@@ -13,10 +13,12 @@ IntervalListState _$IntervalListStateFromJson(Map<String, dynamic> json) {
             ? null
             : SquareSlotState.fromJson(e as Map<String, dynamic>))
         ?.toList(),
+    id: json['id'] as String,
   );
 }
 
 Map<String, dynamic> _$IntervalListStateToJson(IntervalListState instance) =>
     <String, dynamic>{
+      'id': instance.id,
       'slot': instance.slot?.map((e) => e?.toJson())?.toList(),
     };

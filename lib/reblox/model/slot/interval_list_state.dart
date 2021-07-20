@@ -6,23 +6,27 @@ part 'interval_list_state.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class IntervalListState {
+  String id;
   List<SquareSlotState> slot;
 
   IntervalListState({
     @required this.slot,
+    this.id
   });
 
   IntervalListState.fromState(IntervalListState state) {
     this.slot = state.slot;
+    this.id = state.id;
   }
 
   IntervalListState copyWith({intervalListState}) {
     return IntervalListState(
-        slot: intervalListState ?? this.slot);
+        slot: intervalListState ?? this.slot,
+    );
   }
 
   IntervalListState toEmpty() {
-    return IntervalListState(slot: []);
+    return IntervalListState(slot: [], id: '');
   }
 
   factory IntervalListState.fromJson(Map<String, dynamic> json) => _$IntervalListStateFromJson(json);

@@ -384,7 +384,7 @@ class ExternalServiceListState extends State<ExternalServiceList> {
                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 4),
                                alignment: Alignment.centerLeft,
                                child: Text(
-                                 AppLocalizations.of(context).noExternalServiceFound,
+                                 AppLocalizations.of(context).noServiceFound,
                                  style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextGrey, fontWeight: FontWeight.w500, fontSize: 16),
                                ),
                              )),

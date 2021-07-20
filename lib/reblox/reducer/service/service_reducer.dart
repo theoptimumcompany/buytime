@@ -2,8 +2,20 @@ import 'package:Buytime/UI/management/service_internal/class/service_slot_classe
 import 'package:Buytime/reblox/model/file/optimum_file_to_upload.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/model/service/service_slot_time_state.dart';
+import 'package:Buytime/reblox/model/slot/slot_list_snippet_state.dart';
 import 'package:Buytime/reblox/model/snippet/parent.dart';
 import 'package:flutter/material.dart';
+
+class UpdateSlotSnippet {
+  String _serviceId;
+  SlotListSnippetState _slotSnippet;
+
+  UpdateSlotSnippet(this._serviceId, this._slotSnippet);
+
+  SlotListSnippetState get slotSnippet => _slotSnippet;
+  String get serviceId => _serviceId;
+}
+
 
 class AddFileToUploadInService {
   OptimumFileToUpload _fileToUpload;

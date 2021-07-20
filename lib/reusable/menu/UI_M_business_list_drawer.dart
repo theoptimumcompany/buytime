@@ -2,6 +2,7 @@ import 'package:Buytime/UI/management/activity/RUI_M_activity_management.dart';
 import 'package:Buytime/UI/management/activity/UI_M_activity_management.dart';
 import 'package:Buytime/UI/management/business/UI_M_business_list.dart';
 import 'package:Buytime/UI/management/notification/RUI_M_notification_center.dart';
+import 'package:Buytime/UI/management/slot/UI_M_slot_management.dart';
 import 'package:Buytime/UI/user/landing/UI_U_landing.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/reducer/booking_list_reducer.dart';
@@ -41,7 +42,7 @@ import 'package:Buytime/UI/management/business/RUI_M_business_list.dart';
 import '../../utils/globals.dart';
 
 final GoogleSignIn googleSignIn = new GoogleSignIn();
-enum DrawerSelection { BusinessList, NotificationCenter, ActivityManagement }
+enum DrawerSelection { BusinessList, NotificationCenter, ActivityManagement, SlotManagement }
 
 class UI_M_BusinessListDrawer extends StatefulWidget {
   UI_M_BusinessListDrawer({
@@ -249,6 +250,35 @@ class _UI_M_BusinessListDrawerState extends State<UI_M_BusinessListDrawer> {
                   },
                 ),
               ),
+              ///Slot Management
+              Container(
+                decoration: BoxDecoration(border: Border(bottom: BorderSide(color: BuytimeTheme.DividerGrey))),
+                child: ListTile(
+                  selected: drawerSelection == DrawerSelection.SlotManagement,
+                  //selectedTileColor: Color.fromRGBO(32, 124, 195, 0.3),
+                  autofocus: false,
+                  title: Text(
+                    AppLocalizations.of(context).slotManagement,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.start,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 14,
+                      fontFamily: BuytimeTheme.FontFamily,
+                      letterSpacing: 0.1,
+                      color: drawerSelection == DrawerSelection.SlotManagement ? BuytimeTheme.ManagerPrimary : BuytimeTheme.TextBlack,
+                    ),
+                  ),
+                  //leading: Icon(Icons.list),
+                  onTap: () {
+                    //Navigator.pop(context);
+                    setState(() {
+                      drawerSelection = DrawerSelection.SlotManagement;
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SlotManagement()));
+                    });
+                  },
+                ),
+              ),
               Expanded(
                 child: Align(
                   alignment: FractionalOffset.bottomLeft,
@@ -344,7 +374,7 @@ class _UI_M_BusinessListDrawerState extends State<UI_M_BusinessListDrawer> {
                       ),
 
                       ///Settings
-                      ListTile(
+                      /*ListTile(
                         leading: Icon(Icons.settings, color: BuytimeTheme.TextMedium, size: 24),
                         onTap: () {},
                         title: Text(AppLocalizations.of(context).userSettings,
@@ -355,7 +385,7 @@ class _UI_M_BusinessListDrawerState extends State<UI_M_BusinessListDrawer> {
                               letterSpacing: 0.1,
                               color: BuytimeTheme.TextMedium,
                             )),
-                      ),
+                      ),*/
 
                       ///Log out
                       ListTile(
