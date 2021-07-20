@@ -227,7 +227,14 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
     serviceState = StoreProvider.of<AppState>(context).state.serviceState;
     // the media containing information on width and height
     var media = MediaQuery.of(context).size;
-
+    orderDetails = StoreProvider.of<AppState>(context).state.orderDetail;
+    tourist = !(StoreProvider.of<AppState>(context).state.booking != null && StoreProvider.of<AppState>(context).state.booking.booking_id.isNotEmpty);
+    //debugPrint('${widget.imageUrl}');
+    if(orderDetails.cardType != null && orderDetails.cardType.isNotEmpty)
+      card = orderDetails.cardType.toLowerCase().substring(0,1) == 'v' ? 'v' : 'mc';
+    else
+      card = 'e';
+    date = DateFormat('MMM dd').format(orderDetails.date).toUpperCase();
     SizeConfig().init(context);
 
     if(orderDetails.orderId != null && orderDetails.orderId.isNotEmpty) {
@@ -389,14 +396,7 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
                         if(gettingLocation)
                           _getLocation(StoreProvider.of<AppState>(context).state.business);
                         //serviceState = ServiceState().toEmpty();
-                        orderDetails = StoreProvider.of<AppState>(context).state.orderDetail;
-                        tourist = !(StoreProvider.of<AppState>(context).state.booking != null && StoreProvider.of<AppState>(context).state.booking.booking_id.isNotEmpty);
-                        //debugPrint('${widget.imageUrl}');
-                        if(orderDetails.cardType != null && orderDetails.cardType.isNotEmpty)
-                          card = orderDetails.cardType.toLowerCase().substring(0,1) == 'v' ? 'v' : 'mc';
-                        else
-                          card = 'e';
-                        date = DateFormat('MMM dd').format(orderDetails.date).toUpperCase();
+
                         currentDate = DateFormat('MMM dd').format(DateTime.now()).toUpperCase();
                         nextDate = DateFormat('MMM dd').format(DateTime.now().add(Duration(days: 1))).toUpperCase();
                         if(businessState.id_firestore != null && businessState.id_firestore.isNotEmpty){
