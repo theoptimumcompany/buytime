@@ -902,21 +902,25 @@ class _RServiceSlotManagementState extends State<RServiceSlotManagement> {
               squareSlotList.forEach((element) {
                 DateTime tmp = DateFormat('dd/MM/yyyy').parse(element.date);
                 DateTime tmp2 = DateFormat('dd/MM/yyyy').parse(element.date);
+                DateTime currentDate = DateTime.now();
+                currentDate = DateTime(currentDate.year, currentDate.month, currentDate.day, 0,0,0,0,0);
                 Map<DateTime, List<SquareSlotState>> tmpMap = Map();
                 tmp = DateTime(tmp.year, tmp.month, 1, 0,0,0,0,0);
                 tmp2 = DateTime(tmp2.year, tmp2.month, tmp2.day, 0,0,0,0,0);
-                allMap.putIfAbsent(tmp, () => tmpMap);
-                debugPrint('RUI_M_activity_management: VALUE LENGTH: ${element.free}');
-                if(allMap.containsKey(tmp)){
-                  allMap[tmp].putIfAbsent(tmp2, () => []);
-                  //debugPrint('RUI_M_activity_management: KEY: $key');
-                  if(allMap[tmp].containsKey(tmp2))
-                    allMap[tmp][tmp2].add(element);
-                  /*if(key.isAtSameMomentAs(currentTime) || (key.isAfter(currentTime) && key.isBefore(sevenDaysFromNow)) ){
+                if(tmp.isAfter(currentDate) || tmp.isAtSameMomentAs(currentDate)){
+                  allMap.putIfAbsent(tmp, () => tmpMap);
+                  debugPrint('RUI_M_activity_management: VALUE LENGTH: ${element.free}');
+                  if(allMap.containsKey(tmp)){
+                    allMap[tmp].putIfAbsent(tmp2, () => []);
+                    //debugPrint('RUI_M_activity_management: KEY: $key');
+                    if(allMap[tmp].containsKey(tmp2))
+                      allMap[tmp][tmp2].add(element);
+                    /*if(key.isAtSameMomentAs(currentTime) || (key.isAfter(currentTime) && key.isBefore(sevenDaysFromNow)) ){
               debugPrint('RUI_M_activity_management: KEY TIME: $key | CURRENT TIME: $currentTime | SEVEN DAYS FROM NOW: $sevenDaysFromNow');
               debugPrint('RUI_M_activity_management: VALUE LENGTH: ${allMap[tmp].last.length}');
               weekOrderList.add(value);
             }*/
+                  }
                 }
               });
 
