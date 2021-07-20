@@ -7,6 +7,7 @@ import 'package:Buytime/reblox/reducer/booking_reducer.dart';
 import 'package:Buytime/reblox/reducer/business_reducer.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
+import 'package:Buytime/utils/utils.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +20,8 @@ typedef onQuantityChangeCallback = void Function(int value);
 class TimeSlotManagementWidget extends StatefulWidget {
   SquareSlotState squareSlot;
   onQuantityChangeCallback onChange;
-  TimeSlotManagementWidget(this.squareSlot, this.onChange);
+  bool load;
+  TimeSlotManagementWidget(this.squareSlot, this.onChange, this.load);
 
   @override
   _TimeSlotManagementWidgetState createState() => _TimeSlotManagementWidgetState();
@@ -37,13 +39,15 @@ class _TimeSlotManagementWidgetState extends State<TimeSlotManagementWidget> {
   @override
   void initState() {
     super.initState();
-
+    load = false;
   }
+
+  bool load;
 
   @override
   Widget build(BuildContext context) {
     free = widget.squareSlot.free;
-    debugPrint('FREE: ${widget.squareSlot.free}');
+    debugPrint('FREE: ${widget.squareSlot.free} - bool: ${widget.load}');
     DateTime tmp = DateFormat('dd/MM/yyyy').parse(widget.squareSlot.date);
     Map<DateTime, List<SquareSlotState>> tmpMap = Map();
     //tmp = DateTime(tmp.year, tmp.month, 1, 0,0,0,0,0);
@@ -60,7 +64,7 @@ class _TimeSlotManagementWidgetState extends State<TimeSlotManagementWidget> {
       else
         duration = '$tmpMin ${AppLocalizations.of(context).min}';
     }
-    return Container(
+    return !widget.load ? Container(
       //margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 2),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -125,6 +129,7 @@ class _TimeSlotManagementWidgetState extends State<TimeSlotManagementWidget> {
                            int minus = free;
                             if(minus > 0)
                               setState(() {
+                                widget.load = true;
                                 widget.squareSlot.free = minus--;
                                 free = minus--;
                                 widget.onChange(free);
@@ -164,6 +169,7 @@ class _TimeSlotManagementWidgetState extends State<TimeSlotManagementWidget> {
                            int sum = free;
                            if(sum < widget.squareSlot.max)
                              setState(() {
+                               widget.load = true;
                                widget.squareSlot.free = sum++;
                                free = sum++;
                                widget.onChange(free);
@@ -187,7 +193,7 @@ class _TimeSlotManagementWidgetState extends State<TimeSlotManagementWidget> {
          ),
         ],
       ),
-    );
+    ) : Utils.imageShimmer(100, 100);
   }
 }
 

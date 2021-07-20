@@ -324,7 +324,7 @@ class _RServiceSlotManagementState extends State<RServiceSlotManagement> {
                                             /*squareSlotList.forEach((element) {
 
                                             });*/
-                                            }));
+                                            }, false));
                                 },
                                   childCount: value.length,
                                 ),
