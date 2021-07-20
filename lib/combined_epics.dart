@@ -114,6 +114,7 @@ CategoryTreeDeleteService(), */
   ExternalServiceImportedCreateService(),
   ExternalServiceImportedListRequestService(),
   ServiceListByIdsRequestService(),
+  ServiceListByBusinessIdsRequestService(),
   ServiceListByIdsRequestNavigateService(),
   ServiceListSnippetRequestServiceNavigate(),
   UserCategoryListByIdsRequestService(),
@@ -126,6 +127,7 @@ CategoryTreeDeleteService(), */
   NotificationListRequestService(),
   NotificationUpdateRequestService(),
   SlotListSnippetRequestService(),
+  ServiceUpdateSlotSnippetService()
 //DefaultCategoryTreeAddService(),
 /*BusinessGenerateDefaultCategoryService(),
 DefaultCategoryCreateService(),

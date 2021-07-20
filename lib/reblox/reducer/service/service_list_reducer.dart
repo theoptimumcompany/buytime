@@ -27,6 +27,13 @@ class ServiceListRequestByIdsNavigate {
 
   List<String> get serviceIds => _serviceIds;
 }
+class ServiceListRequestByBusinessIds{
+  List<String> _businessIds;
+
+  ServiceListRequestByBusinessIds(this._businessIds);
+
+  List<String> get businessIds => _businessIds;
+}
 
 class ServiceListAndNavigateRequest {
   String _businessId;
