@@ -211,7 +211,7 @@ class _RServiceSlotManagementState extends State<RServiceSlotManagement> {
                         SliverClip(
                           child: MultiSliver(
                             children: <Widget>[
-                              SizedBox(
+                              /*SizedBox(
                                 height: 10,
                               ),
                               Container(
@@ -273,7 +273,7 @@ class _RServiceSlotManagementState extends State<RServiceSlotManagement> {
                                     )
                                   ],
                                 ),
-                              ),
+                              ),*/
                               SizedBox(
                                 height: 10,
                               ),
@@ -897,7 +897,10 @@ class _RServiceSlotManagementState extends State<RServiceSlotManagement> {
               slotSnippetListState.slotListSnippet.first.id = serviceSnapshot.data.docs.first.id;
               debugPrint("slotSnippetListState: ${slotSnippetListState.slotListSnippet.length}");
               squareSlotList.clear();
-              squareSlotList = slotSnippetListState.slotListSnippet.first.slot;
+              slotSnippetListState.slotListSnippet.forEach((element) {
+                squareSlotList.addAll(element.slot);
+              });
+              //squareSlotList = slotSnippetListState.slotListSnippet.first.slot;
               allMap.clear();
               squareSlotList.forEach((element) {
                 DateTime tmp = DateFormat('dd/MM/yyyy').parse(element.date);
@@ -907,7 +910,7 @@ class _RServiceSlotManagementState extends State<RServiceSlotManagement> {
                 Map<DateTime, List<SquareSlotState>> tmpMap = Map();
                 tmp = DateTime(tmp.year, tmp.month, 1, 0,0,0,0,0);
                 tmp2 = DateTime(tmp2.year, tmp2.month, tmp2.day, 0,0,0,0,0);
-                if(tmp.isAfter(currentDate) || tmp.isAtSameMomentAs(currentDate)){
+                if(tmp2.isAfter(currentDate) || tmp2.isAtSameMomentAs(currentDate)){
                   allMap.putIfAbsent(tmp, () => tmpMap);
                   debugPrint('RUI_M_activity_management: VALUE LENGTH: ${element.free}');
                   if(allMap.containsKey(tmp)){

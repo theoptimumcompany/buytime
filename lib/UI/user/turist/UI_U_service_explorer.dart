@@ -90,8 +90,10 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
     for (var z = 0; z < serviceListSnippetListState.length; z++) {
       for (var w = 0; w < serviceListSnippetListState[z].businessSnippet.length; w++) {
         for (var y = 0; y < serviceListSnippetListState[z].businessSnippet[w].serviceList.length; y++) {
-          //debugPrint('INSIDE SERVICE PATH  => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath}');
-          if (serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath.contains(serviceId) && serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath.contains(categoryId)) {
+          //debugPrint('INSIDE SERVICE PATH  => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath} - $serviceId - $categoryId');
+          if (serviceId != null && categoryId != null &&
+              serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath.contains(serviceId) &&
+              serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath.contains(categoryId)) {
             //  debugPrint('INSIDE CATEGORY ROOT => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceName}');
             //debugPrint('INSIDE SERVICE PATH  => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath}');
             sub = true;
@@ -395,7 +397,7 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
                   }
 
                   snapshot.serviceList.serviceListState.forEach((service) {
-                    if ((service.categoryId.contains(cLS.id) || searchCategoryAndServiceOnSnippetList(service.serviceId, cLS.id))) {
+                    if ((service.categoryId != null && service.categoryId.contains(cLS.id) || searchCategoryAndServiceOnSnippetList(service.serviceId, cLS.id))) {
                       debugPrint('UI_U_service_explorer => ${cLS.name} AND LEVEL ${cLS.level}');
                       createCategoryList(cLS);
                     }
@@ -908,7 +910,7 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
                                         child: Container(
                                           margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0),
                                           padding: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 2),
-                                          height: 310,
+                                          height: popularList.isNotEmpty || noActivity ? 310 : 200,
                                           color: Color(0xff1E3C4F),
                                           child: Column(
                                             mainAxisAlignment: MainAxisAlignment.start,
@@ -1057,7 +1059,7 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
                                         child: Container(
                                           margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0),
                                           padding: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 2),
-                                          height: 310,
+                                          height: recommendedList.isNotEmpty || noActivity ? 310 : 200,
                                           color: BuytimeTheme.BackgroundWhite,
                                           child: Column(
                                             mainAxisAlignment: MainAxisAlignment.start,

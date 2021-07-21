@@ -86,6 +86,7 @@ class AllCategoryListRequestService implements EpicClass<AppState> {
           .collection("business")
           .where("draft", isEqualTo: false)
           .get();
+
       List<QuerySnapshot> queryList = [];
       categoryStateList = [];
       serviceStateList = [];
@@ -94,6 +95,7 @@ class AllCategoryListRequestService implements EpicClass<AppState> {
 
       CollectionReference servicesFirebase = FirebaseFirestore.instance.collection("service");
       Query query;
+
       if (store.state.area != null && store.state.area.areaId != null && store.state.area.areaId.isNotEmpty) {
         query = servicesFirebase
             .where("tag", arrayContains: store.state.area.areaId)
@@ -102,6 +104,7 @@ class AllCategoryListRequestService implements EpicClass<AppState> {
         query = servicesFirebase
             .where("visibility", isEqualTo: 'Active');
       }
+
       await query.get().then((value) {
         value.docs.forEach((element) {
           ServiceState serviceState = ServiceState.fromJson(element.data());

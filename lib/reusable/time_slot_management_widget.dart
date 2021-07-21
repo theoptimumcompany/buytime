@@ -114,6 +114,24 @@ class _TimeSlotManagementWidgetState extends State<TimeSlotManagementWidget> {
                    ),
                  ),
                ),
+              /* Container(
+                 width: 100,
+                 margin: EdgeInsets.only(top: 0),
+                 //margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 10),
+                 child: FittedBox(
+                   fit: BoxFit.scaleDown,
+                   child: Text(
+                     '${widget.squareSlot.on}',
+                     style: TextStyle(
+                       //letterSpacing: 1.25,
+                         fontFamily: BuytimeTheme.FontFamily,
+                         color: BuytimeTheme.TextBlack,
+                         fontWeight: FontWeight.bold,
+                         fontSize: 16 ///SizeConfig.safeBlockHorizontal * 4
+                     ),
+                   ),
+                 ),
+               ),*/
                Row(
                  mainAxisAlignment: MainAxisAlignment.center,
                  children: [

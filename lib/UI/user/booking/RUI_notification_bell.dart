@@ -23,8 +23,6 @@ class RNotificationBell extends StatelessWidget {
         builder: (context, AsyncSnapshot<DocumentSnapshot> userNotificationSnapshot) {
           if(userNotificationSnapshot.hasError)
             return Container();
-
-
           return Container(
             child: Stack(
               children: [

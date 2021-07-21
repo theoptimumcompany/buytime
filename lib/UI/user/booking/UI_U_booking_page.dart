@@ -97,7 +97,20 @@ class _BookingPageState extends State<BookingPage> {
   bool searchCategoryAndServiceOnSnippetList(String serviceId, String categoryId) {
     bool sub = false;
     List<ServiceListSnippetState> serviceListSnippetListState = StoreProvider.of<AppState>(context).state.serviceListSnippetListState.serviceListSnippetListState;
+    ServiceListSnippetState serviceListSnippetState =  StoreProvider.of<AppState>(context).state.serviceListSnippetState;
+    for (var w = 0; w < serviceListSnippetState.businessSnippet.length; w++) {
+      for (var y = 0; y < serviceListSnippetState.businessSnippet[w].serviceList.length; y++) {
+        //debugPrint('INSIDE SERVICE PATH  => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath}');
+        if (serviceListSnippetState.businessSnippet[w].serviceList[y].serviceAbsolutePath.contains(serviceId) && serviceListSnippetState.businessSnippet[w].serviceList[y].serviceAbsolutePath.contains(categoryId)) {
+          //  debugPrint('INSIDE CATEGORY ROOT => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceName}');
+          //debugPrint('INSIDE SERVICE PATH  => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath}');
+          sub = true;
+        }
+      }
+    }
+
     for (var z = 0; z < serviceListSnippetListState.length; z++) {
+      //debugPrint('BUSINESS NAME => ${serviceListSnippetListState[z].businessName}');
       for (var w = 0; w < serviceListSnippetListState[z].businessSnippet.length; w++) {
         for (var y = 0; y < serviceListSnippetListState[z].businessSnippet[w].serviceList.length; y++) {
           //debugPrint('INSIDE SERVICE PATH  => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath}');
@@ -248,7 +261,7 @@ class _BookingPageState extends State<BookingPage> {
       onInit: (store) {
         store.dispatch(UserOrderListRequest());
         store.state.notificationListState.notificationListState.clear();
-        //store.dispatch(RequestNotificationList(store.state.user.uid, store.state.business.id_firestore));
+        store.dispatch(RequestNotificationList(store.state.user.uid, store.state.business.id_firestore));
         startRequest = true;
         rippleLoading = true;
       },
@@ -281,11 +294,13 @@ class _BookingPageState extends State<BookingPage> {
           //grid(store.state.categoryList.categoryListState);
           categoryListState = snapshot.categoryList;
           serviceListState = snapshot.serviceList;
+          /*categoryListState.categoryListState.forEach((element) {
+
+          });*/
           categoryListState.categoryListState.forEach((element) {
             debugPrint('UI_U_booking_page => ALL CATEGORIES: ${element.name}');
-          });
-          categoryListState.categoryListState.forEach((element) {
-            if(element.customTag == 'showcase' || element.showcase){
+            if((element.customTag == 'showcase' || element.showcase) && element.level == 0){
+              debugPrint('UI_U_booking_page => LEVEL 0 & SHOWCASE CATEGORY: ${element.name}');
               serviceListState.serviceListState.forEach((service) {
                 //debugPrint('CATAGORY ID: ${cLS.id} - CATEGORY LIST: ${service.categoryId}');
                 if(service.categoryId.contains(element.id) || searchCategoryAndServiceOnSnippetList(service.serviceId, element.id)){
@@ -1150,6 +1165,7 @@ class _BookingPageState extends State<BookingPage> {
                                                 )
                                               ),
                                               ///Show All
+                                              categoryList.length > 5 ?
                                               Container(
                                                 //margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 0.5),
                                                   alignment: Alignment.center,
@@ -1181,7 +1197,7 @@ class _BookingPageState extends State<BookingPage> {
                                                             ),
                                                           ),
                                                         )),
-                                                  ))
+                                                  )) : Container()
                                             ],
                                           ),
                                         ),

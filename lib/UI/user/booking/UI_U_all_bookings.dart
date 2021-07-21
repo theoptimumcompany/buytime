@@ -246,17 +246,20 @@ class _AllBookingsState extends State<AllBookings> {
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Column(
-                                          children: widget.orderStateList
-                                              .map((OrderState order) {
+                                          children: widget.orderStateList.map((OrderState order) {
                                             int index;
                                             for (int i = 0; i <  widget.orderStateList.length; i++) {
                                               if ( widget.orderStateList[i].orderId == order.orderId) index = i;
                                             }
                                             debugPrint('UI_U_all_bookings => CART COUNT: ${order.date}');
                                             ServiceState service = ServiceState().toEmpty();
+                                            debugPrint('UI_U_all_bookings => NOTIFICATION LENGTH: ${StoreProvider.of<AppState>(context).state.notificationListState.notificationListState.length}');
+
                                             StoreProvider.of<AppState>(context).state.notificationListState.notificationListState.forEach((element) {
+                                              debugPrint('UI_U_all_bookings => ${order.orderId} - ${element.data.state.orderId}');
                                               if(element.notificationId != null && element.notificationId.isNotEmpty && order.orderId.isNotEmpty && order.orderId == element.data.state.orderId){
                                                 snapshot.serviceList.serviceListState.forEach((s) {
+                                                  debugPrint('UI_U_all_bookings => ${element.data.state.serviceId} - ${s.serviceId}');
                                                   if(element.data.state.serviceId == s.serviceId)
                                                     service = s;
                                                 });

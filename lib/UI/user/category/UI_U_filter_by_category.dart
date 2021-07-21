@@ -87,6 +87,19 @@ class _FilterByCategoryState extends State<FilterByCategory> {
   bool searchCategoryAndServiceOnSnippetList(String serviceId, String categoryId) {
     bool sub = false;
     List<ServiceListSnippetState> serviceListSnippetListState = StoreProvider.of<AppState>(context).state.serviceListSnippetListState.serviceListSnippetListState;
+    if(!widget.tourist){
+      ServiceListSnippetState serviceListSnippetState =  StoreProvider.of<AppState>(context).state.serviceListSnippetState;
+      for (var w = 0; w < serviceListSnippetState.businessSnippet.length; w++) {
+        for (var y = 0; y < serviceListSnippetState.businessSnippet[w].serviceList.length; y++) {
+          //debugPrint('INSIDE SERVICE PATH  => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath}');
+          if (serviceListSnippetState.businessSnippet[w].serviceList[y].serviceAbsolutePath.contains(serviceId) && serviceListSnippetState.businessSnippet[w].serviceList[y].serviceAbsolutePath.contains(categoryId)) {
+            //  debugPrint('INSIDE CATEGORY ROOT => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceName}');
+            //debugPrint('INSIDE SERVICE PATH  => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath}');
+            sub = true;
+          }
+        }
+      }
+    }
     for (var z = 0; z < serviceListSnippetListState.length; z++) {
       for (var w = 0; w < serviceListSnippetListState[z].businessSnippet.length; w++) {
         for (var y = 0; y < serviceListSnippetListState[z].businessSnippet[w].serviceList.length; y++) {
@@ -99,6 +112,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
         }
       }
     }
+
     return sub;
   }
 
@@ -277,7 +291,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
             if (l.isNotEmpty) {
               subCategoryList.clear();
               l.forEach((element) {
-                if (element.parent != null && widget.categoryListIds.contains(element.parent.id)) {
+                if (element.parent != null && widget.categoryListIds != null && widget.categoryListIds.contains(element.parent.id)) {
                   if (widget.tourist) {
                     debugPrint('UI_U_filter_by_category => SUB CATEGORY NAME: ${element.name}');
                     store.state.serviceList.serviceListState.forEach((service) {
@@ -286,8 +300,15 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                         createSubCategoryList(element);
                       }
                     });
-                  } else
-                    subCategoryList.add(element);
+                  } else{
+                    debugPrint('UI_U_filter_by_category => SUB CATEGORY NAME: ${element.name}');
+                    store.state.serviceList.serviceListState.forEach((service) {
+                      //debugPrint('CATAGORY ID: ${cLS.id} - CATEGORY LIST: ${service.categoryId}');
+                      if ((service.categoryId.contains(element.id) /*||  TODO service.categoryRootId.contains(element.id)*/) /*&& element.level == 0*/) {
+                        createSubCategoryList(element);
+                      }
+                    });
+                  }
                 } else {
                   //categoryList.add(element); ///TODO
                   if (!widget.categoryListIds.contains(element.id)) {
@@ -297,18 +318,35 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                     });
 
                     if (!found) {
-                      debugPrint('UI_U_filter_by_category => CATEGORY NAME: ${element.name}');
-                      if (element.customTag == 'showcase' || element.showcase) {
-                        store.state.serviceList.serviceListState.forEach((service) {
-                          //debugPrint('CATAGORY ID: ${cLS.id} - CATEGORY LIST: ${service.categoryId}');
-                          if (service.categoryId.contains(element.id) || searchCategoryAndServiceOnSnippetList(service.serviceId, element.id)) {
-                            if (!categoryList.contains(element)) {
-                              categoryList.add(element);
+                      debugPrint('UI_U_booking_page => ALL CATEGORIES: ${element.name}');
+                      //debugPrint('UI_U_filter_by_category => CATEGORY NAME: ${element.name}');
+                      if(!widget.tourist){
+                        if ((element.customTag == 'showcase' || element.showcase) && element.level == 0) {
+                          debugPrint('UI_U_booking_page => LEVEL 0 & SHOWCASE CATEGORY: ${element.name}');
+                          store.state.serviceList.serviceListState.forEach((service) {
+                            //debugPrint('CATAGORY ID: ${cLS.id} - CATEGORY LIST: ${service.categoryId}');
+                            if (service.categoryId.contains(element.id) || searchCategoryAndServiceOnSnippetList(service.serviceId, element.id)) {
+                              if (!categoryList.contains(element)) {
+                                categoryList.add(element);
+                              }
                             }
-                          }
-                        });
-                        categoryListIds.putIfAbsent(element.name, () => [element.id]);
+                          });
+                          categoryListIds.putIfAbsent(element.name, () => [element.id]);
+                        }
+                      }else{
+                        if (element.level == 0) {
+                          store.state.serviceList.serviceListState.forEach((service) {
+                            //debugPrint('CATAGORY ID: ${cLS.id} - CATEGORY LIST: ${service.categoryId}');
+                            if (service.categoryId.contains(element.id) || searchCategoryAndServiceOnSnippetList(service.serviceId, element.id)) {
+                              if (!categoryList.contains(element)) {
+                                categoryList.add(element);
+                              }
+                            }
+                          });
+                          categoryListIds.putIfAbsent(element.name, () => [element.id]);
+                        }
                       }
+
                     } else {
                       categoryListIds[element.name].add(element.id);
                     }
@@ -1152,6 +1190,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                       ),
 
                                       ///Show All
+                                      categoryList.length > 5 ?
                                       Container(
                                           //margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 0.5),
                                           alignment: Alignment.center,
@@ -1179,7 +1218,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                                         ),
                                                   ),
                                                 )),
-                                          ))
+                                          )) : Container()
                                     ],
                                   ),
                                 ),
