@@ -536,6 +536,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                             margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
                             decoration: BoxDecoration(borderRadius: new BorderRadius.circular(5), border: Border.all(color: BuytimeTheme.SymbolLightGrey)),
                             child: MaterialButton(
+                              key: Key('login'),
                               elevation: 0,
                               hoverElevation: 0,
                               focusElevation: 0,

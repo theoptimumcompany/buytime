@@ -289,6 +289,7 @@ class RBusinessListState extends State<RBusinessList> {
                                       return  Padding(
                                         padding: const EdgeInsets.only(top: 1.0),
                                         child: new OptimumBusinessCardMediumManager(
+                                          index: index,
                                           businessState: businessListState[index],
                                           networkServices: networkServices ?? 0,
                                           onBusinessCardTap: (BusinessState businessState) async{

@@ -496,6 +496,7 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
 
                                       ///Manage Internal Services
                                       InkWell(
+                                        key: Key('internal_service_manage_key'),
                                         onTap: () {
                                           Navigator.push(context, EnterExitRoute(enterPage: RServiceList(), exitPage: UI_M_Business(), from: true));
                                         },

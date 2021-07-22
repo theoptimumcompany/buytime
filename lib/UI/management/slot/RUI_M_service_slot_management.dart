@@ -818,7 +818,7 @@ class _RServiceSlotManagementState extends State<RServiceSlotManagement> {
     }*/
     debugPrint('UPDATE');
     //debugPrint('RUI_M_activity_management => STREAM LENGTH: ${_orderListRealtime.length}');
-
+    Locale myLocale = Localizations.localeOf(context);
     ///Init sizeConfig
     SizeConfig().init(context);
     return WillPopScope(
@@ -853,7 +853,7 @@ class _RServiceSlotManagementState extends State<RServiceSlotManagement> {
               child: Padding(
                 padding: const EdgeInsets.only(left: 20.0),
                 child: Text(
-                  AppLocalizations.of(context).activityManagement,
+                  Utils.retriveField(myLocale.languageCode, widget.serviceState.name),
                   textAlign: TextAlign.start,
                   style: BuytimeTheme.appbarTitle,
                 ),

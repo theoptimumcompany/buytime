@@ -19,9 +19,11 @@ class OptimumBusinessCardMediumManager extends StatefulWidget {
   Widget rowWidget2;
   Widget rowWidget3;
   Size mediaSize;
+  int index;
 
   OptimumBusinessCardMediumManager(
-      {this.image,
+      {this.index,
+        this.image,
         @required this.imageUrl,
         @required this.businessState,
         this.networkServices,
@@ -89,6 +91,7 @@ class _OptimumBusinessCardMediumManagerState extends State<OptimumBusinessCardMe
       child: Material(
           color: Colors.transparent,
           child: InkWell(
+            key: Key('business_${widget.index}_key'),
             //borderRadius: BorderRadius.all(Radius.circular(10)),
             onTap: () async {
               businessCardTap(widget.businessState);

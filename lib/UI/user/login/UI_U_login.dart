@@ -701,6 +701,7 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
             //resizeToAvoidBottomInset: false,
               appBar: AppBar(
                 leading: IconButton(
+                  key: Key('home_from_login_key'),
                   icon: Icon(
                     Icons.keyboard_arrow_left,
                     color: BuytimeTheme.SymbolBlack,
@@ -804,6 +805,7 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
                                                       //width: 2,
                                                       child: TextFormField(
                                                         //autofillHints: [AutofillHints.username],
+                                                        key: Key('email_key'),
                                                         controller: _emailController,
                                                         textAlign: TextAlign.start,
                                                         keyboardType: TextInputType.emailAddress,
@@ -884,6 +886,7 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
                                               ///SizeConfig.safeBlockHorizontal * 14
                                               //width: 328,
                                               child: TextFormField(
+                                                key: Key('password_key'),
                                                 controller: _passwordController,
                                                 textAlign: TextAlign.start,
                                                 obscureText: passwordVisible,
@@ -940,6 +943,7 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
                                                     margin: EdgeInsets.only(top: 12.0),
                                                     child: Text(
                                                       responseMessage,
+                                                      key: Key('error_key'),
                                                       style: TextStyle(
                                                           color: _success != null
                                                               ? _success
@@ -1056,6 +1060,7 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
                                             crossAxisAlignment: CrossAxisAlignment.center,
                                             children: [
                                               FloatingActionButton(
+                                                key: Key('login_key'),
                                                 onPressed: () async {
                                                   if (_formKey.currentState.validate() && !_isRequestFlying) {
                                                     _signInWithEmailAndPassword();

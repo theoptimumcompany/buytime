@@ -501,6 +501,7 @@ class _RBusinessState extends State<RBusiness> {
 
                                               ///Manage Internal Services
                                               InkWell(
+                                                key: Key('internal_service_manage_key'),
                                                 onTap: () {
                                                   Navigator.push(context, EnterExitRoute(enterPage: RServiceList(), exitPage: RBusiness(), from: true));
                                                 },
