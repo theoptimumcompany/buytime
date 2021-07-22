@@ -53,7 +53,6 @@ OrderState configureOrder(OrderState orderStateFromEvent, EpicStore<AppState> st
     orderState.businessId = orderState.itemList[0].id_business;
     orderState.business.id = orderState.itemList[0].id_business;
     debugPrint("configureOrder sicuramente dovrebbe funzionare " + orderState.businessId);
-
   }
 
   /// set the creation date
