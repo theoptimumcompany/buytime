@@ -310,7 +310,7 @@ class OrderCreateCardAndPayService implements EpicClass<AppState> {
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<CreateOrderCardAndPay>().asyncMap((event) async {
         /// add needed data to the order state
-      orderState = configureOrder(event.orderState, store);
+      // orderState = configureOrder(event.orderState, store);
         if (event.selectedCardPaymentMethodId != null && store.state.booking != null && store.state.booking.booking_id != null) {
           /// This is a time based id, meaning that even if 2 users are going to generate a document at the same moment in time
           /// there are really low chances that the rest of the id is also colliding.

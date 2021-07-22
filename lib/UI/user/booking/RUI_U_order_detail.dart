@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:Buytime/UI/user/landing/UI_U_landing.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:Buytime/reblox/model/notification/notification_state.dart';
@@ -277,13 +278,16 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
                         ),
                         tooltip: AppLocalizations.of(context).comeBack,
                         onPressed: () {
-                          if (widget.route == '/bookingRoomPaymentList') {
-                            Navigator.of(context).pop();
-                          } else {
-                            Future.delayed(Duration(seconds: 1), () {
-                              Navigator.of(context).popUntil(ModalRoute.withName(widget.route));
-                            });
-                          }
+                          Future.delayed(Duration(seconds: 1), () {
+                            Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => Landing()), (Route<dynamic> route) => false);
+                          });
+                          // if (widget.route == '/bookingRoomPaymentList') {
+                          //   Navigator.of(context).pop();
+                          // } else {
+                          //   Future.delayed(Duration(seconds: 1), () {
+                          //     Navigator.of(context).popUntil(ModalRoute.withName(widget.route));
+                          //   });
+                          // }
                         },
                       ),
                     ),
