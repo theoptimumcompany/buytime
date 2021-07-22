@@ -12,6 +12,9 @@ import 'package:Buytime/main.dart';
 import 'package:provider/provider.dart';
 import 'package:redux/redux.dart';
 
+///Integration test run cmd
+///flutter drive --driver integration_test/driver.dart --target --dart-define=ENVIRONMENT=PROD --flavor prod -t integration_test/app_test.dart --debug
+
 void main() {
   group('Testing App Performance Tests', () {
     final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized()
@@ -20,7 +23,7 @@ void main() {
     binding.framePolicy = LiveTestWidgetsFlutterBindingFramePolicy.fullyLive;
 
     ///Login Error
-    testWidgets('Login test', (tester) async {
+    testWidgets('Login erorr', (tester) async {
       final epics = combinedEpics;
       final _initialState = appState;
       final store = new Store<AppState>(
@@ -116,25 +119,35 @@ void main() {
       }, reportKey: 'scrolling_summary');
 
       ///Business List => First Business of the list
-      await tester.tap(find.byKey(ValueKey('business_0_key')));
-      await tester.pumpAndSettle(const Duration(seconds: 2));
-
-      ///Business => Internal Service List
-      await tester.tap(find.byKey(ValueKey('internal_service_manage_key')));
-      await tester.pumpAndSettle(const Duration(seconds: 2));
-
-      ///Internal Service List => Business
-      await tester.tap(find.byKey(ValueKey('back_from_interval_service_key')));
-      await tester.pumpAndSettle(const Duration(seconds: 2));
-
-      ///Business => External Business List
-      /*if(find.byKey(ValueKey('external_business_manage_key')) != null){
-        await tester.tap(find.byKey(ValueKey('external_business_manage_key')));
+      if(!find.byKey(ValueKey('business_0_key')).toString().contains('zero widgets with key')){
+        debugPrint('KEY VALUE: ${find.byKey(ValueKey('business_0_key')).toString()}');
+        await tester.tap(find.byKey(ValueKey('business_0_key')));
         await tester.pumpAndSettle(const Duration(seconds: 2));
-      }*/
-      /*await tester.ensureVisible(find.byKey(ValueKey('external_business_manage_key')));
+
+        ///Business => Internal Service List
+        await tester.tap(find.byKey(ValueKey('internal_service_manage_key')));
+        await tester.pumpAndSettle(const Duration(seconds: 2));
+
+        ///Internal Service List => Business
+        await tester.tap(find.byKey(ValueKey('back_from_interval_service_key')));
+        await tester.pumpAndSettle(const Duration(seconds: 2));
+
+        ///Business => External Business List
+        debugPrint('KEY VALUE: ${find.byKey(ValueKey('external_business_manage_key')).toString()}');
+
+        if(!find.byKey(ValueKey('external_business_manage_key')).toString().contains('zero widgets with key')){
+          await tester.tap(find.byKey(ValueKey('external_business_manage_key')));
+          await tester.pumpAndSettle(const Duration(seconds: 2));
+        }else{
+          debugPrint('KEY \'external_business_manage_key\' not found');
+        }
+        /*await tester.ensureVisible(find.byKey(ValueKey('external_business_manage_key')));
       await tester.tap(find.byKey(ValueKey('external_business_manage_key')));
       await tester.pumpAndSettle(const Duration(seconds: 2));*/
+      }else{
+        debugPrint('KEY \'business_0_key\' not found');
+      }
+
     });
 
   });
