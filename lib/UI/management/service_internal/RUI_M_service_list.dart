@@ -250,6 +250,7 @@ class RServiceListState extends State<RServiceList> {
                     children: [
                       ///Manage Categories of the Business
                       InkWell(
+                        key: Key('manage_category_key'),
                         onTap: () {
                           Navigator.push(context, EnterExitRoute(enterPage: ManageCategory(), exitPage: RServiceList(), from: true));
                         },
@@ -799,6 +800,7 @@ class RServiceListState extends State<RServiceList> {
                                                               ),
                                                               Expanded(
                                                                 child: GestureDetector(
+                                                                  key: Key('service_${i}_${index}_key'),
                                                                   onTap: () {
                                                                     debugPrint('RUI_M_service_list => TAP SERVICE in Gesture');
                                                                     /// TODO we are not sure about this, look at the history of this if @Nipuna

@@ -157,6 +157,7 @@ class _OptimumBusinessCardMediumManagerState extends State<OptimumBusinessCardMe
                                       padding: const EdgeInsets.only(bottom: 5.0),
                                       child: Text(
                                         widget.businessState.name,
+                                        key: Key(widget.businessState.name),
                                         overflow: TextOverflow.ellipsis,
                                         textAlign: TextAlign.start,
                                         style: TextStyle(

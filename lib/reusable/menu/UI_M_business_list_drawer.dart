@@ -167,6 +167,7 @@ class _UI_M_BusinessListDrawerState extends State<UI_M_BusinessListDrawer> {
               Container(
                 decoration: BoxDecoration(border: Border(bottom: BorderSide(color: BuytimeTheme.DividerGrey))),
                 child: ListTile(
+                  key: Key('business_list_key'),
                   selected: drawerSelection == DrawerSelection.BusinessList,
                   //selectedTileColor: Color.fromRGBO(32, 124, 195, 0.3),
                   autofocus: false,
@@ -196,6 +197,7 @@ class _UI_M_BusinessListDrawerState extends State<UI_M_BusinessListDrawer> {
               Container(
                 decoration: BoxDecoration(border: Border(bottom: BorderSide(color: BuytimeTheme.DividerGrey))),
                 child: ListTile(
+                  key: Key('notification_center_key'),
                   selected: drawerSelection == DrawerSelection.NotificationCenter,
                   //selectedTileColor: Color.fromRGBO(32, 124, 195, 0.3),
                   autofocus: false,
@@ -389,6 +391,7 @@ class _UI_M_BusinessListDrawerState extends State<UI_M_BusinessListDrawer> {
 
                       ///Log out
                       ListTile(
+                        key: Key('log_out_key'),
                         leading: Icon(Icons.logout, color: BuytimeTheme.TextMedium, size: 24),
                         onTap: () async {
                           SharedPreferences prefs = await SharedPreferences.getInstance();

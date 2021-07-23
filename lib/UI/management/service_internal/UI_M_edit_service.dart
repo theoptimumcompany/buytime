@@ -485,7 +485,6 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                   ),
                                                 ),
                                               ),
-
                                               ///Name
                                               Container(
                                                 margin: EdgeInsets.only(top: 40.0, bottom: 5.0, left: 32.0, right: 28.0),
@@ -554,7 +553,6 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                   ],
                                                 ),
                                               ),
-
                                               ///Description
                                               Container(
                                                 margin: EdgeInsets.only(top: 10.0, bottom: 5.0, left: 32.0, right: 28.0),
@@ -651,12 +649,18 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                                       : validatePrice(value)
                                                                           ? null
                                                                           : AppLocalizations.of(context).notValidPrice,
+                                                                 /* onTap: (){
+                                                                    setState(() {
+                                                                      priceController.clear();
+                                                                    });
+                                                                  },*/
                                                                   onChanged: (value) {
                                                                     if (value == "") {
-                                                                      setState(() {
+                                                                      /*setState(() {
                                                                         _servicePrice = 0.0;
                                                                         value = "0.0";
-                                                                      });
+                                                                        //StoreProvider.of<AppState>(context).dispatch(SetServicePrice(_servicePrice));
+                                                                      });*/
                                                                     } else {
                                                                       if (value.contains(".")) {
                                                                         List<String> priceString = value.split(".");
@@ -672,6 +676,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                                         _servicePrice = double.parse(value);
                                                                       });
                                                                     }
+
                                                                   },
                                                                   onEditingComplete: () {
                                                                     StoreProvider.of<AppState>(context).dispatch(SetServicePrice(_servicePrice));

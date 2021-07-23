@@ -160,6 +160,7 @@ class _RBusinessState extends State<RBusiness> {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
                     child: IconButton(
+                      key: Key('business_drawer_key'),
                       icon: const Icon(
                         Icons.menu,
                         color: Colors.white,
@@ -631,6 +632,7 @@ class _RBusinessState extends State<RBusiness> {
                                               StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin ||
                                                   StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman ||
                                                   StoreProvider.of<AppState>(context).state.user.getRole() == Role.owner ? InkWell(
+                                                key: Key('external_business_manage_key'),
                                                 onTap: (){
                                                   Navigator.push(context, EnterExitRoute(enterPage: ExternalServiceList(), exitPage: RBusiness(), from: true));
                                                 } ,

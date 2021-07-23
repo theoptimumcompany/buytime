@@ -358,6 +358,7 @@ class _TreeNodeState extends State<TreeNode>
         _tappable = Container(
           padding: EdgeInsets.only(bottom: 5.0, left: 10),
           child: InkWell(
+            key: Key(widget.node.key),
             onTap: canSelectParent ? _handleTap : _handleExpand,
             onDoubleTap: () {
               _handleExpand();
@@ -368,6 +369,7 @@ class _TreeNodeState extends State<TreeNode>
         );
       } else if (_treeView.supportParentDoubleTap) {
         _tappable = InkWell(
+          key: Key(widget.node.key),
           onTap: _handleExpand,
           onDoubleTap: _handleDoubleTap,
           child: labelContainer,
@@ -376,6 +378,7 @@ class _TreeNodeState extends State<TreeNode>
         _tappable = Container(
           padding: EdgeInsets.only(bottom: 5.0, left: 10),
           child: InkWell(
+            key: Key(widget.node.key),
             onTap: canSelectParent ? _handleTap : _handleExpand,
             child: labelContainer,
           ),

@@ -428,6 +428,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
                         child: IconButton(
+                          key: Key('external_business_details_back_key'),
                           icon: const Icon(
                             Icons.keyboard_arrow_left,
                             color: Colors.white,
@@ -464,6 +465,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                   width: 272, ///media.width * .4
                   height: 44,
                   child: MaterialButton(
+                    key: Key('add_entire_business_key'),
                     elevation: 0,
                     hoverElevation: 0,
                     focusElevation: 0,
@@ -993,6 +995,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                                               children: [
                                                 ///View business
                                                 InkWell(
+                                                  key: Key('view_business_key'),
                                                   onTap: () {
                                                     StoreProvider.of<AppState>(context).dispatch(ExternalServiceImportedListRequest(StoreProvider.of<AppState>(context).state.business.id_firestore));
                                                     StoreProvider.of<AppState>(context).dispatch(ExternalBusinessImportedListRequest(StoreProvider.of<AppState>(context).state.business.id_firestore));

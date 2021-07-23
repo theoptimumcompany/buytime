@@ -151,6 +151,8 @@ class ExternalServiceListState extends State<ExternalServiceList> {
               startRequest = false;
             }
 
+            noActivity = false;
+            startRequest = false;
 
           }
           return WillPopScope(
@@ -169,6 +171,7 @@ class ExternalServiceListState extends State<ExternalServiceList> {
                   children: [
                     ///Back Button
                     IconButton(
+                      key: Key('external_business_list_back_key'),
                       icon: Icon(Icons.keyboard_arrow_left, color: Colors.white),
                       onPressed: () {
                         //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_Business()))
@@ -207,6 +210,7 @@ class ExternalServiceListState extends State<ExternalServiceList> {
 
                               ///Add new
                               InkWell(
+                                key: Key('add_external_business_list_key'),
                                 onTap: () {
                                   //StoreProvider.of<AppState>(context).dispatch(ExternalServiceImportedListRequest(StoreProvider.of<AppState>(context).state.business.id_firestore));
                                   //StoreProvider.of<AppState>(context).dispatch(ExternalBusinessImportedListRequest(StoreProvider.of<AppState>(context).state.business.id_firestore));

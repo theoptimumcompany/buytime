@@ -106,6 +106,7 @@ class RBusinessListState extends State<RBusinessList> {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
                     child: IconButton(
+                      key: Key('business_drawer_key'),
                       icon: const Icon(
                         Icons.menu,
                         color: BuytimeTheme.TextWhite,

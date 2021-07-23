@@ -24,89 +24,21 @@ void main() {
 
     ///Login Error
     testWidgets('Login erorr', (tester) async {
-      final epics = combinedEpics;
-      final _initialState = appState;
-      final store = new Store<AppState>(
-        appReducer,
-        initialState: _initialState,
-        middleware: createNavigationMiddleware(epics),
-      );
-
-      WidgetsFlutterBinding.ensureInitialized();
-      const String environment = String.fromEnvironment(
-        'ENVIRONMENT',
-        defaultValue: Environment.PROD,
-      );
-      Environment().initConfig(environment);
-      ///App Load
-      await tester.pumpWidget(MultiProvider(
-        providers: [
-          //ChangeNotifierProvider(create: (_) => NavigationState()),
-          ChangeNotifierProvider(create: (_) => Spinner([], [])),
-        ],
-        child: Buytime(store: store),
-      ));
-      await tester.pumpAndSettle(const Duration(seconds: 2));
+      await loadApp(tester);
 
       //await tester.tap(find.byKey(ValueKey('login')));
       ///Home => Login
-      await tester.tap(find.text('Log In'.toUpperCase()));
-      await tester.pumpAndSettle(const Duration(seconds: 1));
-
-      await tester.enterText(find.byKey(ValueKey('email_key')), 'test_admin@buytime.network');
-      await tester.pumpAndSettle(const Duration(seconds: 1));
-      await tester.enterText(find.byKey(ValueKey('password_key')), 'Test2020');
-      await tester.pumpAndSettle(const Duration(seconds: 2));
-
-      //debugPrint('DESC: ${find.byKey(ValueKey('error_key'))}');
-
-      ///Login => Landing => Business List
-      await tester.tap(find.byKey(ValueKey('login_key')));
-      await tester.pumpAndSettle(const Duration(seconds: 2));
+      await login(tester, 'test_admin@buytime.network', 'Test2020');
       expect(find.text('The password is invalid or the user does not have a password.'), findsOneWidget);
     });
 
     ///Login Admin => Landing => Redirect Business List
-    testWidgets('Login test', (tester) async {
-      final epics = combinedEpics;
-      final _initialState = appState;
-      final store = new Store<AppState>(
-        appReducer,
-        initialState: _initialState,
-        middleware: createNavigationMiddleware(epics),
-      );
-
-      WidgetsFlutterBinding.ensureInitialized();
-      const String environment = String.fromEnvironment(
-        'ENVIRONMENT',
-        defaultValue: Environment.PROD,
-      );
-      Environment().initConfig(environment);
-      ///App Load
-      await tester.pumpWidget(MultiProvider(
-        providers: [
-          //ChangeNotifierProvider(create: (_) => NavigationState()),
-          ChangeNotifierProvider(create: (_) => Spinner([], [])),
-        ],
-        child: Buytime(store: store),
-      ));
-      await tester.pumpAndSettle(const Duration(seconds: 2));
+    testWidgets('Business List', (tester) async {
+      await loadApp(tester);
 
       //await tester.tap(find.byKey(ValueKey('login')));
       ///Home => Login
-      await tester.tap(find.text('Log In'.toUpperCase()));
-      await tester.pumpAndSettle(const Duration(seconds: 1));
-
-      await tester.enterText(find.byKey(ValueKey('email_key')), 'test_admin@buytime.network');
-      await tester.pumpAndSettle(const Duration(seconds: 1));
-      await tester.enterText(find.byKey(ValueKey('password_key')), 'test2020');
-      await tester.pumpAndSettle(const Duration(seconds: 2));
-
-      //debugPrint('DESC: ${find.byKey(ValueKey('error_key'))}');
-
-      ///Login => Landing => Business List
-      await tester.tap(find.byKey(ValueKey('login_key')));
-      await tester.pumpAndSettle(const Duration(seconds: 2));
+      await login(tester, 'test_admin@buytime.network', 'test2020');
 
       ///Scroll up and down
       final listFinder = find.byType(ListView);
@@ -117,27 +49,256 @@ void main() {
         await tester.fling(listFinder, const Offset(0, 500), 10000);
         await tester.pumpAndSettle();
       }, reportKey: 'scrolling_summary');
+    });
+
+    ///Login Admin => Landing => Redirect Business List => Business Drawer
+    testWidgets('Business Drawer', (tester) async {
+      await loadApp(tester);
+
+      //await tester.tap(find.byKey(ValueKey('login')));
+      ///Home => Login
+      //await login(tester, 'test_admin@buytime.network', 'test2020');
+
+      ///Scroll up and down
+      final listFinder = find.byType(ListView);
+      /*await binding.watchPerformance(() async {
+        await tester.fling(listFinder, const Offset(0, -500), 10000);
+        await tester.pumpAndSettle();
+
+        await tester.fling(listFinder, const Offset(0, 500), 10000);
+        await tester.pumpAndSettle();
+      }, reportKey: 'scrolling_summary');*/
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+      ///Business List => First Business of the list
+      debugPrint('KEY VALUE: ${find.byKey(ValueKey('business_drawer_key')).toString()}');
+      if(!find.byKey(ValueKey('business_drawer_key')).toString().contains('zero widgets with')){
+        await tester.tap(find.byKey(ValueKey('business_drawer_key')));
+        await tester.pumpAndSettle(const Duration(seconds: 2));
+      }else{
+        debugPrint('KEY \'business_drawer_key\' not found');
+      }
+    });
+
+    ///Login Admin => Landing => Redirect Business List => Business Drawer => Notification Center
+    testWidgets('Business Drawer', (tester) async {
+      await loadApp(tester);
+
+      //await tester.tap(find.byKey(ValueKey('login')));
+      ///Home => Login
+      //await login(tester, 'test_admin@buytime.network', 'test2020');
+
+      ///Scroll up and down
+      final listFinder = find.byType(ListView);
+      /*await binding.watchPerformance(() async {
+        await tester.fling(listFinder, const Offset(0, -500), 10000);
+        await tester.pumpAndSettle();
+
+        await tester.fling(listFinder, const Offset(0, 500), 10000);
+        await tester.pumpAndSettle();
+      }, reportKey: 'scrolling_summary');*/
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+      ///Business List => First Business of the list
+      debugPrint('KEY VALUE: ${find.byKey(ValueKey('business_drawer_key')).toString()}');
+      if(!find.byKey(ValueKey('business_drawer_key')).toString().contains('zero widgets with')){
+        await tester.tap(find.byKey(ValueKey('business_drawer_key')));
+        await tester.pumpAndSettle(const Duration(seconds: 2));
+
+        await tester.tap(find.byKey(ValueKey('notification_center_key')));
+        await tester.pumpAndSettle(const Duration(seconds: 1));
+      }else{
+        debugPrint('KEY \'business_drawer_key\' not found');
+      }
+    });
+
+    ///Login Admin => Landing => Redirect Business List => Business => Internal Service if exists => Manage Category if exists
+    testWidgets('Internal Service', (tester) async {
+      await loadApp(tester);
+
+      //await tester.tap(find.byKey(ValueKey('login')));
+      ///Home => Login
+      //await login(tester, 'test_admin@buytime.network', 'test2020');
+
+      ///Scroll up and down
+      final listFinder = find.byType(ListView);
+      /*await binding.watchPerformance(() async {
+        await tester.fling(listFinder, const Offset(0, -500), 10000);
+        await tester.pumpAndSettle();
+
+        await tester.fling(listFinder, const Offset(0, 500), 10000);
+        await tester.pumpAndSettle();
+      }, reportKey: 'scrolling_summary');*/
 
       ///Business List => First Business of the list
-      if(!find.byKey(ValueKey('business_0_key')).toString().contains('zero widgets with key')){
+      if(!find.byKey(ValueKey('business_0_key')).toString().contains('zero widgets with')){
         debugPrint('KEY VALUE: ${find.byKey(ValueKey('business_0_key')).toString()}');
         await tester.tap(find.byKey(ValueKey('business_0_key')));
         await tester.pumpAndSettle(const Duration(seconds: 2));
 
         ///Business => Internal Service List
-        await tester.tap(find.byKey(ValueKey('internal_service_manage_key')));
+        if(!find.byKey(ValueKey('internal_service_manage_key')).toString().contains('zero widgets with')){
+          await tester.tap(find.byKey(ValueKey('internal_service_manage_key')));
+          await tester.pumpAndSettle(const Duration(seconds: 2));
+
+          if(!find.byKey(ValueKey('manage_category_key')).toString().contains('zero widgets with')){
+            await tester.tap(find.byKey(ValueKey('manage_category_key')));
+            await tester.pumpAndSettle(const Duration(seconds: 2));
+          }
+          ///Internal Service List => Business
+          //await tester.tap(find.byKey(ValueKey('back_from_interval_service_key')));
+          //await tester.pumpAndSettle(const Duration(seconds: 2));
+        }else{
+          debugPrint('KEY \'internal_service_manage_key\' not found');
+        }
+
+        /*await tester.ensureVisible(find.byKey(ValueKey('external_business_manage_key')));
+      await tester.tap(find.byKey(ValueKey('external_business_manage_key')));
+      await tester.pumpAndSettle(const Duration(seconds: 2));*/
+      }else{
+        debugPrint('KEY \'business_0_key\' not found');
+      }
+    });
+
+    ///Login Admin => Landing => Redirect Business List => Business => Internal Service if exists => First service details if exists
+    testWidgets('Service Details', (tester) async {
+      await loadApp(tester);
+
+      //await tester.tap(find.byKey(ValueKey('login')));
+      ///Home => Login
+      //await login(tester, 'test_admin@buytime.network', 'test2020');
+
+
+      ///Scroll up and down
+      final listFinder = find.byType(ListView);
+      /*await binding.watchPerformance(() async {
+        await tester.fling(listFinder, const Offset(0, -500), 10000);
+        await tester.pumpAndSettle();
+
+        await tester.fling(listFinder, const Offset(0, 500), 10000);
+        await tester.pumpAndSettle();
+      }, reportKey: 'scrolling_summary');*/
+
+      ///Business List => First Business of the list
+      if(!find.byKey(ValueKey('business_0_key')).toString().contains('zero widgets with')){
+        debugPrint('KEY VALUE: ${find.byKey(ValueKey('business_0_key')).toString()}');
+        await tester.tap(find.byKey(ValueKey('business_0_key')));
         await tester.pumpAndSettle(const Duration(seconds: 2));
 
-        ///Internal Service List => Business
-        await tester.tap(find.byKey(ValueKey('back_from_interval_service_key')));
+        ///Business => Internal Service List
+        if(!find.byKey(ValueKey('internal_service_manage_key')).toString().contains('zero widgets with')){
+          await tester.tap(find.byKey(ValueKey('internal_service_manage_key')));
+          await tester.pumpAndSettle(const Duration(seconds: 2));
+
+          if(!find.byKey(ValueKey('service_0_0_key')).toString().contains('zero widgets with')){
+            await tester.tap(find.byKey(ValueKey('service_0_0_key')));
+            await tester.pumpAndSettle(const Duration(seconds: 4));
+          }else{
+            debugPrint('KEY \'service_0_0_key\' not found');
+          }
+          ///Internal Service List => Business
+          //await tester.tap(find.byKey(ValueKey('back_from_interval_service_key')));
+          //await tester.pumpAndSettle(const Duration(seconds: 2));
+        }else{
+          debugPrint('KEY \'internal_service_manage_key\' not found');
+        }
+        /*await tester.ensureVisible(find.byKey(ValueKey('external_business_manage_key')));
+        await tester.tap(find.byKey(ValueKey('external_business_manage_key')));
+        await tester.pumpAndSettle(const Duration(seconds: 2));*/
+
+      }else{
+        debugPrint('KEY \'business_0_key\' not found');
+      }
+    });
+
+    ///Login Admin => Landing => Redirect Business List => Business => Internal Service if exists => Manage Category if exists => First Category Details if exists
+    testWidgets('Category Details', (tester) async {
+      await loadApp(tester);
+
+      //await tester.tap(find.byKey(ValueKey('login')));
+      ///Home => Login
+      //await login(tester, 'test_admin@buytime.network', 'test2020');
+
+      ///Scroll up and down
+      final listFinder = find.byType(ListView);
+      /*await binding.watchPerformance(() async {
+        await tester.fling(listFinder, const Offset(0, -500), 10000);
+        await tester.pumpAndSettle();
+
+        await tester.fling(listFinder, const Offset(0, 500), 10000);
+        await tester.pumpAndSettle();
+      }, reportKey: 'scrolling_summary');*/
+
+      ///Business List => First Business of the list
+      if(!find.byKey(ValueKey('business_0_key')).toString().contains('zero widgets with')){
+        debugPrint('KEY VALUE: ${find.byKey(ValueKey('business_0_key')).toString()}');
+        await tester.tap(find.byKey(ValueKey('business_0_key')));
+        await tester.pumpAndSettle(const Duration(seconds: 2));
+
+        ///Business => Internal Service List
+        if(!find.byKey(ValueKey('internal_service_manage_key')).toString().contains('zero widgets with')){
+          await tester.tap(find.byKey(ValueKey('internal_service_manage_key')));
+          await tester.pumpAndSettle(const Duration(seconds: 2));
+
+          if(!find.byKey(ValueKey('manage_category_key')).toString().contains('zero widgets with')){
+            await tester.tap(find.byKey(ValueKey('manage_category_key')));
+            await tester.pumpAndSettle(const Duration(seconds: 2));
+            //if(!find.byKey(ValueKey('C0pt9ZYzORrHnr0VbPNB')).toString().contains('zero widgets with')){
+            if(!find.text('Arroceria').toString().contains('zero widgets with')){
+              //await tester.tap(find.byKey(ValueKey('C0pt9ZYzORrHnr0VbPNB')));
+              await tester.tap(find.text('Arroceria'));
+              await tester.pumpAndSettle(const Duration(seconds: 4));
+            }else{
+              debugPrint('KEY \'Arroceria\' not found');
+            }
+          }
+          ///Internal Service List => Business
+          //await tester.tap(find.byKey(ValueKey('back_from_interval_service_key')));
+          //await tester.pumpAndSettle(const Duration(seconds: 2));
+        }else{
+          debugPrint('KEY \'internal_service_manage_key\' not found');
+        }
+
+        /*await tester.ensureVisible(find.byKey(ValueKey('external_business_manage_key')));
+      await tester.tap(find.byKey(ValueKey('external_business_manage_key')));
+      await tester.pumpAndSettle(const Duration(seconds: 2));*/
+      }else{
+        debugPrint('KEY \'business_0_key\' not found');
+      }
+    });
+
+    ///Login Admin => Landing => Redirect Business List => Business => External Service if exists
+    testWidgets('External Service', (tester) async {
+      await loadApp(tester);
+
+      //await tester.tap(find.byKey(ValueKey('login')));
+      ///Home => Login
+      //await login(tester, 'test_admin@buytime.network', 'test2020');
+
+      ///Scroll up and down
+      final listFinder = find.byType(ListView);
+      await binding.watchPerformance(() async {
+        await tester.fling(listFinder, const Offset(0, -500), 2000);
+        await tester.pumpAndSettle(const Duration(seconds: 1));
+
+        /* await tester.fling(listFinder, const Offset(0, 500), 10000);
+        await tester.pumpAndSettle();*/
+      }, reportKey: 'scrolling_summary');
+
+      debugPrint('KEY VALUE: ${find.text('Hotel Danila').toString()}');
+      ///Business List => First Business of the list
+      await tester.ensureVisible(find.text('Hotel Danila', skipOffstage: false));
+      if(!find.text('Hotel Danila').toString().contains('zero widgets with')){
+        //debugPrint('KEY VALUE: ${find.byKey(ValueKey('business_0_key')).toString()}');
+        await tester.tap(find.text('Hotel Danila'));
         await tester.pumpAndSettle(const Duration(seconds: 2));
 
         ///Business => External Business List
         debugPrint('KEY VALUE: ${find.byKey(ValueKey('external_business_manage_key')).toString()}');
-
-        if(!find.byKey(ValueKey('external_business_manage_key')).toString().contains('zero widgets with key')){
+        if(!find.byKey(ValueKey('external_business_manage_key')).toString().contains('zero widgets with')){
           await tester.tap(find.byKey(ValueKey('external_business_manage_key')));
-          await tester.pumpAndSettle(const Duration(seconds: 2));
+          await tester.pumpAndSettle(const Duration(seconds: 1));
+
+          await tester.tap(find.byKey(ValueKey('add_external_business_list_key')));
+          await tester.pumpAndSettle(const Duration(seconds: 1));
         }else{
           debugPrint('KEY \'external_business_manage_key\' not found');
         }
@@ -145,10 +306,181 @@ void main() {
       await tester.tap(find.byKey(ValueKey('external_business_manage_key')));
       await tester.pumpAndSettle(const Duration(seconds: 2));*/
       }else{
-        debugPrint('KEY \'business_0_key\' not found');
+        debugPrint('KEY \'Hotel Danila\' not found');
       }
-
     });
 
+    ///Login Admin => Landing => Redirect Business List => Business Drawer => Log Out
+    testWidgets('Business Drawer', (tester) async {
+      await loadApp(tester);
+
+      //await tester.tap(find.byKey(ValueKey('login')));
+      ///Home => Login
+      //await login(tester, 'test_admin@buytime.network', 'test2020');
+
+      ///Scroll up and down
+      final listFinder = find.byType(ListView);
+      /*await binding.watchPerformance(() async {
+        await tester.fling(listFinder, const Offset(0, -500), 10000);
+        await tester.pumpAndSettle();
+
+        await tester.fling(listFinder, const Offset(0, 500), 10000);
+        await tester.pumpAndSettle();
+      }, reportKey: 'scrolling_summary');*/
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+      ///Business List => First Business of the list
+      debugPrint('KEY VALUE: ${find.byKey(ValueKey('business_drawer_key')).toString()}');
+      if(!find.byKey(ValueKey('business_drawer_key')).toString().contains('zero widgets with')){
+        await tester.tap(find.byKey(ValueKey('business_drawer_key')));
+        await tester.pumpAndSettle(const Duration(seconds: 2));
+
+        await tester.tap(find.byKey(ValueKey('log_out_key')));
+        await tester.pumpAndSettle(const Duration(seconds: 1));
+      }else{
+        debugPrint('KEY \'business_drawer_key\' not found');
+      }
+    });
+
+    ///Login Admin => Landing => Redirect Business List => Business => External Service if exists => Add/Remove test
+    /*testWidgets('Add External Service', (tester) async {
+      await loadApp(tester);
+
+      //await tester.tap(find.byKey(ValueKey('login')));
+      ///Home => Login
+      await login(tester, 'test_salesman@buytime.network', 'test2020');
+
+      ///Scroll up and down
+      final listFinder = find.byType(ListView);
+      debugPrint('KEY VALUE: ${find.byType(ListView).toString()}');
+      if(!find.byType(ListView).toString().contains('zero widgets with')){
+        await binding.watchPerformance(() async {
+          await tester.fling(listFinder, const Offset(0, -500), 4000);
+          await tester.pumpAndSettle(const Duration(seconds: 1));
+        }, reportKey: 'scrolling_summary');
+
+        debugPrint('KEY VALUE: ${find.text('Scoglio Bianco').toString()}');
+        ///Business List => First Business of the list
+        await tester.ensureVisible(find.text('Hotel Danila', skipOffstage: false));
+        if(!find.text('Scoglio Bianco').toString().contains('zero widgets with')){
+          //debugPrint('KEY VALUE: ${find.byKey(ValueKey('business_0_key')).toString()}');
+          await tester.tap(find.text('Scoglio Bianco'));
+          await tester.pumpAndSettle(const Duration(seconds: 2));
+
+          ///Business => External Business List
+          debugPrint('KEY VALUE: ${find.byKey(ValueKey('external_business_manage_key')).toString()}');
+          if(!find.byKey(ValueKey('external_business_manage_key')).toString().contains('zero widgets with')){
+            await tester.tap(find.byKey(ValueKey('external_business_manage_key')));
+            await tester.pumpAndSettle(const Duration(seconds: 1));
+
+            await tester.tap(find.byKey(ValueKey('add_external_business_list_key')));
+            await tester.pumpAndSettle(const Duration(seconds: 1));
+
+            await tester.tap(find.text('Stefano sub'));
+            await tester.pumpAndSettle(const Duration(seconds: 2));
+
+            debugPrint('KEY VALUE: ${find.text('Discovery Scuba Diving').toString()}');
+            await tester.drag(find.text('Discovery Scuba Diving').first, const Offset(-700, 0));
+            await tester.pumpAndSettle(const Duration(seconds: 4));
+
+            await tester.tap(find.byKey(ValueKey('external_business_details_back_key')));
+            await tester.pumpAndSettle(const Duration(seconds: 2));
+
+            await tester.tap(find.byKey(ValueKey('add_external_business_back_key')));
+            await tester.pumpAndSettle(const Duration(seconds: 3));
+
+            debugPrint('KEY VALUE: ${find.text('Stefano sub').toString()}');
+            await tester.drag(find.text('Stefano sub').first, const Offset(-700, 0));
+            await tester.pumpAndSettle(const Duration(seconds: 2));
+
+            await tester.tap(find.byKey(ValueKey('add_external_business_list_key')));
+            await tester.pumpAndSettle(const Duration(seconds: 1));
+
+            await tester.tap(find.text('Stefano sub'));
+            await tester.pumpAndSettle(const Duration(seconds: 2));
+
+            await tester.tap(find.text('add_entire_business_key'));
+            await tester.pumpAndSettle(const Duration(seconds: 6));
+
+            await tester.tap(find.byKey(ValueKey('external_business_details_back_key')));
+            await tester.pumpAndSettle(const Duration(seconds: 2));
+
+            await tester.tap(find.byKey(ValueKey('add_external_business_back_key')));
+            await tester.pumpAndSettle(const Duration(seconds: 3));
+
+            await tester.tap(find.text('Stefano sub'));
+            await tester.pumpAndSettle(const Duration(seconds: 2));
+
+            await tester.drag(find.text('Discovery Scuba Diving').first, const Offset(-700, 0));
+            await tester.pumpAndSettle(const Duration(seconds: 4));
+
+            await tester.tap(find.text('view_business_key'));
+            await tester.pumpAndSettle(const Duration(seconds: 3));
+
+            await tester.tap(find.byKey(ValueKey('external_business_details_back_key')));
+            await tester.pumpAndSettle(const Duration(seconds: 2));
+
+            await tester.tap(find.byKey(ValueKey('external_business_details_back_key')));
+            await tester.pumpAndSettle(const Duration(seconds: 3));
+
+            debugPrint('KEY VALUE: ${find.text('Stefano sub').toString()}');
+            await tester.drag(find.text('Stefano sub').first, const Offset(-700, 0));
+            await tester.pumpAndSettle(const Duration(seconds: 2));
+
+          }else{
+            debugPrint('KEY \'external_business_manage_key\' not found');
+          }
+        }else{
+          debugPrint('KEY \'Hotel Danila\' not found');
+        }
+      }else{
+        debugPrint('listview not found');
+      }
+
+    });*/
+
+
+
   });
+}
+
+///Load Application
+Future<void> loadApp(WidgetTester tester) async {
+  final epics = combinedEpics;
+  final _initialState = appState;
+  final store = new Store<AppState>(
+    appReducer,
+    initialState: _initialState,
+    middleware: createNavigationMiddleware(epics),
+  );
+
+  WidgetsFlutterBinding.ensureInitialized();
+  const String environment = String.fromEnvironment(
+    'ENVIRONMENT',
+    defaultValue: Environment.PROD,
+  );
+  Environment().initConfig(environment);
+  ///App Load
+  await tester.pumpWidget(MultiProvider(
+    providers: [
+      //ChangeNotifierProvider(create: (_) => NavigationState()),
+      ChangeNotifierProvider(create: (_) => Spinner([], [])),
+    ],
+    child: Buytime(store: store),
+  ));
+  await tester.pumpAndSettle(const Duration(seconds: 2));
+}
+
+///User Login
+Future<void> login(WidgetTester tester, String email, String password) async {
+  await tester.tap(find.text('Log In'.toUpperCase()));
+  await tester.pumpAndSettle(const Duration(seconds: 1));
+
+  await tester.enterText(find.byKey(ValueKey('email_key')), email);
+  await tester.pumpAndSettle(const Duration(seconds: 1));
+  await tester.enterText(find.byKey(ValueKey('password_key')), password);
+  await tester.pumpAndSettle(const Duration(seconds: 2));
+
+  ///Login => Error
+  await tester.tap(find.byKey(ValueKey('login_key')));
+  await tester.pumpAndSettle(const Duration(seconds: 2));
 }
