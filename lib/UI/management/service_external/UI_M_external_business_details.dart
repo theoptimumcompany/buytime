@@ -131,23 +131,27 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
     }
   }
 
-  void createExternalService(BusinessState businessState, String serviceId, List<ServiceListSnippetState> serviceSnippetList){
+  void createExternalService(BusinessState businessState, ServiceState serviceState, List<ServiceListSnippetState> serviceSnippetList){
     ExternalServiceImportedState eSIS = ExternalServiceImportedState();
     eSIS.internalBusinessId = businessState.id_firestore;
     eSIS.internalBusinessName = businessState.name;
     eSIS.externalBusinessId = widget.externalBusinessState.id_firestore;
     eSIS.externalBusinessName = widget.externalBusinessState.name;
-    eSIS.externalServiceId = serviceId;
+    eSIS.externalServiceId = serviceState.serviceId;
     eSIS.importTimestamp = DateTime.now();
     eSIS.imported = true;
     serviceSnippetList.forEach((sLSL) {
-      sLSL.businessSnippet.forEach((bS) {
-        bS.serviceList.forEach((sL) {
-          if(sL.serviceAbsolutePath.split('/').last == serviceId){
-            eSIS.externalCategoryName = bS.categoryName;
-          }
+      if(sLSL.businessId == serviceState.businessId){
+        sLSL.businessSnippet.forEach((bS) {
+          //debugPrint('CATEGORY NAME: ${bS.categoryName}');
+          bS.serviceList.forEach((sL) {
+            if(sL.serviceAbsolutePath.split('/').last == serviceState.serviceId){
+              //debugPrint('SERVICE NAME: ${sL.serviceName} - SERVICE ID: ${sL.serviceAbsolutePath}');
+              eSIS.externalCategoryName = bS.categoryName;
+            }
+          });
         });
-      });
+      }
     });
     StoreProvider.of<AppState>(context).dispatch(CreateExternalServiceImported(eSIS));
   }
@@ -1270,7 +1274,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                                                       popularServiceList.removeAt(index);
                                                     });
                                                     debugPrint('UI_U_external_business_details => SX to BOOK');
-                                                    createExternalService(snapshot.business, service.serviceId, snapshot.serviceListSnippetListState.serviceListSnippetListState);
+                                                    createExternalService(snapshot.business, service, snapshot.serviceListSnippetListState.serviceListSnippetListState);
                                                     undoPopularDeletion(index, service);
                                                   },
                                                   child: Column(
@@ -1336,7 +1340,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                                                       popularServiceList.removeAt(index);
                                                     });
                                                     debugPrint('UI_U_external_business_details => SX to BOOK');
-                                                    createExternalService(snapshot.business, service.serviceId, snapshot.serviceListSnippetListState.serviceListSnippetListState);
+                                                    createExternalService(snapshot.business, service, snapshot.serviceListSnippetListState.serviceListSnippetListState);
                                                     undoPopularDeletion(index, service);
                                                   },
                                                   child: Column(
@@ -1564,7 +1568,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                                                       allServiceList.removeAt(index);
                                                     });
                                                     debugPrint('UI_U_SearchPage => SX to BOOK');
-                                                    createExternalService(snapshot.business, service.serviceId, snapshot.serviceListSnippetListState.serviceListSnippetListState);
+                                                    createExternalService(snapshot.business, service, snapshot.serviceListSnippetListState.serviceListSnippetListState);
                                                     undoAllDeletion(index, service);
                                                   },
                                                   child: Column(
@@ -1630,7 +1634,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                                                       allServiceList.removeAt(index);
                                                     });
                                                     debugPrint('UI_U_SearchPage => SX to BOOK');
-                                                    createExternalService(snapshot.business, service.serviceId, snapshot.serviceListSnippetListState.serviceListSnippetListState);
+                                                    createExternalService(snapshot.business, service, snapshot.serviceListSnippetListState.serviceListSnippetListState);
                                                     undoAllDeletion(index, service);
                                                   },
                                                   child: Column(
