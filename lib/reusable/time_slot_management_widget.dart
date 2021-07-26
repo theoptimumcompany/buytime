@@ -21,7 +21,9 @@ class TimeSlotManagementWidget extends StatefulWidget {
   SquareSlotState squareSlot;
   onQuantityChangeCallback onChange;
   bool load;
-  TimeSlotManagementWidget(this.squareSlot, this.onChange, this.load);
+  int first;
+  int second;
+  TimeSlotManagementWidget(this.squareSlot, this.onChange, this.load, this.first, this.second);
 
   @override
   _TimeSlotManagementWidgetState createState() => _TimeSlotManagementWidgetState();
@@ -40,6 +42,7 @@ class _TimeSlotManagementWidgetState extends State<TimeSlotManagementWidget> {
   void initState() {
     super.initState();
     load = false;
+    debugPrint('FIRST: ${widget.first} - SECOND: ${widget.second}');
   }
 
   bool load;
@@ -143,6 +146,7 @@ class _TimeSlotManagementWidgetState extends State<TimeSlotManagementWidget> {
                      child: Material(
                        color: Colors.transparent,
                        child: InkWell(
+                         key: Key('remove_${widget.first}_${widget.second}_key'),
                          borderRadius: BorderRadius.all(Radius.circular(12)),
                          onTap: (){
                            int minus = free;
@@ -183,6 +187,7 @@ class _TimeSlotManagementWidgetState extends State<TimeSlotManagementWidget> {
                      child: Material(
                        color: Colors.transparent,
                        child: InkWell(
+                         key: Key('add_${widget.first}_${widget.second}_key'),
                          borderRadius: BorderRadius.all(Radius.circular(12)),
                          onTap: (){
                            int sum = free;

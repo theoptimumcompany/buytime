@@ -856,7 +856,7 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
                                                         return Container(
                                                           width: 80,
                                                           margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0, right: SizeConfig.safeBlockHorizontal * 1),
-                                                          child: DiscoverCardWidget(80, 80, category, true, categoryListIds[category.name]),
+                                                          child: DiscoverCardWidget(80, 80, category, true, categoryListIds[category.name], index),
                                                         );
                                                       },
                                                       childCount: categoryList.length,
@@ -1309,7 +1309,7 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
                                                             return Container(
                                                               width: 80,
                                                               margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0, right: SizeConfig.safeBlockHorizontal * 1),
-                                                              child: DiscoverCardWidget(80, 80, category, true, categoryListIds[category.name]),
+                                                              child: DiscoverCardWidget(80, 80, category, true, categoryListIds[category.name], index),
                                                             );
                                                           },
                                                           childCount: categoryList.length,

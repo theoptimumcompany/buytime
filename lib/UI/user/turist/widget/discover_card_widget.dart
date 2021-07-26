@@ -17,7 +17,8 @@ class DiscoverCardWidget extends StatefulWidget {
   CategoryState categoryState;
   List<String> categoryListIds;
   bool fromBookingPage;
-  DiscoverCardWidget(this.width, this.heigth,this.categoryState, this.fromBookingPage, this.categoryListIds);
+  int index;
+  DiscoverCardWidget(this.width, this.heigth,this.categoryState, this.fromBookingPage, this.categoryListIds, this.index);
 
   @override
   _DiscoverCardWidgetState createState() => _DiscoverCardWidgetState();
@@ -52,6 +53,7 @@ class _DiscoverCardWidgetState extends State<DiscoverCardWidget> {
         child: Material(
           color: Colors.transparent,
           child: InkWell(
+            key: Key('category_${widget.index}_key'),
             splashColor: Colors.black.withOpacity(.3),
             onTap: (){
               List<ServiceListSnippetState> serviceListSnippetListState = StoreProvider.of<AppState>(context).state.serviceListSnippetListState.serviceListSnippetListState;

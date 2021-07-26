@@ -21,6 +21,7 @@ import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
@@ -467,6 +468,7 @@ class RegistrationState extends State<Registration> {
                                       ///SizeConfig.safeBlockHorizontal * 14
                                       //width: 328,
                                       child: TextFormField(
+                                        key: Key('email_key'),
                                         controller: _emailController,
                                         textAlign: TextAlign.start,
                                         keyboardType: TextInputType.emailAddress,
@@ -509,6 +511,7 @@ class RegistrationState extends State<Registration> {
                                       ///SizeConfig.safeBlockHorizontal * 14
                                       //width: 328,
                                       child: TextFormField(
+                                        key: Key('password_key'),
                                         controller: _passwordController,
                                         textAlign: TextAlign.start,
                                         obscureText: passwordVisible,
@@ -525,6 +528,7 @@ class RegistrationState extends State<Registration> {
                                               fontWeight: FontWeight.w400,
                                             ),
                                             suffixIcon: IconButton(
+                                              key: Key('eye_key'),
                                               icon: Icon(
                                                 // Based on passwordVisible state choose the icon
                                                 passwordVisible ? Icons.visibility : Icons.visibility_off,
@@ -644,6 +648,7 @@ class RegistrationState extends State<Registration> {
                                     crossAxisAlignment: CrossAxisAlignment.center,
                                     children: [
                                       FloatingActionButton(
+                                        key: Key('registration_key'),
                                         onPressed: () async {
                                           if (_formKey.currentState.validate() && !_isRequestFlying) {
                                             _register();
@@ -698,6 +703,43 @@ class RegistrationState extends State<Registration> {
   }
 
   void _register() async {
+
+    setState(() {
+      responseMessage = '';
+    });
+
+    showDialog(
+        context: context,
+        builder: (context) {
+          return WillPopScope(
+              onWillPop: () async {
+                FocusScope.of(context).unfocus();
+                return false;
+              },
+              child: Container(
+                  height: SizeConfig.safeBlockVertical * 100,
+                  decoration: BoxDecoration(
+                    color: BuytimeTheme.BackgroundCerulean.withOpacity(.8),
+                  ),
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Container(
+                          width: SizeConfig.safeBlockVertical * 20,
+                          height: SizeConfig.safeBlockVertical * 20,
+                          child: Center(
+                            child: SpinKitRipple(
+                              color: Colors.white,
+                              size: SizeConfig.safeBlockVertical * 18,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )));
+        });
+
     auth.User user;
     auth.UserCredential tmpUserCredential;
     if (!emailHasError && !passwordHasError)
@@ -766,6 +808,7 @@ class RegistrationState extends State<Registration> {
           print('Failed to get platform version');
         }
       }
+
       print("Device ID : " + deviceId);
       StoreProvider.of<AppState>(context).dispatch(new LoggedUser(UserState.fromFirebaseUser(user, deviceId, [serverToken])));
       Device device = Device(name: "device", id: deviceId, user_uid: user.uid);
@@ -779,6 +822,7 @@ class RegistrationState extends State<Registration> {
         Navigator.of(context).pushNamed(Landing.route);
       });
     } else {
+      Navigator.of(context).pop();
       setState(() {
         _success = false;
       });

@@ -107,7 +107,7 @@ class _RServiceSlotManagementState extends State<RServiceSlotManagement> {
   bool startRequest = false;
   bool noActivity = false;
 
-
+  int first = 0;
   void listUp(OrderState element, DateTime currentTime, DateTime sevenDaysFromNow, DateTime orderTime, List<List> list){
     //orderMap.putIfAbsent(DateFormat('dd MM yyyy').format(orderTime), () => []);
     orderMap.putIfAbsent(orderTime, () => []);
@@ -164,8 +164,9 @@ class _RServiceSlotManagementState extends State<RServiceSlotManagement> {
           ),
         )
     );
+
     map.forEach((key, value) {
-      debugPrint('here');
+      debugPrint('here - $first');
       DateTime orderTime = DateFormat('dd/MM/yyyy').parse(value.first.date);
       DateTime tmp = DateFormat('dd/MM/yyyy').parse(value.first.date);
       tmp = DateTime(orderTime.year, orderTime.month, 1, 0,0,0,0,0);
@@ -324,7 +325,9 @@ class _RServiceSlotManagementState extends State<RServiceSlotManagement> {
                                             /*squareSlotList.forEach((element) {
 
                                             });*/
-                                            }, false));
+                                            }, false,
+                                          0, index
+                                      ));
                                 },
                                   childCount: value.length,
                                 ),
@@ -343,6 +346,7 @@ class _RServiceSlotManagementState extends State<RServiceSlotManagement> {
           ),
         ),
       );
+      first++;
     });
 
     return widgetList;

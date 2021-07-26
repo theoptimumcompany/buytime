@@ -13,7 +13,8 @@ class SlotManagementServiceListItem extends StatefulWidget {
 
   ServiceState serviceState;
   bool tourist;
-  SlotManagementServiceListItem(this.serviceState, this.tourist);
+  int index;
+  SlotManagementServiceListItem(this.serviceState, this.tourist, this.index);
 
   @override
   _SlotManagementServiceListItemState createState() => _SlotManagementServiceListItemState();
@@ -30,6 +31,7 @@ class _SlotManagementServiceListItemState extends State<SlotManagementServiceLis
         child: Material(
             color: Colors.transparent,
             child: InkWell(
+              key: Key('slot_management_service_${widget.index}_key'),
               borderRadius: BorderRadius.all(Radius.circular(10)),
               onTap: () {
                 Navigator.push(

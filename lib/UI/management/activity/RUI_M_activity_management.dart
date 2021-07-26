@@ -967,6 +967,7 @@ class _RActivityManagementState extends State<RActivityManagement> {
                             child: Material(
                               color: Colors.transparent,
                               child: InkWell(
+                                  key: Key('activity_period_key'),
                                   onTap: () {
                                     //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ServiceList()),);
                                     //Navigator.of(context).pop();

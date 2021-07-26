@@ -340,6 +340,9 @@ class LandingState extends State<Landing> {
                 if (endTime.isBefore(currentTime)) {
                   //bookingStatus = 'Closed';
                   debugPrint('UI_U_Landing => No active booking found!');
+                  WidgetsBinding.instance.addPostFrameCallback((_) async {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => ServiceExplorer()));
+                  });
                   //rippleLoading = false;
                 } else if (bookingList.first.start_date.isAtSameMomentAs(currentTime)) {
                   //bookingStatus = 'Active';
@@ -638,6 +641,7 @@ class LandingState extends State<Landing> {
                                       child: Material(
                                         color: Colors.transparent,
                                         child: InkWell(
+                                          key: Key('log_out_key'),
                                             onTap: () async {
                                               SharedPreferences prefs = await SharedPreferences.getInstance();
                                               await storage.write(key: 'bookingCode', value: '');
@@ -772,6 +776,10 @@ class _OpenContainerWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return OpenContainer<bool>(
+      key: index == 0 ?
+      StoreProvider.of<AppState>(context).state.bookingList.bookingListState.isEmpty ?
+        Key('invite_key') : Key('my_bookings_key'):
+      Key('discover_key'),
       transitionType: ContainerTransitionType.fadeThrough,
       openBuilder: (BuildContext context, VoidCallback _) {
         if (index == 0) {

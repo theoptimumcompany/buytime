@@ -92,6 +92,14 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
         business.businessAddress.isNotEmpty &&
         business.coordinate != null &&
         business.coordinate.isNotEmpty &&
+        business.zipPostal != null &&
+        business.zipPostal.isNotEmpty &&
+        business.municipality != null &&
+        business.municipality.isNotEmpty &&
+        business.stateTerritoryProvince != null &&
+        business.stateTerritoryProvince.isNotEmpty &&
+        business.nation != null &&
+        business.nation.isNotEmpty &&
         business.area != null &&
         business.area.isNotEmpty &&
         business.logo != null &&
@@ -825,6 +833,7 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
 
                                                     ///Zip
                                                     OptimumFormField(
+                                                      required: required,
                                                       controller: _zipPostalController,
                                                       field: "zipPostal",
                                                       textInputType: TextInputType.number,
@@ -840,6 +849,7 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
 
                                                     ///Municipality
                                                     OptimumFormField(
+                                                      required: required,
                                                       controller: _cityTownController,
                                                       field: "cityTown",
                                                       textInputType: TextInputType.text,
@@ -855,6 +865,7 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
 
                                                     ///State
                                                     OptimumFormField(
+                                                      required: required,
                                                       controller: _stateTerritoryProvinceController,
                                                       field: "stateTerritoryProvince",
                                                       textInputType: TextInputType.text,
@@ -870,6 +881,7 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
 
                                                     ///Nation
                                                     OptimumFormField(
+                                                      required: required,
                                                       controller: _countryController,
                                                       field: "country",
                                                       textInputType: TextInputType.text,

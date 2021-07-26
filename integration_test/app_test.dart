@@ -22,11 +22,77 @@ void main() {
 
     binding.framePolicy = LiveTestWidgetsFlutterBindingFramePolicy.fullyLive;
 
+    ///Login User => Landing => Redirect Booking id exists
+    testWidgets('Login User', (tester) async {
+      await loadApp(tester);
+
+      //await tester.tap(find.byKey(ValueKey('login')));
+      ///Home => Login
+      await login(tester, 'test_user@buytime.network', 'test2020');
+    });
+
+    ///Login User => Landing => Redirect Booking id exists => if not - invite
+    testWidgets('Login User', (tester) async {
+      await loadApp(tester);
+
+      //await tester.tap(find.byKey(ValueKey('login')));
+      ///Home => Login
+      //await login(tester, 'test_user@buytime.network', 'test2020');
+
+      if(!find.byKey(ValueKey('invite_key')).toString().contains('zero widgets with')){
+        await tester.tap(find.byKey(ValueKey('invite_key')));
+        await tester.pumpAndSettle(const Duration(seconds: 2));
+      }else{
+        debugPrint('KEY \'invite_key\' not found');
+      }
+    });
+
+    ///Login User => Landing => Redirect Booking id exists => if not but have old bookings - My Bookings
+    testWidgets('Login User', (tester) async {
+      await loadApp(tester);
+
+      //await tester.tap(find.byKey(ValueKey('login')));
+      ///Home => Login
+      //await login(tester, 'test_user@buytime.network', 'test2020');
+
+      if(!find.byKey(ValueKey('my_bookings_key')).toString().contains('zero widgets with')){
+        await tester.tap(find.byKey(ValueKey('my_bookings_key')));
+        await tester.pumpAndSettle(const Duration(seconds: 2));
+      }else{
+        debugPrint('KEY \'my_bookings_key\' not found');
+      }
+    });
+
+
+    ///Login User => Landing => Redirect Booking id exists => if not - Discover
+    testWidgets('Login User', (tester) async {
+      await loadApp(tester);
+
+      //await tester.tap(find.byKey(ValueKey('login')));
+      ///Home => Login
+      //await login(tester, 'test_user@buytime.network', 'test2020');
+
+      if(!find.byKey(ValueKey('discover_key')).toString().contains('zero widgets with')){
+        await tester.tap(find.byKey(ValueKey('discover_key')));
+        await tester.pumpAndSettle(const Duration(seconds: 2));
+
+        if(!find.byKey(ValueKey('category_0_key')).toString().contains('zero widgets with')){
+          await tester.tap(find.byKey(ValueKey('category_0_key')));
+          await tester.pumpAndSettle(const Duration(seconds: 2));
+        }else{
+          debugPrint('KEY \'category_0_key\' not found');
+        }
+      }else{
+        debugPrint('KEY \'discover_key\' not found');
+      }
+    });
+
+
     ///Login Error
     testWidgets('Login erorr', (tester) async {
       await loadApp(tester);
 
-      //await tester.tap(find.byKey(ValueKey('login')));
+      await tester.tap(find.byKey(ValueKey('login_key')));
       ///Home => Login
       await login(tester, 'test_admin@buytime.network', 'Test2020');
       expect(find.text('The password is invalid or the user does not have a password.'), findsOneWidget);
@@ -105,6 +171,92 @@ void main() {
 
         await tester.tap(find.byKey(ValueKey('notification_center_key')));
         await tester.pumpAndSettle(const Duration(seconds: 1));
+      }else{
+        debugPrint('KEY \'business_drawer_key\' not found');
+      }
+    });
+
+    ///Login Admin => Landing => Redirect Business List => Business Drawer => Activity Management
+    testWidgets('Business Drawer', (tester) async {
+      await loadApp(tester);
+
+      //await tester.tap(find.byKey(ValueKey('login')));
+      ///Home => Login
+      //await login(tester, 'test_admin@buytime.network', 'test2020');
+
+      ///Scroll up and down
+      final listFinder = find.byType(ListView);
+      /*await binding.watchPerformance(() async {
+        await tester.fling(listFinder, const Offset(0, -500), 10000);
+        await tester.pumpAndSettle();
+
+        await tester.fling(listFinder, const Offset(0, 500), 10000);
+        await tester.pumpAndSettle();
+      }, reportKey: 'scrolling_summary');*/
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+      ///Business List => First Business of the list
+      debugPrint('KEY VALUE: ${find.byKey(ValueKey('business_drawer_key')).toString()}');
+      if(!find.byKey(ValueKey('business_drawer_key')).toString().contains('zero widgets with')){
+        await tester.tap(find.byKey(ValueKey('business_drawer_key')));
+        await tester.pumpAndSettle(const Duration(seconds: 2));
+
+        await tester.tap(find.byKey(ValueKey('activity_management_key')));
+        await tester.pumpAndSettle(const Duration(seconds: 1));
+
+        await tester.tap(find.byKey(ValueKey('activity_period_key')));
+        await tester.pumpAndSettle(const Duration(seconds: 1));
+      }else{
+        debugPrint('KEY \'business_drawer_key\' not found');
+      }
+    });
+
+    ///Login Admin => Landing => Redirect Business List => Business Drawer => Slot Management
+    testWidgets('Business Drawer', (tester) async {
+      await loadApp(tester);
+
+      //await tester.tap(find.byKey(ValueKey('login')));
+      ///Home => Login
+      //await login(tester, 'test_admin@buytime.network', 'test2020');
+
+      ///Scroll up and down
+      final listFinder = find.byType(ListView);
+      /*await binding.watchPerformance(() async {
+        await tester.fling(listFinder, const Offset(0, -500), 10000);
+        await tester.pumpAndSettle();
+
+        await tester.fling(listFinder, const Offset(0, 500), 10000);
+        await tester.pumpAndSettle();
+      }, reportKey: 'scrolling_summary');*/
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+      ///Business List => First Business of the list
+      debugPrint('KEY VALUE: ${find.byKey(ValueKey('business_drawer_key')).toString()}');
+      if(!find.byKey(ValueKey('business_drawer_key')).toString().contains('zero widgets with')){
+        await tester.tap(find.byKey(ValueKey('business_drawer_key')));
+        await tester.pumpAndSettle(const Duration(seconds: 2));
+
+        await tester.tap(find.byKey(ValueKey('slot_management_key')));
+        await tester.pumpAndSettle(const Duration(seconds: 1));
+
+        if(!find.byKey(ValueKey('slot_management_service_0_key')).toString().contains('zero widgets with')){
+          await tester.tap(find.byKey(ValueKey('slot_management_service_0_key')));
+          await tester.pumpAndSettle(const Duration(seconds: 3));
+
+          if(!find.byKey(ValueKey('remove_0_0_key')).toString().contains('zero widgets with')){
+            await tester.tap(find.byKey(ValueKey('remove_0_0_key')).first);
+            await tester.pumpAndSettle(const Duration(seconds: 3));
+          }else{
+            debugPrint('KEY \'remove_0_0_key\' not found');
+          }
+
+          if(!find.byKey(ValueKey('add_0_0_key')).toString().contains('zero widgets with')){
+            await tester.tap(find.byKey(ValueKey('add_0_0_key')).first);
+            await tester.pumpAndSettle(const Duration(seconds: 3));
+          }else{
+            debugPrint('KEY \'add_0_0_key\' not found');
+          }
+        }else{
+          debugPrint('KEY \'slot_management_service_0_key\' not found');
+        }
       }else{
         debugPrint('KEY \'business_drawer_key\' not found');
       }
@@ -438,8 +590,6 @@ void main() {
 
     });*/
 
-
-
   });
 }
 
@@ -472,7 +622,8 @@ Future<void> loadApp(WidgetTester tester) async {
 
 ///User Login
 Future<void> login(WidgetTester tester, String email, String password) async {
-  await tester.tap(find.text('Log In'.toUpperCase()));
+  await tester.tap(find.byKey(ValueKey('home_login_key')));
+  //await tester.tap(find.text('Log In'.toUpperCase()));
   await tester.pumpAndSettle(const Duration(seconds: 1));
 
   await tester.enterText(find.byKey(ValueKey('email_key')), email);

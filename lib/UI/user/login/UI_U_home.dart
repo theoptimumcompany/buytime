@@ -491,6 +491,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                           child: FadeTransition(
                             opacity: _animation3,
                             child: MaterialButton(
+                              key: Key('home_register_key'),
                               elevation: 0,
                               hoverElevation: 0,
                               focusElevation: 0,
@@ -536,7 +537,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                             margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
                             decoration: BoxDecoration(borderRadius: new BorderRadius.circular(5), border: Border.all(color: BuytimeTheme.SymbolLightGrey)),
                             child: MaterialButton(
-                              key: Key('login'),
+                              key: Key('home_login_key'),
                               elevation: 0,
                               hoverElevation: 0,
                               focusElevation: 0,
@@ -582,6 +583,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                               child: Material(
                                 color: Colors.transparent,
                                 child: InkWell(
+                                  key: Key('free_access_key'),
                                     onTap: () {
                                       Navigator.of(context).pushNamed(ServiceExplorer.route);
                                     },

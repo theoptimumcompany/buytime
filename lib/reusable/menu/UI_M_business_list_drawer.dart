@@ -227,6 +227,7 @@ class _UI_M_BusinessListDrawerState extends State<UI_M_BusinessListDrawer> {
               Container(
                 decoration: BoxDecoration(border: Border(bottom: BorderSide(color: BuytimeTheme.DividerGrey))),
                 child: ListTile(
+                  key: Key('activity_management_key'),
                   selected: drawerSelection == DrawerSelection.ActivityManagement,
                   //selectedTileColor: Color.fromRGBO(32, 124, 195, 0.3),
                   autofocus: false,
@@ -256,6 +257,7 @@ class _UI_M_BusinessListDrawerState extends State<UI_M_BusinessListDrawer> {
               Container(
                 decoration: BoxDecoration(border: Border(bottom: BorderSide(color: BuytimeTheme.DividerGrey))),
                 child: ListTile(
+                  key: Key('slot_management_key'),
                   selected: drawerSelection == DrawerSelection.SlotManagement,
                   //selectedTileColor: Color.fromRGBO(32, 124, 195, 0.3),
                   autofocus: false,

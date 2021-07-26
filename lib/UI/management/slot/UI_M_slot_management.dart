@@ -194,7 +194,7 @@ class _SlotManagementState extends State<SlotManagement> {
                                 ServiceState service = serviceList.elementAt(index);
                                 return Column(
                                   children: [
-                                    SlotManagementServiceListItem(service, false),
+                                    SlotManagementServiceListItem(service, false, index),
                                     Container(
                                       margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 30),
                                       height: SizeConfig.safeBlockVertical * .2,
