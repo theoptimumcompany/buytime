@@ -100,6 +100,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
         }
       }
     }
+
     for (var z = 0; z < serviceListSnippetListState.length; z++) {
       for (var w = 0; w < serviceListSnippetListState[z].businessSnippet.length; w++) {
         for (var y = 0; y < serviceListSnippetListState[z].businessSnippet[w].serviceList.length; y++) {
@@ -222,6 +223,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
         }
       });
     }
+    debugPrint('i1: ${i1} - i2: ${i2} - i3: ${i3}');
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -271,6 +273,32 @@ class _FilterByCategoryState extends State<FilterByCategory> {
     }
   }
 
+  void createCategoryList(CategoryState element) {
+    bool found = false;
+    categoryList.forEach((cL) {
+      if (cL.name == element.name) {
+        debugPrint('UI_U_filter_by_category => EQUAL CATEGORY NAME: ${element.name} - ${element.id} - ${element.businessId}');
+        found = true;
+      }
+    });
+
+    if (!found) {
+      debugPrint('UI_U_filter_by_category => ADD CATEGORY NAME: ${element.name} - ${element.id} - ${element.businessId}');
+      categoryList.add(element);
+      categoryListIds.putIfAbsent(element.name, () => [element.id]);
+    } else {
+      debugPrint('UI_U_filter_by_category => ADD EQUAL ? CATEGORY NAME: ${element.name} - ${element.id} - ${element.businessId}');
+      if (!categoryListIds[element.name].contains(element.id)) {
+        debugPrint('UI_U_filter_by_category => ADD EQUAL CATEGORY NAME: ${element.name} - ${element.id}  - ${element.businessId}');
+        categoryListIds[element.name].add(element.id);
+      }
+    }
+
+    categoryListIds.forEach((key, value) {
+      debugPrint('IDS: $key | $value');
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context).size;
@@ -279,7 +307,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
     return StoreConnector<AppState, AppState>(
       converter: (store) => store.state,
       onInit: (store) {
-        debugPrint('UI_U_filter_by_category => ${widget.categoryListIds}');
+        debugPrint('UI_U_filter_by_category => WIDGET CATEGORY LIST: ${widget.categoryListIds}');
         WidgetsBinding.instance.addPostFrameCallback((_) {
           // no
           //search(store.state.serviceList.serviceListState);
@@ -296,7 +324,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                     debugPrint('UI_U_filter_by_category => SUB CATEGORY NAME: ${element.name}');
                     store.state.serviceList.serviceListState.forEach((service) {
                       //debugPrint('CATAGORY ID: ${cLS.id} - CATEGORY LIST: ${service.categoryId}');
-                      if ((service.categoryId.contains(element.id) /*||  TODO service.categoryRootId.contains(element.id)*/) /*&& element.level == 0*/) {
+                      if (service.categoryId.contains(element.id) || searchCategoryAndServiceOnSnippetList(service.serviceId, element.id)) {
                         createSubCategoryList(element);
                       }
                     });
@@ -304,59 +332,46 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                     debugPrint('UI_U_filter_by_category => SUB CATEGORY NAME: ${element.name}');
                     store.state.serviceList.serviceListState.forEach((service) {
                       //debugPrint('CATAGORY ID: ${cLS.id} - CATEGORY LIST: ${service.categoryId}');
-                      if ((service.categoryId.contains(element.id) /*||  TODO service.categoryRootId.contains(element.id)*/) /*&& element.level == 0*/) {
+                      if (service.categoryId.contains(element.id) || searchCategoryAndServiceOnSnippetList(service.serviceId, element.id)) {
                         createSubCategoryList(element);
                       }
                     });
                   }
                 } else {
                   //categoryList.add(element); ///TODO
-                  if (!widget.categoryListIds.contains(element.id)) {
-                    bool found = false;
-                    categoryList.forEach((cL) {
-                      if (cL.name.trim() == element.name.trim()) found = true;
-                    });
-
-                    if (!found) {
-                      debugPrint('UI_U_booking_page => ALL CATEGORIES: ${element.name}');
-                      //debugPrint('UI_U_filter_by_category => CATEGORY NAME: ${element.name}');
-                      if(!widget.tourist){
-                        if ((element.customTag == 'showcase' || element.showcase) && element.level == 0) {
-                          debugPrint('UI_U_booking_page => LEVEL 0 & SHOWCASE CATEGORY: ${element.name}');
-                          store.state.serviceList.serviceListState.forEach((service) {
-                            //debugPrint('CATAGORY ID: ${cLS.id} - CATEGORY LIST: ${service.categoryId}');
-                            if (service.categoryId.contains(element.id) || searchCategoryAndServiceOnSnippetList(service.serviceId, element.id)) {
-                              if (!categoryList.contains(element)) {
-                                categoryList.add(element);
-                              }
-                            }
-                          });
-                          categoryListIds.putIfAbsent(element.name, () => [element.id]);
-                        }
-                      }else{
-                        if (element.level == 0) {
-                          store.state.serviceList.serviceListState.forEach((service) {
-                            //debugPrint('CATAGORY ID: ${cLS.id} - CATEGORY LIST: ${service.categoryId}');
-                            if (service.categoryId.contains(element.id) || searchCategoryAndServiceOnSnippetList(service.serviceId, element.id)) {
-                              if (!categoryList.contains(element)) {
-                                categoryList.add(element);
-                              }
-                            }
-                          });
-                          categoryListIds.putIfAbsent(element.name, () => [element.id]);
-                        }
+                  if(!widget.categoryListIds.contains(element.id)){
+                    if(!widget.tourist){
+                      if ((element.customTag == 'showcase' || element.showcase) && element.level == 0) {
+                        debugPrint('UI_U_booking_page => LEVEL 0 & SHOWCASE CATEGORY: ${element.name}');
+                        store.state.serviceList.serviceListState.forEach((service) {
+                          //debugPrint('CATAGORY ID: ${cLS.id} - CATEGORY LIST: ${service.categoryId}');
+                          if (service.categoryId.contains(element.id) || searchCategoryAndServiceOnSnippetList(service.serviceId, element.id)) {
+                            createCategoryList(element);
+                          }
+                        });
                       }
-
-                    } else {
-                      categoryListIds[element.name].add(element.id);
+                    }else{
+                      if (element.level == 0) {
+                        //debugPrint('UI_U_booking_page => LEVEL 0 & SHOWCASE CATEGORY: ${element.name}');
+                        store.state.serviceList.serviceListState.forEach((service) {
+                          //debugPrint('CATAGORY ID: ${cLS.id} - CATEGORY LIST: ${service.categoryId}');
+                          if (service.categoryId.contains(element.id) || searchCategoryAndServiceOnSnippetList(service.serviceId, element.id)) {
+                            createCategoryList(element);
+                          }
+                        });
+                      }
                     }
                   }
                 }
+              });
+              categoryListIds.forEach((key, value) {
+                debugPrint('IDS: $key | $value');
               });
             }
           });
           if(categoryList.isNotEmpty)
                grid(categoryList);
+
         });
         /*categoryListState = store.state.categoryList;
         categoryList.addAll(categoryListState.categoryListState);
@@ -371,9 +386,11 @@ class _FilterByCategoryState extends State<FilterByCategory> {
           tmpServiceList.clear();
           serviceList.clear();
           s.addAll(snapshot.serviceList.serviceListState);
+          debugPrint('SERVICE LENGTH: ${s.length}');
           s.forEach((element) {
             if (element.categoryId != null) {
               element.categoryId.forEach((element2) {
+                //debugPrint('CATEGORY ID: ${element2}');
                 if (widget.categoryListIds != null && widget.categoryListIds.contains(element2)) {
                   tmpServiceList.add(element);
                   serviceList.add(element);

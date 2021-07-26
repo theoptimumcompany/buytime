@@ -23,10 +23,12 @@ void main() {
     binding.framePolicy = LiveTestWidgetsFlutterBindingFramePolicy.fullyLive;
 
     ///Free Access
-    testWidgets('Registration erorr', (tester) async {
+    testWidgets('Free Access', (tester) async {
       await loadApp(tester);
 
+      debugPrint('KEY VALUE: ${find.byKey(ValueKey('free_access_key')).toString()}');
       await tester.tap(find.byKey(ValueKey('free_access_key')));
+      await tester.pumpAndSettle(const Duration(seconds: 2));
     });
 
    /* ///Registration Error => Wrong Password
