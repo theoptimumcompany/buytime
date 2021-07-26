@@ -190,7 +190,12 @@ flutter:
     - assets/img/image_placeholder.png
     - assets/img/aboutus.png
     - assets/img/apple_pay.jpg
+    - assets/img/apple_pay_button.jpg
     - assets/img/google_pay.jpg
+    - assets/img/cash.png
+    - assets/img/googlePay.png
+    - assets/img/mastercard_icon.png
+    - assets/img/room.png
     - assets/img/visa.jpg
     - assets/img/mastercard.png
     - assets/icon.jpeg
