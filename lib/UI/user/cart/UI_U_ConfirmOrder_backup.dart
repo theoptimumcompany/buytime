@@ -32,18 +32,18 @@ import 'package:http/http.dart' as http;
 
 import '../../../environment_abstract.dart';
 
-class ConfirmOrder extends StatefulWidget {
+class ConfirmOrderBackup extends StatefulWidget {
   final String title = 'confirmOrder';
   bool tourist;
   bool reserve = false;
 
-  ConfirmOrder({Key key, this.reserve, this.tourist}) : super(key: key);
+  ConfirmOrderBackup({Key key, this.reserve, this.tourist}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => ConfirmOrderState();
 }
 
-class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderStateMixin {
+class ConfirmOrderState extends State<ConfirmOrderBackup> with SingleTickerProviderStateMixin {
   TabController _controller;
   int _selectedIndex = 0;
   CardFieldInputDetails _card;
@@ -173,6 +173,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                     child: buildTabBar(context),
                                   ),
                                 ),
+
                                 ///Tab value
                                 (() {
                                   return buildTabsBeforeConfirmation(snapshot.booking.booking_code, snapshot.cardListState);
@@ -181,35 +182,6 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                             ),
                             Center(
                               child: (() {
-                                return MaterialButton(
-                                  textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
-                                  color: widget.tourist != null && widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
-                                  disabledColor: BuytimeTheme.SymbolLightGrey,
-                                  //padding: EdgeInsets.all(media.width * 0.03),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: new BorderRadius.circular(5),
-                                  ),
-                                  child: Container(
-                                    alignment: Alignment.center,
-                                    height: 44,
-                                    child: Text(
-                                      !(widget.reserve != null && widget.reserve)
-                                          ? AppLocalizations.of(context).test
-                                          : '${AppLocalizations.of(context).completeBooking.toUpperCase()}',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        letterSpacing: 1.25,
-                                        fontSize: 14,
-                                        fontFamily: BuytimeTheme.FontFamily,
-                                        fontWeight: FontWeight.w500,
-                                        color: BuytimeTheme.TextWhite,
-                                      ),
-                                    ),
-                                  ),
-                                  onPressed: () {
-                                    _modalChoosePaymentMethod(context);
-                                  },
-                                );
                                 return buildConfirmButton(context, snapshot, media);
                               }()),
                             )
@@ -219,6 +191,16 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                       ),
                     ),
                   ));
+
+              // ,
+              // snapshot.order.addCardProgress == Utils.enumToString(AddCardStatus.inProgress) || cardOrder ? spinnerConfirmOrder() : Container(),
+              // snapshot.lastError != null && snapshot.lastError.isNotEmpty
+              //     ? ShowErrorDialogToDismiss(
+              //   buttonText: AppLocalizations.of(context).ok,
+              //   content: snapshot.lastError,
+              //   title: AppLocalizations.of(context).error,
+              // )
+              //     : Container()
 
           }),
     );
@@ -551,56 +533,6 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
     );
   }
 
-  void _modalChoosePaymentMethod(context) {
-    showModalBottomSheet(
-        elevation: 3,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        context: context,
-        builder: (BuildContext bc) {
-          return Container(
-            padding: EdgeInsets.only(left: 30, top: 30),
-            height: 550,
-            child: new Wrap(
-              children: <Widget>[
-
-                ListTile(
-                  leading: Image(width: SizeConfig.blockSizeHorizontal * 10, image: AssetImage('assets/img/mastercard_icon.png')),
-                  title: new Text( AppLocalizations.of(context).creditCard),
-                  onTap: () => {},
-                ),
-                Divider(),
-                ListTile(
-                  leading: Image(width: SizeConfig.blockSizeHorizontal * 10, image: AssetImage('assets/img/apple_pay.jpg')),
-                  title: new Text( AppLocalizations.of(context).payWithApplePay),
-                  onTap: () => {},
-                ),
-                Divider(),
-                ListTile(
-                  leading: Image(width: SizeConfig.blockSizeHorizontal * 10, image: AssetImage('assets/img/googlePay.png')),
-                  title: new Text( AppLocalizations.of(context).googlePay),
-                  onTap: () => {},
-                ),
-                Divider(),
-                ListTile(
-                  leading: Image(width: SizeConfig.blockSizeHorizontal * 10, image: AssetImage('assets/img/room.png')),
-                  title: new Text( AppLocalizations.of(context).room),
-                  onTap: () => {},
-                ),
-                Divider(),
-                ListTile(
-                  leading: Image(width: SizeConfig.blockSizeHorizontal * 10, image: AssetImage('assets/img/cash.png')),
-                  title: new Text( AppLocalizations.of(context).onSite),
-                  onTap: () => {},
-                ),
-                Divider(),
-              ],
-            ),
-          );
-        });
-  }
-
   ///Recap
   Container buildOrderRecap(BuildContext context, AppState snapshot, Size media) {
     return Container(
@@ -719,6 +651,33 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
             height: SizeConfig.safeBlockVertical * .2,
           )
               : Container(),
+
+          ///Please Charge ...
+          Container(
+            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * .5),
+            height: SizeConfig.safeBlockVertical * 8,
+            color: Colors.white,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 0.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    AppLocalizations.of(context).pleaseChargeThisToMy,
+                    textAlign: TextAlign.start,
+                    style: TextStyle(
+                      fontFamily: BuytimeTheme.FontFamily,
+                      color: BuytimeTheme.TextBlack,
+                      fontSize: 14,
+
+                      /// SizeConfig.safeBlockHorizontal * 4
+                      fontWeight: FontWeight.w600,
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );
