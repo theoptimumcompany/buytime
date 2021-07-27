@@ -94,8 +94,8 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
         business.coordinate.isNotEmpty &&
         business.zipPostal != null &&
         business.zipPostal.isNotEmpty &&
-        business.municipality != null &&
-        business.municipality.isNotEmpty &&
+        /*business.municipality != null &&
+        business.municipality.isNotEmpty &&*/
         business.cityTown != null &&
         business.cityTown.isNotEmpty &&
         business.stateTerritoryProvince != null &&
