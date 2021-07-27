@@ -123,6 +123,7 @@ class CartState extends State<Cart> {
                     children: [
                       ///Back Button
                       IconButton(
+                        key: Key('back_from_cart_key'),
                           icon: Icon(Icons.chevron_left, color: BuytimeTheme.TextWhite),
                           onPressed: () {
                             /*Navigator.pushReplacement(
@@ -414,6 +415,7 @@ class CartState extends State<Cart> {
                                           /// media.width * .4
                                           height: 46,
                                           child: MaterialButton(
+                                            key: Key('cart_buy_key'),
                                             elevation: 0,
                                             hoverElevation: 0,
                                             focusElevation: 0,

@@ -868,6 +868,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                                 ? (widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary)
                                                 : BuytimeTheme.SymbolGrey)),
                                     child: MaterialButton(
+                                      key: Key('service_details_add_to_cart_key'),
                                       elevation: 0,
                                       hoverElevation: 0,
                                       focusElevation: 0,
@@ -962,6 +963,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                     height: 44,
                                     margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, bottom: 29),
                                     child: MaterialButton(
+                                      key: Key('service_details_buy_key'),
                                       elevation: 0,
                                       hoverElevation: 0,
                                       focusElevation: 0,

@@ -324,6 +324,7 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
                           child: Align(
                             alignment: Alignment.center,
                             child: IconButton(
+                              key: Key('cart_key'),
                               icon: Icon(
                                 BuytimeIcons.shopping_cart,
                                 color: BuytimeTheme.TextWhite,

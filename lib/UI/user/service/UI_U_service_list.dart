@@ -221,6 +221,7 @@ class CartIconAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IconButton(
+      key: Key('cart_key'),
       icon: const Icon(
         Icons.shopping_cart,
         color: Colors.white,

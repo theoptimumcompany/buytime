@@ -14,7 +14,9 @@ class FindYourInspirationCardWidget extends StatefulWidget {
   List<String> categoryListIds;
   bool fromBookingPage;
   bool tourist;
-  FindYourInspirationCardWidget(this.width, this.heigth,this.categoryState, this.fromBookingPage, this.tourist, this.categoryListIds);
+  int first;
+  int second;
+  FindYourInspirationCardWidget(this.width, this.heigth,this.categoryState, this.fromBookingPage, this.tourist, this.categoryListIds, this.first, this.second);
 
   @override
   _FindYourInspirationCardWidgetState createState() => _FindYourInspirationCardWidgetState();
@@ -50,6 +52,7 @@ class _FindYourInspirationCardWidgetState extends State<FindYourInspirationCardW
         child: Material(
           color: Colors.transparent,
           child: InkWell(
+            key: Key('category_${widget.first}_${widget.second}_key'),
             splashColor: Colors.black.withOpacity(.3),
             onTap: (){
               widget.fromBookingPage ?

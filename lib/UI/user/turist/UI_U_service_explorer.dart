@@ -641,6 +641,7 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
                                             //width: SizeConfig.safeBlockHorizontal * 60,
                                             // decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
                                             child: TextFormField(
+                                              key: Key('search_field_key'),
                                               controller: _searchController,
                                               textAlign: TextAlign.start,
                                               textInputAction: TextInputAction.search,
@@ -663,6 +664,7 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
                                                   fontWeight: FontWeight.w400,
                                                 ),
                                                 suffixIcon: InkWell(
+                                                  key: Key('search_button_key'),
                                                   onTap: () {
                                                     debugPrint('done');
                                                     FocusScope.of(context).unfocus();
@@ -699,6 +701,7 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
                                             ? Container(
                                           margin: EdgeInsets.only(bottom: 20),
                                           child: IconButton(
+                                            key: Key('search_clear_button_key'),
                                             icon: Icon(
                                               // Based on passwordVisible state choose the icon
                                               BuytimeIcons.remove,

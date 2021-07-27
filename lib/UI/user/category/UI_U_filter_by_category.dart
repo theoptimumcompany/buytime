@@ -207,7 +207,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
     });
   }
 
-  Widget inspiration(List<CategoryState> list) {
+  Widget inspiration(List<CategoryState> list, int pos) {
     List<String> i1 = [];
     List<String> i2 = [];
     List<String> i3 = [];
@@ -232,7 +232,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
             ? Flexible(
                 flex: 1,
                 child: FindYourInspirationCardWidget(
-                    list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2, list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2, list[0], false, widget.tourist, i1),
+                    list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2, list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2, list[0], false, widget.tourist, i1, pos, 0),
               )
             : Container(),
 
@@ -241,7 +241,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
             ? Flexible(
                 flex: 1,
                 child: FindYourInspirationCardWidget(
-                    list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2, list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2, list[1], false, widget.tourist, i2),
+                    list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2, list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2, list[1], false, widget.tourist, i2, pos, 1),
               )
             : Container(),
 
@@ -250,7 +250,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
             ? Flexible(
                 flex: 1,
                 child: FindYourInspirationCardWidget(
-                    list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2, list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2, list[2], false, widget.tourist, i3),
+                    list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2, list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2, list[2], false, widget.tourist, i3, pos, 2),
               )
             : Container(),
       ],
@@ -487,6 +487,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                             child: Align(
                               alignment: Alignment.center,
                               child: IconButton(
+                                key: Key('cart_key'),
                                 icon: Icon(
                                   BuytimeIcons.shopping_cart,
                                   color: BuytimeTheme.TextWhite,
@@ -589,7 +590,6 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                       ),
                                       subCategoryList.isNotEmpty
                                           ?
-
                                           ///List
                                           Container(
                                               height: SizeConfig.screenWidth / 3,
@@ -603,7 +603,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                                       CategoryState category = subCategoryList.elementAt(index);
                                                       return Container(
                                                         margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, right: SizeConfig.safeBlockHorizontal * 1),
-                                                        child: FindYourInspirationCardWidget(SizeConfig.screenWidth / 3 - 2, SizeConfig.screenWidth / 3 - 2, category, false, widget.tourist, subCategoryListIds[category.name]),
+                                                        child: FindYourInspirationCardWidget(SizeConfig.screenWidth / 3 - 2, SizeConfig.screenWidth / 3 - 2, category, false, widget.tourist, subCategoryListIds[category.name], 0, index),
                                                       );
                                                     },
                                                     childCount: subCategoryList.length,
@@ -1249,17 +1249,15 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                         child: Column(
                                           children: [
                                             // !showAll && rowLess1.isNotEmpty ? inspiration(rowLess1) : Container(),
-                                            rowLess1.isNotEmpty ? inspiration(rowLess1) : Container(),
+                                            rowLess1.isNotEmpty ? inspiration(rowLess1, 1) : Container(),
                                             // !showAll && rowLess2.isNotEmpty ? inspiration(rowLess2) : Container(),
-                                            rowLess2.isNotEmpty ? inspiration(rowLess2) : Container(),
+                                            rowLess2.isNotEmpty ? inspiration(rowLess2, 2) : Container(),
                                             // showAll && row1.isNotEmpty ? inspiration(row1) : Container(),
                                             // showAll && row2.isNotEmpty ? inspiration(row2) : Container(),
                                             // showAll && row3.isNotEmpty ? inspiration(row3) : Container(),
                                             // showAll && row4.isNotEmpty ? inspiration(row4) : Container(),
                                           ],
-                                        ))
-                                    :
-
+                                        )) :
                                     ///No Category
                                     Container(
                                         height: SizeConfig.safeBlockVertical * 8,

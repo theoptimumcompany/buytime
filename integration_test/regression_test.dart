@@ -22,16 +22,120 @@ void main() {
 
     binding.framePolicy = LiveTestWidgetsFlutterBindingFramePolicy.fullyLive;
 
-    ///Free Access
+    ///Login User => Discover => Service add to cart => Payment process without ending
+    testWidgets('Login User', (tester) async {
+      await loadApp(tester);
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+      //await tester.tap(find.byKey(ValueKey('login')));
+      ///Home => registration
+      await login(tester, 'test_automatico@buytime.network', 'Test2021');
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+
+     /* await tester.enterText(find.byKey(ValueKey('search_field_key')), 'Drink');
+      await tester.pumpAndSettle(const Duration(seconds: 2));*/
+
+      await tester.tap(find.text('Drink'));
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+
+      if(!find.text('Appetizer').toString().contains('zero widgets with')){
+        await tester.drag(find.text('Appetizer').first, const Offset(-700, 0));
+        await tester.pumpAndSettle(const Duration(seconds: 2));
+
+        await tester.tap(find.byKey(ValueKey('cart_key')));
+        await tester.pumpAndSettle(const Duration(seconds: 2));
+
+        await tester.tap(find.byKey(ValueKey('cart_buy_key')));
+        await tester.pumpAndSettle(const Duration(seconds: 2));
+
+        await tester.tap(find.byKey(ValueKey('back_cart_from_confirm_order_key')));
+        await tester.pumpAndSettle(const Duration(seconds: 1));
+
+        await tester.tap(find.byKey(ValueKey('back_from_cart_key')));
+        await tester.pumpAndSettle(const Duration(seconds: 1));
+
+        await tester.tap(find.text('Appetizer').first);
+        await tester.pumpAndSettle(const Duration(seconds: 2));
+
+        await tester.tap(find.text('service_details_add_to_cart_key').first);
+        await tester.pumpAndSettle(const Duration(seconds: 2));
+
+        await tester.tap(find.byKey(ValueKey('cart_key')));
+        await tester.pumpAndSettle(const Duration(seconds: 2));
+
+        await tester.tap(find.byKey(ValueKey('cart_buy_key')));
+        await tester.pumpAndSettle(const Duration(seconds: 2));
+
+        await tester.tap(find.byKey(ValueKey('back_cart_from_confirm_order_key')));
+        await tester.pumpAndSettle(const Duration(seconds: 1));
+
+        await tester.tap(find.byKey(ValueKey('back_from_cart_key')));
+        await tester.pumpAndSettle(const Duration(seconds: 1));
+
+        await tester.tap(find.text('service_details_buy_key').first);
+        await tester.pumpAndSettle(const Duration(seconds: 2));
+
+        await tester.tap(find.byKey(ValueKey('cart_key')));
+        await tester.pumpAndSettle(const Duration(seconds: 2));
+
+        await tester.tap(find.byKey(ValueKey('cart_buy_key')));
+        await tester.pumpAndSettle(const Duration(seconds: 2));
+
+        await tester.tap(find.byKey(ValueKey('back_cart_from_confirm_order_key')));
+        await tester.pumpAndSettle(const Duration(seconds: 1));
+
+        await tester.tap(find.byKey(ValueKey('add_one_item_key')));
+        await tester.pumpAndSettle(const Duration(seconds: 2));
+
+        await tester.tap(find.byKey(ValueKey('remove_one_item_key')));
+        await tester.pumpAndSettle(const Duration(seconds: 2));
+
+        await tester.drag(find.text('Appetizer').first, const Offset(-700, 0));
+        await tester.pumpAndSettle(const Duration(seconds: 2));
+
+        // await tester.tap(find.text('Appetizer'));
+        // await tester.pumpAndSettle(const Duration(seconds: 2));
+      }
+    });
+
+    /*///Free Access
     testWidgets('Free Access', (tester) async {
       await loadApp(tester);
+      await tester.pumpAndSettle(const Duration(seconds: 2));
 
       debugPrint('KEY VALUE: ${find.byKey(ValueKey('free_access_key')).toString()}');
       await tester.tap(find.byKey(ValueKey('free_access_key')));
       await tester.pumpAndSettle(const Duration(seconds: 2));
     });
 
-   /* ///Registration Error => Wrong Password
+    ///Search in turist by category name
+    testWidgets('Free Access', (tester) async {
+      await loadApp(tester);
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+
+      debugPrint('KEY VALUE: ${find.byKey(ValueKey('free_access_key')).toString()}');
+      await tester.tap(find.byKey(ValueKey('free_access_key')));
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+
+      await tester.enterText(find.byKey(ValueKey('search_field_key')), 'Diving');
+      await tester.pumpAndSettle(const Duration(seconds: 1));
+
+      await tester.tap(find.byKey(ValueKey('search_button_key')));
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+
+      await tester.tap(find.byKey(ValueKey('search_clear_button_key')));
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+
+      await tester.enterText(find.byKey(ValueKey('search_field_key')), 'tour');
+      await tester.pumpAndSettle(const Duration(seconds: 1));
+
+      await tester.tap(find.byKey(ValueKey('search_button_key')));
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+
+      await tester.tap(find.byKey(ValueKey('search_clear_button_key')));
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+    });
+
+    ///Registration Error => Wrong Password
     testWidgets('Registration erorr', (tester) async {
       await loadApp(tester);
 
@@ -62,6 +166,39 @@ void main() {
       ///Home => Login
       await register(tester, 'test_automatico@buytime.network', 'Test2021');
       expect(find.text('The email address is already in use by another account.'), findsOneWidget);
+    });
+
+    ///Login User => Landing => log out
+    testWidgets('Login User', (tester) async {
+      await loadApp(tester);
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+      //await tester.tap(find.byKey(ValueKey('login')));
+      ///Home => registration
+      await login(tester, 'test_user@buytime.network', 'test2020');
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+
+      await tester.enterText(find.byKey(ValueKey('guest_search_field_key')), 'Mass');
+      await tester.pumpAndSettle(const Duration(seconds: 1));
+
+      await tester.tap(find.byKey(ValueKey('guest_search_button_key')));
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+
+      await tester.tap(find.byKey(ValueKey('back_home_from_search_key')));
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+
+      //final gesture = await tester.startGesture(Offset(0, 400)); //Position of the scrollview
+      //await gesture.moveBy(Offset(0, -500)); //How much to scroll by
+      await tester.flingFrom(Offset(0, 400), Offset(0, -500), 2000);
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+
+      debugPrint('KEY VALUE: ${find.byKey(ValueKey('category_0_0_key')).toString()}');
+      if(!find.byKey(ValueKey('category_0_0_key')).toString().contains('zero widgets with')){
+        await tester.tap(find.byKey(ValueKey('category_0_0_key')).first, warnIfMissed: false);
+        await tester.pumpAndSettle(const Duration(seconds: 2));
+      }else{
+        debugPrint('KEY \'category_0_0_key\' not found');
+      }
+
     });*/
 
   });

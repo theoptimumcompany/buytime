@@ -116,6 +116,7 @@ class _FilterGeneralState extends State<FilterGeneral> {
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
                         child: IconButton(
+                          key: Key('back_home_from_search_key'),
                           icon: const Icon(
                             Icons.keyboard_arrow_left,
                             color: Colors.white,
@@ -157,6 +158,7 @@ class _FilterGeneralState extends State<FilterGeneral> {
                             child: Align(
                               alignment: Alignment.center,
                               child: IconButton(
+                                key: Key('cart_key'),
                                 icon: Icon(
                                   BuytimeIcons.shopping_cart,
                                   color: BuytimeTheme.TextWhite,
