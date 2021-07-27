@@ -1028,7 +1028,7 @@ class ConfirmOrderState extends State<ConfirmOrderBackup> with SingleTickerProvi
       );
 
       // 3. Confirm Google pay payment method
-      await Stripe.instance.confirmPaymentMethod(
+      await Stripe.instance.confirmPayment(
         clientSecret,
         params,
       );

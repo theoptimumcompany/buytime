@@ -253,6 +253,24 @@ class SetServicePrice {
   double get price => _price;
 }
 
+class SetServicePaymentMethodCard {
+  bool _value;
+  SetServicePaymentMethodCard(this._value);
+  bool get value => _value;
+}
+
+class SetServicePaymentMethodOnSite {
+  bool _value;
+  SetServicePaymentMethodOnSite(this._value);
+  bool get value => _value;
+}
+
+class SetServicePaymentMethodRoom {
+  bool _value;
+  SetServicePaymentMethodRoom(this._value);
+  bool get value => _value;
+}
+
 class SetServiceVAT {
   int _vat;
 
@@ -366,6 +384,18 @@ ServiceState serviceReducer(ServiceState state, action) {
   }
   if (action is SetServicePrice) {
     serviceState.price = action.price;
+    return serviceState;
+  }
+  if (action is SetServicePaymentMethodCard) {
+    serviceState.paymentMethodCard = action.value;
+    return serviceState;
+  }
+  if (action is SetServicePaymentMethodRoom) {
+    serviceState.paymentMethodRoom = action.value;
+    return serviceState;
+  }
+  if (action is SetServicePaymentMethodOnSite) {
+    serviceState.paymentMethodOnSite = action.value;
     return serviceState;
   }
   if (action is SetServiceVAT) {

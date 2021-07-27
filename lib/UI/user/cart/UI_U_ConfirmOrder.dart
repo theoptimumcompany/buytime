@@ -1140,14 +1140,14 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
       );
 
       // 3. Confirm Google pay payment method
-      await Stripe.instance.confirmPaymentMethod(
+      await Stripe.instance.confirmPayment(
         clientSecret,
         params,
       );
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-            content: Text('Google Pay payment succesfully completed')),
+            content: Text('Google Pay payment successfully completed')),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(

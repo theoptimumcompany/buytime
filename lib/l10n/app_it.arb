@@ -587,5 +587,10 @@
   "confirmPayment": "Conferma Pagamento",
   "applePay": "Apple Pay",
   "delete": "rimuovi",
-  "showcase": "Showcase"
+  "showcase": "Showcase",
+  "paymentMethods": "Metodi di Pagamento",
+  "selectPaymentMethodsAccepted": "Select the payment methods accepted by your service",
+  "all": "Tutti",
+  "roomPayment": "Pagamento addebitato alla Stanza",
+  "cardPayment": "Carta di Credito"
 }
