@@ -194,6 +194,7 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
                                 children: [
                                   ///Remove item
                                   InkWell(
+                                    key: Key('remove_one_item_key'),
                                     child: Container(
                                       margin: EdgeInsets.all(SizeConfig.safeBlockVertical * 1),
                                       child: Icon(
@@ -220,6 +221,7 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
                                   ),
                                   ///Add item
                                   InkWell(
+                                    key: Key('add_one_item_key'),
                                     child: Container(
                                       margin: EdgeInsets.all(SizeConfig.safeBlockVertical * 1),
                                       child: Icon(

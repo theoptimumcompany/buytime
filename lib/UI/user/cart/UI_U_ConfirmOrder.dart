@@ -1185,6 +1185,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
       children: [
         ///Back Button
         IconButton(
+          key: Key('back_cart_from_confirm_order_key'),
           icon: Icon(Icons.chevron_left, color: BuytimeTheme.TextWhite),
           onPressed: () => Future.delayed(Duration.zero, () {
             /// if the order is paid we empty the order status before leaving

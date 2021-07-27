@@ -96,6 +96,8 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
         business.zipPostal.isNotEmpty &&
         business.municipality != null &&
         business.municipality.isNotEmpty &&
+        business.cityTown != null &&
+        business.cityTown.isNotEmpty &&
         business.stateTerritoryProvince != null &&
         business.stateTerritoryProvince.isNotEmpty &&
         business.nation != null &&
@@ -860,6 +862,7 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
                                                       //initialFieldValue: snapshot.municipality,
                                                       onSaveOrChangedCallback: (value) {
                                                         StoreProvider.of<AppState>(context).dispatch(SetBusinessCityTown(value));
+                                                        StoreProvider.of<AppState>(context).dispatch(SetBusinessMunicipality(value));
                                                       },
                                                     ),
 

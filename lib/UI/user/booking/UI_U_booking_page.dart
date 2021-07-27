@@ -197,7 +197,7 @@ class _BookingPageState extends State<BookingPage> {
     });
   }
 
-  Widget inspiration(List<CategoryState> list) {
+  Widget inspiration(List<CategoryState> list, int pos) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -206,7 +206,7 @@ class _BookingPageState extends State<BookingPage> {
             ? Flexible(
           flex: 1,
           child: FindYourInspirationCardWidget(list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2,
-              list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2, list[0], true, false, [list[0].id]),
+              list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2, list[0], true, false, [list[0].id], pos, 0),
         )
             : Container(),
 
@@ -215,7 +215,7 @@ class _BookingPageState extends State<BookingPage> {
             ? Flexible(
           flex: 1,
           child: FindYourInspirationCardWidget(list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2,
-              list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2, list[1], true, false, [list[1].id]),
+              list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2, list[1], true, false, [list[1].id], pos, 1),
         )
             : Container(),
 
@@ -224,7 +224,7 @@ class _BookingPageState extends State<BookingPage> {
             ? Flexible(
           flex: 1,
           child: FindYourInspirationCardWidget(list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2,
-              list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2, list[2], true, false, [list[2].id]),
+              list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2, list[2], true, false, [list[2].id], pos, 2),
         )
             : Container(),
       ],
@@ -473,6 +473,7 @@ class _BookingPageState extends State<BookingPage> {
                                           child: Align(
                                             alignment: Alignment.center,
                                             child: IconButton(
+                                              key: Key('cart_key'),
                                               icon: Icon(
                                                 BuytimeIcons.shopping_cart,
                                                 color: BuytimeTheme.TextWhite,
@@ -693,6 +694,7 @@ class _BookingPageState extends State<BookingPage> {
                                               bottom: SizeConfig.safeBlockVertical * 4),
                                           height: SizeConfig.safeBlockHorizontal * 20,
                                           child: TextFormField(
+                                            key: Key('guest_search_field_key'),
                                             controller: _searchController,
                                             textAlign: TextAlign.start,
                                             textInputAction: TextInputAction.search,
@@ -713,6 +715,7 @@ class _BookingPageState extends State<BookingPage> {
                                                 fontWeight: FontWeight.w400,
                                               ),
                                               suffixIcon: InkWell(
+                                                key: Key('guest_search_button_key'),
                                                 onTap: () {
                                                   debugPrint('done');
                                                   FocusScope.of(context).unfocus();
@@ -1211,9 +1214,9 @@ class _BookingPageState extends State<BookingPage> {
                                             child: Column(
                                               children: [
                                                 // !showAll && rowLess1.isNotEmpty ? inspiration(rowLess1) : Container(),
-                                                rowLess1.isNotEmpty ? inspiration(rowLess1) : Container(),
+                                                rowLess1.isNotEmpty ? inspiration(rowLess1, 0) : Container(),
                                                 // !showAll && rowLess2.isNotEmpty ? inspiration(rowLess2) : Container(),
-                                                rowLess2.isNotEmpty ? inspiration(rowLess2) : Container(),
+                                                rowLess2.isNotEmpty ? inspiration(rowLess2, 1) : Container(),
                                                 // showAll && row1.isNotEmpty ? inspiration(row1) : Container(),
                                                 // showAll && row2.isNotEmpty ? inspiration(row2) : Container(),
                                                 // showAll && row3.isNotEmpty ? inspiration(row3) : Container(),

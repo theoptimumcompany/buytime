@@ -144,6 +144,7 @@ class _NotificationsState extends State<Notifications> {
                                 child: Align(
                                   alignment: Alignment.center,
                                   child: IconButton(
+                                    key: Key('cart_key'),
                                     icon: Icon(
                                       BuytimeIcons.shopping_cart,
                                       color: BuytimeTheme.TextWhite,

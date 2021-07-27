@@ -203,6 +203,8 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
         business.zipPostal.isNotEmpty &&
         business.municipality != null &&
         business.municipality.isNotEmpty &&
+        business.cityTown != null &&
+        business.cityTown.isNotEmpty &&
         business.stateTerritoryProvince != null &&
         business.stateTerritoryProvince.isNotEmpty &&
         business.nation != null &&
@@ -873,6 +875,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                           //initialFieldValue: snapshot.municipality,
                                                           onSaveOrChangedCallback: (value) {
                                                             StoreProvider.of<AppState>(context).dispatch(SetBusinessCityTown(value));
+                                                            StoreProvider.of<AppState>(context).dispatch(SetBusinessMunicipality(value));
                                                           },
                                                         ),
 
