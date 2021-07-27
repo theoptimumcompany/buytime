@@ -100,8 +100,8 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
         business.cityTown.isNotEmpty &&
         business.stateTerritoryProvince != null &&
         business.stateTerritoryProvince.isNotEmpty &&
-        business.nation != null &&
-        business.nation.isNotEmpty &&
+        business.country != null &&
+        business.country.isNotEmpty &&
         business.area != null &&
         business.area.isNotEmpty &&
         business.logo != null &&
