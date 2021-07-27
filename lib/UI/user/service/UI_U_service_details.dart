@@ -223,6 +223,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                           child: Align(
                             alignment: Alignment.center,
                             child: IconButton(
+                              key: Key('cart_key'),
                               icon: Icon(
                                 BuytimeIcons.shopping_cart,
                                 color: BuytimeTheme.TextWhite,
@@ -1087,6 +1088,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                             )*/
                               ),
                               child: MaterialButton(
+                                key: Key('service_reserve_buy_key'),
                                 onPressed: StoreProvider.of<AppState>(context).state.user.getRole() == Role.user
                                     ? () {
                                         StoreProvider.of<AppState>(context).dispatch(SetOrderReservableToEmpty('ok'));

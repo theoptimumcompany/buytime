@@ -74,10 +74,22 @@ class CartReservableState extends State<CartReservable> {
   void deleteReserveItem(OrderReservableState snapshot, OrderEntry entry, int index) {
     debugPrint('UI_U_CartReservable => Remove Normal Item');
     setState(() {
+      StoreProvider.of<AppState>(context).state.slotSnippetListState.slotListSnippet.forEach((element) {
+        element.slot.forEach((element2) {
+          if(element2.uid == entry.idSquareSlot){
+            debugPrint('ON: ${element2.on} - FREE: ${element2.free} - MAX: ${element2.max} - ORDER CAPACITY: ${entry.orderCapacity}');
+            int tmp = element2.free;
+            tmp = tmp+ entry.orderCapacity;
+            element2.free = tmp;
+          }
+        });
+      });
       orderReservableState.cartCounter = orderReservableState.cartCounter - entry.number;
       orderReservableState.removeReserveItem(entry);
       orderReservableState.selected.removeAt(index);
+
       orderReservableState.itemList.remove(entry);
+      //StoreProvider.of<AppState>(context).dispatch(UpdateOrderReservable(orderReservableState));
       if (orderReservableState.itemList.length == 0) Navigator.of(context).pop();
 
       StoreProvider.of<AppState>(context).dispatch(UpdateOrderReservable(orderReservableState));
@@ -109,6 +121,7 @@ class CartReservableState extends State<CartReservable> {
                     children: [
                       ///Back Button
                       IconButton(
+                          key: Key('back_from_cart_reserve_key'),
                           icon: Icon(Icons.chevron_left, color: BuytimeTheme.TextWhite),
                           onPressed: () {
                             /*Navigator.pushReplacement(
@@ -357,6 +370,7 @@ class CartReservableState extends State<CartReservable> {
                                         /// media.width * .4
                                         height: 46,
                                         child: MaterialButton(
+                                          key: Key('cart_reserve_key'),
                                           elevation: 0,
                                           hoverElevation: 0,
                                           focusElevation: 0,

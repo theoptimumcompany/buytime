@@ -64,11 +64,6 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
     debugPrint('image: ${serviceState.image1}');
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
 
 
   //List<int> dates = [];
@@ -195,6 +190,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
             tmpSlots.add([]);
             for (int j = 0; j < mySlots.length; j++) {
               if (!first /*&& mySlots[i].visibility*/) {
+                debugPrint('FIRST TIME');
                 if (mySlots[j].free != 0) {
                   //debugPrint('HEREEE => ${mySlots[j].on}');
                   DateTime squareDateFormat = DateFormat("dd/MM/yyyy").parse(mySlots[j].date).toUtc();
@@ -210,13 +206,16 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                   }
                 }
               } else {
+                debugPrint('SECONDS AND OTHERS');
                 bool found = false;
                 order.itemList.forEach((element) {
                   if (element.idSquareSlot == mySlots[j].uid) {
                     found = true;
+                    debugPrint('FOUND SLOT FROM ORDER');
                   }
                 });
                 if (found) {
+                  //debugPrint('FROM ORDER');
                   DateTime squareDateFormat = DateFormat("dd/MM/yyyy").parse(mySlots[j].date).toUtc();
                   //debugPrint('DATE: $squareDateFormat');
                   DateTime squareDate = squareDateFormat;
@@ -225,20 +224,24 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                   squareTime = new DateTime(squareTime.year, squareTime.month, squareTime.day, int.parse(mySlots[j].on.split(':').first), int.parse(mySlots[j].on.split(':').last), 0, 0, 0);
                   //debugPrint('UI_U_ServiceReserve => SQUARE SLOT DATE: $squareDate - CURRENT DATE: ${startDate.add(Duration(days: i))} - SQUARE SLOT TIME: ${mySlots[j].on} - SQUARE TIME: $squareTime');
                   if (squareDate.isAtSameMomentAs(startDate.add(Duration(days: i))) && squareTime.isAfter(DateTime.now())) {
-                    //debugPrint('UI_U_ServiceReserve => SQUARE SLOT DATE: $squareDate - CURRENT DATE: ${startDate.add(Duration(days: i))} - SQUARE SLOT TIME: ${mySlots[j].on} - SQUARE TIME: $squareTime');
+                    debugPrint('UI_U_ServiceReserve => SQUARE SLOT DATE: $squareDate - CURRENT DATE: ${startDate.add(Duration(days: i))} - SQUARE SLOT TIME: ${mySlots[j].on} - SQUARE TIME: $squareTime');
                     tmpSlots.last.add([j, slot, mySlots[j]]);
                   }
                 } else {
+                  DateTime squareDateFormat = DateFormat("dd/MM/yyyy").parse(mySlots[j].date).toUtc();
+                  //debugPrint('DATE: $squareDateFormat');
+                  DateTime squareDate = squareDateFormat;
+                  squareDate = new DateTime(squareDate.year, squareDate.month, squareDate.day, 0, 0, 0, 0, 0);
+                  DateTime squareTime = DateFormat("dd/MM/yyyy").parse(mySlots[j].date).toUtc();
+                  squareTime = new DateTime(squareTime.year, squareTime.month, squareTime.day, int.parse(mySlots[j].on.split(':').first), int.parse(mySlots[j].on.split(':').last), 0, 0, 0);
+                  if (squareDate.isAtSameMomentAs(startDate.add(Duration(days: i))) && squareTime.isAfter(DateTime.now())) {
+                    debugPrint('UI_U_ServiceReserve => OUTSIDE SQUARE SLOT DATE: $squareDate - CURRENT DATE: ${startDate.add(Duration(days: i))} - SQUARE SLOT TIME: ${mySlots[j].on} - SQUARE TIME: $squareTime');
+                    debugPrint('NOT FROM ORDER');
+                  }
                   if (mySlots[j].free != 0) {
-                    DateTime squareDateFormat = DateFormat("dd/MM/yyyy").parse(mySlots[j].date).toUtc();
-                    //debugPrint('DATE: $squareDateFormat');
-                    DateTime squareDate = squareDateFormat;
-                    squareDate = new DateTime(squareDate.year, squareDate.month, squareDate.day, 0, 0, 0, 0, 0);
-                    DateTime squareTime = DateFormat("dd/MM/yyyy").parse(mySlots[j].date).toUtc();
-                    squareTime = new DateTime(squareTime.year, squareTime.month, squareTime.day, int.parse(mySlots[j].on.split(':').first), int.parse(mySlots[j].on.split(':').last), 0, 0, 0);
                     //debugPrint('UI_U_ServiceReserve => SQUARE SLOT DATE: $squareDate - CURRENT DATE: ${startDate.add(Duration(days: i))} - SQUARE SLOT TIME: ${mySlots[j].on} - SQUARE TIME: $squareTime');
                     if (squareDate.isAtSameMomentAs(startDate.add(Duration(days: i))) && squareTime.isAfter(DateTime.now())) {
-                      //debugPrint('UI_U_ServiceReserve => SQUARE SLOT DATE: $squareDate - CURRENT DATE: ${startDate.add(Duration(days: i))} - SQUARE SLOT TIME: ${mySlots[j].on} - SQUARE TIME: $squareTime');
+                      debugPrint('UI_U_ServiceReserve => SQUARE SLOT DATE: $squareDate - CURRENT DATE: ${startDate.add(Duration(days: i))} - SQUARE SLOT TIME: ${mySlots[j].on} - SQUARE TIME: $squareTime');
                       tmpSlots.last.add([j, slot, mySlots[j]]);
                     }
                   }
@@ -309,6 +312,14 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
   bool first = false;
 
   @override
+  void dispose() {
+    /*setState(() {
+      first = true;
+    });*/
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     // the media containing information on width and height
     var media = MediaQuery.of(context).size;
@@ -371,6 +382,9 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
           noActivity = false;
           dates.clear();
           slots.clear();
+          selectedSlot.clear();
+          picked.clear();
+          //selectQuantity.clear();
           List<IntervalListState> tmpState = snapshot.slotSnippetListState.slotListSnippet;
           //tmpState.addAll();
           for (int i = 0; i < tmpState.length; i++) {
@@ -393,6 +407,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
 
               dates = getDaysInBeteween(tmpStartDate, tmpEndDate, startDateBoth, endDateBoth, tmpState[i].slot, widget.serviceState.serviceSlot[i]);
               if (tmpSlots.isNotEmpty) {
+                debugPrint('UI_U_service_reserve => TMP SLOTS FIRST: $tmpSlots');
                 slots.addAll(tmpSlots);
                 slots.forEach((element) {
                   picked.add(List.generate(element.length, (index) => false));
@@ -402,6 +417,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
               }
             } else {
               List<DateTime> tmpDates = getDaysInBeteween(tmpStartDate, tmpEndDate, snapshot.booking.start_date, snapshot.booking.end_date, tmpState[i].slot, widget.serviceState.serviceSlot[i]);
+              debugPrint('UI_U_service_reserve => TMP SLOTS SECOND: $tmpSlots');
               for (int i = 0; i < dates.length; i++) {
                 for (int j = 0; j < tmpDates.length; j++) {
                   if (dates[i] == tmpDates[j]) {
@@ -594,7 +610,9 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
         });*/
 
         debugPrint("UI_U_ServiceReserve => CART COUNT: ${order.cartCounter}");
-        debugPrint('UI_U_ServiceReserve => PICKED: ${picked.length}');
+        debugPrint('UI_U_ServiceReserve => PICKED: ${picked.length} - $picked');
+        debugPrint('UI_U_ServiceReserve => SELECTED: ${selectedSlot}');
+        debugPrint('UI_U_ServiceReserve => SELECT QUANTITY: ${selectQuantity}');
         //debugPrint('UI_U_ServiceReserve => INTERVAL SLOTS LENGTH: ${widget.serviceState.serviceSlot.first.startTime.length}');
         return GestureDetector(
           onTap: () {
@@ -618,6 +636,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
                         child: IconButton(
+                          key: Key('back_from_service_reserve_key'),
                           icon: const Icon(
                             Icons.keyboard_arrow_left,
                             color: Colors.white,
@@ -1163,6 +1182,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                             child: Material(
                                                                 color: Colors.transparent,
                                                                 child: InkWell(
+                                                                  key: Key('service_slot_${index}_${i}_key'),
                                                                   borderRadius: BorderRadius.all(Radius.circular(5)),
                                                                   onTap: !selectedSlot[index][i]
                                                                       ? () async {
@@ -1558,6 +1578,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                         ///media.width * .4
                                         height: 44,
                                         child: MaterialButton(
+                                          key: Key('service_reserve_key'),
                                           elevation: 0,
                                           hoverElevation: 0,
                                           focusElevation: 0,
