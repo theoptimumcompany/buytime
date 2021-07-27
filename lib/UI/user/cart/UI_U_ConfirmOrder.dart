@@ -6,7 +6,9 @@ import 'package:Buytime/UI/user/cart/widget/W_credit_card_simple.dart';
 import 'package:Buytime/UI/user/cart/widget/W_loading_button.dart';
 import 'package:Buytime/reblox/enum/order_time_intervals.dart';
 import 'package:Buytime/reblox/model/card/card_list_state.dart';
+import 'package:Buytime/reblox/model/stripe/stripe_card_response.dart';
 import 'package:Buytime/reblox/reducer/stripe_payment_reducer.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pay/pay.dart' as pay;
 import 'package:Buytime/reblox/model/order/order_reservable_state.dart';
 import 'package:Buytime/reblox/model/stripe/stripe_state.dart';
@@ -36,7 +38,7 @@ import 'UI_U_CardChoice.dart';
 
 class ConfirmOrder extends StatefulWidget {
   final String title = 'confirmOrder';
-  bool tourist;
+  bool tourist = false;
   bool reserve = false;
 
   ConfirmOrder({Key key, this.reserve, this.tourist}) : super(key: key);
@@ -261,7 +263,15 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
 
   Text getCurrentPaymentMethod(BuildContext context, AppState snapshot) {
     if(snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.card)) {
-      return creditCardText(context, snapshot);
+      if (
+          snapshot.cardListState != null &&
+          snapshot.cardListState.cardList != null &&
+          snapshot.cardListState.cardList.first.stripeState != null &&
+          snapshot.cardListState.cardList.first.stripeState.stripeCard != null
+      ) {
+        return Text(snapshot.cardListState.cardList.first.stripeState.stripeCard.brand + " " + snapshot.cardListState.cardList.first.stripeState.stripeCard.last4);
+      }
+      return Text( AppLocalizations.of(context).creditCard.replaceAll(":", ""));
     } else if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.room)) {
       return Text( AppLocalizations.of(context).room.replaceAll(":", ""));
     } else if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.onSite)) {
@@ -615,18 +625,32 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
             child: new Wrap(
               children: <Widget>[
                 /// TODO wrap with realtime query for card list
-                ListTile(
-                  leading: Image(width: SizeConfig.blockSizeHorizontal * 10, image: AssetImage('assets/img/mastercard_icon.png')),
-                  title: creditCardText(context, snapshot),
-                  trailing: creditCardTrailing(context, snapshot) ,
-                  onTap: () {
-                    if (snapshot.cardListState != null && snapshot.cardListState.cardList != null && snapshot.cardListState.cardList.length > 0) {
-                      StoreProvider.of<AppState>(context).dispatch(ChoosePaymentMethod(Utils.enumToString(PaymentType.card)));
-                      Navigator.of(context).pop();
-                    } else {
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) =>CardChoice()),);
+                StreamBuilder<QuerySnapshot>(
+                  stream: FirebaseFirestore.instance.collection('stripeCustomer').doc(_userId).collection('card').snapshots(includeMetadataChanges: true),
+                  builder: (context, cardListSnapshot) {
+                    if (cardListSnapshot.hasError || cardListSnapshot.connectionState == ConnectionState.waiting) {
+                      return Text(AppLocalizations.of(context).loading + "...");
                     }
-                  },
+                    StripeCardResponse cardFromFirestore;
+                    if (cardListSnapshot.data.docs.isEmpty) {
+
+                    } else {
+                      cardFromFirestore = StripeCardResponse.fromJson(cardListSnapshot.data.docs.first.data());
+                    }
+                    return ListTile(
+                      leading: Image(width: SizeConfig.blockSizeHorizontal * 10, image: AssetImage('assets/img/mastercard_icon.png')),
+                      title: creditCardText(context, cardFromFirestore),
+                      trailing: creditCardTrailing(context, cardFromFirestore) ,
+                      onTap: () {
+                        if (cardFromFirestore != null) {
+                          StoreProvider.of<AppState>(context).dispatch(ChoosePaymentMethod(Utils.enumToString(PaymentType.card)));
+                          Navigator.of(context).pop();
+                        } else {
+                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) =>CardChoice()),);
+                        }
+                      },
+                    );
+                  }
                 ),
                 Divider(),
                 Platform.isIOS ? ListTile(
@@ -671,13 +695,11 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
         });
   }
 
-  Text creditCardText(context, AppState snapshot) {
+  Text creditCardText(context, StripeCardResponse cardFromFirestore) {
     if (
-    snapshot.cardListState != null &&
-    snapshot.cardListState.cardList != null &&
-    snapshot.cardListState.cardList.length > 0
+    cardFromFirestore != null
     ) {
-      return Text(snapshot.cardListState.cardList[0].stripeState.stripeCard.brand + " " + snapshot.cardListState.cardList[0].stripeState.stripeCard.last4);
+      return Text(cardFromFirestore.brand + " " + cardFromFirestore.last4);
     }
     return Text( AppLocalizations.of(context).creditCard.replaceAll(":", ""));
   }
@@ -1208,22 +1230,27 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
     return null;
   }
 
-  creditCardTrailing(context, AppState snapshot) {
-    return TextButton(
-        onPressed: () {
-          if (!deleting) {
-            deleting = true;
-            if(snapshot.cardListState != null && snapshot.cardListState.cardList != null && snapshot.cardListState.cardList.length > 0) {
-              StoreProvider.of<AppState>(context).dispatch(DeletingStripePaymentMethod());
-              String firestoreCardId = snapshot.cardListState.cardList[0].stripeState.stripeCard.firestore_id;
-              StoreProvider.of<AppState>(context).dispatch(CreateDisposePaymentMethodIntent(firestoreCardId, StoreProvider.of<AppState>(context).state.user.uid));
-            }
+  creditCardTrailing(context, StripeCardResponse cardState) {
+    if(cardState != null) {
+      return TextButton(
+          onPressed: () {
+            if (!deleting) {
+              deleting = true;
+              if(cardState != null) {
+                StoreProvider.of<AppState>(context).dispatch(DeletingStripePaymentMethod());
+                String firestoreCardId = cardState.firestore_id;
+                StoreProvider.of<AppState>(context).dispatch(CreateDisposePaymentMethodIntent(firestoreCardId, StoreProvider.of<AppState>(context).state.user.uid));
+              }
 
-          }
-        },
-        child: Text(AppLocalizations.of(context).delete,
-                    style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.AccentRed)
-        )
-    );
+            }
+          },
+          child: Text(AppLocalizations.of(context).delete,
+              style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.AccentRed)
+          )
+      );
+    } else {
+      return null;
+    }
+
   }
 }
