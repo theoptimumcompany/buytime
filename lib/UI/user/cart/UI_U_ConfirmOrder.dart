@@ -244,7 +244,18 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                       ),
                                     ),
                                     onPressed: () {
-                                      /// TODO START PAYMENT FLOW
+                                      if(snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.card)) {
+                                        String selectedCardPaymentMethodId = snapshot.cardListState.cardList[0].stripeState.stripeCard.paymentMethodId;
+                                        confirmationCard(context, snapshot, snapshot.stripe.stripeCard.last4, snapshot.stripe.stripeCard.brand, snapshot.stripe.stripeCard.country, selectedCardPaymentMethodId);
+                                      } else if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.applePay)) {
+
+                                      } else if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.googlePay)) {
+
+                                      } else if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.room)) {
+
+                                      } else if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.onSite)) {
+
+                                      }
                                     },
                                   ),
                                 )
@@ -636,6 +647,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
 
                     } else {
                       cardFromFirestore = StripeCardResponse.fromJson(cardListSnapshot.data.docs.first.data());
+                      cardFromFirestore.firestore_id = cardListSnapshot.data.docs.first.id;
                     }
                     return ListTile(
                       leading: Image(width: SizeConfig.blockSizeHorizontal * 10, image: AssetImage('assets/img/mastercard_icon.png')),
@@ -1128,14 +1140,14 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
       );
 
       // 3. Confirm Google pay payment method
-      await Stripe.instance.confirmPaymentMethod(
+      await Stripe.instance.confirmPayment(
         clientSecret,
         params,
       );
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-            content: Text('Google Pay payment succesfully completed')),
+            content: Text('Google Pay payment successfully completed')),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(

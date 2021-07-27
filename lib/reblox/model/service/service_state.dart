@@ -38,6 +38,12 @@ class ServiceState {
   String serviceBusinessCoordinates;
   String serviceAddress;
   String serviceCoordinates;
+  @JsonKey(defaultValue: true)
+  bool paymentMethodRoom = true;
+  @JsonKey(defaultValue: true)
+  bool paymentMethodCard = true;
+  @JsonKey(defaultValue: false)
+  bool paymentMethodOnSite = false;
 
   ///Out Database
   @JsonKey(ignore: true)
@@ -69,6 +75,9 @@ class ServiceState {
     this.serviceBusinessCoordinates,
     this.serviceAddress,
     this.serviceCoordinates,
+    this.paymentMethodRoom,
+    this.paymentMethodCard,
+    this.paymentMethodOnSite,
   });
 
   ServiceState toEmpty() {
@@ -98,6 +107,9 @@ class ServiceState {
       serviceBusinessCoordinates: '',
       serviceAddress: '',
       serviceCoordinates: '',
+      paymentMethodRoom: true,
+      paymentMethodCard: true,
+      paymentMethodOnSite: false,
     );
   }
 
@@ -127,6 +139,9 @@ class ServiceState {
     this.serviceBusinessCoordinates = service.serviceBusinessCoordinates;
     this.serviceAddress = service.serviceAddress;
     this.serviceCoordinates = service.serviceCoordinates;
+    this.paymentMethodCard = service.paymentMethodCard;
+    this.paymentMethodOnSite = service.paymentMethodOnSite;
+    this.paymentMethodRoom = service.paymentMethodRoom;
   }
 
   ServiceState copyWith({
@@ -155,6 +170,9 @@ class ServiceState {
     String serviceBusinessCoordinates,
     String serviceAddress,
     String serviceCoordinates,
+    bool paymentMethodRoom,
+    bool paymentMethodCard,
+    bool paymentMethodOnSite,
   }) {
     return ServiceState(
       serviceId: serviceId ?? this.serviceId,
@@ -182,6 +200,9 @@ class ServiceState {
       serviceBusinessCoordinates: serviceBusinessCoordinates ?? this.serviceBusinessCoordinates,
       serviceAddress: serviceAddress ?? this.serviceAddress,
       serviceCoordinates: serviceCoordinates ?? this.serviceCoordinates,
+      paymentMethodRoom: paymentMethodRoom ?? this.paymentMethodRoom,
+      paymentMethodCard: paymentMethodCard ?? this.paymentMethodCard,
+      paymentMethodOnSite: paymentMethodOnSite ?? this.paymentMethodOnSite,
     );
   }
 

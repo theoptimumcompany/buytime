@@ -12,6 +12,7 @@ import 'package:Buytime/reblox/reducer/service/service_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/service_slot_time_reducer.dart';
 import 'package:Buytime/reblox/reducer/slot_list_snippet_reducer.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
+import 'package:Buytime/reusable/checkbox/W_checkbox_parent_child.dart';
 import 'package:Buytime/reusable/enterExitRoute.dart';
 import 'package:Buytime/utils/animations/translate_animation.dart';
 import 'package:Buytime/utils/size_config.dart';
@@ -53,6 +54,9 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
   bool rippleTranslate = false;
   bool errorSwitchSlots = false;
   bool submit = false;
+  bool card = true;
+  bool room = true;
+  bool onSite = false;
 
   TextEditingController nameController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
@@ -65,6 +69,36 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {});
+  }
+
+  void _manageTristate(bool value, String type) {
+    setState(() {
+      switch (type) {
+        case 'card':
+          card = value;
+          StoreProvider.of<AppState>(context).dispatch(SetServicePaymentMethodCard(value));
+          break;
+        case 'room':
+          room = value;
+          StoreProvider.of<AppState>(context).dispatch(SetServicePaymentMethodRoom(value));
+          break;
+        case 'onSite':
+          onSite = value;
+          StoreProvider.of<AppState>(context).dispatch(SetServicePaymentMethodOnSite(value));
+          break;
+      }
+    });
+  }
+
+  void _checkAll(bool value) {
+    StoreProvider.of<AppState>(context).dispatch(SetServicePaymentMethodCard(value));
+    StoreProvider.of<AppState>(context).dispatch(SetServicePaymentMethodOnSite(value));
+    StoreProvider.of<AppState>(context).dispatch(SetServicePaymentMethodRoom(value));
+    setState(() {
+      room = value;
+      card = value;
+      onSite = value;
+    });
   }
 
   bool validateAndSave() {
@@ -293,6 +327,9 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                   //descriptionController.clear();
                   descriptionController.text = Utils.retriveField(myLocale.languageCode, snapshot.serviceState.description);
                 }
+                card = snapshot.serviceState.paymentMethodCard;
+                room = snapshot.serviceState.paymentMethodRoom;
+                onSite = snapshot.serviceState.paymentMethodOnSite;
                 firstTime = true;
               }
             }
@@ -485,6 +522,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                   ),
                                                 ),
                                               ),
+
                                               ///Name
                                               Container(
                                                 margin: EdgeInsets.only(top: 40.0, bottom: 5.0, left: 32.0, right: 28.0),
@@ -553,6 +591,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                   ],
                                                 ),
                                               ),
+
                                               ///Description
                                               Container(
                                                 margin: EdgeInsets.only(top: 10.0, bottom: 5.0, left: 32.0, right: 28.0),
@@ -649,7 +688,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                                       : validatePrice(value)
                                                                           ? null
                                                                           : AppLocalizations.of(context).notValidPrice,
-                                                                 /* onTap: (){
+                                                                  /* onTap: (){
                                                                     setState(() {
                                                                       priceController.clear();
                                                                     });
@@ -676,7 +715,6 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                                         _servicePrice = double.parse(value);
                                                                       });
                                                                     }
-
                                                                   },
                                                                   onEditingComplete: () {
                                                                     StoreProvider.of<AppState>(context).dispatch(SetServicePrice(_servicePrice));
@@ -998,6 +1036,123 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                   ),
                                                 ),
                                               ),
+                                              StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin
+                                                  ? Padding(
+                                                      padding: const EdgeInsets.only(top: 10.0),
+                                                      child: Container(
+                                                        child: Divider(
+                                                          indent: 0.0,
+                                                          color: BuytimeTheme.DividerGrey,
+                                                          thickness: 20.0,
+                                                        ),
+                                                      ),
+                                                    )
+                                                  : Container(),
+                                              StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin
+                                                  ? Column(
+                                                      children: [
+                                                        Padding(
+                                                          padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 30.0),
+                                                          child: Row(
+                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                            children: [
+                                                              Flexible(
+                                                                child: Text(
+                                                                  AppLocalizations.of(context).paymentMethods,
+                                                                  textAlign: TextAlign.start,
+                                                                  overflow: TextOverflow.clip,
+                                                                  style: TextStyle(
+                                                                    fontSize: 14,
+                                                                    color: BuytimeTheme.TextBlack,
+                                                                    fontWeight: FontWeight.w600,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        Padding(
+                                                          padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 30.0),
+                                                          child: Row(
+                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                            children: [
+                                                              Flexible(
+                                                                child: Text(
+                                                                  AppLocalizations.of(context).selectPaymentMethodsAccepted,
+                                                                  textAlign: TextAlign.start,
+                                                                  overflow: TextOverflow.clip,
+                                                                  style: TextStyle(
+                                                                    fontSize: 14,
+                                                                    color: BuytimeTheme.TextBlack,
+                                                                    fontWeight: FontWeight.w400,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        Padding(
+                                                          padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 30.0),
+                                                          child: Column(
+                                                            children: [
+                                                              Row(
+                                                                children: <Widget>[
+                                                                  // Parent
+                                                                  CustomLabeledCheckbox(
+                                                                    label: AppLocalizations.of(context).all,
+                                                                    value: room && card && onSite,
+                                                                    onChanged: (value) {
+                                                                      /// Checked/Unchecked
+                                                                      _checkAll(value);
+                                                                    },
+                                                                    checkboxType: CheckboxType.Parent,
+                                                                    activeColor: BuytimeTheme.ManagerPrimary,
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                              // Children
+                                                              Row(
+                                                                children: [
+                                                                  Flexible(
+                                                                      child: Column(
+                                                                    children: [
+                                                                      CustomLabeledCheckbox(
+                                                                        label: AppLocalizations.of(context).cardPayment,
+                                                                        value: card,
+                                                                        onChanged: (value) {
+                                                                          _manageTristate(value, 'card');
+                                                                        },
+                                                                        checkboxType: CheckboxType.Child,
+                                                                        activeColor: BuytimeTheme.ManagerPrimary,
+                                                                      ),
+                                                                      CustomLabeledCheckbox(
+                                                                        label: AppLocalizations.of(context).roomPayment,
+                                                                        value: room,
+                                                                        onChanged: (value) {
+                                                                          _manageTristate(value, 'room');
+                                                                        },
+                                                                        checkboxType: CheckboxType.Child,
+                                                                        activeColor: BuytimeTheme.ManagerPrimary,
+                                                                      ),
+                                                                      CustomLabeledCheckbox(
+                                                                        label: AppLocalizations.of(context).onSite,
+                                                                        value: onSite,
+                                                                        onChanged: (value) {
+                                                                          _manageTristate(value, 'onSite');
+                                                                        },
+                                                                        checkboxType: CheckboxType.Child,
+                                                                        activeColor: BuytimeTheme.ManagerPrimary,
+                                                                      )
+                                                                    ],
+                                                                  )),
+                                                                ],
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        )
+                                                      ],
+                                                    )
+                                                  : Container(),
 
                                               Padding(
                                                 padding: const EdgeInsets.only(top: 10.0),
