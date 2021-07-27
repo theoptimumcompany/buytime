@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:Buytime/UI/user/cart/tab/T_room.dart';
 import 'package:Buytime/UI/user/cart/tab/T_room_disabled.dart';
 import 'package:Buytime/UI/user/cart/widget/W_credit_card_simple.dart';
@@ -31,6 +32,7 @@ import 'package:flutter_stripe/flutter_stripe.dart' as StripeOfficial;
 import 'package:http/http.dart' as http;
 
 import '../../../environment_abstract.dart';
+import 'UI_U_CardChoice.dart';
 
 class ConfirmOrder extends StatefulWidget {
   final String title = 'confirmOrder';
@@ -55,6 +57,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
   OrderReservableState orderReservableState;
   bool disableRoomPayment = false;
   List<Widget> cardWidgetList = [];
+  bool deleting = false;
 
   @override
   void initState() {
@@ -137,81 +140,113 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                     child: Center(
                       child: ConstrainedBox(
                         constraints: BoxConstraints(),
-                        child: ListView(
+                        child: Column(
                           // crossAxisAlignment: CrossAxisAlignment.start,
-                          // mainAxisAlignment: MainAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           // mainAxisSize: MainAxisSize.min,
                           children: [
-                            ///Cart Details & Confirm Details
                             Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 ///Recap
                                 buildOrderRecap(context, snapshot, media),
 
-                                ///Divider
-                                Container(
-                                  color: BuytimeTheme.BackgroundLightGrey,
-                                  height: SizeConfig.safeBlockVertical * 2,
-                                ),
+                                // ///Divider
+                                // Container(
+                                //   color: BuytimeTheme.BackgroundLightGrey,
+                                //   height: SizeConfig.safeBlockVertical * 1,
+                                // ),
 
-                                ///Tab bar
-                                PreferredSize(
-                                  preferredSize: Size.fromHeight(kToolbarHeight),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: widget.tourist != null && widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black87.withOpacity(.3),
-                                          spreadRadius: 1,
-                                          blurRadius: 1,
-                                          offset: Offset(0, 2), // changes position of shadow
-                                        ),
-                                      ],
-                                    ),
-                                    child: buildTabBar(context),
-                                  ),
-                                ),
-                                ///Tab value
-                                (() {
-                                  return buildTabsBeforeConfirmation(snapshot.booking.booking_code, snapshot.cardListState);
-                                }())
+                                // ///Tab bar
+                                // PreferredSize(
+                                //   preferredSize: Size.fromHeight(kToolbarHeight),
+                                //   child: Container(
+                                //     decoration: BoxDecoration(
+                                //       color: widget.tourist != null && widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
+                                //       boxShadow: [
+                                //         BoxShadow(
+                                //           color: Colors.black87.withOpacity(.3),
+                                //           spreadRadius: 1,
+                                //           blurRadius: 1,
+                                //           offset: Offset(0, 2), // changes position of shadow
+                                //         ),
+                                //       ],
+                                //     ),
+                                //     child: buildTabBar(context),
+                                //   ),
+                                // ),
+                                // ///Tab value
+                                // (() {
+                                //   return buildTabsBeforeConfirmation(snapshot.booking.booking_code, snapshot.cardListState);
+                                // }())
                               ],
                             ),
-                            Center(
-                              child: (() {
-                                return MaterialButton(
-                                  textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
-                                  color: widget.tourist != null && widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
-                                  disabledColor: BuytimeTheme.SymbolLightGrey,
-                                  //padding: EdgeInsets.all(media.width * 0.03),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: new BorderRadius.circular(5),
-                                  ),
-                                  child: Container(
-                                    alignment: Alignment.center,
-                                    height: 44,
-                                    child: Text(
-                                      !(widget.reserve != null && widget.reserve)
-                                          ? AppLocalizations.of(context).test
-                                          : '${AppLocalizations.of(context).completeBooking.toUpperCase()}',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        letterSpacing: 1.25,
-                                        fontSize: 14,
-                                        fontFamily: BuytimeTheme.FontFamily,
-                                        fontWeight: FontWeight.w500,
-                                        color: BuytimeTheme.TextWhite,
-                                      ),
+                            /// bottom block, confirm button and payment method
+                            Column(
+                              children: [
+                                Container(
+                                  width: SizeConfig.blockSizeHorizontal * 100,
+                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 3, bottom: SizeConfig.safeBlockVertical * 3),
+                                  child: Text(
+                                    AppLocalizations.of(context).paymentMethod,
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w500, fontSize: 18
                                     ),
                                   ),
-                                  onPressed: () {
-                                    _modalChoosePaymentMethod(context);
-                                  },
-                                );
-                                return buildConfirmButton(context, snapshot, media);
-                              }()),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(left:20.0, bottom: 20.0),
+                                  child: Column(
+                                    children: [
+                                      ListTile(
+                                        trailing: const Icon(
+                                          Icons.keyboard_arrow_right,
+                                          color: Colors.black54,
+                                          size: 25.0,
+                                        ),
+                                        leading: getCurrentLeadingImage(context, snapshot),
+                                        title: getCurrentPaymentMethod(context, snapshot),
+                                        onTap: () {
+                                          _modalChoosePaymentMethod(context, snapshot);
+                                        },
+                                      ),
+                                      Divider(),
+                                    ],
+                                  ),
+                                ),
+                                Center(
+                                  child:MaterialButton(
+                                    textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
+                                    color: widget.tourist != null && widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
+                                    disabledColor: BuytimeTheme.SymbolLightGrey,
+                                    //padding: EdgeInsets.all(media.width * 0.03),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: new BorderRadius.circular(5),
+                                    ),
+                                    child: Container(
+                                      alignment: Alignment.center,
+                                      width: SizeConfig.blockSizeHorizontal * 57 ,
+                                      height: 44,
+                                      child: Text(
+                                        !(widget.reserve != null && widget.reserve)
+                                            ? AppLocalizations.of(context).confirmPayment
+                                            : '${AppLocalizations.of(context).completeBooking.toUpperCase()}',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          letterSpacing: 1.25,
+                                          fontSize: 14,
+                                          fontFamily: BuytimeTheme.FontFamily,
+                                          fontWeight: FontWeight.w500,
+                                          color: BuytimeTheme.TextWhite,
+                                        ),
+                                      ),
+                                    ),
+                                    onPressed: () {
+                                      /// TODO START PAYMENT FLOW
+                                    },
+                                  ),
+                                )
+                              ],
                             )
 
                           ],
@@ -222,6 +257,21 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
 
           }),
     );
+  }
+
+  Text getCurrentPaymentMethod(BuildContext context, AppState snapshot) {
+    if(snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.card)) {
+      return creditCardText(context, snapshot);
+    } else if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.room)) {
+      return Text( AppLocalizations.of(context).room.replaceAll(":", ""));
+    } else if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.onSite)) {
+      return Text( AppLocalizations.of(context).onSite);
+    } else if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.googlePay)) {
+      return Text( AppLocalizations.of(context).googlePay);
+    } else if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.applePay)) {
+      return Text( AppLocalizations.of(context).applePay);
+    }
+    return Text( AppLocalizations.of(context).choosePaymentMethod);
   }
 
   Widget buildTabsBeforeConfirmation(String bookingCode, CardListState cardListState) {
@@ -551,7 +601,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
     );
   }
 
-  void _modalChoosePaymentMethod(context) {
+  void _modalChoosePaymentMethod(context, AppState snapshot) {
     showModalBottomSheet(
         elevation: 3,
         shape: RoundedRectangleBorder(
@@ -564,41 +614,72 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
             height: 550,
             child: new Wrap(
               children: <Widget>[
-
+                /// TODO wrap with realtime query for card list
                 ListTile(
                   leading: Image(width: SizeConfig.blockSizeHorizontal * 10, image: AssetImage('assets/img/mastercard_icon.png')),
-                  title: new Text( AppLocalizations.of(context).creditCard),
-                  onTap: () => {},
+                  title: creditCardText(context, snapshot),
+                  trailing: creditCardTrailing(context, snapshot) ,
+                  onTap: () {
+                    if (snapshot.cardListState != null && snapshot.cardListState.cardList != null && snapshot.cardListState.cardList.length > 0) {
+                      StoreProvider.of<AppState>(context).dispatch(ChoosePaymentMethod(Utils.enumToString(PaymentType.card)));
+                      Navigator.of(context).pop();
+                    } else {
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) =>CardChoice()),);
+                    }
+                  },
                 ),
                 Divider(),
-                ListTile(
-                  leading: Image(width: SizeConfig.blockSizeHorizontal * 10, image: AssetImage('assets/img/apple_pay.jpg')),
-                  title: new Text( AppLocalizations.of(context).payWithApplePay),
-                  onTap: () => {},
-                ),
-                Divider(),
-                ListTile(
-                  leading: Image(width: SizeConfig.blockSizeHorizontal * 10, image: AssetImage('assets/img/googlePay.png')),
-                  title: new Text( AppLocalizations.of(context).googlePay),
-                  onTap: () => {},
-                ),
-                Divider(),
-                ListTile(
+                Platform.isIOS ? ListTile(
+                  leading: Image(width: SizeConfig.blockSizeHorizontal * 10, image: AssetImage('assets/img/applePay.png')),
+                  title: new Text( AppLocalizations.of(context).applePay),
+                  onTap: () {
+                  StoreProvider.of<AppState>(context).dispatch(ChoosePaymentMethod(Utils.enumToString(PaymentType.applePay)));
+                  Navigator.of(context).pop();
+                  },
+                ) : Container(),
+
+                // ListTile(
+                //   leading: Image(width: SizeConfig.blockSizeHorizontal * 10, image: AssetImage('assets/img/googlePay.png')),
+                //   title: new Text( AppLocalizations.of(context).googlePay),
+                //   onTap: () {
+                //     StoreProvider.of<AppState>(context).dispatch(ChoosePaymentMethod(Utils.enumToString(PaymentType.googlePay)));
+                //     Navigator.of(context).pop();
+                //   },
+                // ),
+                !widget.tourist ? Divider() : Container(),
+                !widget.tourist ? ListTile(
                   leading: Image(width: SizeConfig.blockSizeHorizontal * 10, image: AssetImage('assets/img/room.png')),
-                  title: new Text( AppLocalizations.of(context).room),
-                  onTap: () => {},
-                ),
+                  title: new Text( AppLocalizations.of(context).room.replaceAll(":", "")),
+                  onTap: () {
+                    StoreProvider.of<AppState>(context).dispatch(ChoosePaymentMethod(Utils.enumToString(PaymentType.room)));
+                    Navigator.of(context).pop();
+                  },
+                ) : Container(),
                 Divider(),
                 ListTile(
                   leading: Image(width: SizeConfig.blockSizeHorizontal * 10, image: AssetImage('assets/img/cash.png')),
                   title: new Text( AppLocalizations.of(context).onSite),
-                  onTap: () => {},
+                  onTap: () {
+                    StoreProvider.of<AppState>(context).dispatch(ChoosePaymentMethod(Utils.enumToString(PaymentType.onSite)));
+                    Navigator.of(context).pop();
+                  },
                 ),
                 Divider(),
               ],
             ),
           );
         });
+  }
+
+  Text creditCardText(context, AppState snapshot) {
+    if (
+    snapshot.cardListState != null &&
+    snapshot.cardListState.cardList != null &&
+    snapshot.cardListState.cardList.length > 0
+    ) {
+      return Text(snapshot.cardListState.cardList[0].stripeState.stripeCard.brand + " " + snapshot.cardListState.cardList[0].stripeState.stripeCard.last4);
+    }
+    return Text( AppLocalizations.of(context).creditCard.replaceAll(":", ""));
   }
 
   ///Recap
@@ -724,51 +805,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
     );
   }
 
-  ///App bar
-  BuytimeAppbar buildBuytimeAppbar(Size media, BuildContext context) {
-    return BuytimeAppbar(
-      background: widget.tourist != null && widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
-      width: media.width,
-      children: [
-        ///Back Button
-        IconButton(
-          icon: Icon(Icons.chevron_left, color: BuytimeTheme.TextWhite),
-          onPressed: () => Future.delayed(Duration.zero, () {
-            /// if the order is paid we empty the order status before leaving
-            String orderProgress = StoreProvider.of<AppState>(context).state.order.progress;
-            if (orderProgress == Utils.enumToString(OrderStatus.paid) || orderProgress == Utils.enumToString(OrderStatus.toBePaidAtCheckout)) {
-              StoreProvider.of<AppState>(context).dispatch(SetOrder(OrderState().toEmpty()));
-              Navigator.of(context).popUntil(ModalRoute.withName('/bookingPage'));
-            } else {
-              Navigator.of(context).pop();
-            }
-          }),
-        ),
 
-        ///Order Title
-        Container(
-          child: Padding(
-            padding: const EdgeInsets.only(left: 0.0),
-            child: Text(
-              AppLocalizations.of(context).confirmOrder,
-              textAlign: TextAlign.start,
-              style: BuytimeTheme.appbarTitle,
-            ),
-          ),
-        ),
-        /*ColorFiltered(
-                            colorFilter: ColorFilter.linearToSrgbGamma(),
-                            child: Image.network(
-                              StoreProvider.of<AppState>(context).state.business.logo,
-                              height: media.height * 0.05,
-                            ),
-                          ),*/
-        SizedBox(
-          width: 40.0,
-        ),
-      ],
-    );
-  }
 
   ///Loading spinner
   Positioned spinnerConfirmOrder() {
@@ -1118,5 +1155,75 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
     'No stripe publishable key added to assets/google_pay_payment_profile.json',
     );
   }
+  ///App bar
+  BuytimeAppbar buildBuytimeAppbar(Size media, BuildContext context) {
+    return BuytimeAppbar(
+      background: widget.tourist != null && widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
+      width: media.width,
+      children: [
+        ///Back Button
+        IconButton(
+          icon: Icon(Icons.chevron_left, color: BuytimeTheme.TextWhite),
+          onPressed: () => Future.delayed(Duration.zero, () {
+            /// if the order is paid we empty the order status before leaving
+            String orderProgress = StoreProvider.of<AppState>(context).state.order.progress;
+            if (orderProgress == Utils.enumToString(OrderStatus.paid) || orderProgress == Utils.enumToString(OrderStatus.toBePaidAtCheckout)) {
+              StoreProvider.of<AppState>(context).dispatch(SetOrder(OrderState().toEmpty()));
+              Navigator.of(context).popUntil(ModalRoute.withName('/bookingPage'));
+            } else {
+              Navigator.of(context).pop();
+            }
+          }),
+        ),
+        ///Order Title
+        Container(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 0.0),
+            child: Text(
+              AppLocalizations.of(context).confirmOrder,
+              textAlign: TextAlign.start,
+              style: BuytimeTheme.appbarTitle,
+            ),
+          ),
+        ),
+        SizedBox(
+          width: 40.0,
+        ),
+      ],
+    );
+  }
 
+  getCurrentLeadingImage(BuildContext context, AppState snapshot) {
+    if(snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.card)) {
+      return Image(width: SizeConfig.blockSizeHorizontal * 10, image: AssetImage('assets/img/mastercard_icon.png'));
+    } else if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.room)) {
+      return Image(width: SizeConfig.blockSizeHorizontal * 10, image: AssetImage('assets/img/room.png'));
+    } else if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.onSite)) {
+      return Image(width: SizeConfig.blockSizeHorizontal * 10, image: AssetImage('assets/img/cash.png'));
+    } else if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.googlePay)) {
+      return Image(width: SizeConfig.blockSizeHorizontal * 10, image: AssetImage('assets/img/googlePay.png'));
+    } else if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.applePay)) {
+      return Image(width: SizeConfig.blockSizeHorizontal * 10, image: AssetImage('assets/img/applePay.png'));
+    }
+    return null;
+  }
+
+  creditCardTrailing(context, AppState snapshot) {
+    return TextButton(
+        onPressed: () {
+          if (!deleting) {
+            deleting = true;
+            if(snapshot.cardListState != null && snapshot.cardListState.cardList != null && snapshot.cardListState.cardList.length > 0) {
+              StoreProvider.of<AppState>(context).dispatch(DeletingStripePaymentMethod());
+              String firestoreCardId = snapshot.cardListState.cardList[0].stripeState.stripeCard.firestore_id;
+              StoreProvider.of<AppState>(context).dispatch(CreateDisposePaymentMethodIntent(firestoreCardId, StoreProvider.of<AppState>(context).state.user.uid));
+            }
+
+          }
+        },
+        child: Text(AppLocalizations.of(context).delete,
+                    style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.AccentRed)
+        )
+    );
+  }
 }

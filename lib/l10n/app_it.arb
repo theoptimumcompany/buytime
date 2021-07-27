@@ -582,6 +582,10 @@
   "saveYourCardSuccess": "Success: Card has been saved.",
   "virtualAndPrepaidNotSupported": "We accept credit and debit cards. Virtual and Prepaid cards may not be supported in this country.",
   "saveYourCardError": "Card not supported. Have you used a VIRTUAL or PREPAID card?",
-  "onSite": "Pay on site",
+  "onSite": "Pagamento in loco",
+  "paymentMethod": "Metodo di Pagamento",
+  "confirmPayment": "Conferma Pagamento",
+  "applePay": "Apple Pay",
+  "delete": "rimuovi",
   "showcase": "Showcase"
 }

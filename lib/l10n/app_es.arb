@@ -583,5 +583,9 @@
   "virtualAndPrepaidNotSupported": "We accept credit and debit cards. Virtual and Prepaid cards may not be supported in this country.",
   "saveYourCardError": "Card not supported. Have you used a VIRTUAL or PREPAID card??",
   "onSite": "Pay on site",
+  "paymentMethod": "Payment Method",
+  "confirmPayment": "Confirm Payment",
+  "applePay": "Apple Pay",
+  "delete": "delete",
   "showcase": "Showcase"
 }

@@ -1,8 +1,12 @@
+import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/model/stripe/stripe_card_response.dart';
 import 'package:Buytime/reblox/model/stripe/stripe_state.dart';
+import 'package:Buytime/utils/utils.dart';
 import 'package:flutter/material.dart';
 // import 'package:stripe_sdk/stripe_sdk_ui.dart' as StripeUnofficialUI;
 import 'package:flutter_stripe/flutter_stripe.dart' as StripeOfficial;
+
+
 
 
 class SetStripeState {
@@ -36,6 +40,15 @@ class AddStripePaymentMethod
   String get userId => _userId;
   String get paymentMethodId => _paymentMethodId;
 }
+
+class ChoosePaymentMethod
+{
+  String _chosenPaymentMethod;
+  ChoosePaymentMethod(this._chosenPaymentMethod);
+  String get chosenPaymentMethod => _chosenPaymentMethod;
+}
+
+
 class CreateDisposePaymentMethodIntent
 {
   String _firestoreCardId;
@@ -119,6 +132,10 @@ StripeState stripePaymentReducer(StripeState state, action) {
   }
   if (action is CheckedStripeCustomer) {
     stripeState.stripeCustomerCreated = action.stripeCustomerCreated;
+    return stripeState.copyWith();
+  }
+  if (action is ChoosePaymentMethod) {
+    stripeState.chosenPaymentMethod = Utils.enumToString(action.chosenPaymentMethod);
     return stripeState.copyWith();
   }
 

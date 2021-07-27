@@ -1,12 +1,18 @@
 import 'package:Buytime/reblox/model/stripe/stripe_card_response.dart';
+import 'package:Buytime/utils/utils.dart';
 import 'package:json_annotation/json_annotation.dart';
 part 'stripe_state.g.dart';
 
 enum PaymentType {
   card,
   native,
-  room
+  room,
+  applePay,
+  googlePay,
+  onSite,
+  noPaymentMethod
 }
+
 
 @JsonSerializable(explicitToJson: true)
 class StripeState {
@@ -19,6 +25,9 @@ class StripeState {
   String error = "";
   @JsonKey(ignore: true)
   bool stripeCustomerCreated = false;
+  @JsonKey(ignore: true)
+  String chosenPaymentMethod = Utils.enumToString(PaymentType.noPaymentMethod);
+
 
   StripeState({
     this.paymentMethodList,
@@ -28,6 +37,7 @@ class StripeState {
     this.stripeCard,
     this.URL,
     this.error,
+    this.chosenPaymentMethod = "noPaymentMethod",
     this.stripeCustomerCreated = false,
   });
 
@@ -39,6 +49,7 @@ class StripeState {
     this.stripeCard = state.stripeCard;
     this.URL = state.URL;
     this.error = state.error;
+    this.chosenPaymentMethod = state.chosenPaymentMethod;
     this.stripeCustomerCreated = state.stripeCustomerCreated;
   }
 
@@ -50,6 +61,7 @@ class StripeState {
     StripeCardResponse stripeCard,
     String URL,
     String error,
+    String chosenPaymentMethod,
     String stripeCustomerCreated,
   }) {
     return StripeState(
@@ -60,6 +72,7 @@ class StripeState {
       stripeCard: stripeCard ?? this.stripeCard,
       URL: URL ?? this.URL,
       error: error ?? this.error,
+      chosenPaymentMethod: chosenPaymentMethod ?? this.chosenPaymentMethod,
       stripeCustomerCreated: stripeCustomerCreated ?? this.stripeCustomerCreated,
     );
   }
@@ -73,6 +86,7 @@ class StripeState {
       stripeCard: StripeCardResponse(),
       URL: "",
       error: "",
+      chosenPaymentMethod: "noPaymentMethod",
       stripeCustomerCreated: false,
     );
   }
