@@ -127,6 +127,10 @@ CategoryTreeDeleteService(), */
   NotificationListRequestService(),
   NotificationUpdateRequestService(),
   SlotListSnippetRequestService(),
+  OrderCreateOnSitePendingService(),
+  OrderCreateOnSiteAndPayService(),
+  OrderCreateOnSitePendingService(),
+  OrderCreateOnSitePendingService(),
   ServiceUpdateSlotSnippetService()
 //DefaultCategoryTreeAddService(),
 /*BusinessGenerateDefaultCategoryService(),

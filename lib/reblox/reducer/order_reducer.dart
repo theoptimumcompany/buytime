@@ -104,6 +104,14 @@ class CreateOrderRoomAndPay {
   String get roomNumber => _roomNumber;
 }
 
+class CreateOrderOnSiteAndPay {
+  OrderState _orderState;
+  PaymentType _paymentType;
+  CreateOrderOnSiteAndPay(this._orderState, this._paymentType);
+  OrderState get orderState => _orderState;
+  PaymentType get paymentType => _paymentType;
+}
+
 class CreateOrderCardPending {
   OrderState _orderState;
   String _last4;
@@ -136,6 +144,14 @@ class CreateOrderRoomPending {
   OrderState get orderState => _orderState;
   PaymentType get paymentType => _paymentType;
   String get roomNumber => _roomNumber;
+}
+
+class CreateOrderOnSitePending {
+  OrderState _orderState;
+  PaymentType _paymentType;
+  CreateOrderOnSitePending(this._orderState, this._paymentType);
+  OrderState get orderState => _orderState;
+  PaymentType get paymentType => _paymentType;
 }
 
 class CreatedOrder {}

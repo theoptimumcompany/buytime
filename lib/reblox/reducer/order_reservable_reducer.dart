@@ -150,6 +150,14 @@ class CreateOrderReservableRoomAndPay {
   String get roomNumber => _roomNumber;
 }
 
+class CreateOrderReservableOnSiteAndPay {
+  OrderReservableState _orderReservableState;
+  PaymentType _paymentType;
+  CreateOrderReservableOnSiteAndPay(this._orderReservableState, this._paymentType);
+  OrderReservableState get orderReservableState => _orderReservableState;
+  PaymentType get paymentType => _paymentType;
+}
+
 class CreateOrderReservableRoomPending {
   OrderReservableState _orderReservableState;
   String _roomNumber;
@@ -158,6 +166,14 @@ class CreateOrderReservableRoomPending {
   OrderReservableState get orderReservableState => _orderReservableState;
   PaymentType get paymentType => _paymentType;
   String get roomNumber => _roomNumber;
+}
+
+class CreateOrderReservableOnSitePending {
+  OrderReservableState _orderReservableState;
+  PaymentType _paymentType;
+  CreateOrderReservableOnSitePending(this._orderReservableState, this._paymentType);
+  OrderReservableState get orderReservableState => _orderReservableState;
+  PaymentType get paymentType => _paymentType;
 }
 
 class SetOrderReservablePaymentMethod

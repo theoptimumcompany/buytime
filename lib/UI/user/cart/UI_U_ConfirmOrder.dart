@@ -248,13 +248,13 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                         String selectedCardPaymentMethodId = snapshot.cardListState.cardList[0].stripeState.stripeCard.paymentMethodId;
                                         confirmationCard(context, snapshot, snapshot.stripe.stripeCard.last4, snapshot.stripe.stripeCard.brand, snapshot.stripe.stripeCard.country, selectedCardPaymentMethodId);
                                       } else if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.applePay)) {
-
+                                        confirmationNative(context, snapshot);
                                       } else if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.googlePay)) {
-
+                                        /// TODO to be implemented
                                       } else if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.room)) {
-
+                                        confirmationRoom(context, snapshot);
                                       } else if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.onSite)) {
-
+                                        confirmationOnSite(context, snapshot);
                                       }
                                     },
                                   ),
@@ -636,7 +636,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
             child: new Wrap(
               children: <Widget>[
                 /// TODO wrap with realtime query for card list
-                StreamBuilder<QuerySnapshot>(
+                snapshot.serviceState.paymentMethodCard ? StreamBuilder<QuerySnapshot>(
                   stream: FirebaseFirestore.instance.collection('stripeCustomer').doc(_userId).collection('card').snapshots(includeMetadataChanges: true),
                   builder: (context, cardListSnapshot) {
                     if (cardListSnapshot.hasError || cardListSnapshot.connectionState == ConnectionState.waiting) {
@@ -663,9 +663,9 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                       },
                     );
                   }
-                ),
-                Divider(),
-                Platform.isIOS ? ListTile(
+                ) : Container(),
+                Platform.isIOS && snapshot.serviceState.switchAutoConfirm && snapshot.serviceState.paymentMethodCard ? Divider() : Container(),
+                Platform.isIOS && snapshot.serviceState.switchAutoConfirm && snapshot.serviceState.paymentMethodCard ? ListTile(
                   leading: Image(width: SizeConfig.blockSizeHorizontal * 10, image: AssetImage('assets/img/applePay.png')),
                   title: new Text( AppLocalizations.of(context).applePay),
                   onTap: () {
@@ -682,8 +682,8 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                 //     Navigator.of(context).pop();
                 //   },
                 // ),
-                !widget.tourist ? Divider() : Container(),
-                !widget.tourist ? ListTile(
+                !widget.tourist && snapshot.serviceState.paymentMethodRoom ? Divider() : Container(),
+                !widget.tourist && snapshot.serviceState.paymentMethodRoom ? ListTile(
                   leading: Image(width: SizeConfig.blockSizeHorizontal * 10, image: AssetImage('assets/img/room.png')),
                   title: new Text( AppLocalizations.of(context).room.replaceAll(":", "")),
                   onTap: () {
@@ -691,15 +691,15 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                     Navigator.of(context).pop();
                   },
                 ) : Container(),
-                Divider(),
-                ListTile(
+                snapshot.serviceState.paymentMethodOnSite ? Divider() : Container(),
+                snapshot.serviceState.paymentMethodOnSite ? ListTile(
                   leading: Image(width: SizeConfig.blockSizeHorizontal * 10, image: AssetImage('assets/img/cash.png')),
                   title: new Text( AppLocalizations.of(context).onSite),
                   onTap: () {
                     StoreProvider.of<AppState>(context).dispatch(ChoosePaymentMethod(Utils.enumToString(PaymentType.onSite)));
                     Navigator.of(context).pop();
                   },
-                ),
+                ): Container(),
                 Divider(),
               ],
             ),
@@ -991,6 +991,26 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
         } else {
           /// 2B: we display a message to the user: "you have to ask the concierge to add your room number to be able to use this payment method"
         }
+      }
+    }
+  }
+
+  Future<void> confirmationOnSite(BuildContext context, AppState snapshot) async {
+    StoreProvider.of<AppState>(context).dispatch(CreatingOrder());
+    if (widget.reserve != null && widget.reserve) {
+      /// Reservable payment process starts with Native Method
+      debugPrint('UI_U_ConfirmOrder => start reservable payment process with Onsite Method');
+      if (snapshot.orderReservable.isOrderAutoConfirmable()) {
+          StoreProvider.of<AppState>(context).dispatch(CreateOrderReservableOnSiteAndPay(snapshot.orderReservable, PaymentType.onSite));
+      } else {
+          StoreProvider.of<AppState>(context).dispatch(CreateOrderReservableOnSitePending(snapshot.orderReservable, PaymentType.onSite));
+      }
+    } else {
+      debugPrint('UI_U_ConfirmOrder => start direct payment process with Onsite Method');
+      if (snapshot.order.isOrderAutoConfirmable()) {
+          StoreProvider.of<AppState>(context).dispatch(CreateOrderOnSiteAndPay(snapshot.order, PaymentType.onSite));
+      } else {
+          StoreProvider.of<AppState>(context).dispatch(CreateOrderOnSitePending(snapshot.order, PaymentType.onSite));
       }
     }
   }
