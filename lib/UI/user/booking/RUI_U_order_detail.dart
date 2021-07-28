@@ -6,11 +6,13 @@ import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:Buytime/reblox/model/notification/notification_state.dart';
 import 'package:Buytime/reblox/model/order/order_detail_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
+import 'package:Buytime/reblox/model/stripe/stripe_state.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
 import 'package:Buytime/services/order_service_epic.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -32,6 +34,7 @@ import 'package:flutter/foundation.dart';
 import 'package:Buytime/UI/user/map/UI_U_map.dart';
 import 'package:location/location.dart' as loc;
 import 'package:permission_handler/permission_handler.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
 import '../../../environment_abstract.dart';
 
@@ -223,9 +226,43 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
   }
 
   NotificationState notificationState;
+
+  Future<Uri> createDynamicLink(String userId, String orderId) async {
+    final DynamicLinkParameters parameters = DynamicLinkParameters(
+      uriPrefix: Environment().config.dynamicLink,
+      link: Uri.parse('${Environment().config.dynamicLink}/onSitePayment/?userId=$userId&orderId=$orderId'),
+      androidParameters: AndroidParameters(
+        packageName: 'com.theoptimumcompany.buytime',
+        minimumVersion: 1,
+      ),
+      iosParameters: IosParameters(
+        bundleId: 'com.theoptimumcompany.buytime',
+        minimumVersion: '1',
+        appStoreId: '1508552491',
+      ),
+    );
+    var dynamicUrl = await parameters.buildUrl();
+    print("Dynamic Link On Site Payment " + dynamicUrl.toString());
+    return dynamicUrl;
+  }
+
+  String link = '';
+
+  Future readDynamicLink(String userId, String orderId) async {
+    if (link.isEmpty) {
+      Uri tmp = await createDynamicLink(userId, orderId);
+      setState(() {
+        link = '$tmp';
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     serviceState = StoreProvider.of<AppState>(context).state.serviceState;
+
+    readDynamicLink(StoreProvider.of<AppState>(context).state.user.uid, StoreProvider.of<AppState>(context).state.orderDetail.orderId);
+
     // the media containing information on width and height
     var media = MediaQuery.of(context).size;
     orderDetails = StoreProvider.of<AppState>(context).state.orderDetail;
@@ -1101,6 +1138,17 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
                                           ),
                                         )),
                                   )) : Container(),
+                              orderDetails.cardType == Utils.enumToString(PaymentType.onSite) ? Container(
+                                  margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 2.5),
+                                  alignment: Alignment.center,
+                                  child: Material(
+                                    color: Colors.transparent,
+                                    child: QrImage(
+                                      data: '$link',
+                                      version: QrVersions.auto,
+                                      size: 150.0,
+                                    ),
+                                  )) : Container(child: Text(orderDetails.cardType),),
                             ],
                           );
                           OrderState orderState = OrderState.fromJson(orderSnapshot.data.data());
