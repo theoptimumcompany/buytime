@@ -537,6 +537,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                                       margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 4, bottom: SizeConfig.safeBlockVertical * 1),
                                       alignment: Alignment.bottomCenter,
                                       child: MaterialButton(
+                                        key: Key('send_booking_email_key'),
                                         elevation: 0,
                                         hoverElevation: 0,
                                         focusElevation: 0,
@@ -619,6 +620,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                                       margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 2.5),
                                       alignment: Alignment.bottomCenter,
                                       child: MaterialButton(
+                                        key: Key('copy_to_dashboard_key'),
                                         elevation: 0,
                                         hoverElevation: 0,
                                         focusElevation: 0,

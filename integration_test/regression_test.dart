@@ -22,59 +22,6 @@ void main() {
 
     binding.framePolicy = LiveTestWidgetsFlutterBindingFramePolicy.fullyLive;
 
-    ///Login User => Landing => Service Reserve
-    testWidgets('Login User', (tester) async {
-      await loadApp(tester);
-      await tester.pumpAndSettle(const Duration(seconds: 2));
-      //await tester.tap(find.byKey(ValueKey('login')));
-      ///Home => registration
-      await login(tester, 'test_user@buytime.network', 'test2020');
-      await tester.pumpAndSettle(const Duration(seconds: 2));
-
-      await tester.drag(find.text('Shiatsu Massage').first, const Offset(-700, 0));
-      await tester.pumpAndSettle(const Duration(seconds: 2));
-
-      await tester.tap(find.byKey(ValueKey('service_slot_0_0_key')));
-      await tester.pumpAndSettle(const Duration(seconds: 2));
-
-      await tester.tap(find.byKey(ValueKey('service_reserve_key')));
-      await tester.pumpAndSettle(const Duration(seconds: 2));
-
-      await tester.tap(find.byKey(ValueKey('cart_reserve_key')));
-      await tester.pumpAndSettle(const Duration(seconds: 2));
-
-      await tester.tap(find.byKey(ValueKey('back_cart_from_confirm_order_key')));
-      await tester.pumpAndSettle(const Duration(seconds: 1));
-
-      await tester.tap(find.byKey(ValueKey('back_from_cart_reserve_key')));
-      await tester.pumpAndSettle(const Duration(seconds: 1));
-
-      await tester.tap(find.byKey(ValueKey('back_from_service_reserve_key')));
-      await tester.pumpAndSettle(const Duration(seconds: 1));
-
-      await tester.tap(find.text('Shiatsu Massage').first);
-      await tester.pumpAndSettle(const Duration(seconds: 2));
-
-      await tester.tap(find.byKey(ValueKey('service_reserve_buy_key')));
-      await tester.pumpAndSettle(const Duration(seconds: 1));
-
-      await tester.tap(find.byKey(ValueKey('service_slot_0_0_key')));
-      await tester.pumpAndSettle(const Duration(seconds: 2));
-
-      await tester.tap(find.byKey(ValueKey('service_reserve_key')));
-      await tester.pumpAndSettle(const Duration(seconds: 2));
-
-      await tester.tap(find.byKey(ValueKey('cart_reserve_key')));
-      await tester.pumpAndSettle(const Duration(seconds: 2));
-
-      await tester.tap(find.byKey(ValueKey('back_cart_from_confirm_order_key')));
-      await tester.pumpAndSettle(const Duration(seconds: 1));
-
-      await tester.drag(find.text('Reservation').first, const Offset(-700, 0));
-      await tester.pumpAndSettle(const Duration(seconds: 2));
-
-    });
-
     ///Free Access
     testWidgets('Free Access', (tester) async {
       await loadApp(tester);
@@ -316,6 +263,7 @@ void main() {
 
       //final gesture = await tester.startGesture(Offset(0, 400)); //Position of the scrollview
       //await gesture.moveBy(Offset(0, -500)); //How much to scroll by
+      ///Scroll down
       await tester.flingFrom(Offset(0, 400), Offset(0, -500), 2000);
       await tester.pumpAndSettle(const Duration(seconds: 2));
 
@@ -328,6 +276,187 @@ void main() {
       }
 
     });
+
+    ///Login User => Landing => Service Reserve
+    testWidgets('Login User', (tester) async {
+      await loadApp(tester);
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+      //await tester.tap(find.byKey(ValueKey('login')));
+      ///Home => registration
+      //await login(tester, 'test_user@buytime.network', 'test2020');
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+
+      await tester.drag(find.text('Shiatsu Massage').first, const Offset(-700, 0));
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+
+      await tester.tap(find.byKey(ValueKey('service_slot_0_0_key')));
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+
+      await tester.tap(find.byKey(ValueKey('service_reserve_key')));
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+
+      await tester.tap(find.byKey(ValueKey('cart_reserve_key')));
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+
+      await tester.tap(find.byKey(ValueKey('back_cart_from_confirm_order_key')));
+      await tester.pumpAndSettle(const Duration(seconds: 1));
+
+      await tester.tap(find.byKey(ValueKey('back_from_cart_reserve_key')));
+      await tester.pumpAndSettle(const Duration(seconds: 1));
+
+      await tester.tap(find.byKey(ValueKey('back_from_service_reserve_key')));
+      await tester.pumpAndSettle(const Duration(seconds: 1));
+
+      await tester.tap(find.text('Shiatsu Massage').first);
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+
+      await tester.tap(find.byKey(ValueKey('service_reserve_buy_key')));
+      await tester.pumpAndSettle(const Duration(seconds: 1));
+
+      await tester.tap(find.byKey(ValueKey('service_slot_0_0_key')));
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+
+      await tester.tap(find.byKey(ValueKey('service_reserve_key')));
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+
+      await tester.tap(find.byKey(ValueKey('cart_reserve_key')));
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+
+      await tester.tap(find.byKey(ValueKey('back_cart_from_confirm_order_key')));
+      await tester.pumpAndSettle(const Duration(seconds: 1));
+
+      await tester.drag(find.text('Reservation').first, const Offset(-700, 0));
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+
+    });
+
+    ///Login User => Self Check in => log out
+    /*testWidgets('Registration User', (tester) async {
+      await loadApp(tester);
+      await tester.pumpAndSettle(const Duration(seconds: 3));
+      //await tester.tap(find.byKey(ValueKey('login')));
+      ///Home => login
+      await login(tester, 'test_self@buytime.network', 'Test2021');
+      //await tester.tap(find.byKey(ValueKey('log_out_key')));
+      await tester.pumpAndSettle(const Duration(seconds: 3));
+
+      await tester.enterText(find.byKey(ValueKey('self_email_key')), 'test_self@buytime.network');
+      await tester.pumpAndSettle(const Duration(seconds: 1));
+
+      await tester.enterText(find.byKey(ValueKey('self_name_key')), 'Test');
+      await tester.pumpAndSettle(const Duration(seconds: 1));
+
+      await tester.enterText(find.byKey(ValueKey('self_surname_key')), 'Self');
+      await tester.pumpAndSettle(const Duration(seconds: 1));
+
+      await tester.tap(find.byKey(ValueKey('self_check_in_key')));
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+
+      await tester.tap(find.text('29').first);
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+
+      await tester.tap(find.text('30').first);
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+
+      await tester.tap(find.text('Save'.toUpperCase()).first);
+      await tester.pumpAndSettle(const Duration(seconds: 1));
+      //await tester.tap(find.byKey(ValueKey('self_check_out_key')));
+      //await tester.pumpAndSettle(const Duration(seconds: 2));
+
+      await tester.flingFrom(Offset(0, 400), Offset(0, -500), 2000);
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+
+      await tester.enterText(find.byKey(ValueKey('self_guests_key')), '2');
+      await tester.pumpAndSettle(const Duration(seconds: 1));
+
+      await tester.tap(find.byKey(ValueKey('create_self_invite_key')));
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+
+      await tester.tap(find.byKey(ValueKey('back_from_booking_page_key')));
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+
+      await tester.tap(find.byKey(ValueKey('log_out_key')));
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+
+    });*/
+
+    /*testWidgets('Add External Service', (tester) async {
+      await loadApp(tester);
+
+      //await tester.tap(find.byKey(ValueKey('login')));
+      ///Home => Login
+      await login(tester, 'test_salesman@buytime.network', 'test2020');
+
+      ///Scroll up and down
+      final listFinder = find.byType(ListView);
+      debugPrint('KEY VALUE: ${find.byType(ListView).toString()}');
+      if(!find.byType(ListView).toString().contains('zero widgets with')){
+        await binding.watchPerformance(() async {
+          await tester.fling(listFinder, const Offset(0, -500), 4000);
+          await tester.pumpAndSettle(const Duration(seconds: 1));
+        }, reportKey: 'scrolling_summary');
+
+        debugPrint('KEY VALUE: ${find.text('Scoglio Bianco').toString()}');
+        ///Business List => First Business of the list
+        await tester.ensureVisible(find.text('Hotel Danila', skipOffstage: false));
+        if(!find.text('Scoglio Bianco').toString().contains('zero widgets with')) {
+          //debugPrint('KEY VALUE: ${find.byKey(ValueKey('business_0_key')).toString()}');
+          await tester.tap(find.text('Scoglio Bianco'));
+          await tester.pumpAndSettle(const Duration(seconds: 2));
+
+          await tester.tap(find.byKey(ValueKey('business_invite_key')));
+          await tester.pumpAndSettle(const Duration(seconds: 2));
+
+          await tester.tap(find.byKey(ValueKey('create_booking_key')));
+          await tester.pumpAndSettle(const Duration(seconds: 2));
+
+          await tester.enterText(find.byKey(ValueKey('create_email_key')), 'test_self@buytime.network');
+          await tester.pumpAndSettle(const Duration(seconds: 1));
+
+          await tester.enterText(find.byKey(ValueKey('create_name_key')), 'Test');
+          await tester.pumpAndSettle(const Duration(seconds: 1));
+
+          await tester.enterText(find.byKey(ValueKey('create_surname_key')), 'Self');
+          await tester.pumpAndSettle(const Duration(seconds: 1));
+
+          await tester.tap(find.byKey(ValueKey('create_check_in_key')));
+          await tester.pumpAndSettle(const Duration(seconds: 2));
+
+          await tester.tap(find.text('29').first);
+          await tester.pumpAndSettle(const Duration(seconds: 2));
+
+          await tester.tap(find.text('30').first);
+          await tester.pumpAndSettle(const Duration(seconds: 2));
+
+          await tester.tap(find.text('Save'.toUpperCase()).first);
+          await tester.pumpAndSettle(const Duration(seconds: 1));
+
+          // await tester.tap(find.byKey(ValueKey('create_check_out_key')));
+          // await tester.pumpAndSettle(const Duration(seconds: 2));
+
+          // await tester.flingFrom(Offset(0, 400), Offset(0, -500), 2000);
+          // await tester.pumpAndSettle(const Duration(seconds: 2));
+
+          await tester.enterText(find.byKey(ValueKey('create_guests_key')), '2');
+          await tester.pumpAndSettle(const Duration(seconds: 1));
+
+          await tester.tap(find.byKey(ValueKey('create_booking_invite_key')));
+          await tester.pumpAndSettle(const Duration(seconds: 3));
+
+          await tester.flingFrom(Offset(0, 400), Offset(0, -500), 2000);
+          await tester.pumpAndSettle(const Duration(seconds: 2));
+
+          // await tester.tap(find.byKey(ValueKey('send_booking_email_key')));
+          // await tester.pumpAndSettle(const Duration(seconds: 3));
+
+          await tester.tap(find.byKey(ValueKey('copy_to_dashboard_key')));
+          await tester.pumpAndSettle(const Duration(seconds: 3));
+        }
+      }else{
+        debugPrint('listview not found');
+      }
+
+    });*/
 
   });
 }

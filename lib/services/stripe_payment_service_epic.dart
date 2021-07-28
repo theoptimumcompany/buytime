@@ -30,6 +30,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:http/http.dart' as http;
 import 'package:Buytime/utils/utils.dart';
 
+import '../main.dart';
+
 // final StripeUnofficial.Stripe stripeSDK = StripeUnofficial.Stripe(
 //   Environment().config.stripePublicKey,
 //   // stripeAccount: "",
@@ -233,6 +235,31 @@ class StripeCardListRequestAndNavigateService implements EpicClass<AppState> {
       actionArray.add(AddedStripePaymentMethod());
       actionArray.add(UpdateStatistics(statisticsState));
       actionArray.add(NavigateReplaceAction(AppRoutes.confirmOrder));
+      return actionArray;
+    });
+  }
+}
+
+class StripeCardListRequestAndNavigatePop implements EpicClass<AppState> {
+  StatisticsState statisticsState;
+  List<StripeState> stripeStateList;
+  StripeCardResponse stripeCardResponse;
+  List<CardState> cardList;
+
+  @override
+  Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
+    return actions.whereType<StripeCardListRequestAndNavigate>().asyncMap((event) async {
+      stripeStateList = [];
+      cardList = [];
+      cardList = await stripeCardListMaker(event, stripeStateList, cardList, stripeCardResponse);
+    }).expand((element) {
+      var actionArray = [];
+      actionArray.add(AddCardToList(cardList));
+      actionArray.add(AddedStripePaymentMethod());
+      actionArray.add(UpdateStatistics(statisticsState));
+      actionArray.add({
+        navigatorKey.currentState.pop()
+      });
       return actionArray;
     });
   }

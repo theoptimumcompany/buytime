@@ -383,6 +383,7 @@ class _BookingPageState extends State<BookingPage> {
                             Padding(
                               padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
                               child: IconButton(
+                                key: Key('back_from_booking_page_key'),
                                 icon: const Icon(
                                   Icons.keyboard_arrow_left,
                                   color: Colors.white,

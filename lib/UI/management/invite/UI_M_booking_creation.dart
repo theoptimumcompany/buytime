@@ -246,6 +246,7 @@ class _BookingCreationState extends State<BookingCreation> {
                                                 child: Container(
                                                     margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.blockSizeHorizontal * 5),
                                                     child: TextFormField(
+                                                      key: Key('create_email_key'),
                                                       controller: _emailToInviteController,
                                                       textAlign: TextAlign.start,
                                                       keyboardType: TextInputType.emailAddress,
@@ -306,6 +307,7 @@ class _BookingCreationState extends State<BookingCreation> {
                                                 child: Container(
                                                     margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.blockSizeHorizontal * 5),
                                                     child: TextFormField(
+                                                      key: Key('create_name_key'),
                                                       controller: _nameController,
                                                       textAlign: TextAlign.start,
                                                       textInputAction: TextInputAction.next,
@@ -354,6 +356,7 @@ class _BookingCreationState extends State<BookingCreation> {
                                                 child: Container(
                                                     margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.blockSizeHorizontal * 5),
                                                     child: TextFormField(
+                                                      key: Key('create_surname_key'),
                                                       controller: _surnameController,
                                                       textAlign: TextAlign.start,
                                                       textInputAction: TextInputAction.done,
@@ -408,6 +411,7 @@ class _BookingCreationState extends State<BookingCreation> {
                                                         ///Check In
                                                         Expanded(
                                                             child:  GestureDetector(
+                                                              key: Key('create_check_in_key'),
                                                               onTap: ()async{
                                                                 await _selectDate(context, checkIn, checkOut);
                                                               },
@@ -470,6 +474,7 @@ class _BookingCreationState extends State<BookingCreation> {
                                                         ///Check Out
                                                         Expanded(
                                                             child: GestureDetector(
+                                                              key: Key('create_check_out_key'),
                                                               onTap: () async{
                                                                 await _selectDate(context, checkIn, checkOut);
                                                               },
@@ -536,6 +541,7 @@ class _BookingCreationState extends State<BookingCreation> {
                                                 child: Container(
                                                     margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.blockSizeHorizontal * 5),
                                                     child: TextFormField(
+                                                      key: Key('create_guests_key'),
                                                       controller: _numberOfGuestsController,
                                                       textAlign: TextAlign.start,
                                                       textInputAction: TextInputAction.done,
@@ -584,6 +590,7 @@ class _BookingCreationState extends State<BookingCreation> {
                                                 height: 44,
                                                 margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 4),
                                                 child: MaterialButton(
+                                                  key: Key('create_booking_invite_key'),
                                                   elevation: 0,
                                                   hoverElevation: 0,
                                                   focusElevation: 0,

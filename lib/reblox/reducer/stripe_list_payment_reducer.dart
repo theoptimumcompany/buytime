@@ -12,6 +12,12 @@ class StripeCardListRequestAndNavigate {
   String get firebaseUserId => _firebaseUserId;
 }
 
+class StripeCardListRequestAndPop{
+  String _firebaseUserId;
+  StripeCardListRequestAndPop(this._firebaseUserId);
+  String get firebaseUserId => _firebaseUserId;
+}
+
 class StripeCardListResult {
   List<StripeState> _stripeCardResponse;
   StripeCardListResult(this._stripeCardResponse);

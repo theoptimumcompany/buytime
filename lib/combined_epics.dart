@@ -127,7 +127,8 @@ CategoryTreeDeleteService(), */
   NotificationListRequestService(),
   NotificationUpdateRequestService(),
   SlotListSnippetRequestService(),
-  ServiceUpdateSlotSnippetService()
+  ServiceUpdateSlotSnippetService(),
+  StripeCardListRequestAndNavigatePop()
 //DefaultCategoryTreeAddService(),
 /*BusinessGenerateDefaultCategoryService(),
 DefaultCategoryCreateService(),

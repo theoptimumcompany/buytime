@@ -1,5 +1,6 @@
 import 'package:Buytime/main.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:redux/redux.dart';
 import 'package:redux_epics/redux_epics.dart';
 
@@ -33,6 +34,14 @@ List<String> _navigatePop(List<String> route, NavigatePopAction action) {
   var result = List<String>.from(route);
   if (result != null && result.isNotEmpty) {
     result.removeLast();
+  }
+  return result;
+}
+
+List<String> _navigate(List<String> route, NavigatePopAction action) {
+  var result = List<String>.from(route);
+  if (result != null && result.isNotEmpty) {
+    navigatorKey.currentState.pop();
   }
   return result;
 }
@@ -72,8 +81,10 @@ class NavigatePopUntilAction {
 
 class NavigatePopAction {
 
+
   @override
   String toString() {
+    debugPrint('pop');
     return 'NavigatePopAction';
   }
 }
