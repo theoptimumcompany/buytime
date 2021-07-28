@@ -156,7 +156,8 @@ class StripePaymentAddPaymentMethod implements EpicClass<AppState> {
       if (error != null) {
         actionArray.add(ErrorAction(error));
       } else {
-        actionArray.add(StripeCardListRequestAndNavigate('${userId}${Environment().config.stripeSuffix}'));
+        //actionArray.add(StripeCardListRequestAndNavigate('${userId}${Environment().config.stripeSuffix}'));
+        actionArray.add(StripeCardListRequestAndPop('${userId}${Environment().config.stripeSuffix}'));
       }
       actionArray.add(UpdateStatistics(statisticsState));
       return actionArray;
@@ -248,7 +249,7 @@ class StripeCardListRequestAndNavigatePop implements EpicClass<AppState> {
 
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-    return actions.whereType<StripeCardListRequestAndNavigate>().asyncMap((event) async {
+    return actions.whereType<StripeCardListRequestAndPop>().asyncMap((event) async {
       stripeStateList = [];
       cardList = [];
       cardList = await stripeCardListMaker(event, stripeStateList, cardList, stripeCardResponse);
