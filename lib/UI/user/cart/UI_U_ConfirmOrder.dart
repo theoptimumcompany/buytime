@@ -78,7 +78,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
 
   @override
   void dispose() {
-    StoreProvider.of<AppState>(context).dispatch(ResetOrderIfPaidOrCanceled());
+    StoreProvider.of<AppState>(context).dispatch(ResetOrderIfPaidOrCanceled());  //TODO: FRANCESCO CONTROLLA CHE QUESTA DA ERRORE SUL BACK PAGE
     super.dispose();
   }
 
