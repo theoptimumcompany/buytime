@@ -190,7 +190,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
             tmpSlots.add([]);
             for (int j = 0; j < mySlots.length; j++) {
               if (!first /*&& mySlots[i].visibility*/) {
-                debugPrint('FIRST TIME');
+               // debugPrint('FIRST TIME');
                 if (mySlots[j].free != 0) {
                   //debugPrint('HEREEE => ${mySlots[j].on}');
                   DateTime squareDateFormat = DateFormat("dd/MM/yyyy").parse(mySlots[j].date).toUtc();
@@ -206,12 +206,12 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                   }
                 }
               } else {
-                debugPrint('SECONDS AND OTHERS');
+               // debugPrint('SECONDS AND OTHERS');
                 bool found = false;
                 order.itemList.forEach((element) {
                   if (element.idSquareSlot == mySlots[j].uid) {
                     found = true;
-                    debugPrint('FOUND SLOT FROM ORDER');
+                 //   debugPrint('FOUND SLOT FROM ORDER');
                   }
                 });
                 if (found) {
