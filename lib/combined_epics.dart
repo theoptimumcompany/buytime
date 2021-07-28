@@ -131,7 +131,8 @@ CategoryTreeDeleteService(), */
   OrderCreateOnSiteAndPayService(),
   OrderCreateOnSitePendingService(),
   OrderCreateOnSitePendingService(),
-  ServiceUpdateSlotSnippetService()
+  ServiceUpdateSlotSnippetService(),
+  StripeCardListRequestAndNavigatePop()
 //DefaultCategoryTreeAddService(),
 /*BusinessGenerateDefaultCategoryService(),
 DefaultCategoryCreateService(),

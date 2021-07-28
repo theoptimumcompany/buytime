@@ -4,9 +4,11 @@ import 'package:Buytime/UI/user/cart/tab/T_room.dart';
 import 'package:Buytime/UI/user/cart/tab/T_room_disabled.dart';
 import 'package:Buytime/UI/user/cart/widget/W_credit_card_simple.dart';
 import 'package:Buytime/UI/user/cart/widget/W_loading_button.dart';
+import 'package:Buytime/main.dart';
 import 'package:Buytime/reblox/enum/order_time_intervals.dart';
 import 'package:Buytime/reblox/model/card/card_list_state.dart';
 import 'package:Buytime/reblox/model/stripe/stripe_card_response.dart';
+import 'package:Buytime/reblox/navigation/navigation_reducer.dart';
 import 'package:Buytime/reblox/reducer/stripe_payment_reducer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pay/pay.dart' as pay;
@@ -76,7 +78,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
 
   @override
   void dispose() {
-    StoreProvider.of<AppState>(context).dispatch(ResetOrderIfPaidOrCanceled());
+    StoreProvider.of<AppState>(context).dispatch(ResetOrderIfPaidOrCanceled());  //TODO: FRANCESCO CONTROLLA CHE QUESTA DA ERRORE SUL BACK PAGE
     super.dispose();
   }
 
@@ -648,6 +650,8 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                     } else {
                       cardFromFirestore = StripeCardResponse.fromJson(cardListSnapshot.data.docs.first.data());
                       cardFromFirestore.firestore_id = cardListSnapshot.data.docs.first.id;
+
+                      //StoreProvider.of<AppState>(context).dispatch(CardLi());
                     }
                     return ListTile(
                       leading: Image(width: SizeConfig.blockSizeHorizontal * 10, image: AssetImage('assets/img/mastercard_icon.png')),
@@ -658,7 +662,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                           StoreProvider.of<AppState>(context).dispatch(ChoosePaymentMethod(Utils.enumToString(PaymentType.card)));
                           Navigator.of(context).pop();
                         } else {
-                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) =>CardChoice()),);
+                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => CardChoice()),);
                         }
                       },
                     );
@@ -1226,6 +1230,9 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
               StoreProvider.of<AppState>(context).dispatch(SetOrder(OrderState().toEmpty()));
               Navigator.of(context).popUntil(ModalRoute.withName('/bookingPage'));
             } else {
+              /*StoreProvider.of<AppState>(context).dispatch({
+                navigatorKey.currentState.pop()
+              });*/
               Navigator.of(context).pop();
             }
           }),
@@ -1270,6 +1277,8 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
             if (!deleting) {
               deleting = true;
               if(cardState != null) {
+                StoreProvider.of<AppState>(context).state.stripe.chosenPaymentMethod = Utils.enumToString(PaymentType.noPaymentMethod);
+                StoreProvider.of<AppState>(context).dispatch(SetStripeState(StoreProvider.of<AppState>(context).state.stripe));
                 StoreProvider.of<AppState>(context).dispatch(DeletingStripePaymentMethod());
                 String firestoreCardId = cardState.firestore_id;
                 StoreProvider.of<AppState>(context).dispatch(CreateDisposePaymentMethodIntent(firestoreCardId, StoreProvider.of<AppState>(context).state.user.uid));

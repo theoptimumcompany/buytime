@@ -209,6 +209,7 @@ class _BookingListState extends State<BookingList> {
                                           crossAxisAlignment: CrossAxisAlignment.center,
                                           children: [
                                             FloatingActionButton(
+                                              key: Key('create_booking_key'),
                                               backgroundColor: BuytimeTheme.Secondary,
                                               onPressed: () async {
                                                 Navigator.push(context, MaterialPageRoute(builder: (context) => BookingCreation()));

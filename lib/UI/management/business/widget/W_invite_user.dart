@@ -44,6 +44,7 @@ class InviteUserState extends State<InviteUser> {
           child: Material(
             color: Colors.transparent,
             child: InkWell(
+              key: Key('business_invite_key'),
               onTap: () {
                 debugPrint('INVITE USER Clicked!');
 

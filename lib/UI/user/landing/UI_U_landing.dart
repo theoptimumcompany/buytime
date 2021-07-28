@@ -104,8 +104,9 @@ class LandingState extends State<Landing> {
     await storage.delete(key: 'selfBookingCode');
 
 
-    if (bookingCode.isNotEmpty) {
+    if (selfBookingCode.isNotEmpty) {
       StoreProvider.of<AppState>(context).dispatch(BusinessRequest(selfBookingCode));
+      await Future.delayed(Duration(milliseconds: 1000));
       Navigator.of(context).push(MaterialPageRoute(builder: (context) => BookingSelfCreation()));
     }
   }
@@ -188,13 +189,14 @@ class LandingState extends State<Landing> {
           } else
             debugPrint('UI_U_landing: USER NOT LOGGED in onLink');
         } else if (deepLink.queryParameters.containsKey('selfBookingCode') && deepLink.queryParameters['selfBookingCode'].length > 5) {
-          String selfBookingCode = deepLink.queryParameters['selfBookingCode'];
-          debugPrint('UI_U_landing: selfBookingCode from dynamic link: $selfBookingCode');
-          await storage.write(key: 'selfBookingCode', value: selfBookingCode);
+          String tmSselfBookingCode = deepLink.queryParameters['selfBookingCode'];
+          debugPrint('UI_U_landing: selfBookingCode from dynamic link: $tmSselfBookingCode');
+          selfBookingCode = tmSselfBookingCode;
+          await storage.write(key: 'selfBookingCode', value: tmSselfBookingCode);
 
           if (FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty) {
             debugPrint('UI_U_landing: USER Is LOGGED in onLink');
-            StoreProvider.of<AppState>(context).dispatch(BusinessRequest(selfBookingCode));
+            StoreProvider.of<AppState>(context).dispatch(BusinessRequest(tmSselfBookingCode));
             await storage.write(key: 'selfBookingCode', value: '');
             await Future.delayed(Duration(milliseconds: 1000));
             Navigator.push(context, MaterialPageRoute(builder: (context) => BookingSelfCreation()));
@@ -329,7 +331,8 @@ class LandingState extends State<Landing> {
                 snapshot.bookingList.bookingListState.removeLast();
                 bookingList.removeLast();
                 WidgetsBinding.instance.addPostFrameCallback((_) async {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => ServiceExplorer()));
+                  if(selfBookingCode.isEmpty)
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => ServiceExplorer()));
                 });
               } else {
                 DateTime currentTime = DateTime.now();
@@ -341,7 +344,8 @@ class LandingState extends State<Landing> {
                   //bookingStatus = 'Closed';
                   debugPrint('UI_U_Landing => No active booking found!');
                   WidgetsBinding.instance.addPostFrameCallback((_) async {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => ServiceExplorer()));
+                    if(selfBookingCode.isEmpty)
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => ServiceExplorer()));
                   });
                   //rippleLoading = false;
                 } else if (bookingList.first.start_date.isAtSameMomentAs(currentTime)) {

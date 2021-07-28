@@ -140,7 +140,7 @@ class _BookingSelfCreationState extends State<BookingSelfCreation> {
                   child: ConstrainedBox(
                       constraints: BoxConstraints(),
                       child: Container(
-                        height: (SizeConfig.safeBlockVertical * 140) - 60,
+                        height: (SizeConfig.safeBlockVertical * 126) - 60,
                         child: Stack(
                           children: [
                             ///Booking Code
@@ -241,6 +241,7 @@ class _BookingSelfCreationState extends State<BookingSelfCreation> {
                                               child: Container(
                                                   margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.blockSizeHorizontal * 5),
                                                   child: TextFormField(
+                                                    key: Key('self_email_key'),
                                                     controller: _emailToInviteController,
                                                     textAlign: TextAlign.start,
                                                     keyboardType: TextInputType.emailAddress,
@@ -287,6 +288,7 @@ class _BookingSelfCreationState extends State<BookingSelfCreation> {
                                               child: Container(
                                                   margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.blockSizeHorizontal * 5),
                                                   child: TextFormField(
+                                                    key: Key('self_name_key'),
                                                     controller: _nameController,
                                                     textAlign: TextAlign.start,
                                                     textInputAction: TextInputAction.next,
@@ -321,6 +323,7 @@ class _BookingSelfCreationState extends State<BookingSelfCreation> {
                                               child: Container(
                                                   margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.blockSizeHorizontal * 5),
                                                   child: TextFormField(
+                                                    key: Key('self_surname_key'),
                                                     controller: _surnameController,
                                                     textAlign: TextAlign.start,
                                                     textInputAction: TextInputAction.done,
@@ -361,6 +364,7 @@ class _BookingSelfCreationState extends State<BookingSelfCreation> {
                                                       ///Check In
                                                       Expanded(
                                                           child: GestureDetector(
+                                                            key: Key('self_check_in_key'),
                                                         onTap: () async {
                                                           await _selectDate(context, checkIn, checkOut);
                                                         },
@@ -406,6 +410,7 @@ class _BookingSelfCreationState extends State<BookingSelfCreation> {
                                                       ///Check Out
                                                       Expanded(
                                                           child: GestureDetector(
+                                                            key: Key('self_check_out_key'),
                                                         onTap: () async {
                                                           await _selectDate(context, checkIn, checkOut);
                                                         },
@@ -454,6 +459,7 @@ class _BookingSelfCreationState extends State<BookingSelfCreation> {
                                               child: Container(
                                                   margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.blockSizeHorizontal * 5),
                                                   child: TextFormField(
+                                                    key: Key('self_guests_key'),
                                                     controller: _numberOfGuestsController,
                                                     textAlign: TextAlign.start,
                                                     textInputAction: TextInputAction.done,
@@ -490,6 +496,7 @@ class _BookingSelfCreationState extends State<BookingSelfCreation> {
                                               height: 44,
                                               margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 4),
                                               child: MaterialButton(
+                                                key: Key('create_self_invite_key'),
                                                 elevation: 0,
                                                 hoverElevation: 0,
                                                 focusElevation: 0,
@@ -562,7 +569,7 @@ class _BookingSelfCreationState extends State<BookingSelfCreation> {
                                     child: Align(
                                       alignment: Alignment.center,
                                       child: Container(
-                                          height: SizeConfig.safeBlockVertical * 100,
+                                          height: SizeConfig.safeBlockVertical * 126,
                                           decoration: BoxDecoration(
                                             color: BuytimeTheme.BackgroundCerulean.withOpacity(.8),
                                           ),
@@ -571,6 +578,7 @@ class _BookingSelfCreationState extends State<BookingSelfCreation> {
                                               mainAxisAlignment: MainAxisAlignment.center,
                                               children: <Widget>[
                                                 Container(
+                                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 26),
                                                   width: SizeConfig.safeBlockVertical * 20,
                                                   height: SizeConfig.safeBlockVertical * 20,
                                                   child: Center(
