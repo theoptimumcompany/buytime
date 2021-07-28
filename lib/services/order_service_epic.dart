@@ -403,10 +403,10 @@ class OrderCreateOnSiteAndPayService implements EpicClass<AppState> {
 
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-    return actions.whereType<CreateOrderRoomAndPay>().asyncMap((event) async {
+    return actions.whereType<CreateOrderOnSiteAndPay>().asyncMap((event) async {
       /// add needed data to the order state
       orderState = configureOrder(event.orderState, store);
-      orderState.cardType = Utils.enumToString(PaymentType.room);
+      orderState.cardType = Utils.enumToString(PaymentType.onSite);
 
       /// This is a time based id, meaning that even if 2 users are going to generate a document at the same moment in time
       /// there are really low chances that the rest of the id is also colliding.
