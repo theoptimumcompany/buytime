@@ -789,6 +789,56 @@ class CreateOrderReservableRoomAndPayService implements EpicClass<AppState> {
     });
   }
 }
+/// an order always have to be created with a payment method attached in its subcollection
+/// TODO: research if there is a way to make this two operations in an atomic way
+class CreateOrderReservableOnSiteAndPayService implements EpicClass<AppState> {
+  StatisticsState statisticsState;
+  String state = '';
+  String paymentResult = '';
+  OrderReservableState reservable;
+
+  @override
+  Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
+    return actions.whereType<CreateOrderReservableOnSiteAndPay>().asyncMap((event) async {
+      for (int i = 0; i < event.orderReservableState.itemList.length; i++) {
+        reservable = orderReservableInitialization(event, i);
+        debugPrint('UI_U_ConfirmOrder => Date: ${reservable.date}');
+        /// add needed data to the order state
+        OrderReservableState orderReservableState = configureOrderReservable(reservable, store);
+          reservable.cardType = Utils.enumToString(PaymentType.onSite);
+          reservable.progress = Utils.enumToString(OrderStatus.accepted);
+          /// send document to orders collection
+          /// This is a time based id, meaning that even if 2 users are going to generate a document at the same moment in time
+          /// there are really low chances that the rest of the id is also colliding.
+          String timeBasedId = Uuid().v1();
+          orderReservableState.orderId = timeBasedId;
+          var addedOrder = await FirebaseFirestore.instance.collection("order").doc(timeBasedId).set(orderReservableState.toJson());
+          /// add the payment method to the order sub collection on firebase
+          String bookingId = '';
+          if(store.state.booking != null && store.state.booking.booking_id != null) {
+            bookingId = store.state.booking.booking_id;
+          }
+          var addedPaymentMethod = await FirebaseFirestore.instance.collection("order/" + orderReservableState.orderId + "/orderPaymentMethod").add({
+            'paymentMethodId' : '',
+            'last4': '',
+            'brand': '',
+            'type':  Utils.enumToString(event.paymentType),
+            'country': '',
+            'bookingId': bookingId
+          });
+      }
+      statisticsComputation();
+    }).expand((element) {
+      var actionArray = [];
+      actionArray.add(CreatedOrderReservable());
+      actionArray.add(UpdateStatistics(statisticsState));
+      actionArray.add(SetOrderReservableOrderId(reservable.orderId));
+      actionArray.add(SetOrderDetail(OrderDetailState.fromReservableState(reservable)));
+      actionArray.add(NavigatePushAction(AppRoutes.orderDetailsRealtime));
+      return actionArray;
+    });
+  }
+}
 
 /// an order always have to be created with a payment method attached in its subcollection
 /// TODO: research if there is a way to make this two operations in an atomic way
@@ -852,8 +902,7 @@ class CreateOrderReservableOnSitePendingService implements EpicClass<AppState> {
         debugPrint('UI_U_ConfirmOrder => Date: ${reservable.date}');
         /// add needed data to the order state
         OrderReservableState orderReservableState = configureOrderReservable(reservable, store);
-        if(store.state.booking != null && store.state.booking.booking_id != null) {
-          reservable.cardType = Utils.enumToString(PaymentType.room);
+          reservable.cardType = Utils.enumToString(PaymentType.onSite);
           reservable.progress = Utils.enumToString(OrderStatus.pending);
           /// send document to orders collection
           /// This is a time based id, meaning that even if 2 users are going to generate a document at the same moment in time
@@ -862,15 +911,18 @@ class CreateOrderReservableOnSitePendingService implements EpicClass<AppState> {
           orderReservableState.orderId = timeBasedId;
           var addedOrder = await FirebaseFirestore.instance.collection("order").doc(timeBasedId).set(orderReservableState.toJson());
           /// add the payment method to the order sub collection on firebase
+          String bookingId = '';
+          if(store.state.booking != null && store.state.booking.booking_id != null) {
+            bookingId = store.state.booking.booking_id;
+          }
           var addedPaymentMethod = await FirebaseFirestore.instance.collection("order/" + orderReservableState.orderId + "/orderPaymentMethod").add({
             'paymentMethodId' : '',
             'last4': '',
             'brand': '',
             'type':  Utils.enumToString(event.paymentType),
             'country': '',
-            'bookingId': store.state.booking.booking_id
+            'bookingId': bookingId
           });
-        }
       }
       statisticsComputation();
     }).expand((element) {
