@@ -1257,6 +1257,8 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
             if (!deleting) {
               deleting = true;
               if(cardState != null) {
+                StoreProvider.of<AppState>(context).state.stripe.chosenPaymentMethod = Utils.enumToString(PaymentType.noPaymentMethod);
+                StoreProvider.of<AppState>(context).dispatch(SetStripeState(StoreProvider.of<AppState>(context).state.stripe));
                 StoreProvider.of<AppState>(context).dispatch(DeletingStripePaymentMethod());
                 String firestoreCardId = cardState.firestore_id;
                 StoreProvider.of<AppState>(context).dispatch(CreateDisposePaymentMethodIntent(firestoreCardId, StoreProvider.of<AppState>(context).state.user.uid));
