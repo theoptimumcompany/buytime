@@ -396,6 +396,7 @@ class _RBusinessState extends State<RBusiness> {
                                   externalCategories.add(element);
                                 element.serviceList.forEach((service) { 
                                   if(service.serviceAbsolutePath.split('/').first != StoreProvider.of<AppState>(context).state.business.id_firestore){
+                                    debugPrint('EXTERNAL: ${element.categoryName}');
                                     if(!externalCategories.contains(element))
                                       externalCategories.add(element);
                                   }

@@ -82,6 +82,9 @@ class LandingState extends State<Landing> {
   String bookingCode = '';
   String categoryCode = '';
 
+  String orderId = '';
+  String userId = '';
+
   ///Storage
   final storage = new FlutterSecureStorage();
 
@@ -120,6 +123,25 @@ class LandingState extends State<Landing> {
       Navigator.push(context, MaterialPageRoute(builder: (context) => RBusinessList()));
     }
   }
+
+  onSitePaymentFound() async {
+    userId = await storage.read(key: 'onSiteUserId') ?? '';
+    orderId = await storage.read(key: 'onSiteOrderId') ?? '';
+    debugPrint('UI_U_landing: DEEP LINK EMPTY | userId: $userId | orderId: $orderId');
+    await storage.delete(key: 'onSiteUserId');
+    await storage.delete(key: 'onSiteOrderId');
+
+
+    if (userId.isNotEmpty && orderId.isNotEmpty) {
+      StoreProvider.of<AppState>(context).dispatch(OrderRequest(orderId));
+      await Future.delayed(Duration(milliseconds: 1000));
+      StoreProvider.of<AppState>(context).state.order.progress = 'paid';
+      StoreProvider.of<AppState>(context).dispatch(UpdateOrder(StoreProvider.of<AppState>(context).state.order));
+      //StoreProvider.of<AppState>(context).dispatch(BusinessRequest(selfBookingCode));
+      //await Future.delayed(Duration(milliseconds: 1000));
+      //Navigator.of(context).push(MaterialPageRoute(builder: (context) => BookingSelfCreation()));
+    }
+  }
   ///List
   @override
   void initState() {
@@ -142,6 +164,8 @@ class LandingState extends State<Landing> {
         String bookingCodeRead = await storage.containsKey(key: 'bookingCodeRead') ? await storage.read(key: 'bookingCodeRead') ?? '' : '';
         String categoryInviteRead = await storage.containsKey(key: 'categoryInviteRead') ? await storage.read(key: 'categoryInviteRead') ?? '' : '';
         String orderIdRead = await storage.containsKey(key: 'orderIdRead') ? await storage.read(key: 'orderIdRead') ?? '' : '';
+        String onSiteUserIdRead = await storage.containsKey(key: 'onSiteUserIdRead') ? await storage.read(key: 'onSiteUserIdRead') ?? '' : '';
+        String onSiteOrderIdRead = await storage.containsKey(key: 'onSiteOrderIdRead') ? await storage.read(key: 'onSiteOrderIdRead') ?? '' : '';
         debugPrint('UI_U_landing: after reading secure storage');
 
         if (deepLink.queryParameters.containsKey('booking') && bookingCodeRead != 'true') {
@@ -203,6 +227,28 @@ class LandingState extends State<Landing> {
           } else {
             debugPrint('UI_U_landing: USER NOT LOGGED in onLink');
           }
+        } else if (deepLink.queryParameters.containsKey('userId') && deepLink.queryParameters.containsKey('orderId') && onSiteUserIdRead != 'true' && onSiteOrderIdRead != 'true') {
+          String orderId = deepLink.queryParameters['orderId'];
+          String userId = deepLink.queryParameters['userId'];
+          debugPrint('UI_U_landing: userId onLink: $userId - orderId onLink: $orderId');
+          await storage.write(key: 'onSiteUserId', value: userId);
+          await storage.write(key: 'onSiteOrderId', value: orderId);
+          await storage.write(key: 'onSiteUserIdRead', value: 'true');
+          await storage.write(key: 'onSiteOrderIdRead', value: 'true');
+          setState(() {
+            onBookingCode = true;
+          });
+          //StoreProvider.of<AppState>(context).dispatch(BookingRequestResponse(BookingState(booking_code: id)));
+          //Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => InviteGuestForm(id: id, fromLanding: false,)), (Route<dynamic> route) => false);
+          if (FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty) {
+            debugPrint('UI_U_landing: USER Is LOGGED in onLink');
+            //Navigator.of(context).push(MaterialPageRoute(builder: (context) => InviteGuestForm(id: id, fromLanding: true,)));
+            StoreProvider.of<AppState>(context).dispatch(OrderRequest(orderId));
+            await Future.delayed(Duration(milliseconds: 1000));
+            StoreProvider.of<AppState>(context).state.order.progress = 'paid';
+            StoreProvider.of<AppState>(context).dispatch(UpdateOrder(StoreProvider.of<AppState>(context).state.order));
+          } else
+            debugPrint('UI_U_landing: USER NOT LOGGED in onLink');
         }
       }
     }, onError: (OnLinkErrorException e) async {
@@ -221,6 +267,8 @@ class LandingState extends State<Landing> {
       String bookingCodeRead = await storage.read(key: 'bookingCodeRead') ?? '';
       String categoryInviteRead = await storage.read(key: 'categoryInviteRead') ?? '';
       String orderIdRead = await storage.read(key: 'orderIdRead') ?? '';
+      String onSiteUserIdRead = await storage.containsKey(key: 'onSiteUserIdRead') ? await storage.read(key: 'onSiteUserIdRead') ?? '' : '';
+      String onSiteOrderIdRead = await storage.containsKey(key: 'onSiteOrderIdRead') ? await storage.read(key: 'onSiteOrderIdRead') ?? '' : '';
 
       if (deepLink.queryParameters.containsKey('booking') && bookingCodeRead != 'true') {
         String id = deepLink.queryParameters['booking'];
@@ -271,6 +319,43 @@ class LandingState extends State<Landing> {
             debugPrint('UI_U_landing: USER NOT LOGGED in onLink');
         } else
           debugPrint('UI_U_landing: USER NOT LOGGED in onLink');
+      }else if (deepLink.queryParameters.containsKey('selfBookingCode') && deepLink.queryParameters['selfBookingCode'].length > 5) {
+        String tmSselfBookingCode = deepLink.queryParameters['selfBookingCode'];
+        debugPrint('UI_U_landing: selfBookingCode from dynamic link: $tmSselfBookingCode');
+        selfBookingCode = tmSselfBookingCode;
+        await storage.write(key: 'selfBookingCode', value: tmSselfBookingCode);
+
+        if (FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty) {
+          debugPrint('UI_U_landing: USER Is LOGGED in onLink');
+          StoreProvider.of<AppState>(context).dispatch(BusinessRequest(tmSselfBookingCode));
+          await storage.write(key: 'selfBookingCode', value: '');
+          await Future.delayed(Duration(milliseconds: 1000));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => BookingSelfCreation()));
+        } else {
+          debugPrint('UI_U_landing: USER NOT LOGGED in onLink');
+        }
+      } else if (deepLink.queryParameters.containsKey('userId') && deepLink.queryParameters.containsKey('orderId') && onSiteUserIdRead != 'true' && onSiteOrderIdRead != 'true') {
+        String orderId = deepLink.queryParameters['orderId'];
+        String userId = deepLink.queryParameters['userId'];
+        debugPrint('UI_U_landing: userId onLink: $userId - orderId onLink: $orderId');
+        await storage.write(key: 'onSiteUserId', value: userId);
+        await storage.write(key: 'onSiteOrderId', value: orderId);
+        await storage.write(key: 'onSiteUserIdRead', value: 'true');
+        await storage.write(key: 'onSiteOrderIdRead', value: 'true');
+        setState(() {
+          onBookingCode = true;
+        });
+        //StoreProvider.of<AppState>(context).dispatch(BookingRequestResponse(BookingState(booking_code: id)));
+        //Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => InviteGuestForm(id: id, fromLanding: false,)), (Route<dynamic> route) => false);
+        if (FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty) {
+          debugPrint('UI_U_landing: USER Is LOGGED in onLink');
+          //Navigator.of(context).push(MaterialPageRoute(builder: (context) => InviteGuestForm(id: id, fromLanding: true,)));
+          StoreProvider.of<AppState>(context).dispatch(OrderRequest(orderId));
+          await Future.delayed(Duration(milliseconds: 1000));
+          StoreProvider.of<AppState>(context).state.order.progress = 'paid';
+          StoreProvider.of<AppState>(context).dispatch(UpdateOrder(StoreProvider.of<AppState>(context).state.order));
+        } else
+          debugPrint('UI_U_landing: USER NOT LOGGED in onLink');
       }
     }
   }
@@ -294,6 +379,7 @@ class LandingState extends State<Landing> {
           bookingCodeFound();
           selfCheckInFound();
           categoryInviteFound();
+          onSitePaymentFound();
           //debugPrint('UI_U_Landing => Booking code: ${store.state.booking.booking_code}');
           debugPrint('UI_U_Landing => onInit()');
           debugPrint('UI_U_Landing => store on init()');
