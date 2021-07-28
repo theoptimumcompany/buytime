@@ -650,6 +650,8 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                     } else {
                       cardFromFirestore = StripeCardResponse.fromJson(cardListSnapshot.data.docs.first.data());
                       cardFromFirestore.firestore_id = cardListSnapshot.data.docs.first.id;
+
+                      //StoreProvider.of<AppState>(context).dispatch(CardLi());
                     }
                     return ListTile(
                       leading: Image(width: SizeConfig.blockSizeHorizontal * 10, image: AssetImage('assets/img/mastercard_icon.png')),

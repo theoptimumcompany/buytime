@@ -253,11 +253,13 @@ class StripeCardListRequestAndNavigatePop implements EpicClass<AppState> {
       stripeStateList = [];
       cardList = [];
       cardList = await stripeCardListMaker(event, stripeStateList, cardList, stripeCardResponse);
+      store.state.stripe.chosenPaymentMethod = Utils.enumToString(PaymentType.card);
     }).expand((element) {
       var actionArray = [];
       actionArray.add(AddCardToList(cardList));
       actionArray.add(AddedStripePaymentMethod());
       actionArray.add(UpdateStatistics(statisticsState));
+      actionArray.add(SetStripeState(store.state.stripe));
       actionArray.add({
         navigatorKey.currentState.pop()
       });
