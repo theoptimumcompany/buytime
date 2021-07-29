@@ -14,7 +14,6 @@ import 'package:redux/redux.dart';
 
 ///Integration test run cmd
 ///flutter drive --driver integration_test/driver.dart --target --dart-define=ENVIRONMENT=PROD --flavor prod -t integration_test/app_test.dart --debug
-///flutter drive --driver integration_test/driver.dart --target --dart-define=ENVIRONMENT=PROD --flavor prod -t integration_test/regression_test.dart --debug
 
 void main() {
   group('Testing App Performance Tests', () {

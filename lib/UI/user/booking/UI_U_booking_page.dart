@@ -98,6 +98,8 @@ class _BookingPageState extends State<BookingPage> {
     bool sub = false;
     List<ServiceListSnippetState> serviceListSnippetListState = StoreProvider.of<AppState>(context).state.serviceListSnippetListState.serviceListSnippetListState;
     ServiceListSnippetState serviceListSnippetState =  StoreProvider.of<AppState>(context).state.serviceListSnippetState;
+
+    //debugPrint('BUSINESS ID: ${serviceListSnippetState.businessId}');
     for (var w = 0; w < serviceListSnippetState.businessSnippet.length; w++) {
       for (var y = 0; y < serviceListSnippetState.businessSnippet[w].serviceList.length; y++) {
         //debugPrint('INSIDE SERVICE PATH  => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath}');
@@ -109,8 +111,10 @@ class _BookingPageState extends State<BookingPage> {
       }
     }
 
+    debugPrint('BUSINESS LENGTH: ${serviceListSnippetListState.length}');
     for (var z = 0; z < serviceListSnippetListState.length; z++) {
       //debugPrint('BUSINESS NAME => ${serviceListSnippetListState[z].businessName}');
+      debugPrint('BUSINESS ID: ${serviceListSnippetListState[z].businessId} - ${serviceListSnippetListState[z].businessName}');
       for (var w = 0; w < serviceListSnippetListState[z].businessSnippet.length; w++) {
         for (var y = 0; y < serviceListSnippetListState[z].businessSnippet[w].serviceList.length; y++) {
           //debugPrint('INSIDE SERVICE PATH  => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath}');
@@ -264,6 +268,10 @@ class _BookingPageState extends State<BookingPage> {
         store.dispatch(RequestNotificationList(store.state.user.uid, store.state.business.id_firestore));
         startRequest = true;
         rippleLoading = true;
+        if(store.state.serviceListSnippetListState.serviceListSnippetListState.length == 1){
+          if(store.state.serviceListSnippetListState.serviceListSnippetListState.first.businessId == null)
+            store.state.serviceListSnippetListState.serviceListSnippetListState.removeLast();
+        }
       },
       builder: (context, snapshot) {
         debugPrint('UI_U_BookingPage => Order List LENGTH: ${snapshot.orderList.orderListState.length}');
@@ -363,6 +371,7 @@ class _BookingPageState extends State<BookingPage> {
         order = snapshot.order.itemList != null ? (snapshot.order.itemList.length > 0 ? snapshot.order : OrderState().toEmpty()) : OrderState().toEmpty();
         debugPrint('UI_U_BookingPage => CART COUNT: ${order.cartCounter}');
         debugPrint('UI_U_booking_page =>has notifications? $hasNotifications');
+
         return Stack(children: [
           Positioned.fill(
             child: Align(

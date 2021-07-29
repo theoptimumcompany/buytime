@@ -491,7 +491,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                       Expanded(
                                                         flex: 1,
                                                         child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                          mainAxisAlignment: MainAxisAlignment.start,
                                                           children: [
                                                             Container(
                                                               child: WidgetServicePhoto(
