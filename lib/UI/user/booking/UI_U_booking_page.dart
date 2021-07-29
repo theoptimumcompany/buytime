@@ -113,9 +113,11 @@ class _BookingPageState extends State<BookingPage> {
 
     debugPrint('BUSINESS LENGTH: ${serviceListSnippetListState.length}');
     for (var z = 0; z < serviceListSnippetListState.length; z++) {
-      //debugPrint('BUSINESS NAME => ${serviceListSnippetListState[z].businessName}');
+      debugPrint('BUSINESS NAME => ${serviceListSnippetListState[z].businessName}');
+      debugPrint('BUSINESS NAME => ${serviceListSnippetListState[z].businessSnippet.length}');
       debugPrint('BUSINESS ID: ${serviceListSnippetListState[z].businessId} - ${serviceListSnippetListState[z].businessName}');
       for (var w = 0; w < serviceListSnippetListState[z].businessSnippet.length; w++) {
+
         for (var y = 0; y < serviceListSnippetListState[z].businessSnippet[w].serviceList.length; y++) {
           //debugPrint('INSIDE SERVICE PATH  => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath}');
           if (serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath.contains(serviceId) && serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath.contains(categoryId)) {

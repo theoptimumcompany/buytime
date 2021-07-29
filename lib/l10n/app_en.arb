@@ -593,5 +593,6 @@
   "selectPaymentMethodsAccepted": "Select the payment methods accepted by your service",
   "all": "All",
   "roomPayment": "Room Payment",
-  "cardPayment": "Credit Card"
+  "cardPayment": "Credit Card",
+  "noPaymentMethod": "No chosen Payment Method"
 }
