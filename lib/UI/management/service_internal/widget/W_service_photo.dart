@@ -10,6 +10,7 @@ import 'package:Buytime/utils/utils.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:google_place/google_place.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:path/path.dart' as path;
 import 'package:flutter/material.dart';
@@ -52,6 +53,7 @@ class WidgetServicePhotoState extends State<WidgetServicePhoto> {
   var size;
   String image;
   AssetImage assetImage = AssetImage('assets/img/image_placeholder.png');
+  AssetImage assetSquare = AssetImage('assets/img/image_placeholder_square_upload.png');
 
   Image croppedImage;
 
@@ -245,23 +247,75 @@ class WidgetServicePhotoState extends State<WidgetServicePhoto> {
           ],
         ),
         Container(
-          child: GestureDetector(
-            child: croppedImage != null ? croppedImage : (image != '' ? CachedNetworkImage(
-              imageUrl: remotePath.endsWith('1') ? Utils.sizeImage(image, Utils.imageSizing600) : Utils.sizeImage(image, Utils.imageSizing200),
-              imageBuilder: (context, imageProvider) => Container(
-                //margin: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 5), ///5%
-                height: remotePath.endsWith('1') ? 300 : 150,
-                width: remotePath.endsWith('1') ? 300 : 150,
-                decoration: BoxDecoration(
-                  //borderRadius: BorderRadius.all(Radius.circular(SizeConfig.blockSizeHorizontal * 5)), ///12.5%
-                    image: DecorationImage(image: imageProvider, fit: BoxFit.cover)),
+          height: remotePath.endsWith('1') ? 300 : 150,
+          width: remotePath.endsWith('1') ? 300 : 150,
+          color: Color(0xffe6e6e6),
+          child: Stack(
+            children: [
+              Positioned.fill(
+                child: Align(
+                  alignment: Alignment.center,
+                  child: GestureDetector(
+                    child: croppedImage != null ? croppedImage : (image != '' ? CachedNetworkImage(
+                      fit: BoxFit.fill,
+                      imageUrl: remotePath.endsWith('1') ? Utils.sizeImage(image, Utils.imageSizing600) : Utils.sizeImage(image, Utils.imageSizing200),
+                      imageBuilder: (context, imageProvider) => Container(
+                        //margin: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 5), ///5%
+                        height: remotePath.endsWith('1') ? 300 : 150,
+                        width: remotePath.endsWith('1') ? 300 : 150,
+                        decoration: BoxDecoration(
+                          //borderRadius: BorderRadius.all(Radius.circular(SizeConfig.blockSizeHorizontal * 5)), ///12.5%
+                            image: DecorationImage(image: imageProvider, fit: BoxFit.cover)),
+                      ),
+                      placeholder: (context, url) => Utils.imageShimmer(remotePath.endsWith('1') ? 300 : 150, remotePath.endsWith('1') ? 300 : 150),
+                      errorWidget: (context, url, error) => croppedImage == null ? Image(width: SizeConfig.blockSizeHorizontal * 100, image: assetSquare, fit: BoxFit.fill) : croppedImage,
+                    ) : Image(width: SizeConfig.blockSizeHorizontal * 100, image: assetSquare, fit: BoxFit.fill,)),
+                    onTap: canEdit() ? () {
+                      manageImage();
+                    } : null,
+                  ),
+                ),
               ),
-              placeholder: (context, url) => Utils.imageShimmer(remotePath.endsWith('1') ? 300 : 150, remotePath.endsWith('1') ? 300 : 150),
-              errorWidget: (context, url, error) => croppedImage == null ? Image(width: SizeConfig.blockSizeHorizontal * 100, image: assetImage) : croppedImage,
-            ) : Image(width: SizeConfig.blockSizeHorizontal * 100, image: assetImage)),
-            onTap: canEdit() ? () {
-              manageImage();
-            } : null,
+              croppedImage != null || image != '' ?
+              Positioned.fill(
+                top: 10,
+                right: 5,
+                child: Align(
+                  alignment: Alignment.topRight,
+                  child: GestureDetector(
+                    onTap: (){
+                      debugPrint('Remove image: $remotePath');
+                      if(remotePath.endsWith('1')){
+                        StoreProvider.of<AppState>(context).state.serviceState.image1 = '';
+                      }
+                      else if(remotePath.endsWith('2')){
+                        StoreProvider.of<AppState>(context).state.serviceState.image2 = '';
+                      }
+                      else if(remotePath.endsWith('3')){
+                        StoreProvider.of<AppState>(context).state.serviceState.image3 = '';
+                      }
+
+                      setState(() {
+                        image = '';
+                        croppedImage = Image();
+                      });
+                    },
+                    child: Container(
+                      height: 24,
+                      width: 24,
+                      decoration: BoxDecoration(
+                          color: BuytimeTheme.BackgroundWhite.withOpacity(0.8),
+                          borderRadius: BorderRadius.all(Radius.circular(12.5))
+                      ),
+                      child: Icon(
+                          Icons.close,
+                        size: 23,
+                      ),
+                    ),
+                  ),
+                ),
+              ) : Container()
+            ],
           ),
         )
       ],

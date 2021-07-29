@@ -152,6 +152,7 @@ class ServiceListSnippetRequestServiceNavigate implements EpicClass<AppState> {
           if(sL.serviceVisibility == 'Deactivated' || sL.serviceVisibility == 'Active'){
             serviceIds.add(sL.serviceAbsolutePath.split('/').last);
             if(!businessIds.contains(sL.serviceAbsolutePath.split('/').first) && sL.serviceAbsolutePath.split('/').first != store.state.business.id_firestore){
+              debugPrint('EXTERNAL BUSINESS ID: ${sL.serviceAbsolutePath.split('/').first}');
               businessIds.add(sL.serviceAbsolutePath.split('/').first);
             }
           }

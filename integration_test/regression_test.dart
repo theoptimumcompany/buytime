@@ -13,7 +13,7 @@ import 'package:provider/provider.dart';
 import 'package:redux/redux.dart';
 
 ///Integration test run cmd
-///flutter drive --driver integration_test/driver.dart --target --dart-define=ENVIRONMENT=PROD --flavor prod -t integration_test/app_test.dart --debug
+///flutter drive --driver integration_test/driver.dart --target --dart-define=ENVIRONMENT=PROD --flavor prod -t integration_test/regression_test.dart --debug
 
 void main() {
   group('Testing App Performance Tests', () {
@@ -331,7 +331,8 @@ void main() {
     });
 
     ///Login User => Self Check in => log out
-    /*testWidgets('Registration User', (tester) async {
+    /*
+     testWidgets('Registration User', (tester) async {
       await loadApp(tester);
       await tester.pumpAndSettle(const Duration(seconds: 3));
       //await tester.tap(find.byKey(ValueKey('login')));
@@ -352,10 +353,14 @@ void main() {
       await tester.tap(find.byKey(ValueKey('self_check_in_key')));
       await tester.pumpAndSettle(const Duration(seconds: 2));
 
-      await tester.tap(find.text('29').first);
+      DateTime currentDate = DateTime.now();
+      String start = currentDate.add(Duration(days: 1)).day.toString();
+      String end = currentDate.add(Duration(days: 2)).day.toString();
+
+      await tester.tap(find.text(start).first);
       await tester.pumpAndSettle(const Duration(seconds: 2));
 
-      await tester.tap(find.text('30').first);
+      await tester.tap(find.text(end).first);
       await tester.pumpAndSettle(const Duration(seconds: 2));
 
       await tester.tap(find.text('Save'.toUpperCase()).first);
@@ -422,10 +427,14 @@ void main() {
           await tester.tap(find.byKey(ValueKey('create_check_in_key')));
           await tester.pumpAndSettle(const Duration(seconds: 2));
 
-          await tester.tap(find.text('29').first);
+          DateTime currentDate = DateTime.now();
+          String start = currentDate.add(Duration(days: 1)).day.toString();
+          String end = currentDate.add(Duration(days: 2)).day.toString();
+
+          await tester.tap(find.text(start).first);
           await tester.pumpAndSettle(const Duration(seconds: 2));
 
-          await tester.tap(find.text('30').first);
+          await tester.tap(find.text(end).first);
           await tester.pumpAndSettle(const Duration(seconds: 2));
 
           await tester.tap(find.text('Save'.toUpperCase()).first);
