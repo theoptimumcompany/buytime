@@ -232,7 +232,7 @@ class OrderCreateNativeAndPayService implements EpicClass<AppState> {
       /// create an order for each business
 
         /// add needed data to the order state
-      orderState = configureOrder(event.orderState, store);
+      orderState = configureOrder(event.orderState, store.state);
         if (event.paymentMethod != null) {
           /// This is a time based id, meaning that even if 2 users are going to generate a document at the same moment in time
           /// there are really low chances that the rest of the id is also colliding.
@@ -319,7 +319,7 @@ class OrderCreateCardAndPayService implements EpicClass<AppState> {
 
           debugPrint('OrderCreateCardAndPayService - creating order from card: ' + orderState.toString());
           debugPrint('OrderCreateCardAndPayService - creating order from card: ' + orderState.toJson().toString());
-          orderState = configureOrder(event.orderState, store);
+          orderState = configureOrder(event.orderState, store.state);
 
 
           /// send document to orders collection
@@ -362,7 +362,7 @@ class OrderCreateRoomAndPayService implements EpicClass<AppState> {
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<CreateOrderRoomAndPay>().asyncMap((event) async {
       /// add needed data to the order state
-      orderState = configureOrder(event.orderState, store);
+      orderState = configureOrder(event.orderState, store.state);
       orderState.cardType = Utils.enumToString(PaymentType.room);
 
       /// This is a time based id, meaning that even if 2 users are going to generate a document at the same moment in time
@@ -405,7 +405,7 @@ class OrderCreateOnSiteAndPayService implements EpicClass<AppState> {
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<CreateOrderOnSiteAndPay>().asyncMap((event) async {
       /// add needed data to the order state
-      orderState = configureOrder(event.orderState, store);
+      orderState = configureOrder(event.orderState, store.state);
       orderState.cardType = Utils.enumToString(PaymentType.onSite);
 
       /// This is a time based id, meaning that even if 2 users are going to generate a document at the same moment in time
@@ -457,7 +457,7 @@ class OrderCreateNativePendingService implements EpicClass<AppState> {
       debugPrint('CreateOrderPending start');
 
         /// add needed data to the order state
-        orderState = configureOrder(event.orderState, store);
+        orderState = configureOrder(event.orderState, store.state);
         orderState.cardType = Utils.enumToString(PaymentType.room);
         orderState.progress = Utils.enumToString(OrderStatus.pending);
 
@@ -505,7 +505,7 @@ class OrderCreateCardPendingService implements EpicClass<AppState> {
       debugPrint('CreateOrderPending start');
 
         /// add needed data to the order state
-        orderState = configureOrder(event.orderState, store);
+        orderState = configureOrder(event.orderState, store.state);
         orderState.cardType = Utils.enumToString(PaymentType.card);
         orderState.progress = Utils.enumToString(OrderStatus.pending);
 
@@ -554,7 +554,7 @@ class OrderCreateRoomPendingService implements EpicClass<AppState> {
       debugPrint('CreateOrderPending start');
 
       /// add needed data to the order state
-      orderState = configureOrder(event.orderState, store);
+      orderState = configureOrder(event.orderState, store.state);
       orderState.cardType = Utils.enumToString(PaymentType.room);
       orderState.progress = Utils.enumToString(OrderStatus.pending);
 
@@ -607,7 +607,7 @@ class OrderCreateOnSitePendingService implements EpicClass<AppState> {
       debugPrint('CreateOrderPending start');
 
       /// add needed data to the order state
-      orderState = configureOrder(event.orderState, store);
+      orderState = configureOrder(event.orderState, store.state);
       orderState.cardType = Utils.enumToString(PaymentType.onSite);
       orderState.progress = Utils.enumToString(OrderStatus.pending);
 

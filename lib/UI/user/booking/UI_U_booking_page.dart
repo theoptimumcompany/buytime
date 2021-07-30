@@ -329,8 +329,8 @@ class _BookingPageState extends State<BookingPage> {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             if (l.isNotEmpty) grid(l);
           });
-          bookingState = snapshot.booking;
-          businessState = snapshot.business;
+          bookingState = snapshot.booking != null ? snapshot.booking : BookingState().toEmpty();
+          businessState = snapshot.business != null ? snapshot.business : BusinessState().toEmpty();
           serviceList = serviceListState.serviceListState.length >= 5 ? serviceListState.serviceListState.sublist(0,5) : serviceListState.serviceListState;
 
 
@@ -584,7 +584,7 @@ class _BookingPageState extends State<BookingPage> {
                                     height: 125,
                                     child: CachedNetworkImage(
                                       //width: 125,
-                                      imageUrl: businessState.wide != null ? businessState.wide : 'https://firebasestorage.googleapis.com/v0/b/buytime-458a1.appspot.com/o/general%2Fimage_placeholder_200x200_1000x1000.png?alt=media&token=082a1896-32d8-4750-b7cc-141f00bc060c',
+                                      imageUrl: businessState  != null && businessState.wide != null ? businessState.wide : 'https://firebasestorage.googleapis.com/v0/b/buytime-458a1.appspot.com/o/general%2Fimage_placeholder_200x200_1000x1000.png?alt=media&token=082a1896-32d8-4750-b7cc-141f00bc060c',
                                       imageBuilder: (context, imageProvider) => Container(
                                         //margin: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 5), ///5%
                                         decoration: BoxDecoration(
@@ -640,7 +640,7 @@ class _BookingPageState extends State<BookingPage> {
                                         Container(
                                           margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                                           child: Text(
-                                            AppLocalizations.of(context).yourHolidayInSpace + ' ' + businessState.municipality,
+                                            AppLocalizations.of(context).yourHolidayInSpace + ' ' + (businessState != null ? businessState.municipality : ""),
                                             style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextMedium, fontWeight: FontWeight.w400, fontSize: 16
 
                                               ///SizeConfig.safeBlockHorizontal * 4

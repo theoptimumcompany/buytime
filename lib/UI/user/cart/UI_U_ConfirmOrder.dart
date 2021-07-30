@@ -6,10 +6,14 @@ import 'package:Buytime/UI/user/cart/widget/W_credit_card_simple.dart';
 import 'package:Buytime/UI/user/cart/widget/W_loading_button.dart';
 import 'package:Buytime/main.dart';
 import 'package:Buytime/reblox/enum/order_time_intervals.dart';
+import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:Buytime/reblox/model/card/card_list_state.dart';
+import 'package:Buytime/reblox/model/order/order_entry.dart';
 import 'package:Buytime/reblox/model/stripe/stripe_card_response.dart';
 import 'package:Buytime/reblox/navigation/navigation_reducer.dart';
+import 'package:Buytime/reblox/reducer/business_reducer.dart';
 import 'package:Buytime/reblox/reducer/stripe_payment_reducer.dart';
+import 'package:Buytime/services/order/util.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pay/pay.dart' as pay;
 import 'package:Buytime/reblox/model/order/order_reservable_state.dart';
@@ -34,6 +38,8 @@ import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:flutter_stripe/flutter_stripe.dart' as StripeOfficial;
 
 import 'package:http/http.dart' as http;
+import 'package:redux_epics/redux_epics.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../../environment_abstract.dart';
 import 'UI_U_CardChoice.dart';
@@ -57,6 +63,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
   SetupIntent _setupIntentResult;
   String _userId = '';
   bool _saveCard = false;
+  AppState state;
   OrderState orderState;
   OrderReservableState orderReservableState;
   bool disableRoomPayment = false;
@@ -135,7 +142,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
 
             _email = snapshot.user.email;
             _userId = snapshot.user.uid;
-
+            state = snapshot;
             debugPrint('T_credit_cards => ON INIT');
             return
               Scaffold(
@@ -218,6 +225,10 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                     ],
                                   ),
                                 ),
+                                snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.applePay) ? ApplePayButton(
+                                  width: SizeConfig.blockSizeHorizontal * 65,
+                                  onPressed: _handlePayPress,
+                                ) :
                                 Center(
                                   child:MaterialButton(
                                     textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
@@ -344,50 +355,6 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
       return Room(tourist: widget.tourist, bookingCode: bookingCode);
     }
     return Container();
-  }
-
-  Column buildMobilePay() {
-    return Column(
-        children: [
-          if (Stripe.instance.isApplePaySupported.value)
-            Padding(
-              padding: EdgeInsets.all(16),
-              child: ApplePayButton(
-                onPressed: _handlePayPress,
-              ),
-            )
-          else
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16),
-              child: Text('Apple Pay is not available in this device'),
-            ),
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: pay.GooglePayButton(
-              paymentConfigurationAsset: 'google_pay_payment_profile.json',
-              paymentItems: buildGoogleItems(),
-              margin: const EdgeInsets.only(top: 15),
-              onPaymentResult: onGooglePayResult,
-              loadingIndicator: const Center(
-                child: CircularProgressIndicator(),
-              ),
-              onPressed: () async {
-                // 1. Add your stripe publishable key to assets/google_pay_payment_profile.json
-                // await debugChangedStripePublishableKey();
-              },
-              onError: (e) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text(
-                        'There was an error while trying to perform the payment'),
-                  ),
-                );
-              },
-            ),
-          )
-
-        ],
-      );
   }
 
   List<pay.PaymentItem> buildGoogleItems() {
@@ -921,7 +888,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
     /// 1: create the payment method
     StripePaymentService stripePaymentService = StripePaymentService();
     if (widget.reserve != null && widget.reserve) {
-      paymentMethod = await stripePaymentService.createPaymentMethodNative(OrderState.fromReservableState(snapshot.orderReservable), snapshot.business.name);
+      // paymentMethod = await stripePaymentService.createPaymentMethodNative(OrderState.fromReservableState(snapshot.orderReservable), snapshot.business.name);
 
       /// Reservable payment process starts with Native Method
       StoreProvider.of<AppState>(context).dispatch(SetOrderReservablePaymentMethod(paymentMethod));
@@ -1094,57 +1061,76 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
 
   /// APPLE PAY FUNCTIONS
   Future<void> _handlePayPress() async {
-    try {
+    orderState = configureOrder(orderState, state);
+      String timeBasedId = Uuid().v1();
+      orderState.orderId = timeBasedId;
+      var addedOrder = await FirebaseFirestore.instance.collection("order").doc(timeBasedId).set(orderState.toJson());
+      var addedPaymentMethod = await FirebaseFirestore.instance.collection("order").doc(orderState.orderId).collection("orderPaymentMethod").add({
+        'paymentMethodId': '',
+        'last4': '',
+        'brand': '',
+        'type': Utils.enumToString(PaymentType.applePay),
+        'country': 'IT',
+        'booking_id': ''
+      });
+    Stripe.publishableKey = "pk_live_51HS20eHr13hxRBpCLHzfi0SXeqw8Efu911cWdYEE96BAV0zSOesvE83OiqqzRucKIxgCcKHUvTCJGY6cXRtkDVCm003CmGXYzy";
+    Stripe.merchantIdentifier = "merchant.theoptimumcompany.buytime";
+
+    DocumentSnapshot businessSnapshot = await FirebaseFirestore.instance
+        .collection("business")
+        .doc(state.order.businessId)
+        .get();
+
+    BusinessState businessState = BusinessState.fromJson(businessSnapshot.data());
+    Stripe.stripeAccountId = businessState.stripeCustomerId;
+
+    debugPrint("UI_U_ConfirmOrder >>>>>>>> state.business.stripeCustomerId" + businessState.stripeCustomerId);
+
+    if(businessState.stripeCustomerId == null || businessState.stripeCustomerId.isEmpty) {
+      debugPrint("UI_U_ConfirmOrder >>>>>>>> state.business.stripeCustomerId is MISSING");
+    }
+
+    List<ApplePayCartSummaryItem> items = [];
+    // initializePaymentValues(orderState, orderState.business.name, orderState.total, items);
+    for (int i = 0; i < orderState.itemList.length; i++) {
+      OrderEntry orderEntry = orderState.itemList[i];
+      String totalItemPrice = (orderEntry.price * orderEntry.number).toString();
+      ApplePayCartSummaryItem item = ApplePayCartSummaryItem(label: Utils.retriveField(Localizations.localeOf(context).languageCode, orderEntry.name), amount: totalItemPrice);
+      items.add(item);
+    }
+    debugPrint("stripe_payment_service_epic createPaymentServiceNative");
+    // try {
       // 1. Present Apple Pay sheet
-      await Stripe.instance.presentApplePay(
+      var presentApplePay = await Stripe.instance.presentApplePay(
         ApplePayPresentParams(
-          cartItems: [
-            ApplePayCartSummaryItem(
-              label: 'Product Test',
-              amount: '20',
-            ),
-          ],
-          country: 'Es',
+          cartItems: items,
+          country: 'It',
           currency: 'EUR',
         ),
       );
-
-      // 2. fetch Intent Client Secret from backend
-      final response = await fetchPaymentIntentClientSecret();
-      final clientSecret = response['clientSecret'];
-      // 2. Confirm apple pay payment
-      await Stripe.instance.confirmApplePayPayment(clientSecret);
+      final response = await fetchPaymentIntentClientSecret(orderState);
+      final clientSecret = response['client_secret'];
+      var resultOfConfirmation = await Stripe.instance.confirmApplePayPayment(clientSecret);
+      debugPrint("Apple Pay payment succesfully completed");
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
             content: Text('Apple Pay payment succesfully completed')),
       );
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: $e')),
-      );
-    }
+    // } catch (e) {
+    //   debugPrint('Error: $e');
+    //
+    //   ScaffoldMessenger.of(context).showSnackBar(
+    //     SnackBar(content: Text('Error: $e')),
+    //   );
+    // }
   }
 
-  Future<Map<String, dynamic>> fetchPaymentIntentClientSecret() async {
-    final url = Uri.parse('${Environment().config.cloudFunctionLink}/create-payment-intent');
-    final response = await http.post(
-      url,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: json.encode({
-        'email': _email,
-        'currency': 'EUR',
-        'items': [
-          {'id': 'id'}
-        ],
-        'request_three_d_secure': 'any',
-      }),
-    );
+  Future<Map<String, dynamic>> fetchPaymentIntentClientSecret(OrderState orderState) async {
+    String orderId = orderState.orderId;
+    final url =  Uri.https(Environment().config.cloudFunctionLink, '/StripePIOnApplePayOrder', {'orderId': '$orderId', 'currency': 'EUR'});
+    final http.Response response = await http.get(url);
     return json.decode(response.body);
   }
-
-  /// google pay functions
 
   Future<void> onGooglePayResult(paymentResult) async {
     try {
@@ -1294,5 +1280,25 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
       return null;
     }
 
+  }
+
+
+  void initializePaymentValues(OrderState orderState, String businessName, double totalCost, List<ApplePayCartSummaryItem> items) {
+    print('initializing instance payment values...');
+    totalCost = orderState.total;
+    for (int i = 0; i < orderState.itemList.length; i++) {
+      items.add(ApplePayCartSummaryItem(
+        label: Utils.retriveField(Localizations.localeOf(context).languageCode, orderState.itemList[i].name),
+        amount: orderState.itemList[i].toString(),
+      ));
+    }
+    items.add(ApplePayCartSummaryItem(
+      label: 'Tax',
+      amount: orderState.tax.toString(),
+    ));
+    items.add(ApplePayCartSummaryItem(
+      label: businessName,
+      amount: (totalCost).toString(),
+    ));
   }
 }

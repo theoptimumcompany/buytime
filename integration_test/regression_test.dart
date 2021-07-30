@@ -67,7 +67,7 @@ void main() {
     });
 
     ///Registration Error => Wrong Password
-    testWidgets('Registration erorr', (tester) async {
+    testWidgets('Registration error', (tester) async {
       await loadApp(tester);
 
       await tester.tap(find.byKey(ValueKey('home_register_key')));

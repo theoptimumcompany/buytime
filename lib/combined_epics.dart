@@ -130,7 +130,7 @@ CategoryTreeDeleteService(), */
   OrderCreateOnSitePendingService(),
   OrderCreateOnSiteAndPayService(),
   CreateOrderReservableOnSitePendingService(),
-  OrderCreateOnSitePendingService(),
+  CreateOrderReservableOnSiteAndPayService(),
   ServiceUpdateSlotSnippetService(),
   StripeCardListRequestAndNavigatePop()
 //DefaultCategoryTreeAddService(),
