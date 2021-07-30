@@ -8,6 +8,7 @@ import 'package:Buytime/reblox/model/order/order_detail_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/model/stripe/stripe_state.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
+import 'package:Buytime/reblox/reducer/stripe_payment_reducer.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
 import 'package:Buytime/services/order_service_epic.dart';
 import 'package:Buytime/utils/size_config.dart';
@@ -40,13 +41,14 @@ import '../../../environment_abstract.dart';
 
 class RUI_U_OrderDetail extends StatefulWidget {
   String route = '/bookingPage';
+
   RUI_U_OrderDetail(this.route);
+
   @override
   createState() => _RUI_U_OrderDetailState();
 }
 
 class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTickerProviderStateMixin {
-
   OrderState order = OrderState().toEmpty();
   Stream<DocumentSnapshot> _orderStream;
   Stream<DocumentSnapshot> _businessStream;
@@ -54,7 +56,7 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
   String currentDate = '';
   String nextDate = '';
   String card = '';
-  List<String> cc = ['v','mc','e'];
+  List<String> cc = ['v', 'mc', 'e'];
   double lat = 0.0;
   double lng = 0.0;
   BusinessState businessState;
@@ -69,10 +71,73 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
     //currentDate == date ? AppLocalizations.of(context).today + date : index == 1 && nextDate == date ? AppLocalizations.of(context).tomorrow + date : '${DateFormat('EEEE').format(i).toUpperCase()}, $date'
   }
 
-
   @override
   void dispose() {
     super.dispose();
+  }
+
+  Widget chosenPaymentMethod(String paymentType) {
+    // card,
+    // native,
+    // room,
+    // applePay,
+    // googlePay,
+    // onSite,
+    // noPaymentMethod
+
+    Widget widget = Container();
+    switch (paymentType) {
+      case 'card':
+        widget = ListTile(
+          leading: Image(width: SizeConfig.blockSizeHorizontal * 10, image: AssetImage('assets/img/card.png')),
+          title: Text(AppLocalizations.of(context).creditCard),
+          onTap: () {},
+        );
+        break;
+      case 'native':
+        widget = ListTile(
+          leading: Image(width: SizeConfig.blockSizeHorizontal * 10, image: AssetImage('assets/img/native.png')),
+          title: Text(AppLocalizations.of(context).native),
+          onTap: () {},
+        );
+        break;
+      case 'room':
+        widget = ListTile(
+          leading: Image(width: SizeConfig.blockSizeHorizontal * 10, image: AssetImage('assets/img/room.png')),
+          title: Text(AppLocalizations.of(context).room),
+          onTap: () {},
+        );
+        break;
+      case 'applePay':
+        widget = ListTile(
+          leading: Image(width: SizeConfig.blockSizeHorizontal * 10, image: AssetImage('assets/img/applePay.png')),
+          title: Text(AppLocalizations.of(context).applePay),
+          onTap: () {},
+        );
+        break;
+      case 'googlePay':
+        widget = ListTile(
+          leading: Image(width: SizeConfig.blockSizeHorizontal * 10, image: AssetImage('assets/img/googlePay.png')),
+          title: Text(AppLocalizations.of(context).googlePay),
+          onTap: () {},
+        );
+        break;
+      case 'onSite':
+        widget = ListTile(
+          leading: Image(width: SizeConfig.blockSizeHorizontal * 10, image: AssetImage('assets/img/cash.png')),
+          title: Text(AppLocalizations.of(context).onSite),
+          onTap: () {},
+        );
+        break;
+      case 'noPaymentMethod':
+        widget = ListTile(
+          leading: Image(width: SizeConfig.blockSizeHorizontal * 10, image: AssetImage('assets/img/noPaymentMethod.png')),
+          title: Text(AppLocalizations.of(context).noPaymentMethod),
+          onTap: () {},
+        );
+        break;
+    }
+    return widget;
   }
 
   String version1000(String imageUrl) {
@@ -82,33 +147,32 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
       extension = imageUrl.substring(imageUrl.lastIndexOf('.'), imageUrl.length);
       result = imageUrl.substring(0, imageUrl.lastIndexOf('.'));
       result += "_1000x1000" + extension;
-    }else {
+    } else {
       result = "https://firebasestorage.googleapis.com/v0/b/buytime-458a1.appspot.com/o/general%2Fimage_placeholder_200x200.png?alt=media&token=d40ccab1-7fb5-4290-91c6-634871b7a4f3";
     }
     return result;
   }
 
-  String whichDate(DateTime orderDate){
-    DateTime orderDateUTC2 = new DateTime(orderDate.year, orderDate.month, orderDate.day, orderDate.hour +2, orderDate.minute, 0, 0, 0);
-    if(orderDetails.itemList.first.time != null){
-      return currentDate == date ?
-      AppLocalizations.of(context).todayLower + ' ${DateFormat('dd EEE',Localizations.localeOf(context).languageCode).format(orderDate)}, ${orderDetails.itemList.first.time}' :
-      nextDate == date ? AppLocalizations.of(context).tomorrowLower + ' ${DateFormat('dd EEE',Localizations.localeOf(context).languageCode).format(orderDate)}, ${orderDetails.itemList.first.time}' :
-      '${DateFormat('dd EEE',Localizations.localeOf(context).languageCode).format(orderDate)},  ${orderDetails.itemList.first.time}';
-    }else{
-      return currentDate == date ?
-      AppLocalizations.of(context).todayLower + ' ${DateFormat('dd EEE',Localizations.localeOf(context).languageCode).format(orderDate)}, ${DateFormat('HH:mm',Localizations.localeOf(context).languageCode).format(orderDateUTC2)}' :
-      nextDate == date ? AppLocalizations.of(context).tomorrowLower + ' ${DateFormat('dd EEE',Localizations.localeOf(context).languageCode).format(orderDate)}, ${DateFormat('HH:mm',Localizations.localeOf(context).languageCode).format(orderDateUTC2)}' :
-      '${DateFormat('dd EEE',Localizations.localeOf(context).languageCode).format(orderDate)},  ${DateFormat('HH:mm',Localizations.localeOf(context).languageCode).format(orderDateUTC2)}';
+  String whichDate(DateTime orderDate) {
+    DateTime orderDateUTC2 = new DateTime(orderDate.year, orderDate.month, orderDate.day, orderDate.hour + 2, orderDate.minute, 0, 0, 0);
+    if (orderDetails.itemList.first.time != null) {
+      return currentDate == date
+          ? AppLocalizations.of(context).todayLower + ' ${DateFormat('dd EEE', Localizations.localeOf(context).languageCode).format(orderDate)}, ${orderDetails.itemList.first.time}'
+          : nextDate == date
+              ? AppLocalizations.of(context).tomorrowLower + ' ${DateFormat('dd EEE', Localizations.localeOf(context).languageCode).format(orderDate)}, ${orderDetails.itemList.first.time}'
+              : '${DateFormat('dd EEE', Localizations.localeOf(context).languageCode).format(orderDate)},  ${orderDetails.itemList.first.time}';
+    } else {
+      return currentDate == date
+          ? AppLocalizations.of(context).todayLower + ' ${DateFormat('dd EEE', Localizations.localeOf(context).languageCode).format(orderDate)}, ${DateFormat('HH:mm', Localizations.localeOf(context).languageCode).format(orderDateUTC2)}'
+          : nextDate == date
+              ? AppLocalizations.of(context).tomorrowLower + ' ${DateFormat('dd EEE', Localizations.localeOf(context).languageCode).format(orderDate)}, ${DateFormat('HH:mm', Localizations.localeOf(context).languageCode).format(orderDateUTC2)}'
+              : '${DateFormat('dd EEE', Localizations.localeOf(context).languageCode).format(orderDate)},  ${DateFormat('HH:mm', Localizations.localeOf(context).languageCode).format(orderDateUTC2)}';
     }
-
   }
 
-  String getShopLocationImage(String coordinates){
-
-
+  String getShopLocationImage(String coordinates) {
     String url;
-    if(Platform.isIOS)
+    if (Platform.isIOS)
       url = 'https://maps.googleapis.com/maps/api/staticmap?center=$lat,$lng&zoom=18&size=640x640&scale=2&markers=color:red|$lat,$lng&key=${Environment().config.googleApiKey}';
     else
       url = 'https://maps.googleapis.com/maps/api/staticmap?center=$lat,$lng&zoom=18&size=640x640&scale=2&markers=color:red|$lat,$lng&key=${Environment().config.googleApiKey}';
@@ -122,6 +186,7 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
   double distanceFromBusiness;
   double distanceFromCurrentPosition;
   bool gettingLocation = true;
+
   Future<bool> requestLocationPermission({Function onPermissionDenied}) async {
     var granted = await Permission.location.isGranted;
     if (!granted) {
@@ -132,9 +197,7 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
   }
 
   _getCurrentLocation() {
-    Geolocator
-        .getCurrentPosition(desiredAccuracy: LocationAccuracy.best, forceAndroidLocationManager: true)
-        .then((Position position) {
+    Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best, forceAndroidLocationManager: true).then((Position position) {
       setState(() {
         _currentPosition = position;
         debugPrint('UI_U_order_details => FROM GEOLOCATOR: $_currentPosition');
@@ -146,7 +209,7 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
     });
   }
 
-  _getLocation(BusinessState businessState) async{
+  _getLocation(BusinessState businessState) async {
     loc.Location location = new loc.Location();
 
     bool _serviceEnabled;
@@ -177,7 +240,7 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
 
     _locationData = await location.getLocation();
     debugPrint('UI_U_order_details => FROM LOCATION: $_locationData');
-    if(_locationData.latitude != null){
+    if (_locationData.latitude != null) {
       setState(() {
         gettingLocation = false;
         distanceFromCurrentPosition = calculateDistance('$currentLat, $currentLng');
@@ -186,43 +249,41 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
     _getCurrentLocation();
   }
 
-  double calculateDistance(String coordiantes){
+  double calculateDistance(String coordiantes) {
     double lat1 = 0.0;
     double lon1 = 0.0;
     double lat2 = 0.0;
     double lon2 = 0.0;
-    if(coordiantes.isNotEmpty){
+    if (coordiantes.isNotEmpty) {
       List<String> latLng1 = coordiantes.replaceAll('(', '').replaceAll(')', '').replaceAll(' ', '').split(',');
       //debugPrint('W_add_external_business_list_item => $businessState.name} | Cordinates 1: $latLng1');
-      if(latLng1.length == 2){
+      if (latLng1.length == 2) {
         lat1 = double.parse(latLng1[0]);
         lon1 = double.parse(latLng1[1]);
       }
     }
-    if(serviceState.serviceCoordinates != null && serviceState.serviceCoordinates.isNotEmpty){
+    if (serviceState.serviceCoordinates != null && serviceState.serviceCoordinates.isNotEmpty) {
       List<String> latLng2 = serviceState.serviceCoordinates.replaceAll('(', '').replaceAll(')', '').replaceAll(' ', '').split(',');
       debugPrint('W_add_external_business_list_item => ${serviceState.name} | Cordinates 2: $latLng2');
-      if(latLng2.length == 2){
+      if (latLng2.length == 2) {
         lat2 = double.parse(latLng2[0]);
         lon2 = double.parse(latLng2[1]);
       }
-    }else if(serviceState.serviceBusinessCoordinates != null && serviceState.serviceBusinessCoordinates.isNotEmpty){
+    } else if (serviceState.serviceBusinessCoordinates != null && serviceState.serviceBusinessCoordinates.isNotEmpty) {
       List<String> latLng2 = serviceState.serviceBusinessCoordinates.replaceAll('(', '').replaceAll(')', '').replaceAll(' ', '').split(',');
       //debugPrint('W_add_external_business_list_item => ${widget.externalBusinessState.name} | Cordinates 2: $latLng2');
-      if(latLng2.length == 2){
+      if (latLng2.length == 2) {
         lat2 = double.parse(latLng2[0]);
         lon2 = double.parse(latLng2[1]);
       }
     }
     var p = 0.017453292519943295;
     var c = cos;
-    var a = 0.5 - c((lat2 - lat1) * p)/2 +
-        c(lat1 * p) * c(lat2 * p) *
-            (1 - c((lon2 - lon1) * p))/2;
+    var a = 0.5 - c((lat2 - lat1) * p) / 2 + c(lat1 * p) * c(lat2 * p) * (1 - c((lon2 - lon1) * p)) / 2;
     double tmp = (12742 * asin(sqrt(a)));
     debugPrint('W_add_external_business_list_item => Distance: $tmp');
 
-    return  tmp;
+    return tmp;
   }
 
   NotificationState notificationState;
@@ -268,338 +329,335 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
     orderDetails = StoreProvider.of<AppState>(context).state.orderDetail;
     tourist = !(StoreProvider.of<AppState>(context).state.booking != null && StoreProvider.of<AppState>(context).state.booking.booking_id.isNotEmpty);
     //debugPrint('${widget.imageUrl}');
-    if(orderDetails.cardType != null && orderDetails.cardType.isNotEmpty)
-      card = orderDetails.cardType.toLowerCase().substring(0,1) == 'v' ? 'v' : 'mc';
+    if (orderDetails.cardType != null && orderDetails.cardType.isNotEmpty)
+      card = orderDetails.cardType.toLowerCase().substring(0, 1) == 'v' ? 'v' : 'mc';
     else
       card = 'e';
     date = DateFormat('MMM dd').format(orderDetails.date).toUpperCase();
     SizeConfig().init(context);
 
-    if(orderDetails.orderId != null && orderDetails.orderId.isNotEmpty) {
+    if (orderDetails.orderId != null && orderDetails.orderId.isNotEmpty) {
       _orderStream = FirebaseFirestore.instance.collection('order').doc(orderDetails.orderId).snapshots();
     }
     notificationState = StoreProvider.of<AppState>(context).state.notificationState;
-    if(notificationState.data.state.businessId.isNotEmpty)
+    if (notificationState.data.state.businessId.isNotEmpty)
       _businessStream = FirebaseFirestore.instance.collection('business').doc(notificationState.data.state.businessId).snapshots();
-    else if(orderDetails.businessId.isNotEmpty)
+    else if (orderDetails.businessId.isNotEmpty)
       _businessStream = FirebaseFirestore.instance.collection('business').doc(orderDetails.businessId).snapshots();
     else
       _businessStream = FirebaseFirestore.instance.collection('business').doc(serviceState.businessId).snapshots();
     refundAsked = false;
-      return GestureDetector(
-        onTap: (){
-          FocusScopeNode currentFocus = FocusScope.of(context);
+    return GestureDetector(
+      onTap: () {
+        FocusScopeNode currentFocus = FocusScope.of(context);
 
-          if (!currentFocus.hasPrimaryFocus) {
-            currentFocus.unfocus();
-          }
-        },
-        child: WillPopScope(
-          onWillPop: () async => false,
-          child: Scaffold(
-            appBar: BuytimeAppbar(
-              background: tourist != null && tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
-              width: media.width,
-              children: [
-                ///Back Button
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
-                      child: IconButton(
-                        icon: const Icon(
-                          Icons.keyboard_arrow_left,
-                          color: Colors.white,
-                          size: 25.0,
-                        ),
-                        tooltip: AppLocalizations.of(context).comeBack,
-                        onPressed: () {
-                          Future.delayed(Duration(seconds: 1), () {
-                            Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => Landing()), (Route<dynamic> route) => false);
-                          });
-                          // if (widget.route == '/bookingRoomPaymentList') {
-                          //   Navigator.of(context).pop();
-                          // } else {
-                          //   Future.delayed(Duration(seconds: 1), () {
-                          //     Navigator.of(context).popUntil(ModalRoute.withName(widget.route));
-                          //   });
-                          // }
-                        },
+        if (!currentFocus.hasPrimaryFocus) {
+          currentFocus.unfocus();
+        }
+      },
+      child: WillPopScope(
+        onWillPop: () async => false,
+        child: Scaffold(
+          appBar: BuytimeAppbar(
+            background: tourist != null && tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
+            width: media.width,
+            children: [
+              ///Back Button
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
+                    child: IconButton(
+                      icon: const Icon(
+                        Icons.keyboard_arrow_left,
+                        color: Colors.white,
+                        size: 25.0,
                       ),
+                      tooltip: AppLocalizations.of(context).comeBack,
+                      onPressed: () {
+                        Future.delayed(Duration(seconds: 1), () {
+                          Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => Landing()), (Route<dynamic> route) => false);
+                        });
+                        // if (widget.route == '/bookingRoomPaymentList') {
+                        //   Navigator.of(context).pop();
+                        // } else {
+                        //   Future.delayed(Duration(seconds: 1), () {
+                        //     Navigator.of(context).popUntil(ModalRoute.withName(widget.route));
+                        //   });
+                        // }
+                      },
                     ),
-                  ],
-                ),
-                ///Title
-                Container(
-                  width: SizeConfig.safeBlockHorizontal * 60,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 10.0),
-                    child: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Text(
-                        orderDetails.itemList.length > 1 ?
-                        Utils.retriveField(Localizations.localeOf(context).languageCode, orderDetails.business.name)
-                            : Utils.retriveField(Localizations.localeOf(context).languageCode,  orderDetails.itemList.first.name),
-                        textAlign: TextAlign.start,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                        style: BuytimeTheme.appbarTitle,
-                      ),
+                  ),
+                ],
+              ),
+
+              ///Title
+              Container(
+                width: SizeConfig.safeBlockHorizontal * 60,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 10.0),
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      orderDetails.itemList.length > 1
+                          ? Utils.retriveField(Localizations.localeOf(context).languageCode, orderDetails.business.name)
+                          : Utils.retriveField(Localizations.localeOf(context).languageCode, orderDetails.itemList.first.name),
+                      textAlign: TextAlign.start,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                      style: BuytimeTheme.appbarTitle,
                     ),
                   ),
                 ),
-                ///Cart
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 10.0),
-                  child: Container(
-                    width: 50,
-                    height: 50,
-                    child: Stack(
-                      children: [
-                        Positioned.fill(
-                          child: Align(
-                            alignment: Alignment.center,
-                            child: IconButton(
-                              key: Key('cart_key'),
-                              icon: Icon(
-                                BuytimeIcons.shopping_cart,
-                                color: BuytimeTheme.TextWhite,
-                                size: 24.0,
-                              ),
-                              onPressed: (){
-                                if (order.cartCounter > 0) {
-                                  // dispatch the order
-                                  StoreProvider.of<AppState>(context).dispatch(SetOrder(order));
-                                  // go to the cart page
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(builder: (context) => Cart(tourist: false,)),
-                                  );
-                                } else {
-                                  showDialog(
-                                      context: context,
-                                      builder: (_) => new AlertDialog(
-                                        title: new Text(AppLocalizations.of(context).warning),
-                                        content: new Text(AppLocalizations.of(context).emptyCart),
-                                        actions: <Widget>[
-                                          MaterialButton(
-                                            elevation: 0,
-                                            hoverElevation: 0,
-                                            focusElevation: 0,
-                                            highlightElevation: 0,
-                                            child: Text(AppLocalizations.of(context).ok),
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                          )
-                                        ],
-                                      ));
-                                }
-                              },
+              ),
+
+              ///Cart
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 10.0),
+                child: Container(
+                  width: 50,
+                  height: 50,
+                  child: Stack(
+                    children: [
+                      Positioned.fill(
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: IconButton(
+                            key: Key('cart_key'),
+                            icon: Icon(
+                              BuytimeIcons.shopping_cart,
+                              color: BuytimeTheme.TextWhite,
+                              size: 24.0,
                             ),
+                            onPressed: () {
+                              if (order.cartCounter > 0) {
+                                // dispatch the order
+                                StoreProvider.of<AppState>(context).dispatch(SetOrder(order));
+                                // go to the cart page
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Cart(
+                                            tourist: false,
+                                          )),
+                                );
+                              } else {
+                                showDialog(
+                                    context: context,
+                                    builder: (_) => new AlertDialog(
+                                          title: new Text(AppLocalizations.of(context).warning),
+                                          content: new Text(AppLocalizations.of(context).emptyCart),
+                                          actions: <Widget>[
+                                            MaterialButton(
+                                              elevation: 0,
+                                              hoverElevation: 0,
+                                              focusElevation: 0,
+                                              highlightElevation: 0,
+                                              child: Text(AppLocalizations.of(context).ok),
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                            )
+                                          ],
+                                        ));
+                              }
+                            },
                           ),
                         ),
-                        order.cartCounter > 0
-                            ? Positioned.fill(
-                          top: 5,
-                          left: 2.5,
-                          child: Align(
-                            alignment: Alignment.topCenter,
-                            child: Text(
-                              '${order.cartCounter}',
-                              textAlign: TextAlign.start,
-                              style: TextStyle(
-                                fontSize: SizeConfig.safeBlockHorizontal * 3,
-                                color: BuytimeTheme.TextWhite,
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                          ),
-                        )
-                            : Container(),
-                      ],
-                    ),
-                  ),
-                )
-              ],
-            ),
-            body: SafeArea(
-              child: SingleChildScrollView(
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                    //minHeight: (SizeConfig.safeBlockVertical * 100) - 60
-                  ),
-                  child: StreamBuilder<DocumentSnapshot>(
-                    stream: _businessStream,
-                    builder: (context, AsyncSnapshot<DocumentSnapshot> businessSnapshot) {
-                      if (businessSnapshot!= null && businessSnapshot.data != null && !businessSnapshot.hasError && businessSnapshot.connectionState != ConnectionState.waiting) {
-                        businessState = BusinessState.fromJson(businessSnapshot.data.data() as Map<String, dynamic>);
-                        //debugPrint('YUI_U_order_detail => PRICE: ${orderDetails.total}');
-                        //debugPrint('YUI_U_order_detail => CARD TYPE: ${orderDetails.cardType}');
-                        //businessState  = StoreProvider.of<AppState>(context).state.business;
-                        order = StoreProvider.of<AppState>(context).state.order;
-
-                        if(gettingLocation)
-                          _getLocation(StoreProvider.of<AppState>(context).state.business);
-                        //serviceState = ServiceState().toEmpty();
-
-                        currentDate = DateFormat('MMM dd').format(DateTime.now()).toUpperCase();
-                        nextDate = DateFormat('MMM dd').format(DateTime.now().add(Duration(days: 1))).toUpperCase();
-                        if(businessState.id_firestore != null && businessState.id_firestore.isNotEmpty){
-                          List<String> latLng = businessState.coordinate.replaceAll(' ', '').split(',');
-                          lat = double.parse(latLng[0]);
-                          lng = double.parse(latLng[1]);
-                        }
-                      }
-
-                      return StreamBuilder<DocumentSnapshot>(
-                        stream: _orderStream,
-                        builder: (context, AsyncSnapshot<DocumentSnapshot> orderSnapshot) {
-                          if (orderSnapshot!= null && orderSnapshot.data != null && !orderSnapshot.hasError && orderSnapshot.connectionState != ConnectionState.waiting) {
-                            orderDetails = OrderDetailState.fromJson(orderSnapshot.data.data());
-                            debugPrint('YUI_U_order_detail => PRICE: ${orderDetails.total}');
-                            debugPrint('YUI_U_order_detail => CARD TYPE: ${orderDetails.cardType}');
-                          }
-
-                          return Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              ///Image
-                              CachedNetworkImage(
-                                imageUrl:  orderDetails.itemList.length > 1 ? version1000(orderDetails.business.thumbnail) : version1000(orderDetails.itemList.first.thumbnail),
-                                imageBuilder: (context, imageProvider) => Container(
-                                  //margin: EdgeInsets.all(SizeConfig.safeBlockVertical*.25),
-                                  //width: double.infinity,
-                                  //height: double.infinity,
-                                  //width: 200, ///SizeConfig.safeBlockVertical * widget.width
-                                  height: 375, ///SizeConfig.safeBlockVertical * widget.width
-                                  decoration: BoxDecoration(
-                                      color: BuytimeTheme.BackgroundWhite,
-                                      //borderRadius: BorderRadius.all(Radius.circular(5)),
-                                      image: DecorationImage(
-                                        image: imageProvider,
-                                        fit: BoxFit.cover,
-                                      )
-                                  ),
-                                  child: Container(
-                                    //width: 375,
-                                    height: 375,
-                                    decoration: BoxDecoration(
-                                      //borderRadius: BorderRadius.all(Radius.circular(5)),
-                                      //color: Colors.black.withOpacity(.2)
-                                    ),
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        ///Service name
-                                        Container(
-                                          //width: 200,
-                                          height: 100/3,
-                                          alignment: Alignment.centerLeft,
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.only(
-                                                bottomLeft: Radius.circular(5),
-                                                bottomRight: Radius.circular(5)),
-                                            gradient: LinearGradient(
-                                              colors: [
-                                                Colors.transparent,
-                                                BuytimeTheme.BackgroundBlack.withOpacity(0.5),
-                                              ],
-                                              begin : Alignment.topCenter,
-                                              end : Alignment.bottomCenter,
-                                              stops: [0.0, 5.0],
-                                              //tileMode: TileMode.
-                                            ),
-                                          ),
-                                          //margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, bottom: SizeConfig.safeBlockVertical * 2),
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Container(
-                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
-                                                child: FittedBox(
-                                                  fit: BoxFit.scaleDown,
-                                                  child: Text(
-                                                    orderDetails.itemList.length > 1 ? AppLocalizations.of(context).multipleOrders :
-                                                    Utils.retriveField(Localizations.localeOf(context).languageCode, orderDetails.itemList[0].name),
-                                                    style: TextStyle(
-                                                        fontFamily: BuytimeTheme.FontFamily,
-                                                        color: BuytimeTheme.TextWhite,
-                                                        fontWeight: FontWeight.bold,
-                                                        fontSize: 16 ///SizeConfig.safeBlockHorizontal * 4
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
+                      ),
+                      order.cartCounter > 0
+                          ? Positioned.fill(
+                              top: 5,
+                              left: 2.5,
+                              child: Align(
+                                alignment: Alignment.topCenter,
+                                child: Text(
+                                  '${order.cartCounter}',
+                                  textAlign: TextAlign.start,
+                                  style: TextStyle(
+                                    fontSize: SizeConfig.safeBlockHorizontal * 3,
+                                    color: BuytimeTheme.TextWhite,
+                                    fontWeight: FontWeight.w400,
                                   ),
                                 ),
-                                placeholder: (context, url) => Utils.imageShimmer(double.infinity, 375),
-                                errorWidget: (context, url, error) => Icon(Icons.error),
                               ),
-                              ///Address & Map
-                              orderDetails.itemList.first.time != null ?
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Flexible(
-                                      flex: 3,
-                                      child: Container(
-                                        height: 125,
+                            )
+                          : Container(),
+                    ],
+                  ),
+                ),
+              )
+            ],
+          ),
+          body: SafeArea(
+            child: SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                    //minHeight: (SizeConfig.safeBlockVertical * 100) - 60
+                    ),
+                child: StreamBuilder<DocumentSnapshot>(
+                  stream: _businessStream,
+                  builder: (context, AsyncSnapshot<DocumentSnapshot> businessSnapshot) {
+                    if (businessSnapshot != null && businessSnapshot.data != null && !businessSnapshot.hasError && businessSnapshot.connectionState != ConnectionState.waiting) {
+                      businessState = BusinessState.fromJson(businessSnapshot.data.data() as Map<String, dynamic>);
+                      //debugPrint('YUI_U_order_detail => PRICE: ${orderDetails.total}');
+                      //debugPrint('YUI_U_order_detail => CARD TYPE: ${orderDetails.cardType}');
+                      //businessState  = StoreProvider.of<AppState>(context).state.business;
+                      order = StoreProvider.of<AppState>(context).state.order;
+
+                      if (gettingLocation) _getLocation(StoreProvider.of<AppState>(context).state.business);
+                      //serviceState = ServiceState().toEmpty();
+
+                      currentDate = DateFormat('MMM dd').format(DateTime.now()).toUpperCase();
+                      nextDate = DateFormat('MMM dd').format(DateTime.now().add(Duration(days: 1))).toUpperCase();
+                      if (businessState.id_firestore != null && businessState.id_firestore.isNotEmpty) {
+                        List<String> latLng = businessState.coordinate.replaceAll(' ', '').split(',');
+                        lat = double.parse(latLng[0]);
+                        lng = double.parse(latLng[1]);
+                      }
+                    }
+
+                    return StreamBuilder<DocumentSnapshot>(
+                      stream: _orderStream,
+                      builder: (context, AsyncSnapshot<DocumentSnapshot> orderSnapshot) {
+                        if (orderSnapshot != null && orderSnapshot.data != null && !orderSnapshot.hasError && orderSnapshot.connectionState != ConnectionState.waiting) {
+                          orderDetails = OrderDetailState.fromJson(orderSnapshot.data.data());
+                          debugPrint('YUI_U_order_detail => PRICE: ${orderDetails.total}');
+                          debugPrint('YUI_U_order_detail => CARD TYPE: ${orderDetails.cardType}');
+                        }
+
+                        return Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            ///Image
+                            CachedNetworkImage(
+                              imageUrl: orderDetails.itemList.length > 1 ? version1000(orderDetails.business.thumbnail) : version1000(orderDetails.itemList.first.thumbnail),
+                              imageBuilder: (context, imageProvider) => Container(
+                                //margin: EdgeInsets.all(SizeConfig.safeBlockVertical*.25),
+                                //width: double.infinity,
+                                //height: double.infinity,
+                                //width: 200, ///SizeConfig.safeBlockVertical * widget.width
+                                height: 375,
+
+                                ///SizeConfig.safeBlockVertical * widget.width
+                                decoration: BoxDecoration(
+                                    color: BuytimeTheme.BackgroundWhite,
+                                    //borderRadius: BorderRadius.all(Radius.circular(5)),
+                                    image: DecorationImage(
+                                      image: imageProvider,
+                                      fit: BoxFit.cover,
+                                    )),
+                                child: Container(
+                                  //width: 375,
+                                  height: 375,
+                                  decoration: BoxDecoration(
+                                      //borderRadius: BorderRadius.all(Radius.circular(5)),
+                                      //color: Colors.black.withOpacity(.2)
+                                      ),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      ///Service name
+                                      Container(
+                                        //width: 200,
+                                        height: 100 / 3,
+                                        alignment: Alignment.centerLeft,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.only(bottomLeft: Radius.circular(5), bottomRight: Radius.circular(5)),
+                                          gradient: LinearGradient(
+                                            colors: [
+                                              Colors.transparent,
+                                              BuytimeTheme.BackgroundBlack.withOpacity(0.5),
+                                            ],
+                                            begin: Alignment.topCenter,
+                                            end: Alignment.bottomCenter,
+                                            stops: [0.0, 5.0],
+                                            //tileMode: TileMode.
+                                          ),
+                                        ),
+                                        //margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, bottom: SizeConfig.safeBlockVertical * 2),
                                         child: Column(
                                           crossAxisAlignment: CrossAxisAlignment.start,
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children: [
-                                            ///Address
-                                            Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                ///Address text
-                                                Container(
-                                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
-                                                  child: FittedBox(
-                                                    fit: BoxFit.scaleDown,
-                                                    child: Text(
-                                                      AppLocalizations.of(context).address.toUpperCase(),
-                                                      style: TextStyle(
-                                                          letterSpacing: 1.5,
-                                                          fontFamily: BuytimeTheme.FontFamily,
-                                                          color: BuytimeTheme.TextMedium,
-                                                          fontWeight: FontWeight.w500,
-                                                          fontSize: 10 ///SizeConfig.safeBlockHorizontal * 4
+                                            Container(
+                                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
+                                              child: FittedBox(
+                                                fit: BoxFit.scaleDown,
+                                                child: Text(
+                                                  orderDetails.itemList.length > 1 ? AppLocalizations.of(context).multipleOrders : Utils.retriveField(Localizations.localeOf(context).languageCode, orderDetails.itemList[0].name),
+                                                  style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextWhite, fontWeight: FontWeight.bold, fontSize: 16
+
+                                                      ///SizeConfig.safeBlockHorizontal * 4
                                                       ),
-                                                    ),
-                                                  ),
                                                 ),
-                                                ///Address value
-                                                Container(
-                                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
-                                                  child: FittedBox(
-                                                    fit: BoxFit.scaleDown,
-                                                    child: Text(
-                                                      serviceState.serviceAddress.isNotEmpty ? serviceState.serviceAddress : businessState.businessAddress,
-                                                      style: TextStyle(
-                                                          letterSpacing: 0.15,
-                                                          fontFamily: BuytimeTheme.FontFamily,
-                                                          color: BuytimeTheme.TextBlack,
-                                                          fontWeight: FontWeight.w500,
-                                                          fontSize: 16 ///SizeConfig.safeBlockHorizontal * 4
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
+                                              ),
                                             ),
-                                            ///Hour text
-                                            /*Container(
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              placeholder: (context, url) => Utils.imageShimmer(double.infinity, 375),
+                              errorWidget: (context, url, error) => Icon(Icons.error),
+                            ),
+
+                            ///Address & Map
+                            orderDetails.itemList.first.time != null
+                                ? Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Flexible(
+                                          flex: 3,
+                                          child: Container(
+                                            height: 125,
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                ///Address
+                                                Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    ///Address text
+                                                    Container(
+                                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                                      child: FittedBox(
+                                                        fit: BoxFit.scaleDown,
+                                                        child: Text(
+                                                          AppLocalizations.of(context).address.toUpperCase(),
+                                                          style: TextStyle(letterSpacing: 1.5, fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextMedium, fontWeight: FontWeight.w500, fontSize: 10
+
+                                                              ///SizeConfig.safeBlockHorizontal * 4
+                                                              ),
+                                                        ),
+                                                      ),
+                                                    ),
+
+                                                    ///Address value
+                                                    Container(
+                                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
+                                                      child: FittedBox(
+                                                        fit: BoxFit.scaleDown,
+                                                        child: Text(
+                                                          serviceState.serviceAddress.isNotEmpty ? serviceState.serviceAddress : businessState.businessAddress,
+                                                          style: TextStyle(letterSpacing: 0.15, fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w500, fontSize: 16
+
+                                                              ///SizeConfig.safeBlockHorizontal * 4
+                                                              ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+
+                                                ///Hour text
+                                                /*Container(
                                         margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                                         child: FittedBox(
                                           fit: BoxFit.scaleDown,
@@ -615,265 +673,264 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
                                           ),
                                         ),
                                       ),*/
-                                            ///Open until value
-                                            Container(
-                                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
-                                              child: FittedBox(
-                                                fit: BoxFit.scaleDown,
-                                                child: Text(
-                                                  ///Orario fine giornata
-                                                  '${AppLocalizations.of(context).openUntil} ${orderDetails.openUntil}',
-                                                  style: TextStyle(
-                                                      letterSpacing: 0.15,
-                                                      fontFamily: BuytimeTheme.FontFamily,
-                                                      color: BuytimeTheme.TextBlack,
-                                                      fontWeight: FontWeight.w500,
-                                                      fontSize: 16 ///SizeConfig.safeBlockHorizontal * 4
+
+                                                ///Open until value
+                                                Container(
+                                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
+                                                  child: FittedBox(
+                                                    fit: BoxFit.scaleDown,
+                                                    child: Text(
+                                                      ///Orario fine giornata
+                                                      '${AppLocalizations.of(context).openUntil} ${orderDetails.openUntil}',
+                                                      style: TextStyle(letterSpacing: 0.15, fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w500, fontSize: 16
+
+                                                          ///SizeConfig.safeBlockHorizontal * 4
+                                                          ),
+                                                    ),
                                                   ),
                                                 ),
-                                              ),
-                                            ),
-                                            ///Directions
-                                            Container(
-                                              padding: EdgeInsets.only(bottom: SizeConfig.safeBlockHorizontal * 1),
-                                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
-                                              child: Row(
-                                                children: [
-                                                  Icon(
-                                                    Icons.location_pin,
-                                                    size: 14,
-                                                    color: BuytimeTheme.SymbolGrey,
-                                                  ),
-                                                  ///Min
-                                                  gettingLocation ? Container(
-                                                    margin: EdgeInsets.only(left: 5, right: 2.5),
-                                                    height: 12,
-                                                    width: 12,
-                                                    child: CircularProgressIndicator(
-                                                      strokeWidth: 2,
-                                                      //valueColor: new AlwaysStoppedAnimation<Color>(widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary),
-                                                    ),
-                                                  ) :
-                                                  Container(
-                                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 0.5, right: SizeConfig.safeBlockHorizontal * 1, top: SizeConfig.safeBlockVertical * 0),
-                                                    child: FittedBox(
-                                                      fit: BoxFit.scaleDown,
-                                                      child: Text(
-                                                            (){
-                                                          if(distanceFromCurrentPosition != null){
-                                                            return distanceFromCurrentPosition.toString().split('.').first.startsWith('0') && distanceFromCurrentPosition.toString().split('.').first.length != 1?
-                                                            distanceFromCurrentPosition.toString().split('.').last.substring(0,3) + ' m' :
-                                                            distanceFromCurrentPosition.toStringAsFixed(1) + ' Km';
-                                                          }else{
-                                                            return distanceFromBusiness.toString().split('.').first.startsWith('0') && distanceFromBusiness.toString().split('.').first.length != 1?
-                                                            distanceFromBusiness.toString().split('.').last.substring(0,3) + ' m' :
-                                                            distanceFromBusiness.toStringAsFixed(1) + ' Km';
-                                                          }
-                                                        }(),
-                                                        style: TextStyle(
-                                                            letterSpacing: 0.25,
-                                                            fontFamily: BuytimeTheme.FontFamily,
-                                                            color: BuytimeTheme.TextMedium,
-                                                            fontWeight: FontWeight.w500,
-                                                            fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  ///Directions
-                                                  Container(
-                                                      margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 2.5),
-                                                      alignment: Alignment.center,
-                                                      child: Material(
-                                                        color: Colors.transparent,
-                                                        child: InkWell(
-                                                            onTap: () {
-                                                              Navigator.push(
-                                                                context,
-                                                                MaterialPageRoute(builder: (context) => BuytimeMap(user: true,
-                                                                  title: orderDetails.itemList.length > 1 ? orderDetails.business.name : orderDetails.itemList.first.name,
-                                                                  businessState: businessState,
-                                                                  serviceState: serviceState,
-                                                                  tourist: false,
-                                                                ) ///TODO service address
-                                                                ),
-                                                              );
-                                                            },
-                                                            borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                                                            child: Container(
-                                                              padding: EdgeInsets.all(5.0),
-                                                              child: Text(
-                                                                AppLocalizations.of(context).directions,
-                                                                style: TextStyle(
-                                                                    letterSpacing: SizeConfig.safeBlockHorizontal * .2,
-                                                                    fontFamily: BuytimeTheme.FontFamily,
-                                                                    color: BuytimeTheme.UserPrimary,
-                                                                    fontWeight: FontWeight.w400,
-                                                                    fontSize: 14
 
-                                                                  ///SizeConfig.safeBlockHorizontal * 4
+                                                ///Directions
+                                                Container(
+                                                  padding: EdgeInsets.only(bottom: SizeConfig.safeBlockHorizontal * 1),
+                                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
+                                                  child: Row(
+                                                    children: [
+                                                      Icon(
+                                                        Icons.location_pin,
+                                                        size: 14,
+                                                        color: BuytimeTheme.SymbolGrey,
+                                                      ),
+
+                                                      ///Min
+                                                      gettingLocation
+                                                          ? Container(
+                                                              margin: EdgeInsets.only(left: 5, right: 2.5),
+                                                              height: 12,
+                                                              width: 12,
+                                                              child: CircularProgressIndicator(
+                                                                strokeWidth: 2,
+                                                                //valueColor: new AlwaysStoppedAnimation<Color>(widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary),
+                                                              ),
+                                                            )
+                                                          : Container(
+                                                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 0.5, right: SizeConfig.safeBlockHorizontal * 1, top: SizeConfig.safeBlockVertical * 0),
+                                                              child: FittedBox(
+                                                                fit: BoxFit.scaleDown,
+                                                                child: Text(
+                                                                  () {
+                                                                    if (distanceFromCurrentPosition != null) {
+                                                                      return distanceFromCurrentPosition.toString().split('.').first.startsWith('0') && distanceFromCurrentPosition.toString().split('.').first.length != 1
+                                                                          ? distanceFromCurrentPosition.toString().split('.').last.substring(0, 3) + ' m'
+                                                                          : distanceFromCurrentPosition.toStringAsFixed(1) + ' Km';
+                                                                    } else {
+                                                                      return distanceFromBusiness.toString().split('.').first.startsWith('0') && distanceFromBusiness.toString().split('.').first.length != 1
+                                                                          ? distanceFromBusiness.toString().split('.').last.substring(0, 3) + ' m'
+                                                                          : distanceFromBusiness.toStringAsFixed(1) + ' Km';
+                                                                    }
+                                                                  }(),
+                                                                  style: TextStyle(letterSpacing: 0.25, fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextMedium, fontWeight: FontWeight.w500, fontSize: 14
+
+                                                                      ///SizeConfig.safeBlockHorizontal * 4
+                                                                      ),
                                                                 ),
                                                               ),
-                                                            )),
-                                                      ))
-                                                ],
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      )
-                                  ),
-                                  ///Map
-                                  Flexible(
-                                    flex: 2,
-                                    child: InkWell(
-                                      onTap: (){
-                                        String address = orderDetails.itemList.length > 1 ? orderDetails.business.name : orderDetails.itemList.first.name;
-                                        //Utils.openMap(lat, lng);
-                                        //Navigator.push(context, MaterialPageRoute(builder: (context) => BuytimeMap(user: true, title: orderDetails.itemList.length > 1 ? orderDetails.business.name : orderDetails.itemList.first.name, businessState: businessState,)),);
-                                        Navigator.push(context, MaterialPageRoute(builder: (context) => BuytimeMap(user: true, title: address,
-                                          businessState: businessState,
-                                          serviceState: ServiceState().toEmpty(), ///TODO service address
-                                          tourist: false,
-                                        )));
-                                        //Navigator.push(context, MaterialPageRoute(builder: (context) => AnimatedScreen()));
-                                      },
-                                      child: Container(
-                                        width: 174,
-                                        height: 125,
-                                        //margin: EdgeInsets.only(left:10.0, right: 10.0),
-                                        child: CachedNetworkImage(
-                                          imageUrl:  getShopLocationImage(businessState.coordinate),
-                                          imageBuilder: (context, imageProvider) => Container(
-                                            decoration: BoxDecoration(
-                                                color: BuytimeTheme.BackgroundWhite,
-                                                //borderRadius: BorderRadius.all(Radius.circular(5)),
-                                                image: DecorationImage(
-                                                  image: imageProvider,
-                                                  fit: BoxFit.cover,
+                                                            ),
+
+                                                      ///Directions
+                                                      Container(
+                                                          margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 2.5),
+                                                          alignment: Alignment.center,
+                                                          child: Material(
+                                                            color: Colors.transparent,
+                                                            child: InkWell(
+                                                                onTap: () {
+                                                                  Navigator.push(
+                                                                    context,
+                                                                    MaterialPageRoute(
+                                                                        builder: (context) => BuytimeMap(
+                                                                              user: true,
+                                                                              title: orderDetails.itemList.length > 1 ? orderDetails.business.name : orderDetails.itemList.first.name,
+                                                                              businessState: businessState,
+                                                                              serviceState: serviceState,
+                                                                              tourist: false,
+                                                                            )
+
+                                                                        ///TODO service address
+                                                                        ),
+                                                                  );
+                                                                },
+                                                                borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                                                child: Container(
+                                                                  padding: EdgeInsets.all(5.0),
+                                                                  child: Text(
+                                                                    AppLocalizations.of(context).directions,
+                                                                    style: TextStyle(letterSpacing: SizeConfig.safeBlockHorizontal * .2, fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.UserPrimary, fontWeight: FontWeight.w400, fontSize: 14
+
+                                                                        ///SizeConfig.safeBlockHorizontal * 4
+                                                                        ),
+                                                                  ),
+                                                                )),
+                                                          ))
+                                                    ],
+                                                  ),
                                                 )
+                                              ],
                                             ),
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                gradient: LinearGradient(
-                                                  colors: [
-                                                    BuytimeTheme.BackgroundWhite,
-                                                    BuytimeTheme.BackgroundWhite.withOpacity(0.1),
-                                                  ],
-                                                  begin : Alignment.centerLeft,
-                                                  end : Alignment.centerRight,
-                                                  //tileMode: TileMode.
+                                          )),
+
+                                      ///Map
+                                      Flexible(
+                                        flex: 2,
+                                        child: InkWell(
+                                          onTap: () {
+                                            String address = orderDetails.itemList.length > 1 ? orderDetails.business.name : orderDetails.itemList.first.name;
+                                            //Utils.openMap(lat, lng);
+                                            //Navigator.push(context, MaterialPageRoute(builder: (context) => BuytimeMap(user: true, title: orderDetails.itemList.length > 1 ? orderDetails.business.name : orderDetails.itemList.first.name, businessState: businessState,)),);
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) => BuytimeMap(
+                                                          user: true,
+                                                          title: address,
+                                                          businessState: businessState,
+                                                          serviceState: ServiceState().toEmpty(),
+
+                                                          ///TODO service address
+                                                          tourist: false,
+                                                        )));
+                                            //Navigator.push(context, MaterialPageRoute(builder: (context) => AnimatedScreen()));
+                                          },
+                                          child: Container(
+                                            width: 174,
+                                            height: 125,
+                                            //margin: EdgeInsets.only(left:10.0, right: 10.0),
+                                            child: CachedNetworkImage(
+                                              imageUrl: getShopLocationImage(businessState.coordinate),
+                                              imageBuilder: (context, imageProvider) => Container(
+                                                decoration: BoxDecoration(
+                                                    color: BuytimeTheme.BackgroundWhite,
+                                                    //borderRadius: BorderRadius.all(Radius.circular(5)),
+                                                    image: DecorationImage(
+                                                      image: imageProvider,
+                                                      fit: BoxFit.cover,
+                                                    )),
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    gradient: LinearGradient(
+                                                      colors: [
+                                                        BuytimeTheme.BackgroundWhite,
+                                                        BuytimeTheme.BackgroundWhite.withOpacity(0.1),
+                                                      ],
+                                                      begin: Alignment.centerLeft,
+                                                      end: Alignment.centerRight,
+                                                      //tileMode: TileMode.
+                                                    ),
+                                                  ),
                                                 ),
                                               ),
+                                              placeholder: (context, url) => Utils.imageShimmer(174, 125),
+                                              errorWidget: (context, url, error) => Icon(Icons.error),
                                             ),
                                           ),
-                                          placeholder: (context, url) => Utils.imageShimmer(174, 125),
-                                          errorWidget: (context, url, error) => Icon(Icons.error),
                                         ),
                                       ),
+                                    ],
+                                  )
+                                : Container(),
+
+                            ///Divider
+                            orderDetails.itemList.first.time != null
+                                ? Container(
+                                    //margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
+                                    height: 15,
+                                    color: BuytimeTheme.DividerGrey,
+                                  )
+                                : Container(),
+
+                            ///Order status
+                            Row(
+                              children: [
+                                Container(
+                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 1, top: SizeConfig.safeBlockVertical * 2),
+                                  child: FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    child: Text(
+                                      Utils.translateOrderStatusUser(context, orderDetails.progress).toUpperCase(),
+                                      style: TextStyle(letterSpacing: 1.5, fontFamily: BuytimeTheme.FontFamily, color: Utils.colorOrderStatusUser(context, orderDetails.progress), fontWeight: FontWeight.w600, fontSize: 14
+
+                                          ///SizeConfig.safeBlockHorizontal * 4
+                                          ),
                                     ),
                                   ),
-                                ],
-                              ) : Container(),
-                              ///Divider
-                              orderDetails.itemList.first.time != null ?
-                              Container(
-                                //margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
-                                height: 15,
-                                color: BuytimeTheme.DividerGrey,
-                              ) : Container(),
-                              ///Order status
-                              Row(
-                                children: [
-                                  Container(
-                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 1, top: SizeConfig.safeBlockVertical * 2),
+                                ),
+                                orderDetails.progress == Utils.enumToString(OrderStatus.paid) || orderDetails.progress == Utils.enumToString(OrderStatus.toBePaidAtCheckout)
+                                    ? Container(
+                                        margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                        child: FittedBox(
+                                          fit: BoxFit.scaleDown,
+                                          child: Text(
+                                            " - " + AppLocalizations.of(context).paid,
+                                            style: TextStyle(letterSpacing: 1.5, fontFamily: BuytimeTheme.FontFamily, color: Utils.colorOrderStatusUser(context, orderDetails.progress), fontWeight: FontWeight.w600, fontSize: 14
+
+                                                ///SizeConfig.safeBlockHorizontal * 4
+                                                ),
+                                          ),
+                                        ),
+                                      )
+                                    : Container()
+                              ],
+                            ),
+
+                            ///Date
+                            Container(
+                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
+                              child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Text(
+                                  orderDetails.itemList.first.time != null ? whichDate(orderDetails.itemList.first.date) : whichDate(orderDetails.date),
+                                  style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w600, fontSize: 18
+
+                                      ///SizeConfig.safeBlockHorizontal * 4
+                                      ),
+                                ),
+                              ),
+                            ),
+
+                            ///Location
+                            orderDetails.itemList.first.time == null && orderDetails.location.isNotEmpty
+                                ? Container(
+                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                                     child: FittedBox(
                                       fit: BoxFit.scaleDown,
                                       child: Text(
-                                        Utils.translateOrderStatusUser(context, orderDetails.progress).toUpperCase(),
-                                        style: TextStyle(
-                                            letterSpacing: 1.5,
-                                            fontFamily: BuytimeTheme.FontFamily,
-                                            color: Utils.colorOrderStatusUser(context, orderDetails.progress),
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
-                                        ),
+                                        AppLocalizations.of(context).location.toUpperCase().replaceAll(' ', ''),
+                                        style: TextStyle(letterSpacing: 1.5, fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextMedium, fontWeight: FontWeight.w500, fontSize: 10
+
+                                            ///SizeConfig.safeBlockHorizontal * 4
+                                            ),
                                       ),
                                     ),
-                                  ),
-                                  orderDetails.progress == Utils.enumToString(OrderStatus.paid) ||
-                                      orderDetails.progress == Utils.enumToString(OrderStatus.toBePaidAtCheckout) ?
-                                  Container(
-                                    margin: EdgeInsets.only( right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                  )
+                                : Container(),
+
+                            ///Location value
+                            orderDetails.itemList.first.time == null && orderDetails.location.isNotEmpty
+                                ? Container(
+                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
                                     child: FittedBox(
                                       fit: BoxFit.scaleDown,
                                       child: Text(
-                                        " - " + AppLocalizations.of(context).paid,
-                                        style: TextStyle(
-                                            letterSpacing: 1.5,
-                                            fontFamily: BuytimeTheme.FontFamily,
-                                            color: Utils.colorOrderStatusUser(context, orderDetails.progress),
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
-                                        ),
+                                        orderDetails.location,
+                                        style: TextStyle(letterSpacing: 0.15, fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w500, fontSize: 16
+
+                                            ///SizeConfig.safeBlockHorizontal * 4
+                                            ),
                                       ),
                                     ),
-                                  ): Container()
-                                ],
-                              ),
-                              ///Date
-                              Container(
-                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
-                                child: FittedBox(
-                                  fit: BoxFit.scaleDown,
-                                  child: Text(
-                                    orderDetails.itemList.first.time != null ? whichDate(orderDetails.itemList.first.date) : whichDate(orderDetails.date),
-                                    style: TextStyle(
-                                        fontFamily: BuytimeTheme.FontFamily,
-                                        color: BuytimeTheme.TextBlack,
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 18 ///SizeConfig.safeBlockHorizontal * 4
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              ///Location
-                              orderDetails.itemList.first.time == null && orderDetails.location.isNotEmpty ?
-                              Container(
-                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
-                                child: FittedBox(
-                                  fit: BoxFit.scaleDown,
-                                  child: Text(
-                                    AppLocalizations.of(context).location.toUpperCase().replaceAll(' ', ''),
-                                    style: TextStyle(
-                                        letterSpacing: 1.5,
-                                        fontFamily: BuytimeTheme.FontFamily,
-                                        color: BuytimeTheme.TextMedium,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 10 ///SizeConfig.safeBlockHorizontal * 4
-                                    ),
-                                  ),
-                                ),
-                              ) : Container(),
-                              ///Location value
-                              orderDetails.itemList.first.time == null && orderDetails.location.isNotEmpty ?
-                              Container(
-                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
-                                child: FittedBox(
-                                  fit: BoxFit.scaleDown,
-                                  child: Text(
-                                    orderDetails.location,
-                                    style: TextStyle(
-                                        letterSpacing: 0.15,
-                                        fontFamily: BuytimeTheme.FontFamily,
-                                        color: BuytimeTheme.TextBlack,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 16 ///SizeConfig.safeBlockHorizontal * 4
-                                    ),
-                                  ),
-                                ),
-                              ) : Container(),
-                              /*///Conditions
+                                  )
+                                : Container(),
+                            /*///Conditions
                             orderDetails.itemList.first.time != null  ?
                             Container(
                               margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
@@ -909,32 +966,43 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
                                 ),
                               ),
                             ) : Container(),*/
-                              ///Payment method
-                              Container(
-                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
-                                child: FittedBox(
-                                  fit: BoxFit.scaleDown,
-                                  child: Text(
-                                    AppLocalizations.of(context).choosePaymentMethod.substring(7,AppLocalizations.of(context).choosePaymentMethod.length ).toUpperCase(),
-                                    style: TextStyle(
-                                        letterSpacing: 1.5,
-                                        fontFamily: BuytimeTheme.FontFamily,
-                                        color: BuytimeTheme.TextMedium,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 10 ///SizeConfig.safeBlockHorizontal * 4
-                                    ),
-                                  ),
+
+                            ///Payment method
+                            Container(
+                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                              child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Text(
+                                  AppLocalizations.of(context).choosePaymentMethod.substring(7, AppLocalizations.of(context).choosePaymentMethod.length).toUpperCase(),
+                                  style: TextStyle(letterSpacing: 1.5, fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextMedium, fontWeight: FontWeight.w500, fontSize: 10
+
+                                      ///SizeConfig.safeBlockHorizontal * 4
+                                      ),
                                 ),
                               ),
-                              ///Payment value
-                              Container(
-                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    orderDetails.cardType != null && (!orderDetails.cardType.contains('room') && orderDetails.cardType.isNotEmpty && orderDetails.cardLast4Digit != null) ?
-                                    Container(
+                            ),
+
+                            ///Chosen Payment Method
+                            ///orderDetails.cardType == Utils.enumToString(PaymentType.onSite)
+                            Container(child: chosenPaymentMethod(orderDetails.cardType)),
+
+                            ///Price
+                            Container(
+                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                              child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Text(
+                                  AppLocalizations.of(context).price.toUpperCase(),
+                                  style: TextStyle(letterSpacing: 1.5, fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextMedium, fontWeight: FontWeight.w500, fontSize: 10
+
+                                      ///SizeConfig.safeBlockHorizontal * 4
+                                      ),
+                                ),
+                              ),
+                            ),
+
+                            /*  orderDetails.cardType != null && (!orderDetails.cardType.contains('room') && orderDetails.cardType.isNotEmpty && orderDetails.cardLast4Digit != null) ?
+                                   Container(
                                       height: 30,
                                       width: 50,
                                       margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, right: SizeConfig.safeBlockHorizontal * 2.5),
@@ -945,265 +1013,203 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
                                               )
                                           )
                                       ),
-                                    ) : Container(),
-                                    ///Card Name
-                                    orderDetails.cardLast4Digit != null ?
-                                    Container(
-                                      margin: EdgeInsets.only(top: orderDetails.cardType != null && !orderDetails.cardType.contains('room') && orderDetails.cardType.isNotEmpty ? 0 : 8),
-                                      child: Text(
-                                        orderDetails.cardType != null && orderDetails.cardType.isNotEmpty ?
-                                        orderDetails.cardType.substring(0,1).toUpperCase() + orderDetails.cardType.substring(1, orderDetails.cardType.length) + '  ' :
-                                        AppLocalizations.of(context).native,
-                                        style: TextStyle(
-                                            fontSize: 14,
-                                            fontFamily: BuytimeTheme.FontFamily,
-                                            fontWeight: FontWeight.w600,
-                                            color: BuytimeTheme.TextBlack
-                                        ),
-                                      ),
-                                    ) : Container(),
-                                    ///Ending **** ....
-                                    orderDetails.cardType != null && !orderDetails.cardType.contains('room') && orderDetails.cardType.isNotEmpty ?
-                                    Text(
-                                      orderDetails.cardLast4Digit != null  ?
-                                      '**** ' + orderDetails.cardLast4Digit :
-                                      AppLocalizations.of(context).native,
-                                      style: TextStyle(
-                                          fontSize: 14,
-                                          fontFamily: BuytimeTheme.FontFamily,
-                                          fontWeight: FontWeight.w600,
-                                          color: BuytimeTheme.TextBlack
-                                      ),
-                                    ) : Container(),
-                                  ],
-                                ),
-                              ),
-                              ///Price
-                              Container(
-                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
-                                child: FittedBox(
-                                  fit: BoxFit.scaleDown,
-                                  child: Text(
-                                    AppLocalizations.of(context).price.toUpperCase(),
-                                    style: TextStyle(
-                                        letterSpacing: 1.5,
-                                        fontFamily: BuytimeTheme.FontFamily,
-                                        color: BuytimeTheme.TextMedium,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 10 ///SizeConfig.safeBlockHorizontal * 4
-                                    ),
-                                  ),
-                                ),
-                              ),
+                                    ) : Container(), */
 
-                              orderDetails.itemList.first.time == null  ?
-                              orderDetails.itemList.length > 1 ?
-                              ((){
-                                List<Widget> tmpOrders = [];
-                                orderDetails.itemList.forEach((element) {
-                                  tmpOrders.add(
-                                      Container(
-                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1),
+                            orderDetails.itemList.first.time == null
+                                ? orderDetails.itemList.length > 1
+                                    ? (() {
+                                        List<Widget> tmpOrders = [];
+                                        orderDetails.itemList.forEach((element) {
+                                          tmpOrders.add(Container(
+                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1),
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Text(
+                                                  element.number > 1
+                                                      ? '${element.number} x ${Utils.retriveField(Localizations.localeOf(context).languageCode, element.name)}'
+                                                      : '${element.number} x ${Utils.retriveField(Localizations.localeOf(context).languageCode, element.name)}',
+                                                  style: TextStyle(letterSpacing: 0.15, fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w500, fontSize: 14
+
+                                                      ///SizeConfig.safeBlockHorizontal * 4
+                                                      ),
+                                                ),
+                                                Text(
+                                                  '${element.number} x ${element.price.toStringAsFixed(2)} €',
+                                                  style: TextStyle(letterSpacing: 0.15, fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w500, fontSize: 14
+
+                                                      ///SizeConfig.safeBlockHorizontal * 4
+                                                      ),
+                                                )
+                                              ],
+                                            ),
+                                          ));
+                                        });
+                                        return Column(
+                                          children: tmpOrders.map((e) => e).toList(),
+                                        );
+                                      }())
+                                    : Container(
+                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1),
                                         child: Row(
                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children: [
                                             Text(
-                                              element.number > 1 ?
-                                              '${element.number} x ${Utils.retriveField(Localizations.localeOf(context).languageCode, element.name)}' :
-                                              '${element.number} x ${Utils.retriveField(Localizations.localeOf(context).languageCode, element.name)}',
-                                              style: TextStyle(
-                                                  letterSpacing: 0.15,
-                                                  fontFamily: BuytimeTheme.FontFamily,
-                                                  color: BuytimeTheme.TextBlack,
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
-                                              ),
+                                              orderDetails.itemList.first.number > 1
+                                                  ? '${orderDetails.itemList.first.number} x ${AppLocalizations.of(context).products}'
+                                                  : '${orderDetails.itemList.first.number} x ${AppLocalizations.of(context).product}',
+                                              style: TextStyle(letterSpacing: 0.15, fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w500, fontSize: 14
+
+                                                  ///SizeConfig.safeBlockHorizontal * 4
+                                                  ),
                                             ),
                                             Text(
-                                              '${element.number} x ${element.price.toStringAsFixed(2)} €',
-                                              style: TextStyle(
-                                                  letterSpacing: 0.15,
-                                                  fontFamily: BuytimeTheme.FontFamily,
-                                                  color: BuytimeTheme.TextBlack,
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
-                                              ),
+                                              '${orderDetails.itemList.first.number} x ${orderDetails.itemList.first.price.toStringAsFixed(2)} €',
+                                              style: TextStyle(letterSpacing: 0.15, fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w500, fontSize: 14
+
+                                                  ///SizeConfig.safeBlockHorizontal * 4
+                                                  ),
                                             )
                                           ],
                                         ),
                                       )
-                                  );
-                                });
-                                return Column(
-                                  children: tmpOrders.map((e) => e).toList(),
-                                );
-                              }()) :
-                              Container(
-                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      orderDetails.itemList.first.number > 1 ?
-                                      '${orderDetails.itemList.first.number} x ${AppLocalizations.of(context).products}' :
-                                      '${orderDetails.itemList.first.number} x ${AppLocalizations.of(context).product}',
-                                      style: TextStyle(
-                                          letterSpacing: 0.15,
-                                          fontFamily: BuytimeTheme.FontFamily,
-                                          color: BuytimeTheme.TextBlack,
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
-                                      ),
+                                : Container(),
+
+                            ///Price value
+                            orderDetails.itemList.first.time == null
+                                ? Container(
+                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 2),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          '${AppLocalizations.of(context).onlyTotal}',
+                                          style: TextStyle(letterSpacing: 0.15, fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.bold, fontSize: 16
+
+                                              ///SizeConfig.safeBlockHorizontal * 4
+                                              ),
+                                        ),
+                                        Text(
+                                          '${AppLocalizations.of(context).euroSpace} ${orderDetails.total.toStringAsFixed(2)}',
+                                          style: TextStyle(letterSpacing: 0.15, fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.bold, fontSize: 16
+
+                                              ///SizeConfig.safeBlockHorizontal * 4
+                                              ),
+                                        )
+                                      ],
                                     ),
-                                    Text(
-                                      '${orderDetails.itemList.first.number} x ${orderDetails.itemList.first.price.toStringAsFixed(2)} €',
-                                      style: TextStyle(
-                                          letterSpacing: 0.15,
-                                          fontFamily: BuytimeTheme.FontFamily,
-                                          color: BuytimeTheme.TextBlack,
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
+                                  )
+                                : Container(
+                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 2),
+                                    child: FittedBox(
+                                      fit: BoxFit.scaleDown,
+                                      child: Text(
+                                        '${AppLocalizations.of(context).euroSpace} ${orderDetails.total.toStringAsFixed(2)}',
+                                        style: TextStyle(letterSpacing: 0.15, fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.bold, fontSize: 16
+
+                                            ///SizeConfig.safeBlockHorizontal * 4
+                                            ),
                                       ),
-                                    )
-                                  ],
-                                ),
-                              ) : Container(),
-                              ///Price value
-                              orderDetails.itemList.first.time == null ? Container(
-                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 2),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      '${AppLocalizations.of(context).onlyTotal}',
-                                      style: TextStyle(
-                                          letterSpacing: 0.15,
-                                          fontFamily: BuytimeTheme.FontFamily,
-                                          color: BuytimeTheme.TextBlack,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16 ///SizeConfig.safeBlockHorizontal * 4
-                                      ),
-                                    ),
-                                    Text(
-                                      '${AppLocalizations.of(context).euroSpace} ${orderDetails.total.toStringAsFixed(2)}',
-                                      style: TextStyle(
-                                          letterSpacing: 0.15,
-                                          fontFamily: BuytimeTheme.FontFamily,
-                                          color: BuytimeTheme.TextBlack,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16 ///SizeConfig.safeBlockHorizontal * 4
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ) :
-                              Container(
-                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 2),
-                                child: FittedBox(
-                                  fit: BoxFit.scaleDown,
-                                  child: Text(
-                                    '${AppLocalizations.of(context).euroSpace} ${orderDetails.total.toStringAsFixed(2)}',
-                                    style: TextStyle(
-                                        letterSpacing: 0.15,
-                                        fontFamily: BuytimeTheme.FontFamily,
-                                        color: BuytimeTheme.TextBlack,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16 ///SizeConfig.safeBlockHorizontal * 4
                                     ),
                                   ),
-                                ),
-                              ),
-                              orderDetails.progress == Utils.enumToString(OrderStatus.paid) ? Container(
-                                  margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 2.5),
-                                  alignment: Alignment.center,
-                                  child: Material(
-                                    color: Colors.transparent,
-                                    child: InkWell(
-                                        onTap: refundAsked ? null: () {
-                                          refundAsked = true;
-                                          StoreProvider.of<AppState>(context).dispatch(RefundOrderByUser(orderDetails.orderId));
-                                        },
-                                        borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                                        child: Container(
-                                          padding: EdgeInsets.all(5.0),
-                                          child: Text(
-                                            AppLocalizations.of(context).askForRefund,
-                                            style: TextStyle(
-                                                letterSpacing: SizeConfig.safeBlockHorizontal * .2,
-                                                fontFamily: BuytimeTheme.FontFamily,
-                                                color: refundAsked ? BuytimeTheme.TextGrey : BuytimeTheme.UserPrimary,
-                                                fontWeight: FontWeight.w400,
-                                                fontSize: 16
+                            orderDetails.progress == Utils.enumToString(OrderStatus.paid)
+                                ? Container(
+                                    margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 2.5),
+                                    alignment: Alignment.center,
+                                    child: Material(
+                                      color: Colors.transparent,
+                                      child: InkWell(
+                                          onTap: refundAsked
+                                              ? null
+                                              : () {
+                                                  refundAsked = true;
+                                                  StoreProvider.of<AppState>(context).dispatch(RefundOrderByUser(orderDetails.orderId));
+                                                },
+                                          borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                          child: Container(
+                                            padding: EdgeInsets.all(5.0),
+                                            child: Text(
+                                              AppLocalizations.of(context).askForRefund,
+                                              style: TextStyle(
+                                                  letterSpacing: SizeConfig.safeBlockHorizontal * .2,
+                                                  fontFamily: BuytimeTheme.FontFamily,
+                                                  color: refundAsked ? BuytimeTheme.TextGrey : BuytimeTheme.UserPrimary,
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 16),
                                             ),
+                                          )),
+                                    ))
+                                : Container(),
+                            orderDetails.cardType == Utils.enumToString(PaymentType.onSite)
+                                ? Padding(
+                                    padding: const EdgeInsets.only(top: 20.0),
+                                    child: Container(
+                                        margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 2.5),
+                                        alignment: Alignment.center,
+                                        child: Material(
+                                          color: Colors.transparent,
+                                          child: QrImage(
+                                            data: '$link',
+                                            version: QrVersions.auto,
+                                            size: 150.0,
                                           ),
                                         )),
-                                  )) : Container(),
-                              orderDetails.cardType == Utils.enumToString(PaymentType.onSite) ? Container(
-                                  margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 2.5),
-                                  alignment: Alignment.center,
-                                  child: Material(
-                                    color: Colors.transparent,
-                                    child: QrImage(
-                                      data: '$link',
-                                      version: QrVersions.auto,
-                                      size: 150.0,
-                                    ),
-                                  )) : Container(child: Text(orderDetails.cardType),),
-                            ],
-                          );
-                          OrderState orderState = OrderState.fromJson(orderSnapshot.data.data());
-                          order = orderState.itemList != null ? (orderState.itemList.length > 0 ? orderState : OrderState().toEmpty()) : OrderState().toEmpty();
-                          debugPrint('UI_U_ServiceDetails => CART COUNT: ${order.cartCounter}');
-
-                        },
-                      );
-                      /*OrderState orderState = OrderState.fromJson(orderSnapshot.data.data());
+                                  )
+                                : Container(
+                                    child: Text(orderDetails.cardType),
+                                  ),
+                          ],
+                        );
+                        OrderState orderState = OrderState.fromJson(orderSnapshot.data.data());
+                        order = orderState.itemList != null ? (orderState.itemList.length > 0 ? orderState : OrderState().toEmpty()) : OrderState().toEmpty();
+                        debugPrint('UI_U_ServiceDetails => CART COUNT: ${order.cartCounter}');
+                      },
+                    );
+                    /*OrderState orderState = OrderState.fromJson(orderSnapshot.data.data());
                       order = orderState.itemList != null ? (orderState.itemList.length > 0 ? orderState : OrderState().toEmpty()) : OrderState().toEmpty();
                       debugPrint('UI_U_ServiceDetails => CART COUNT: ${order.cartCounter}');*/
-
-                    },
-                  )
-                 ,
+                  },
                 ),
               ),
             ),
-            /* )*/
           ),
+          /* )*/
         ),
-      );
+      ),
+    );
   }
 
   Stack spinnerConfirmOrder() {
     return Stack(
       children: [
         Positioned.fill(
-        child: Align(
-          alignment: Alignment.bottomCenter,
-          child: Container(
-              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3),
-              height: SizeConfig.safeBlockVertical * 100,
-              decoration: BoxDecoration(
-                color: BuytimeTheme.BackgroundCerulean.withOpacity(.8),
-              ),
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Container(
-                      width: SizeConfig.safeBlockVertical * 20,
-                      height: SizeConfig.safeBlockVertical * 20,
-                      child: Center(
-                        child: SpinKitRipple(
-                          color: Colors.white,
-                          size: SizeConfig.safeBlockVertical * 18,
+          child: Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+                margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3),
+                height: SizeConfig.safeBlockVertical * 100,
+                decoration: BoxDecoration(
+                  color: BuytimeTheme.BackgroundCerulean.withOpacity(.8),
+                ),
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Container(
+                        width: SizeConfig.safeBlockVertical * 20,
+                        height: SizeConfig.safeBlockVertical * 20,
+                        child: Center(
+                          child: SpinKitRipple(
+                            color: Colors.white,
+                            size: SizeConfig.safeBlockVertical * 18,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              )),
-        ),
-      )
+                    ],
+                  ),
+                )),
+          ),
+        )
       ],
     );
   }

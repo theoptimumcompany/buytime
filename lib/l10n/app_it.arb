@@ -592,5 +592,6 @@
   "selectPaymentMethodsAccepted": "Select the payment methods accepted by your service",
   "all": "Tutti",
   "roomPayment": "Pagamento addebitato alla Stanza",
-  "cardPayment": "Carta di Credito"
+  "cardPayment": "Carta di Credito",
+  "noPaymentMethod": "Nessuno metodo di pagamento scelto"
 }
