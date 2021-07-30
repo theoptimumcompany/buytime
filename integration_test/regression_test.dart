@@ -163,8 +163,8 @@ void main() {
         await tester.tap(find.byKey(ValueKey('remove_one_item_key')));
         await tester.pumpAndSettle(const Duration(seconds: 2));
 
-        await tester.drag(find.text('Appetizer').first, const Offset(-700, 0));
-        await tester.pumpAndSettle(const Duration(seconds: 2));
+        /*await tester.drag(find.text('Appetizer').first, const Offset(-700, 0));
+        await tester.pumpAndSettle(const Duration(seconds: 2));*/
 
         // await tester.tap(find.text('Appetizer'));
         // await tester.pumpAndSettle(const Duration(seconds: 2));
@@ -177,7 +177,7 @@ void main() {
       await tester.pumpAndSettle(const Duration(seconds: 2));
       //await tester.tap(find.byKey(ValueKey('login')));
       ///Home => registration
-     // await login(tester, 'test_automatico@buytime.network', 'Test2021');
+      await login(tester, 'test_automatico@buytime.network', 'Test2021');
       await tester.pumpAndSettle(const Duration(seconds: 2));
 
       /* await tester.enterText(find.byKey(ValueKey('search_field_key')), 'Drink');
@@ -226,8 +226,8 @@ void main() {
         await tester.tap(find.byKey(ValueKey('back_cart_from_confirm_order_key')));
         await tester.pumpAndSettle(const Duration(seconds: 1));
 
-        await tester.drag(find.text('Reservation').first, const Offset(-700, 0));
-        await tester.pumpAndSettle(const Duration(seconds: 2));
+        /*await tester.drag(find.text('Reservation').first, const Offset(-700, 0));
+        await tester.pumpAndSettle(const Duration(seconds: 2));*/
 
         //service_reserve_buy_key
 
@@ -331,13 +331,12 @@ void main() {
       await tester.tap(find.byKey(ValueKey('back_cart_from_confirm_order_key')));
       await tester.pumpAndSettle(const Duration(seconds: 1));
 
-      await tester.drag(find.text('Reservation').first, const Offset(-700, 0));
-      await tester.pumpAndSettle(const Duration(seconds: 2));
-
+      /*await tester.drag(find.text('Reservation').first, const Offset(-700, 0));
+      await tester.pumpAndSettle(const Duration(seconds: 2));*/
     });
 
     ///Login User => Self Check in => log out
-    /*testWidgets('Registration User', (tester) async {
+    testWidgets('Registration User', (tester) async {
       await loadApp(tester);
       await tester.pumpAndSettle(const Duration(seconds: 3));
       //await tester.tap(find.byKey(ValueKey('login')));
@@ -358,10 +357,14 @@ void main() {
       await tester.tap(find.byKey(ValueKey('self_check_in_key')));
       await tester.pumpAndSettle(const Duration(seconds: 2));
 
-      await tester.tap(find.text('29').first);
+      DateTime currentDate = DateTime.now();
+      String start = currentDate.add(Duration(days: 0)).day.toString();
+      String end = currentDate.add(Duration(days: 1)).day.toString();
+
+      await tester.tap(find.text(start).first);
       await tester.pumpAndSettle(const Duration(seconds: 2));
 
-      await tester.tap(find.text('30').first);
+      await tester.tap(find.text(end).first);
       await tester.pumpAndSettle(const Duration(seconds: 2));
 
       await tester.tap(find.text('Save'.toUpperCase()).first);
@@ -384,9 +387,9 @@ void main() {
       await tester.tap(find.byKey(ValueKey('log_out_key')));
       await tester.pumpAndSettle(const Duration(seconds: 2));
 
-    });*/
+    });
 
-    /*testWidgets('Add External Service', (tester) async {
+    testWidgets('Add External Service', (tester) async {
       await loadApp(tester);
 
       //await tester.tap(find.byKey(ValueKey('login')));
@@ -428,10 +431,14 @@ void main() {
           await tester.tap(find.byKey(ValueKey('create_check_in_key')));
           await tester.pumpAndSettle(const Duration(seconds: 2));
 
-          await tester.tap(find.text('29').first);
+          DateTime currentDate = DateTime.now();
+          String start = currentDate.add(Duration(days: 0)).day.toString();
+          String end = currentDate.add(Duration(days: 1)).day.toString();
+
+          await tester.tap(find.text(start).first);
           await tester.pumpAndSettle(const Duration(seconds: 2));
 
-          await tester.tap(find.text('30').first);
+          await tester.tap(find.text(end).first);
           await tester.pumpAndSettle(const Duration(seconds: 2));
 
           await tester.tap(find.text('Save'.toUpperCase()).first);
@@ -462,7 +469,8 @@ void main() {
         debugPrint('listview not found');
       }
 
-    });*/
+    });
+
 
   });
 }

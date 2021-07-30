@@ -206,7 +206,7 @@ class LandingState extends State<Landing> {
             Navigator.push(context, MaterialPageRoute(builder: (context) => RBusinessList()));
           } else
             debugPrint('UI_U_landing: USER NOT LOGGED in onLink');
-        } else if (deepLink.queryParameters.containsKey('userId') && deepLink.queryParameters.containsKey('orderId') && onSiteUserIdRead == 'true' && onSiteOrderIdRead == 'true') {
+        } else if (deepLink.queryParameters.containsKey('userId') && deepLink.queryParameters.containsKey('orderId') && onSiteUserIdRead != 'true' && onSiteOrderIdRead != 'true') {
           debugPrint('ON SITE PAYMENT ON LINK');
           String orderId = deepLink.queryParameters['orderId'];
           String userId = deepLink.queryParameters['userId'];

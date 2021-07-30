@@ -782,6 +782,36 @@ class _RServiceSlotManagementState extends State<RServiceSlotManagement> {
   List<SquareSlotState> squareSlotList = [];
   SlotListSnippetState slotSnippetListState = SlotListSnippetState(slotListSnippet: []);
 
+  DateTime start = DateTime.now();
+  DateTime end = DateTime.now();
+
+
+  Future<void> _selectDate(BuildContext context, DateTime cIn, DateTime cOut) async {
+    final DateTimeRange picked = await showDateRangePicker(
+        context: context,
+        initialDateRange: DateTimeRange(start: cIn, end: cOut),
+        firstDate: new DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day),
+        lastDate: new DateTime(2025),
+        builder: (BuildContext context, Widget child) {
+          return Theme(
+            data: ThemeData(primaryColor: BuytimeTheme.ManagerPrimary, splashColor: BuytimeTheme.ManagerPrimary, colorScheme: ColorScheme.light(onPrimary: Colors.white, primary: BuytimeTheme.ManagerPrimary)),
+            child: child,
+          );
+        });
+    if (picked != null && picked.start != null && picked.end != null) {
+      print(picked);
+      /*_checkInController.text = DateFormat('dd/MM/yyyy').format(picked.start);
+      _checkOutController.text = DateFormat('dd/MM/yyyy').format(picked.end);*/
+      setState(() {
+        /*checkIn = picked.start.toUtc();
+        checkOut = picked.end.toUtc();*/
+        start = DateTime.utc(picked.start.year, picked.start.month, picked.start.day);
+        end = DateTime.utc(picked.end.year, picked.end.month, picked.end.day);
+      });
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context).size;
@@ -864,9 +894,20 @@ class _RServiceSlotManagementState extends State<RServiceSlotManagement> {
                 ),
               ),
             ),
-            SizedBox(
-              width: 56.0,
+            Container(
+              child: IconButton(
+                onPressed: (){
+                  _selectDate(context, start, end);
+                },
+                icon: Icon(
+                    Icons.calendar_today_outlined,
+                  color: BuytimeTheme.SymbolWhite,
+                ),
+              ),
             )
+            /*SizedBox(
+              width: 56.0,
+            )*/
           ],
         ),
         drawer: UI_M_BusinessListDrawer(),
@@ -911,7 +952,7 @@ class _RServiceSlotManagementState extends State<RServiceSlotManagement> {
                 DateTime tmp = DateFormat('dd/MM/yyyy').parse(element.date);
                 DateTime tmp2 = DateFormat('dd/MM/yyyy').parse(element.date);
                 DateTime currentDate = DateTime.now();
-                currentDate = DateTime(currentDate.year, currentDate.month, currentDate.day, 0,0,0,0,0);
+                currentDate = DateTime(start.year, start.month, start.day, 0,0,0,0,0);
                 Map<DateTime, List<SquareSlotState>> tmpMap = Map();
                 tmp = DateTime(tmp.year, tmp.month, 1, 0,0,0,0,0);
                 tmp2 = DateTime(tmp2.year, tmp2.month, tmp2.day, 0,0,0,0,0);
