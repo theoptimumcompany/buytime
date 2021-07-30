@@ -787,9 +787,9 @@ class _RServiceSlotManagementState extends State<RServiceSlotManagement> {
 
 
   Future<void> _selectDate(BuildContext context, DateTime cIn, DateTime cOut) async {
-    final DateTimeRange picked = await showDateRangePicker(
+    final DateTime picked = await showDatePicker(
         context: context,
-        initialDateRange: DateTimeRange(start: cIn, end: cOut),
+        initialDate: cIn,
         firstDate: new DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day),
         lastDate: new DateTime(2025),
         builder: (BuildContext context, Widget child) {
@@ -798,15 +798,15 @@ class _RServiceSlotManagementState extends State<RServiceSlotManagement> {
             child: child,
           );
         });
-    if (picked != null && picked.start != null && picked.end != null) {
+    if (picked != null ) {
       print(picked);
       /*_checkInController.text = DateFormat('dd/MM/yyyy').format(picked.start);
       _checkOutController.text = DateFormat('dd/MM/yyyy').format(picked.end);*/
       setState(() {
         /*checkIn = picked.start.toUtc();
         checkOut = picked.end.toUtc();*/
-        start = DateTime.utc(picked.start.year, picked.start.month, picked.start.day);
-        end = DateTime.utc(picked.end.year, picked.end.month, picked.end.day);
+        start = DateTime.utc(picked.year, picked.month, picked.day);
+        //end = DateTime.utc(picked.end.year, picked.end.month, picked.end.day);
       });
     }
     return null;
