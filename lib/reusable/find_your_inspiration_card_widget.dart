@@ -16,7 +16,8 @@ class FindYourInspirationCardWidget extends StatefulWidget {
   bool tourist;
   int first;
   int second;
-  FindYourInspirationCardWidget(this.width, this.heigth,this.categoryState, this.fromBookingPage, this.tourist, this.categoryListIds, this.first, this.second);
+  bool fromSubCategory;
+  FindYourInspirationCardWidget(this.width, this.heigth,this.categoryState, this.fromBookingPage, this.tourist, this.categoryListIds, this.first, this.second, this.fromSubCategory);
 
   @override
   _FindYourInspirationCardWidgetState createState() => _FindYourInspirationCardWidgetState();
@@ -55,7 +56,7 @@ class _FindYourInspirationCardWidgetState extends State<FindYourInspirationCardW
             key: Key('category_${widget.first}_${widget.second}_key'),
             splashColor: Colors.black.withOpacity(.3),
             onTap: (){
-              widget.fromBookingPage ?
+              widget.fromBookingPage || widget.fromSubCategory ?
               Navigator.push(context, MaterialPageRoute(builder: (context) => FilterByCategory(fromBookingPage: true, categoryState: widget.categoryState, tourist: widget.tourist, categoryListIds: widget.categoryListIds,))) :
               Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => FilterByCategory(fromBookingPage: false,categoryState: widget.categoryState, tourist: widget.tourist, categoryListIds: widget.categoryListIds,)));
             },

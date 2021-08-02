@@ -144,14 +144,21 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
           }
         });
 
-        /// TODO update
+        ///Business name from booking business
         if(store.state.business.id_firestore.isNotEmpty){
           bussinessName = store.state.business.name;
         }
+        ///Business name from business list
         store.state.businessList.businessListState.forEach((element) {
           debugPrint('BUSINESS NAME: ${element.id_firestore} VS ${widget.serviceState.businessId}');
           if(widget.serviceState.businessId == element.id_firestore)
             bussinessName = element.name;
+        });
+        ///Business name from snippet
+        store.state.serviceListSnippetListState.serviceListSnippetListState.forEach((element) {
+          debugPrint('BUSINESS NAME: ${element.businessId} VS ${widget.serviceState.businessId}');
+          if(widget.serviceState.businessId == element.businessId)
+            bussinessName = element.businessName;
         });
 
 

@@ -212,7 +212,7 @@ class _BookingPageState extends State<BookingPage> {
             ? Flexible(
           flex: 1,
           child: FindYourInspirationCardWidget(list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2,
-              list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2, list[0], true, false, [list[0].id], pos, 0),
+              list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2, list[0], true, false, [list[0].id], pos, 0, false),
         )
             : Container(),
 
@@ -221,7 +221,7 @@ class _BookingPageState extends State<BookingPage> {
             ? Flexible(
           flex: 1,
           child: FindYourInspirationCardWidget(list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2,
-              list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2, list[1], true, false, [list[1].id], pos, 1),
+              list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2, list[1], true, false, [list[1].id], pos, 1, false),
         )
             : Container(),
 
@@ -230,7 +230,7 @@ class _BookingPageState extends State<BookingPage> {
             ? Flexible(
           flex: 1,
           child: FindYourInspirationCardWidget(list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2,
-              list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2, list[2], true, false, [list[2].id], pos, 2),
+              list.length <= 2 ? SizeConfig.screenWidth / 2 - 2 : SizeConfig.screenWidth / 3 - 2, list[2], true, false, [list[2].id], pos, 2, false),
         )
             : Container(),
       ],
