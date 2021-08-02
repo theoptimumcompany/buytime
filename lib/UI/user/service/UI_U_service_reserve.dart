@@ -234,11 +234,11 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                // debugPrint('FIRST TIME');
                 if (mySlots[j].free != 0) {
                   //debugPrint('HEREEE => ${mySlots[j].on}');
-                  DateTime squareDateFormat = DateFormat("dd/MM/yyyy").parse(mySlots[j].date).toUtc();
+                  DateTime squareDateFormat = DateFormat("dd/MM/yyyy").parse(mySlots[j].date);
                   //debugPrint('DATE: $squareDateFormat');
                   DateTime squareDate = squareDateFormat;
                   squareDate = new DateTime(squareDate.year, squareDate.month, squareDate.day, 0, 0, 0, 0, 0);
-                  DateTime squareTime = DateFormat("dd/MM/yyyy").parse(mySlots[j].date).toUtc();
+                  DateTime squareTime = DateFormat("dd/MM/yyyy").parse(mySlots[j].date);
                   squareTime = new DateTime(squareTime.year, squareTime.month, squareTime.day, int.parse(mySlots[j].on.split(':').first), int.parse(mySlots[j].on.split(':').last), 0, 0, 0);
                   //debugPrint('UI_U_ServiceReserve => SQUARE SLOT DATE: $squareDate - CURRENT DATE: ${startDate.add(Duration(days: i))} - SQUARE SLOT TIME: ${mySlots[j].on} - SQUARE TIME: $squareTime');
                   if (squareDate.isAtSameMomentAs(startDate.add(Duration(days: i))) && squareTime.isAfter(DateTime.now())) {
@@ -257,11 +257,11 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                 });
                 if (found) {
                   //debugPrint('FROM ORDER');
-                  DateTime squareDateFormat = DateFormat("dd/MM/yyyy").parse(mySlots[j].date).toUtc();
+                  DateTime squareDateFormat = DateFormat("dd/MM/yyyy").parse(mySlots[j].date);
                   //debugPrint('DATE: $squareDateFormat');
                   DateTime squareDate = squareDateFormat;
                   squareDate = new DateTime(squareDate.year, squareDate.month, squareDate.day, 0, 0, 0, 0, 0);
-                  DateTime squareTime = DateFormat("dd/MM/yyyy").parse(mySlots[j].date).toUtc();
+                  DateTime squareTime = DateFormat("dd/MM/yyyy").parse(mySlots[j].date);
                   squareTime = new DateTime(squareTime.year, squareTime.month, squareTime.day, int.parse(mySlots[j].on.split(':').first), int.parse(mySlots[j].on.split(':').last), 0, 0, 0);
                   //debugPrint('UI_U_ServiceReserve => SQUARE SLOT DATE: $squareDate - CURRENT DATE: ${startDate.add(Duration(days: i))} - SQUARE SLOT TIME: ${mySlots[j].on} - SQUARE TIME: $squareTime');
                   if (mySlots[j].free != 0){
@@ -271,11 +271,11 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                     }
                   }
                 } else {
-                  DateTime squareDateFormat = DateFormat("dd/MM/yyyy").parse(mySlots[j].date).toUtc();
+                  DateTime squareDateFormat = DateFormat("dd/MM/yyyy").parse(mySlots[j].date);
                   //debugPrint('DATE: $squareDateFormat');
                   DateTime squareDate = squareDateFormat;
                   squareDate = new DateTime(squareDate.year, squareDate.month, squareDate.day, 0, 0, 0, 0, 0);
-                  DateTime squareTime = DateFormat("dd/MM/yyyy").parse(mySlots[j].date).toUtc();
+                  DateTime squareTime = DateFormat("dd/MM/yyyy").parse(mySlots[j].date);
                   squareTime = new DateTime(squareTime.year, squareTime.month, squareTime.day, int.parse(mySlots[j].on.split(':').first), int.parse(mySlots[j].on.split(':').last), 0, 0, 0);
                   if (squareDate.isAtSameMomentAs(startDate.add(Duration(days: i))) && squareTime.isAfter(DateTime.now())) {
                     debugPrint('UI_U_ServiceReserve => OUTSIDE SQUARE SLOT DATE: $squareDate - CURRENT DATE: ${startDate.add(Duration(days: i))} - SQUARE SLOT TIME: ${mySlots[j].on} - SQUARE TIME: $squareTime');
@@ -796,167 +796,167 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                       ),
 
                       ///Next available time
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 2.5),
-                            child: Text(
-                              AppLocalizations.of(context).nextAvailableTime,
-                              style: TextStyle(
-                                //letterSpacing: 1.25,
-                                  fontFamily: BuytimeTheme.FontFamily,
-                                  color: BuytimeTheme.TextBlack,
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 14
-
-                                ///SizeConfig.safeBlockHorizontal * 4
-                              ),
-                            ),
-                          ),
-
-                          ///First slot
-                          noActivity
-                              ? Expanded(
-                            child: Container(
-                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, bottom: SizeConfig.safeBlockVertical * 3, right: SizeConfig.safeBlockVertical * 5, left: SizeConfig.safeBlockVertical * 2),
-                              //width: 179,
-                              height: 120,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [CircularProgressIndicator()],
-                              ),
-                            ),
-                          )
-                              : Container(
-                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, bottom: SizeConfig.safeBlockVertical * 3, right: SizeConfig.safeBlockVertical * 5, left: SizeConfig.safeBlockVertical * 2),
-                            width: 150,
-                            height: 120,
-                            decoration: BoxDecoration(
-                              color: BuytimeTheme.BackgroundLightBlue.withOpacity(.2),
-                              borderRadius: BorderRadius.all(Radius.circular(5)),
-                            ),
-                            child: dates.isNotEmpty
-                                ? Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                ///Date
-                                Container(
-                                  width: 179,
-                                  //margin: EdgeInsets.only(top: 15),
-                                  //margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 10),
-                                  child: FittedBox(
-                                    fit: BoxFit.scaleDown,
-                                    child: Text(
-                                      DateFormat('MMM dd').format(DateTime.now()).toUpperCase() == DateFormat('MMM dd').format(dates[0]).toUpperCase() ? AppLocalizations.of(context).today.replaceFirst(',', '').toUpperCase() : Utils.capitalize(DateFormat('EEEE',Localizations.localeOf(context).languageCode).format(dates[0])),
-                                      style: TextStyle(
-                                        //letterSpacing: 1.25,
-                                          fontFamily: BuytimeTheme.FontFamily,
-                                          color: BuytimeTheme.TextBlack,
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 16
-
-                                        ///SizeConfig.safeBlockHorizontal * 4
-                                      ),
-                                    ),
-                                  ),
-                                ),
-
-                                ///Time
-                                Container(
-                                  width: 179,
-                                  //margin: EdgeInsets.only(top: 15),
-                                  //margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 10),
-                                  child: FittedBox(
-                                    fit: BoxFit.scaleDown,
-                                    child: Text(
-                                      '${slots[0][0][2].on}',
-                                      style: TextStyle(
-                                        //letterSpacing: 1.25,
-                                          fontFamily: BuytimeTheme.FontFamily,
-                                          color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 16
-
-                                        ///SizeConfig.safeBlockHorizontal * 4
-                                      ),
-                                    ),
-                                  ),
-                                ),
-
-                                ///Duration
-                                Container(
-                                  width: 179,
-                                  //margin: EdgeInsets.only(top: 5),
-                                  //margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 10),
-                                  child: FittedBox(
-                                    fit: BoxFit.scaleDown,
-                                    child: Text(
-                                      firstSlot,
-                                      style: TextStyle(
-                                        //letterSpacing: 1.25,
-                                          fontFamily: BuytimeTheme.FontFamily,
-                                          color: BuytimeTheme.TextBlack,
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 16
-
-                                        ///SizeConfig.safeBlockHorizontal * 4
-                                      ),
-                                    ),
-                                  ),
-                                ),
-
-                                ///Price
-                                Container(
-                                  width: 179,
-                                  //margin: EdgeInsets.only(top: 5),
-                                  child: FittedBox(
-                                    fit: BoxFit.scaleDown,
-                                    child: Text(
-                                      '${AppLocalizations.of(context).currency} ' + slots[0][0][1].price.toStringAsFixed(2),
-                                      style: TextStyle(
-                                        //letterSpacing: 1.25,
-                                          fontFamily: BuytimeTheme.FontFamily,
-                                          color: BuytimeTheme.TextBlack,
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 16
-
-                                        ///SizeConfig.safeBlockHorizontal * 4
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            )
-                                : Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                ///Nothing
-                                Container(
-                                  width: 179,
-                                  //margin: EdgeInsets.only(top: 15),
-                                  //margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 10),
-                                  child: FittedBox(
-                                    fit: BoxFit.scaleDown,
-                                    child: Text(
-                                      AppLocalizations.of(context).noServiceFound,
-                                      style: TextStyle(
-                                        //letterSpacing: 1.25,
-                                          fontFamily: BuytimeTheme.FontFamily,
-                                          color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 16
-
-                                        ///SizeConfig.safeBlockHorizontal * 4
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
+                      // Row(
+                      //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //   children: [
+                      //     Container(
+                      //       margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 2.5),
+                      //       child: Text(
+                      //         AppLocalizations.of(context).nextAvailableTime,
+                      //         style: TextStyle(
+                      //           //letterSpacing: 1.25,
+                      //             fontFamily: BuytimeTheme.FontFamily,
+                      //             color: BuytimeTheme.TextBlack,
+                      //             fontWeight: FontWeight.w400,
+                      //             fontSize: 14
+                      //
+                      //           ///SizeConfig.safeBlockHorizontal * 4
+                      //         ),
+                      //       ),
+                      //     ),
+                      //
+                      //     ///First slot
+                      //     noActivity
+                      //         ? Expanded(
+                      //       child: Container(
+                      //         margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, bottom: SizeConfig.safeBlockVertical * 3, right: SizeConfig.safeBlockVertical * 5, left: SizeConfig.safeBlockVertical * 2),
+                      //         //width: 179,
+                      //         height: 120,
+                      //         child: Column(
+                      //           mainAxisAlignment: MainAxisAlignment.center,
+                      //           children: [CircularProgressIndicator()],
+                      //         ),
+                      //       ),
+                      //     )
+                      //         : Container(
+                      //       margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, bottom: SizeConfig.safeBlockVertical * 3, right: SizeConfig.safeBlockVertical * 5, left: SizeConfig.safeBlockVertical * 2),
+                      //       width: 150,
+                      //       height: 120,
+                      //       decoration: BoxDecoration(
+                      //         color: BuytimeTheme.BackgroundLightBlue.withOpacity(.2),
+                      //         borderRadius: BorderRadius.all(Radius.circular(5)),
+                      //       ),
+                      //       child: dates.isNotEmpty
+                      //           ? Column(
+                      //         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      //         children: [
+                      //           ///Date
+                      //           Container(
+                      //             width: 179,
+                      //             //margin: EdgeInsets.only(top: 15),
+                      //             //margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 10),
+                      //             child: FittedBox(
+                      //               fit: BoxFit.scaleDown,
+                      //               child: Text(
+                      //                 DateFormat('MMM dd').format(DateTime.now()).toUpperCase() == DateFormat('MMM dd').format(dates[0]).toUpperCase() ? AppLocalizations.of(context).today.replaceFirst(',', '').toUpperCase() : Utils.capitalize(DateFormat('EEEE',Localizations.localeOf(context).languageCode).format(dates[0])),
+                      //                 style: TextStyle(
+                      //                   //letterSpacing: 1.25,
+                      //                     fontFamily: BuytimeTheme.FontFamily,
+                      //                     color: BuytimeTheme.TextBlack,
+                      //                     fontWeight: FontWeight.w400,
+                      //                     fontSize: 16
+                      //
+                      //                   ///SizeConfig.safeBlockHorizontal * 4
+                      //                 ),
+                      //               ),
+                      //             ),
+                      //           ),
+                      //
+                      //           ///Time
+                      //           Container(
+                      //             width: 179,
+                      //             //margin: EdgeInsets.only(top: 15),
+                      //             //margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 10),
+                      //             child: FittedBox(
+                      //               fit: BoxFit.scaleDown,
+                      //               child: Text(
+                      //                 '${slots[0][0][2].on}',
+                      //                 style: TextStyle(
+                      //                   //letterSpacing: 1.25,
+                      //                     fontFamily: BuytimeTheme.FontFamily,
+                      //                     color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
+                      //                     fontWeight: FontWeight.w400,
+                      //                     fontSize: 16
+                      //
+                      //                   ///SizeConfig.safeBlockHorizontal * 4
+                      //                 ),
+                      //               ),
+                      //             ),
+                      //           ),
+                      //
+                      //           ///Duration
+                      //           Container(
+                      //             width: 179,
+                      //             //margin: EdgeInsets.only(top: 5),
+                      //             //margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 10),
+                      //             child: FittedBox(
+                      //               fit: BoxFit.scaleDown,
+                      //               child: Text(
+                      //                 firstSlot,
+                      //                 style: TextStyle(
+                      //                   //letterSpacing: 1.25,
+                      //                     fontFamily: BuytimeTheme.FontFamily,
+                      //                     color: BuytimeTheme.TextBlack,
+                      //                     fontWeight: FontWeight.w400,
+                      //                     fontSize: 16
+                      //
+                      //                   ///SizeConfig.safeBlockHorizontal * 4
+                      //                 ),
+                      //               ),
+                      //             ),
+                      //           ),
+                      //
+                      //           ///Price
+                      //           Container(
+                      //             width: 179,
+                      //             //margin: EdgeInsets.only(top: 5),
+                      //             child: FittedBox(
+                      //               fit: BoxFit.scaleDown,
+                      //               child: Text(
+                      //                 '${AppLocalizations.of(context).currency} ' + slots[0][0][1].price.toStringAsFixed(2),
+                      //                 style: TextStyle(
+                      //                   //letterSpacing: 1.25,
+                      //                     fontFamily: BuytimeTheme.FontFamily,
+                      //                     color: BuytimeTheme.TextBlack,
+                      //                     fontWeight: FontWeight.w400,
+                      //                     fontSize: 16
+                      //
+                      //                   ///SizeConfig.safeBlockHorizontal * 4
+                      //                 ),
+                      //               ),
+                      //             ),
+                      //           ),
+                      //         ],
+                      //       )
+                      //           : Column(
+                      //         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      //         children: [
+                      //           ///Nothing
+                      //           Container(
+                      //             width: 179,
+                      //             //margin: EdgeInsets.only(top: 15),
+                      //             //margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 10),
+                      //             child: FittedBox(
+                      //               fit: BoxFit.scaleDown,
+                      //               child: Text(
+                      //                 AppLocalizations.of(context).noServiceFound,
+                      //                 style: TextStyle(
+                      //                   //letterSpacing: 1.25,
+                      //                     fontFamily: BuytimeTheme.FontFamily,
+                      //                     color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
+                      //                     fontWeight: FontWeight.w400,
+                      //                     fontSize: 16
+                      //
+                      //                   ///SizeConfig.safeBlockHorizontal * 4
+                      //                 ),
+                      //               ),
+                      //             ),
+                      //           ),
+                      //         ],
+                      //       ),
+                      //     ),
+                      //   ],
+                      // ),
 
                       ///Blue part & Time Slots
                       noActivity
@@ -968,93 +968,238 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                       )
                           : Expanded(
                           flex: 5,
-                          child: CustomScrollView(shrinkWrap: true, slivers: [
-                            /*SliverPersistentHeader(
-                                pinned: true,
-                                delegate: CustomSliverAppBarDelegate(
-                                  minHeight: 20,
-                                  maxHeight: 20,
-                                  child: ///Blue part
-                                  Container(
-                                    color: BuytimeTheme.UserPrimary,
-                                    height: 20,
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
-                                          child: Text(
-                                            '0',//index == 0 ? AppLocalizations.of(context).today + date : index == 1 ? AppLocalizations.of(context).tomorrow + date : '${DateFormat('EEEE').format(i).toUpperCase()}, $date',
-                                            textAlign: TextAlign.start,
-                                            style: TextStyle(
-                                              letterSpacing: 1.25,
-                                              fontFamily: BuytimeTheme.FontFamily,
-                                              color: BuytimeTheme.TextWhite,
-                                              fontSize: 14, /// SizeConfig.safeBlockHorizontal * 4
-                                              fontWeight: FontWeight.w500,
+                          child: Padding(
+                            padding: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 4),
+                            child: CustomScrollView(shrinkWrap: true, slivers: [
+                              /*SliverPersistentHeader(
+                                  pinned: true,
+                                  delegate: CustomSliverAppBarDelegate(
+                                    minHeight: 20,
+                                    maxHeight: 20,
+                                    child: ///Blue part
+                                    Container(
+                                      color: BuytimeTheme.UserPrimary,
+                                      height: 20,
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
+                                            child: Text(
+                                              '0',//index == 0 ? AppLocalizations.of(context).today + date : index == 1 ? AppLocalizations.of(context).tomorrow + date : '${DateFormat('EEEE').format(i).toUpperCase()}, $date',
+                                              textAlign: TextAlign.start,
+                                              style: TextStyle(
+                                                letterSpacing: 1.25,
+                                                fontFamily: BuytimeTheme.FontFamily,
+                                                color: BuytimeTheme.TextWhite,
+                                                fontSize: 14, /// SizeConfig.safeBlockHorizontal * 4
+                                                fontWeight: FontWeight.w500,
+                                              ),
                                             ),
-                                          ),
-                                        )
-                                      ],
+                                          )
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ),*/
-                            SliverList(
-                              delegate: SliverChildBuilderDelegate(
-                                    (context, index) {
-                                  //MenuItemModel menuItem = menuItems.elementAt(index);
-                                  //final item = (index != snapshot.itemList.length ? snapshot.itemList[index] : null);
-                                  DateTime i = dates.elementAt(index);
-                                  ///TODO: Controllare che localization non dia problemi con controlli
-                                  String date = DateFormat('MMM dd',Localizations.localeOf(context).languageCode).format(i).toUpperCase();
-                                  String currentDate = DateFormat('MMM dd',Localizations.localeOf(context).languageCode).format(DateTime.now()).toUpperCase();
-                                  String nextDate = DateFormat('MMM dd',Localizations.localeOf(context).languageCode).format(DateTime.now().add(Duration(days: 1))).toUpperCase();
-                                  List<bool> select = picked.elementAt(index);
-                                  return Column(
-                                    children: [
-                                      ///Blue part
-                                      Container(
-                                        color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
-                                        height: 20,
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          children: [
-                                            Container(
-                                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
-                                              child: Text(
-                                                index == 0 && currentDate == date
-                                                    ? AppLocalizations.of(context).today + ' ' + date
-                                                    : index == 1 && nextDate == date
-                                                    ? AppLocalizations.of(context).tomorrow + date
-                                                    : '${DateFormat('EEEE', Localizations.localeOf(context).languageCode).format(i).toUpperCase()}, $date',
-                                                textAlign: TextAlign.start,
-                                                style: TextStyle(
-                                                  letterSpacing: 1.25,
-                                                  fontFamily: BuytimeTheme.FontFamily,
-                                                  color: BuytimeTheme.TextWhite,
-                                                  fontSize: 14,
+                                ),*/
+                              SliverList(
+                                delegate: SliverChildBuilderDelegate(
+                                      (context, index) {
+                                    //MenuItemModel menuItem = menuItems.elementAt(index);
+                                    //final item = (index != snapshot.itemList.length ? snapshot.itemList[index] : null);
+                                    DateTime i = dates.elementAt(index);
+                                    ///TODO: Controllare che localization non dia problemi con controlli
+                                    String date = DateFormat('MMM dd',Localizations.localeOf(context).languageCode).format(i).toUpperCase();
+                                    String currentDate = DateFormat('MMM dd',Localizations.localeOf(context).languageCode).format(DateTime.now()).toUpperCase();
+                                    String nextDate = DateFormat('MMM dd',Localizations.localeOf(context).languageCode).format(DateTime.now().add(Duration(days: 1))).toUpperCase();
+                                    List<bool> select = picked.elementAt(index);
+                                    return Column(
+                                      children: [
+                                        ///Blue part
+                                        Container(
+                                          color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
+                                          height: 20,
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            children: [
+                                              Container(
+                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
+                                                child: Text(
+                                                  index == 0 && currentDate == date
+                                                      ? AppLocalizations.of(context).today + ' ' + date
+                                                      : index == 1 && nextDate == date
+                                                      ? AppLocalizations.of(context).tomorrow + date
+                                                      : '${DateFormat('EEEE', Localizations.localeOf(context).languageCode).format(i).toUpperCase()}, $date',
+                                                  textAlign: TextAlign.start,
+                                                  style: TextStyle(
+                                                    letterSpacing: 1.25,
+                                                    fontFamily: BuytimeTheme.FontFamily,
+                                                    color: BuytimeTheme.TextWhite,
+                                                    fontSize: 14,
 
-                                                  /// SizeConfig.safeBlockHorizontal * 4
-                                                  fontWeight: FontWeight.w500,
+                                                    /// SizeConfig.safeBlockHorizontal * 4
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+
+                                        ///Time slot
+                                        /*Container(
+                                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1.5, bottom: SizeConfig.safeBlockVertical * 1.5),
+                                            height: 110,
+                                            width: SizeConfig.safeBlockHorizontal * 100,
+                                            child: CustomScrollView(
+                                                scrollDirection: Axis.horizontal,
+                                                shrinkWrap: true,
+                                                slivers: [
+                                              SliverList(
+                                                delegate: SliverChildBuilderDelegate((context, i) {
+                                                  //MenuItemModel menuItem = menuItems.elementAt(index);
+                                                  //final item = (index != snapshot.itemList.length ? snapshot.itemList[index] : null);
+                                                  List<dynamic> serviceSlot = slots[index].elementAt(i);
+                                                  //debugPrint('UI_U_service_reserve => INDEX: $index | I: $i | SQUARE TIME: ${serviceSlot[2].startTime}');
+                                                  indexes[index][i].first = index;
+                                                  indexes[index][i].last = i;
+                                                  SelectedEntry selected = SelectedEntry(first: index, last: i);
+                                                  return Column(
+                                                    mainAxisSize: MainAxisSize.min,
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    children: [
+                                                      ///Slot
+                                                      Container(
+                                                        margin: EdgeInsets.only(top: 2, bottom: 2, right: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockVertical * 2),
+                                                        child: Container(
+                                                            width: 100,
+                                                            height: 100,
+                                                            decoration: BoxDecoration(
+                                                              color:  BuytimeTheme.BackgroundWhite,
+                                                              borderRadius: BorderRadius.all(Radius.circular(5)),
+                                                              border: Border.all(
+                                                                  color: select[i] ? ( widget.tourist ? BuytimeTheme.BackgroundCerulean.withOpacity(0.5) : BuytimeTheme.UserPrimary.withOpacity(0.5)) : BuytimeTheme.BackgroundWhite
+                                                              ),
+                                                              boxShadow: [
+                                                                BoxShadow(
+                                                                  color: select[i] ? BuytimeTheme.BackgroundWhite : BuytimeTheme.BackgroundBlack.withOpacity(0.3),
+                                                                  spreadRadius: .5,
+                                                                  blurRadius: 1,
+                                                                  offset: Offset(0, select[i] ? 0 : 1), // changes position of shadow
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            child: Material(
+                                                                color: Colors.transparent,
+                                                                child: InkWell(
+                                                                  borderRadius: BorderRadius.all(Radius.circular(5)),
+                                                                  onTap: !selectedSlot[index][i] ? () async {
+                                                                    setState(() {
+                                                                      //selectQuantity = List.generate(dates.length, (index) => false);
+                                                                      select[i] = !select[i];
+                                                                      selectQuantity[index] = select[i];
+                                                                      scrollPositionList[index][i] = select[i];
+                                                                      if(select[i]){
+                                                                        selectedSquareSlot = serviceSlot[2];
+                                                                        selectedQuantityNumber = selectedSquareSlot.maxAvailablePlace - selectedSquareSlot.availablePlaces;
+                                                                        debugPrint('SELECTED SLOT: ${selectQuantity[index]}');
+                                                                        selectedSquareSlotList[index].add([selectedQuantityNumber, selectedSquareSlot]);
+                                                                        debugPrint('SELECTED SLOT LIST: ${selectedSquareSlotList[index].length}');
+                                                                      }else{
+                                                                        serviceSlot[2].availablePlaces = serviceSlot[2].maxAvailablePlace;
+                                                                        selectedQuantityNumber = serviceSlot[2].maxAvailablePlace - serviceSlot[2].availablePlaces;
+                                                                        int mSQQIndex = 0;
+                                                                        debugPrint('SELECTED SLOT LIST: ${selectedSquareSlotList[index].length}');
+                                                                        for(int j = 0; j < selectedSquareSlotList[index].length; j++){
+                                                                          if(selectedSquareSlotList[index][j][1].slotId == serviceSlot[2].slotId){
+                                                                            mSQQIndex = j;
+                                                                          }
+                                                                        }
+                                                                        selectedSquareSlotList[index].removeAt(mSQQIndex);
+                                                                      }
+                                                                    });
+                                                                    if(select[i]){
+                                                                      String duration = '';
+                                                                      //debugPrint('TIMESTAMP: ${Timestamp.fromDate(serviceSlot[2].date)}');
+                                                                      if(serviceSlot[1].day != 0){
+                                                                        if(serviceSlot[1].day > 1){
+                                                                          duration = '${serviceSlot[1].day} ${AppLocalizations.of(context).days}';
+                                                                        }else{
+                                                                          duration = '${serviceSlot[1].day} ${AppLocalizations.of(context).day}';
+                                                                        }
+                                                                      }else{
+                                                                        int tmpMin = serviceSlot[1].hour * 60 + serviceSlot[1].minute;
+                                                                        if(tmpMin > 90)
+                                                                          duration = '${serviceSlot[1].hour} h ${serviceSlot[1].minute} ${AppLocalizations.of(context).min}';
+                                                                        else
+                                                                          duration = '$tmpMin ${AppLocalizations.of(context).min}';
+                                                                      }
+                                                                      order.serviceId = widget.serviceState.serviceId;
+                                                                      if(isExternal){
+                                                                        order.business.name = externalBusinessState.name;
+                                                                        order.business.id = externalBusinessState.id_firestore;
+                                                                      }else{
+                                                                        order.business.name = snapshot.business.name;
+                                                                        order.business.id = snapshot.business.id_firestore;
+                                                                      }
+                                                                      order.user.name = snapshot.user.name;
+                                                                      order.user.id = snapshot.user.uid;
+                                                                      order.addReserveItem(widget.serviceState, snapshot.business.ownerId, serviceSlot[2].startTime, duration, dates[index], serviceSlot[2].price, serviceSlot[2].slotId);
+                                                                      order.selected.add(indexes[index][i]);
+                                                                      //order.selected.add(selected);
+                                                                      order.cartCounter++;
+                                                                      //StoreProvider.of<AppState>(context).dispatch(SetOrderCartCounter(order.cartCounter));
+                                                                      StoreProvider.of<AppState>(context).dispatch(SetOrderReservable(order));
+                                                                    }
+                                                                    else{
+                                                                      OrderEntry tmp;
+
+                                                                      order.itemList.forEach((element) {
+                                                                        DateTime tmpDate = dates[index];
+                                                                        tmpDate = DateTime(dates[index].year, dates[index].month, dates[index].day, int.parse(element.time.split(':').first), int.parse(element.time.split(':').last));
+                                                                        if(element.time ==  serviceSlot[2].startTime && element.date.isAtSameMomentAs(tmpDate)){
+                                                                          tmp = element;
+                                                                          debugPrint('UI_U_service_reserve => ENTRY: ${element.id_business}');
+                                                                        }
+                                                                      });
+                                                                      //debugPrint('UI_U_service_reserve => ENTRY: ${tmp.id_business}');
+                                                                      order.selected.remove(indexes[index][i]);
+                                                                      //order.selected.remove(selected);
+                                                                      deleteItem(snapshot.order, tmp);
+                                                                    }
+
+                                                                    debugPrint('UI_U_ServiceReserve => SELECTED INDEXES: ${order.selected}');
+                                                                  } : null,
+                                                                  child: TimeSlotWidget(serviceSlot[1], serviceSlot[2], serviceSlot[0], select[i]),
+                                                                )
+                                                            )
+                                                        ),
+                                                      ),
+                                                      scrollPositionList[index][i] ?
+                                                      Container(
+                                                        margin: EdgeInsets.only(top: 5),
+                                                        height: 1,
+                                                        width: 80,
+                                                        color: BuytimeTheme.UserPrimary,
+                                                      ) : Container()
+                                                    ],
+                                                  );
+                                                },
+                                                  childCount: slots[index].length,
                                                 ),
                                               ),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-
-                                      ///Time slot
-                                      /*Container(
+                                            ]),
+                                          ),*/
+                                        Container(
                                           margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1.5, bottom: SizeConfig.safeBlockVertical * 1.5),
                                           height: 110,
                                           width: SizeConfig.safeBlockHorizontal * 100,
-                                          child: CustomScrollView(
+                                          child: ScrollablePositionedList.builder(
+                                              itemCount: slots[index].length,
+                                              itemScrollController: _slotControllerList[index][1],
+                                              //physics: NeverScrollableScrollPhysics(),
                                               scrollDirection: Axis.horizontal,
-                                              shrinkWrap: true,
-                                              slivers: [
-                                            SliverList(
-                                              delegate: SliverChildBuilderDelegate((context, i) {
+                                              itemBuilder: (context, i) {
                                                 //MenuItemModel menuItem = menuItems.elementAt(index);
                                                 //final item = (index != snapshot.itemList.length ? snapshot.itemList[index] : null);
                                                 List<dynamic> serviceSlot = slots[index].elementAt(i);
@@ -1073,11 +1218,9 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                           width: 100,
                                                           height: 100,
                                                           decoration: BoxDecoration(
-                                                            color:  BuytimeTheme.BackgroundWhite,
+                                                            color: BuytimeTheme.BackgroundWhite,
                                                             borderRadius: BorderRadius.all(Radius.circular(5)),
-                                                            border: Border.all(
-                                                                color: select[i] ? ( widget.tourist ? BuytimeTheme.BackgroundCerulean.withOpacity(0.5) : BuytimeTheme.UserPrimary.withOpacity(0.5)) : BuytimeTheme.BackgroundWhite
-                                                            ),
+                                                            border: Border.all(color: select[i] ? (widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary) : BuytimeTheme.BackgroundWhite, width: 1.5),
                                                             boxShadow: [
                                                               BoxShadow(
                                                                 color: select[i] ? BuytimeTheme.BackgroundWhite : BuytimeTheme.BackgroundBlack.withOpacity(0.3),
@@ -1090,72 +1233,99 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                           child: Material(
                                                               color: Colors.transparent,
                                                               child: InkWell(
+                                                                key: Key('service_slot_${index}_${i}_key'),
                                                                 borderRadius: BorderRadius.all(Radius.circular(5)),
-                                                                onTap: !selectedSlot[index][i] ? () async {
+                                                                onTap: !selectedSlot[index][i]
+                                                                    ? () async {
                                                                   setState(() {
                                                                     //selectQuantity = List.generate(dates.length, (index) => false);
                                                                     select[i] = !select[i];
                                                                     selectQuantity[index] = select[i];
                                                                     scrollPositionList[index][i] = select[i];
-                                                                    if(select[i]){
+                                                                    if (select[i]) {
+                                                                      slotIndex[index] = i;
+                                                                      //_slotControllerList[index][0] = i;
                                                                       selectedSquareSlot = serviceSlot[2];
-                                                                      selectedQuantityNumber = selectedSquareSlot.maxAvailablePlace - selectedSquareSlot.availablePlaces;
+                                                                      //selectedQuantityNumber = selectedSquareSlot.max - selectedSquareSlot.free;
+                                                                      if (selectedQuantityNumber == 0) selectedQuantityNumber = 1;
+
+                                                                      selectedSquareSlot.free -= 1;
+                                                                      //selectedSquareSlot.free -= selectedQuantityNumber;
+
                                                                       debugPrint('SELECTED SLOT: ${selectQuantity[index]}');
-                                                                      selectedSquareSlotList[index].add([selectedQuantityNumber, selectedSquareSlot]);
+                                                                      selectedSquareSlotList[index].add([selectedQuantityNumber, selectedSquareSlot, i, serviceSlot[1]]);
+                                                                      _controllerList[index][0] = selectedSquareSlotList[index].length - 1;
+                                                                      debugPrint('QUANTITY SLOT: ${_controllerList[index][0]}');
+                                                                      if (selectedSquareSlotList[index].length > 1) {
+                                                                        debugPrint('MOVE TO');
+                                                                        //_controllerList[index][1].scrollTo(index: _controllerList[index][0], duration: Duration(milliseconds: 500));
+                                                                        //_slotControllerList[index][1].scrollTo(index: i, duration: Duration(milliseconds: 500));
+                                                                      }
                                                                       debugPrint('SELECTED SLOT LIST: ${selectedSquareSlotList[index].length}');
-                                                                    }else{
-                                                                      serviceSlot[2].availablePlaces = serviceSlot[2].maxAvailablePlace;
-                                                                      selectedQuantityNumber = serviceSlot[2].maxAvailablePlace - serviceSlot[2].availablePlaces;
+                                                                    } else {
+                                                                      serviceSlot[2].free = serviceSlot[2].max;
+                                                                      selectedQuantityNumber = serviceSlot[2].max - serviceSlot[2].free;
                                                                       int mSQQIndex = 0;
                                                                       debugPrint('SELECTED SLOT LIST: ${selectedSquareSlotList[index].length}');
-                                                                      for(int j = 0; j < selectedSquareSlotList[index].length; j++){
-                                                                        if(selectedSquareSlotList[index][j][1].slotId == serviceSlot[2].slotId){
+                                                                      for (int j = 0; j < selectedSquareSlotList[index].length; j++) {
+                                                                        if (selectedSquareSlotList[index][j][1].uid == serviceSlot[2].uid) {
                                                                           mSQQIndex = j;
                                                                         }
                                                                       }
                                                                       selectedSquareSlotList[index].removeAt(mSQQIndex);
+                                                                      if (selectedSquareSlotList[index].isNotEmpty) {
+                                                                        slotIndex[index] = selectedSquareSlotList[index][selectedSquareSlotList[index].length - 1][2];
+                                                                        //slotIndex[index] = selectedSquareSlotList[index][selectedSquareSlotList[index].length - 1][2];
+                                                                        //_slotControllerList[index][0] = selectedSquareSlotList[index][mSQQIndex - 1][2];
+                                                                        //_controllerList[index][0] = selectedSquareSlotList[index][selectedSquareSlotList[index].length - 1][2];
+                                                                        /*slotIndex[index] = selectedSquareSlotList[index][0][2];
+                                                                         _slotControllerList[index][0] = selectedSquareSlotList[index][0][2];
+                                                                         _controllerList[index][0] = selectedSquareSlotList[index][0][2];*/
+                                                                      } else {
+                                                                        slotIndex[index] = -1;
+                                                                        _slotControllerList[index][0] = -1;
+                                                                      }
                                                                     }
                                                                   });
-                                                                  if(select[i]){
+                                                                  if (select[i]) {
                                                                     String duration = '';
                                                                     //debugPrint('TIMESTAMP: ${Timestamp.fromDate(serviceSlot[2].date)}');
-                                                                    if(serviceSlot[1].day != 0){
-                                                                      if(serviceSlot[1].day > 1){
+                                                                    if (serviceSlot[1].day != 0) {
+                                                                      if (serviceSlot[1].day > 1) {
                                                                         duration = '${serviceSlot[1].day} ${AppLocalizations.of(context).days}';
-                                                                      }else{
+                                                                      } else {
                                                                         duration = '${serviceSlot[1].day} ${AppLocalizations.of(context).day}';
                                                                       }
-                                                                    }else{
+                                                                    } else {
                                                                       int tmpMin = serviceSlot[1].hour * 60 + serviceSlot[1].minute;
-                                                                      if(tmpMin > 90)
+                                                                      if (tmpMin > 90)
                                                                         duration = '${serviceSlot[1].hour} h ${serviceSlot[1].minute} ${AppLocalizations.of(context).min}';
                                                                       else
                                                                         duration = '$tmpMin ${AppLocalizations.of(context).min}';
                                                                     }
                                                                     order.serviceId = widget.serviceState.serviceId;
-                                                                    if(isExternal){
+                                                                    if (isExternal) {
                                                                       order.business.name = externalBusinessState.name;
                                                                       order.business.id = externalBusinessState.id_firestore;
-                                                                    }else{
-                                                                      order.business.name = snapshot.business.name;
-                                                                      order.business.id = snapshot.business.id_firestore;
+                                                                    } else {
+                                                                      order.business.name = businessState.name;
+                                                                      order.business.id = businessState.id_firestore;
                                                                     }
-                                                                    order.user.name = snapshot.user.name;
-                                                                    order.user.id = snapshot.user.uid;
-                                                                    order.addReserveItem(widget.serviceState, snapshot.business.ownerId, serviceSlot[2].startTime, duration, dates[index], serviceSlot[2].price, serviceSlot[2].slotId);
+                                                                    order.user.name = userState.name;
+                                                                    order.user.id = userState.uid;
+                                                                    order.addReserveItem(widget.serviceState, businessState.ownerId, serviceSlot[2].on, duration, dates[index], serviceSlot[1].price, serviceSlot[2].uid);
                                                                     order.selected.add(indexes[index][i]);
                                                                     //order.selected.add(selected);
                                                                     order.cartCounter++;
                                                                     //StoreProvider.of<AppState>(context).dispatch(SetOrderCartCounter(order.cartCounter));
                                                                     StoreProvider.of<AppState>(context).dispatch(SetOrderReservable(order));
-                                                                  }
-                                                                  else{
+                                                                  } else {
                                                                     OrderEntry tmp;
 
                                                                     order.itemList.forEach((element) {
                                                                       DateTime tmpDate = dates[index];
                                                                       tmpDate = DateTime(dates[index].year, dates[index].month, dates[index].day, int.parse(element.time.split(':').first), int.parse(element.time.split(':').last));
-                                                                      if(element.time ==  serviceSlot[2].startTime && element.date.isAtSameMomentAs(tmpDate)){
+                                                                      if (element.time == serviceSlot[2].on && element.date.isAtSameMomentAs(tmpDate)) {
                                                                         tmp = element;
                                                                         debugPrint('UI_U_service_reserve => ENTRY: ${element.id_business}');
                                                                       }
@@ -1163,449 +1333,282 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                                     //debugPrint('UI_U_service_reserve => ENTRY: ${tmp.id_business}');
                                                                     order.selected.remove(indexes[index][i]);
                                                                     //order.selected.remove(selected);
-                                                                    deleteItem(snapshot.order, tmp);
+                                                                    deleteItem(orderState, tmp);
                                                                   }
 
                                                                   debugPrint('UI_U_ServiceReserve => SELECTED INDEXES: ${order.selected}');
-                                                                } : null,
+                                                                }
+                                                                    : null,
                                                                 child: TimeSlotWidget(serviceSlot[1], serviceSlot[2], serviceSlot[0], select[i]),
-                                                              )
-                                                          )
-                                                      ),
+                                                              ))),
                                                     ),
-                                                    scrollPositionList[index][i] ?
+
                                                     Container(
                                                       margin: EdgeInsets.only(top: 5),
                                                       height: 1,
                                                       width: 80,
-                                                      color: BuytimeTheme.UserPrimary,
-                                                    ) : Container()
+                                                      color: slotIndex[index] == i ? BuytimeTheme.UserPrimary : BuytimeTheme.BackgroundWhite,
+                                                    )
                                                   ],
                                                 );
-                                              },
-                                                childCount: slots[index].length,
-                                              ),
-                                            ),
-                                          ]),
-                                        ),*/
-                                      Container(
-                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1.5, bottom: SizeConfig.safeBlockVertical * 1.5),
-                                        height: 110,
-                                        width: SizeConfig.safeBlockHorizontal * 100,
-                                        child: ScrollablePositionedList.builder(
-                                            itemCount: slots[index].length,
-                                            itemScrollController: _slotControllerList[index][1],
-                                            //physics: NeverScrollableScrollPhysics(),
-                                            scrollDirection: Axis.horizontal,
-                                            itemBuilder: (context, i) {
-                                              //MenuItemModel menuItem = menuItems.elementAt(index);
-                                              //final item = (index != snapshot.itemList.length ? snapshot.itemList[index] : null);
-                                              List<dynamic> serviceSlot = slots[index].elementAt(i);
-                                              //debugPrint('UI_U_service_reserve => INDEX: $index | I: $i | SQUARE TIME: ${serviceSlot[2].startTime}');
-                                              indexes[index][i].first = index;
-                                              indexes[index][i].last = i;
-                                              SelectedEntry selected = SelectedEntry(first: index, last: i);
-                                              return Column(
-                                                mainAxisSize: MainAxisSize.min,
-                                                mainAxisAlignment: MainAxisAlignment.center,
-                                                children: [
-                                                  ///Slot
-                                                  Container(
-                                                    margin: EdgeInsets.only(top: 2, bottom: 2, right: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockVertical * 2),
-                                                    child: Container(
-                                                        width: 100,
-                                                        height: 100,
-                                                        decoration: BoxDecoration(
-                                                          color: BuytimeTheme.BackgroundWhite,
-                                                          borderRadius: BorderRadius.all(Radius.circular(5)),
-                                                          border: Border.all(color: select[i] ? (widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary) : BuytimeTheme.BackgroundWhite, width: 1.5),
-                                                          boxShadow: [
-                                                            BoxShadow(
-                                                              color: select[i] ? BuytimeTheme.BackgroundWhite : BuytimeTheme.BackgroundBlack.withOpacity(0.3),
-                                                              spreadRadius: .5,
-                                                              blurRadius: 1,
-                                                              offset: Offset(0, select[i] ? 0 : 1), // changes position of shadow
+                                              }),
+                                        ),
+
+                                        ///Max Quantity
+                                        //selectQuantity[index]
+                                        Container(
+                                          margin: EdgeInsets.only(bottom: 5, left: 5, right: 5),
+                                          height: selectedSquareSlotList[index].isNotEmpty ? 100 : 0,
+                                          width: SizeConfig.safeBlockHorizontal * 100,
+                                          child: ScrollablePositionedList.builder(
+                                            //reverse: true,
+                                              itemCount: selectedSquareSlotList[index].length,
+                                              itemScrollController: _controllerList[index][1],
+                                              physics: NeverScrollableScrollPhysics(),
+                                              scrollDirection: Axis.horizontal,
+                                              //initialScrollIndex: selectedSquareSlotList[index].length - 1,
+                                              itemBuilder: (context, i) {
+                                                SquareSlotState mySSS = selectedSquareSlotList[index].elementAt(i)[1];
+                                                ServiceSlot tmpService = selectedSquareSlotList[index].elementAt(i)[3];
+                                                debugPrint('UI_U_ServiceReserve => QUANTITY INDEXES: ${selectedSquareSlotList[index].length}');
+                                                return Row(
+                                                  mainAxisSize: MainAxisSize.min,
+                                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                                  children: [
+                                                    ///Left
+                                                    i != 0
+                                                        ? Container(
+                                                      height: 100,
+                                                      width: 24,
+                                                      decoration: BoxDecoration(
+                                                        //borderRadius: BorderRadius.all(Radius.circular(12)),
+                                                        color: widget.tourist ? BuytimeTheme.BackgroundCerulean.withOpacity(.2) : BuytimeTheme.UserPrimary.shade50,
+                                                      ),
+                                                      child: Material(
+                                                        color: Colors.transparent,
+                                                        child: InkWell(
+                                                          //borderRadius: BorderRadius.all(Radius.circular(12)),
+                                                          onTap: () {
+                                                            int jump = i;
+                                                            --jump;
+                                                            debugPrint('JUMP: $jump');
+                                                            setState(() {
+                                                              _controllerList[index][0] = jump;
+                                                              _controllerList[index][1].scrollTo(index: jump, duration: Duration(milliseconds: 500));
+                                                              _slotControllerList[index][0] = selectedSquareSlotList[index].elementAt(jump)[2];
+                                                              _slotControllerList[index][1].scrollTo(index: selectedSquareSlotList[index].elementAt(jump)[2], duration: Duration(milliseconds: 500));
+                                                              slotIndex[index] = selectedSquareSlotList[index].elementAt(jump)[2];
+                                                            });
+                                                          },
+                                                          child: Container(
+                                                            height: 24,
+                                                            width: 24,
+                                                            child: Icon(
+                                                              Icons.keyboard_arrow_left,
+                                                              color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
                                                             ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    )
+                                                        : Container(),
+
+                                                    ///Text
+                                                    Flexible(
+                                                      child: Container(
+                                                        //color: Colors.black,
+                                                        alignment: Alignment.center,
+                                                        margin: EdgeInsets.only(left: 20, top: 25, right: 20),
+                                                        height: 100,
+                                                        width: i != 0 && i != selectedSquareSlotList[index].length - 1
+                                                            ? SizeConfig.screenWidth - 40 - 24 - 24 - 10
+                                                            : i != 0
+                                                            ? SizeConfig.screenWidth - 40 - 24 - 10
+                                                            : i != selectedSquareSlotList[index].length - 1
+                                                            ? SizeConfig.screenWidth - 40 - 24 - 10
+                                                            : SizeConfig.screenWidth - 40 - 10,
+                                                        child: Column(
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                          children: [
+                                                            ///Number
+                                                            Row(
+                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                              children: [
+                                                                ///Text
+                                                                Container(
+                                                                  child: Text(
+                                                                    AppLocalizations.of(context).numberOfPeople,
+                                                                    style: TextStyle(fontFamily: BuytimeTheme.FontFamily, fontSize: 16, fontWeight: FontWeight.w400),
+                                                                  ),
+                                                                ),
+
+                                                                ///Icons
+                                                                Row(
+                                                                  children: [
+                                                                    ///Remove
+                                                                    Container(
+                                                                      height: 24,
+                                                                      width: 24,
+                                                                      decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(12)), color: widget.tourist ? BuytimeTheme.BackgroundCerulean.withOpacity(.2) : BuytimeTheme.UserPrimary.shade50),
+                                                                      child: Material(
+                                                                        color: Colors.transparent,
+                                                                        child: InkWell(
+                                                                          borderRadius: BorderRadius.all(Radius.circular(12)),
+                                                                          onTap: selectedSquareSlotList[index].elementAt(i)[0] > 1 && mySSS.free < mySSS.max
+                                                                              ? () {
+                                                                            setState(() {
+                                                                              slots[index].forEach((el2) {
+                                                                                if (el2[2].uid == mySSS.uid) {
+                                                                                  el2[2].free += 1;
+                                                                                  selectedSquareSlotList[index].elementAt(i)[0] -= 1;
+                                                                                }
+                                                                              });
+                                                                              order.total = 0;
+                                                                              order.itemList.forEach((element) {
+                                                                                if (element.idSquareSlot == mySSS.uid) {
+                                                                                  element.orderCapacity = selectedSquareSlotList[index].elementAt(i)[0];
+                                                                                  element.price = tmpService.price * selectedSquareSlotList[index].elementAt(i)[0];
+                                                                                  element.number -= 1;
+                                                                                }
+                                                                                order.total += element.price;
+                                                                              });
+                                                                            });
+                                                                          }
+                                                                              : null,
+                                                                          child: Container(
+                                                                            height: 24,
+                                                                            width: 24,
+                                                                            child: Icon(
+                                                                              Icons.remove,
+                                                                              color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+
+                                                                    ///Quantity
+                                                                    Container(
+                                                                      margin: EdgeInsets.only(top: 0, left: 10, right: 10),
+                                                                      child: Text(
+                                                                        '${selectedSquareSlotList[index].elementAt(i)[0]}',
+                                                                        style: TextStyle(fontFamily: BuytimeTheme.FontFamily, fontSize: 16, fontWeight: FontWeight.w500),
+                                                                      ),
+                                                                    ),
+
+                                                                    ///Add
+                                                                    Container(
+                                                                      height: 24,
+                                                                      width: 24,
+                                                                      decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(12)), color: widget.tourist ? BuytimeTheme.BackgroundCerulean.withOpacity(.2) : BuytimeTheme.UserPrimary.shade50),
+                                                                      child: Material(
+                                                                        color: Colors.transparent,
+                                                                        child: InkWell(
+                                                                          borderRadius: BorderRadius.all(Radius.circular(12)),
+                                                                          onTap: mySSS.free > 0
+                                                                              ? () {
+                                                                            setState(() {
+                                                                              slots[index].forEach((el2) {
+                                                                                if (el2[2].uid == mySSS.uid) {
+                                                                                  el2[2].free -= 1;
+                                                                                  //mySSS.free -= 1;
+                                                                                  selectedSquareSlotList[index].elementAt(i)[0] += 1;
+                                                                                }
+                                                                              });
+                                                                              order.total = 0;
+                                                                              order.itemList.forEach((element) {
+                                                                                if (element.idSquareSlot == mySSS.uid) {
+                                                                                  element.orderCapacity = selectedSquareSlotList[index].elementAt(i)[0];
+                                                                                  element.price = tmpService.price * selectedSquareSlotList[index].elementAt(i)[0];
+                                                                                  element.number += 1;
+                                                                                }
+                                                                                order.total += element.price;
+                                                                              });
+                                                                            });
+                                                                          }
+                                                                              : null,
+                                                                          child: Container(
+                                                                            height: 24,
+                                                                            width: 24,
+                                                                            child: Icon(
+                                                                              Icons.add,
+                                                                              color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    )
+                                                                  ],
+                                                                )
+                                                              ],
+                                                            ),
+
+                                                            ///Spot
+                                                            Container(
+                                                              margin: EdgeInsets.only(top: 5),
+                                                              child: Text(
+                                                                '${AppLocalizations.of(context).still} ${mySSS.free} ${AppLocalizations.of(context).spot}',
+                                                                style: TextStyle(fontFamily: BuytimeTheme.FontFamily, fontSize: 16, fontWeight: FontWeight.w600),
+                                                              ),
+                                                            )
                                                           ],
                                                         ),
-                                                        child: Material(
-                                                            color: Colors.transparent,
-                                                            child: InkWell(
-                                                              key: Key('service_slot_${index}_${i}_key'),
-                                                              borderRadius: BorderRadius.all(Radius.circular(5)),
-                                                              onTap: !selectedSlot[index][i]
-                                                                  ? () async {
-                                                                setState(() {
-                                                                  //selectQuantity = List.generate(dates.length, (index) => false);
-                                                                  select[i] = !select[i];
-                                                                  selectQuantity[index] = select[i];
-                                                                  scrollPositionList[index][i] = select[i];
-                                                                  if (select[i]) {
-                                                                    slotIndex[index] = i;
-                                                                    //_slotControllerList[index][0] = i;
-                                                                    selectedSquareSlot = serviceSlot[2];
-                                                                    //selectedQuantityNumber = selectedSquareSlot.max - selectedSquareSlot.free;
-                                                                    if (selectedQuantityNumber == 0) selectedQuantityNumber = 1;
-
-                                                                    selectedSquareSlot.free -= 1;
-                                                                    //selectedSquareSlot.free -= selectedQuantityNumber;
-
-                                                                    debugPrint('SELECTED SLOT: ${selectQuantity[index]}');
-                                                                    selectedSquareSlotList[index].add([selectedQuantityNumber, selectedSquareSlot, i, serviceSlot[1]]);
-                                                                    _controllerList[index][0] = selectedSquareSlotList[index].length - 1;
-                                                                    debugPrint('QUANTITY SLOT: ${_controllerList[index][0]}');
-                                                                    if (selectedSquareSlotList[index].length > 1) {
-                                                                      debugPrint('MOVE TO');
-                                                                      //_controllerList[index][1].scrollTo(index: _controllerList[index][0], duration: Duration(milliseconds: 500));
-                                                                      //_slotControllerList[index][1].scrollTo(index: i, duration: Duration(milliseconds: 500));
-                                                                    }
-                                                                    debugPrint('SELECTED SLOT LIST: ${selectedSquareSlotList[index].length}');
-                                                                  } else {
-                                                                    serviceSlot[2].free = serviceSlot[2].max;
-                                                                    selectedQuantityNumber = serviceSlot[2].max - serviceSlot[2].free;
-                                                                    int mSQQIndex = 0;
-                                                                    debugPrint('SELECTED SLOT LIST: ${selectedSquareSlotList[index].length}');
-                                                                    for (int j = 0; j < selectedSquareSlotList[index].length; j++) {
-                                                                      if (selectedSquareSlotList[index][j][1].uid == serviceSlot[2].uid) {
-                                                                        mSQQIndex = j;
-                                                                      }
-                                                                    }
-                                                                    selectedSquareSlotList[index].removeAt(mSQQIndex);
-                                                                    if (selectedSquareSlotList[index].isNotEmpty) {
-                                                                      slotIndex[index] = selectedSquareSlotList[index][selectedSquareSlotList[index].length - 1][2];
-                                                                      //slotIndex[index] = selectedSquareSlotList[index][selectedSquareSlotList[index].length - 1][2];
-                                                                      //_slotControllerList[index][0] = selectedSquareSlotList[index][mSQQIndex - 1][2];
-                                                                      //_controllerList[index][0] = selectedSquareSlotList[index][selectedSquareSlotList[index].length - 1][2];
-                                                                      /*slotIndex[index] = selectedSquareSlotList[index][0][2];
-                                                                       _slotControllerList[index][0] = selectedSquareSlotList[index][0][2];
-                                                                       _controllerList[index][0] = selectedSquareSlotList[index][0][2];*/
-                                                                    } else {
-                                                                      slotIndex[index] = -1;
-                                                                      _slotControllerList[index][0] = -1;
-                                                                    }
-                                                                  }
-                                                                });
-                                                                if (select[i]) {
-                                                                  String duration = '';
-                                                                  //debugPrint('TIMESTAMP: ${Timestamp.fromDate(serviceSlot[2].date)}');
-                                                                  if (serviceSlot[1].day != 0) {
-                                                                    if (serviceSlot[1].day > 1) {
-                                                                      duration = '${serviceSlot[1].day} ${AppLocalizations.of(context).days}';
-                                                                    } else {
-                                                                      duration = '${serviceSlot[1].day} ${AppLocalizations.of(context).day}';
-                                                                    }
-                                                                  } else {
-                                                                    int tmpMin = serviceSlot[1].hour * 60 + serviceSlot[1].minute;
-                                                                    if (tmpMin > 90)
-                                                                      duration = '${serviceSlot[1].hour} h ${serviceSlot[1].minute} ${AppLocalizations.of(context).min}';
-                                                                    else
-                                                                      duration = '$tmpMin ${AppLocalizations.of(context).min}';
-                                                                  }
-                                                                  order.serviceId = widget.serviceState.serviceId;
-                                                                  if (isExternal) {
-                                                                    order.business.name = externalBusinessState.name;
-                                                                    order.business.id = externalBusinessState.id_firestore;
-                                                                  } else {
-                                                                    order.business.name = businessState.name;
-                                                                    order.business.id = businessState.id_firestore;
-                                                                  }
-                                                                  order.user.name = userState.name;
-                                                                  order.user.id = userState.uid;
-                                                                  order.addReserveItem(widget.serviceState, businessState.ownerId, serviceSlot[2].on, duration, dates[index], serviceSlot[1].price, serviceSlot[2].uid);
-                                                                  order.selected.add(indexes[index][i]);
-                                                                  //order.selected.add(selected);
-                                                                  order.cartCounter++;
-                                                                  //StoreProvider.of<AppState>(context).dispatch(SetOrderCartCounter(order.cartCounter));
-                                                                  StoreProvider.of<AppState>(context).dispatch(SetOrderReservable(order));
-                                                                } else {
-                                                                  OrderEntry tmp;
-
-                                                                  order.itemList.forEach((element) {
-                                                                    DateTime tmpDate = dates[index];
-                                                                    tmpDate = DateTime(dates[index].year, dates[index].month, dates[index].day, int.parse(element.time.split(':').first), int.parse(element.time.split(':').last));
-                                                                    if (element.time == serviceSlot[2].on && element.date.isAtSameMomentAs(tmpDate)) {
-                                                                      tmp = element;
-                                                                      debugPrint('UI_U_service_reserve => ENTRY: ${element.id_business}');
-                                                                    }
-                                                                  });
-                                                                  //debugPrint('UI_U_service_reserve => ENTRY: ${tmp.id_business}');
-                                                                  order.selected.remove(indexes[index][i]);
-                                                                  //order.selected.remove(selected);
-                                                                  deleteItem(orderState, tmp);
-                                                                }
-
-                                                                debugPrint('UI_U_ServiceReserve => SELECTED INDEXES: ${order.selected}');
-                                                              }
-                                                                  : null,
-                                                              child: TimeSlotWidget(serviceSlot[1], serviceSlot[2], serviceSlot[0], select[i]),
-                                                            ))),
-                                                  ),
-
-                                                  Container(
-                                                    margin: EdgeInsets.only(top: 5),
-                                                    height: 1,
-                                                    width: 80,
-                                                    color: slotIndex[index] == i ? BuytimeTheme.UserPrimary : BuytimeTheme.BackgroundWhite,
-                                                  )
-                                                ],
-                                              );
-                                            }),
-                                      ),
-
-                                      ///Max Quantity
-                                      //selectQuantity[index]
-                                      Container(
-                                        margin: EdgeInsets.only(bottom: 5, left: 5, right: 5),
-                                        height: selectedSquareSlotList[index].isNotEmpty ? 100 : 0,
-                                        width: SizeConfig.safeBlockHorizontal * 100,
-                                        child: ScrollablePositionedList.builder(
-                                          //reverse: true,
-                                            itemCount: selectedSquareSlotList[index].length,
-                                            itemScrollController: _controllerList[index][1],
-                                            physics: NeverScrollableScrollPhysics(),
-                                            scrollDirection: Axis.horizontal,
-                                            //initialScrollIndex: selectedSquareSlotList[index].length - 1,
-                                            itemBuilder: (context, i) {
-                                              SquareSlotState mySSS = selectedSquareSlotList[index].elementAt(i)[1];
-                                              ServiceSlot tmpService = selectedSquareSlotList[index].elementAt(i)[3];
-                                              debugPrint('UI_U_ServiceReserve => QUANTITY INDEXES: ${selectedSquareSlotList[index].length}');
-                                              return Row(
-                                                mainAxisSize: MainAxisSize.min,
-                                                crossAxisAlignment: CrossAxisAlignment.center,
-                                                children: [
-                                                  ///Left
-                                                  i != 0
-                                                      ? Container(
-                                                    height: 100,
-                                                    width: 24,
-                                                    decoration: BoxDecoration(
-                                                      //borderRadius: BorderRadius.all(Radius.circular(12)),
-                                                      color: widget.tourist ? BuytimeTheme.BackgroundCerulean.withOpacity(.2) : BuytimeTheme.UserPrimary.shade50,
-                                                    ),
-                                                    child: Material(
-                                                      color: Colors.transparent,
-                                                      child: InkWell(
-                                                        //borderRadius: BorderRadius.all(Radius.circular(12)),
-                                                        onTap: () {
-                                                          int jump = i;
-                                                          --jump;
-                                                          debugPrint('JUMP: $jump');
-                                                          setState(() {
-                                                            _controllerList[index][0] = jump;
-                                                            _controllerList[index][1].scrollTo(index: jump, duration: Duration(milliseconds: 500));
-                                                            _slotControllerList[index][0] = selectedSquareSlotList[index].elementAt(jump)[2];
-                                                            _slotControllerList[index][1].scrollTo(index: selectedSquareSlotList[index].elementAt(jump)[2], duration: Duration(milliseconds: 500));
-                                                            slotIndex[index] = selectedSquareSlotList[index].elementAt(jump)[2];
-                                                          });
-                                                        },
-                                                        child: Container(
-                                                          height: 24,
-                                                          width: 24,
-                                                          child: Icon(
-                                                            Icons.keyboard_arrow_left,
-                                                            color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
-                                                          ),
-                                                        ),
                                                       ),
                                                     ),
-                                                  )
-                                                      : Container(),
 
-                                                  ///Text
-                                                  Flexible(
-                                                    child: Container(
-                                                      //color: Colors.black,
-                                                      alignment: Alignment.center,
-                                                      margin: EdgeInsets.only(left: 20, top: 25, right: 20),
+                                                    ///Right
+                                                    selectedSquareSlotList[index].length != 1 && i != selectedSquareSlotList[index].length - 1
+                                                        ? Container(
                                                       height: 100,
-                                                      width: i != 0 && i != selectedSquareSlotList[index].length - 1
-                                                          ? SizeConfig.screenWidth - 40 - 24 - 24 - 10
-                                                          : i != 0
-                                                          ? SizeConfig.screenWidth - 40 - 24 - 10
-                                                          : i != selectedSquareSlotList[index].length - 1
-                                                          ? SizeConfig.screenWidth - 40 - 24 - 10
-                                                          : SizeConfig.screenWidth - 40 - 10,
-                                                      child: Column(
-                                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                                        children: [
-                                                          ///Number
-                                                          Row(
-                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                            children: [
-                                                              ///Text
-                                                              Container(
-                                                                child: Text(
-                                                                  AppLocalizations.of(context).numberOfPeople,
-                                                                  style: TextStyle(fontFamily: BuytimeTheme.FontFamily, fontSize: 16, fontWeight: FontWeight.w400),
-                                                                ),
-                                                              ),
-
-                                                              ///Icons
-                                                              Row(
-                                                                children: [
-                                                                  ///Remove
-                                                                  Container(
-                                                                    height: 24,
-                                                                    width: 24,
-                                                                    decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(12)), color: widget.tourist ? BuytimeTheme.BackgroundCerulean.withOpacity(.2) : BuytimeTheme.UserPrimary.shade50),
-                                                                    child: Material(
-                                                                      color: Colors.transparent,
-                                                                      child: InkWell(
-                                                                        borderRadius: BorderRadius.all(Radius.circular(12)),
-                                                                        onTap: selectedSquareSlotList[index].elementAt(i)[0] > 1 && mySSS.free < mySSS.max
-                                                                            ? () {
-                                                                          setState(() {
-                                                                            slots[index].forEach((el2) {
-                                                                              if (el2[2].uid == mySSS.uid) {
-                                                                                el2[2].free += 1;
-                                                                                selectedSquareSlotList[index].elementAt(i)[0] -= 1;
-                                                                              }
-                                                                            });
-                                                                            order.total = 0;
-                                                                            order.itemList.forEach((element) {
-                                                                              if (element.idSquareSlot == mySSS.uid) {
-                                                                                element.orderCapacity = selectedSquareSlotList[index].elementAt(i)[0];
-                                                                                element.price = tmpService.price * selectedSquareSlotList[index].elementAt(i)[0];
-                                                                                element.number -= 1;
-                                                                              }
-                                                                              order.total += element.price;
-                                                                            });
-                                                                          });
-                                                                        }
-                                                                            : null,
-                                                                        child: Container(
-                                                                          height: 24,
-                                                                          width: 24,
-                                                                          child: Icon(
-                                                                            Icons.remove,
-                                                                            color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
-                                                                          ),
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                  ),
-
-                                                                  ///Quantity
-                                                                  Container(
-                                                                    margin: EdgeInsets.only(top: 0, left: 10, right: 10),
-                                                                    child: Text(
-                                                                      '${selectedSquareSlotList[index].elementAt(i)[0]}',
-                                                                      style: TextStyle(fontFamily: BuytimeTheme.FontFamily, fontSize: 16, fontWeight: FontWeight.w500),
-                                                                    ),
-                                                                  ),
-
-                                                                  ///Add
-                                                                  Container(
-                                                                    height: 24,
-                                                                    width: 24,
-                                                                    decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(12)), color: widget.tourist ? BuytimeTheme.BackgroundCerulean.withOpacity(.2) : BuytimeTheme.UserPrimary.shade50),
-                                                                    child: Material(
-                                                                      color: Colors.transparent,
-                                                                      child: InkWell(
-                                                                        borderRadius: BorderRadius.all(Radius.circular(12)),
-                                                                        onTap: mySSS.free > 0
-                                                                            ? () {
-                                                                          setState(() {
-                                                                            slots[index].forEach((el2) {
-                                                                              if (el2[2].uid == mySSS.uid) {
-                                                                                el2[2].free -= 1;
-                                                                                //mySSS.free -= 1;
-                                                                                selectedSquareSlotList[index].elementAt(i)[0] += 1;
-                                                                              }
-                                                                            });
-                                                                            order.total = 0;
-                                                                            order.itemList.forEach((element) {
-                                                                              if (element.idSquareSlot == mySSS.uid) {
-                                                                                element.orderCapacity = selectedSquareSlotList[index].elementAt(i)[0];
-                                                                                element.price = tmpService.price * selectedSquareSlotList[index].elementAt(i)[0];
-                                                                                element.number += 1;
-                                                                              }
-                                                                              order.total += element.price;
-                                                                            });
-                                                                          });
-                                                                        }
-                                                                            : null,
-                                                                        child: Container(
-                                                                          height: 24,
-                                                                          width: 24,
-                                                                          child: Icon(
-                                                                            Icons.add,
-                                                                            color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
-                                                                          ),
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                  )
-                                                                ],
-                                                              )
-                                                            ],
-                                                          ),
-
-                                                          ///Spot
-                                                          Container(
-                                                            margin: EdgeInsets.only(top: 5),
-                                                            child: Text(
-                                                              '${AppLocalizations.of(context).still} ${mySSS.free} ${AppLocalizations.of(context).spot}',
-                                                              style: TextStyle(fontFamily: BuytimeTheme.FontFamily, fontSize: 16, fontWeight: FontWeight.w600),
-                                                            ),
-                                                          )
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ),
-
-                                                  ///Right
-                                                  selectedSquareSlotList[index].length != 1 && i != selectedSquareSlotList[index].length - 1
-                                                      ? Container(
-                                                    height: 100,
-                                                    width: 24,
-                                                    decoration: BoxDecoration(
-                                                      //borderRadius: BorderRadius.all(Radius.circular(12)),
-                                                      color: widget.tourist ? BuytimeTheme.BackgroundCerulean.withOpacity(.2) : BuytimeTheme.UserPrimary.shade50,
-                                                    ),
-                                                    child: Material(
-                                                      color: Colors.transparent,
-                                                      child: InkWell(
+                                                      width: 24,
+                                                      decoration: BoxDecoration(
                                                         //borderRadius: BorderRadius.all(Radius.circular(12)),
-                                                        onTap: () {
-                                                          int jump = i;
-                                                          ++jump;
-                                                          debugPrint('JUMP: $jump');
-                                                          setState(() {
-                                                            _controllerList[index][0] = jump;
-                                                            _controllerList[index][1].scrollTo(index: jump, duration: Duration(milliseconds: 500));
-                                                            _slotControllerList[index][0] = selectedSquareSlotList[index].elementAt(jump)[2];
-                                                            _slotControllerList[index][1].scrollTo(index: selectedSquareSlotList[index].elementAt(jump)[2], duration: Duration(milliseconds: 500));
-                                                            slotIndex[index] = selectedSquareSlotList[index].elementAt(jump)[2];
-                                                          });
-                                                        },
-                                                        child: Container(
-                                                          height: 24,
-                                                          width: 24,
-                                                          child: Icon(
-                                                            Icons.keyboard_arrow_right,
-                                                            color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
+                                                        color: widget.tourist ? BuytimeTheme.BackgroundCerulean.withOpacity(.2) : BuytimeTheme.UserPrimary.shade50,
+                                                      ),
+                                                      child: Material(
+                                                        color: Colors.transparent,
+                                                        child: InkWell(
+                                                          //borderRadius: BorderRadius.all(Radius.circular(12)),
+                                                          onTap: () {
+                                                            int jump = i;
+                                                            ++jump;
+                                                            debugPrint('JUMP: $jump');
+                                                            setState(() {
+                                                              _controllerList[index][0] = jump;
+                                                              _controllerList[index][1].scrollTo(index: jump, duration: Duration(milliseconds: 500));
+                                                              _slotControllerList[index][0] = selectedSquareSlotList[index].elementAt(jump)[2];
+                                                              _slotControllerList[index][1].scrollTo(index: selectedSquareSlotList[index].elementAt(jump)[2], duration: Duration(milliseconds: 500));
+                                                              slotIndex[index] = selectedSquareSlotList[index].elementAt(jump)[2];
+                                                            });
+                                                          },
+                                                          child: Container(
+                                                            height: 24,
+                                                            width: 24,
+                                                            child: Icon(
+                                                              Icons.keyboard_arrow_right,
+                                                              color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
+                                                            ),
                                                           ),
                                                         ),
                                                       ),
-                                                    ),
-                                                  )
-                                                      : Container(),
-                                                ],
-                                              );
-                                            }),
-                                      )
-                                      /*Container(
-                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, bottom: SizeConfig.safeBlockVertical * 2),
-                                        child:  TimeSlotWidget(widget.serviceState.serviceSlot.first),
-                                      )*/
-                                    ],
-                                  );
-                                },
-                                childCount: dates.length,
+                                                    )
+                                                        : Container(),
+                                                  ],
+                                                );
+                                              }),
+                                        )
+                                        /*Container(
+                                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, bottom: SizeConfig.safeBlockVertical * 2),
+                                          child:  TimeSlotWidget(widget.serviceState.serviceSlot.first),
+                                        )*/
+                                      ],
+                                    );
+                                  },
+                                  childCount: dates.length,
+                                ),
                               ),
-                            ),
-                          ])),
+                            ]),
+                          )),
 
                       ///Confirm button
                       noActivity
