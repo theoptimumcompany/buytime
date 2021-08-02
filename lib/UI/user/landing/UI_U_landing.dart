@@ -441,12 +441,12 @@ class LandingState extends State<Landing> {
                 });
               } else {
                 DateTime currentTime = DateTime.now();
-                currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0);
+                currentTime = DateTime(currentTime.year, currentTime.month, currentTime.day, 2, 0, 0, 0, 0);
                 DateTime endTime = DateTime.now();
                 //DateTime startTime = DateTime.now();
-                endTime = new DateTime(bookingList.first.end_date.year, bookingList.first.end_date.month, bookingList.first.end_date.day, 0, 0, 0, 0, 0);
+                endTime = DateTime(bookingList.first.end_date.year, bookingList.first.end_date.month, bookingList.first.end_date.day, 0, 0, 0, 0, 0);
 
-                debugPrint('UI_U_Landing => $currentTime $endTime ${bookingList.first.start_date}  ${bookingList.first.start_date.isAtSameMomentAs(currentTime)} ');
+                debugPrint('UI_U_Landing => $currentTime *** $endTime *** ${bookingList.first.start_date} ***  ${bookingList.first.start_date.isAtSameMomentAs(currentTime)} ');
                 if (endTime.isBefore(currentTime)) {
                   //bookingStatus = 'Closed';
                   debugPrint('UI_U_Landing => No active booking found!');
