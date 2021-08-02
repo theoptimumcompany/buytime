@@ -280,9 +280,9 @@ class _RServiceSlotManagementState extends State<RServiceSlotManagement> {
                               ),
                               SliverGrid(
                                 gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                                    maxCrossAxisExtent: 100,
+                                    maxCrossAxisExtent: 150,
                                     mainAxisSpacing: 10,
-                                    crossAxisSpacing: 10,
+                                    crossAxisSpacing: 0,
                                     mainAxisExtent: 100,
                                     childAspectRatio: 50,
                                 ),
@@ -296,9 +296,8 @@ class _RServiceSlotManagementState extends State<RServiceSlotManagement> {
                                   bool managerHasChosenAction = false;
                                   SquareSlotState slot = value[index];
                                   return Container(
-                                    //margin: EdgeInsets.only(top: 10, bottom: 10),
-                                      width: 100,
-                                      height: 100,
+                                      //padding: EdgeInsets.only(top: 10, bottom: 10),
+                                      margin: EdgeInsets.only(left: 10, right: 10),
                                       decoration: BoxDecoration(
                                         color: BuytimeTheme.BackgroundWhite,
                                         borderRadius: BorderRadius.all(Radius.circular(5)),

@@ -107,6 +107,7 @@ class _SlotManagementState extends State<SlotManagement> {
     return StoreConnector<AppState, AppState>(
       converter: (store) => store.state,
       onInit: (store) {
+        store.state.serviceList.serviceListState.clear();
         List<String> businessIds = [];
         store.state.businessList.businessListState.forEach((element) {
           businessIds.add(element.id_firestore);
