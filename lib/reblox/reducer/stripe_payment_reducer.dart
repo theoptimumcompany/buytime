@@ -48,6 +48,8 @@ class ChoosePaymentMethod
   String get chosenPaymentMethod => _chosenPaymentMethod;
 }
 
+class ResetPaymentMethod{}
+
 
 class CreateDisposePaymentMethodIntent
 {
@@ -136,6 +138,10 @@ StripeState stripePaymentReducer(StripeState state, action) {
   }
   if (action is ChoosePaymentMethod) {
     stripeState.chosenPaymentMethod = Utils.enumToString(action.chosenPaymentMethod);
+    return stripeState.copyWith();
+  }
+  if (action is ResetPaymentMethod) {
+    stripeState.chosenPaymentMethod = Utils.enumToString(PaymentType.noPaymentMethod);
     return stripeState.copyWith();
   }
 

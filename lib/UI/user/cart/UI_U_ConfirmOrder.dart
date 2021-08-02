@@ -9,6 +9,7 @@ import 'package:Buytime/reblox/enum/order_time_intervals.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:Buytime/reblox/model/card/card_list_state.dart';
 import 'package:Buytime/reblox/model/order/order_entry.dart';
+import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/model/stripe/stripe_card_response.dart';
 import 'package:Buytime/reblox/navigation/navigation_reducer.dart';
 import 'package:Buytime/reblox/reducer/business_reducer.dart';
@@ -79,6 +80,8 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
       setState(() {
         _selectedIndex = _controller.index;
       });
+
+
       // print("Selected Index: " + _controller.index.toString());
     });
   }
@@ -105,6 +108,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
             store?.dispatch(CheckStripeCustomer(true));
             store?.dispatch(AddingStripePaymentMethodReset());
             initializeCardList(store.state.cardListState);
+            resetPaymentTypeIfNotAccepted(store.state);
             debugPrint('UI_U_ConfirmOrder => ON INIT');
           },
           distinct: true,
@@ -285,6 +289,8 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
     );
   }
 
+
+
   Text getCurrentPaymentMethod(BuildContext context, AppState snapshot) {
     if(snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.card)) {
       if (
@@ -306,6 +312,18 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
       return Text( AppLocalizations.of(context).applePay);
     }
     return Text( AppLocalizations.of(context).choosePaymentMethod);
+  }
+
+  bool resetPaymentTypeIfNotAccepted(AppState snapshot) {
+    if (
+    ((snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.card) ||
+        snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.applePay) ||
+        snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.googlePay)) &&
+    !snapshot.serviceState.paymentMethodCard ) ||
+    (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.room) && !snapshot.serviceState.paymentMethodRoom) ||
+    (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.onSite) && !snapshot.serviceState.paymentMethodOnSite)) {
+      StoreProvider.of<AppState>(context).dispatch(ResetPaymentMethod());
+    }
   }
 
   Widget buildTabsBeforeConfirmation(String bookingCode, CardListState cardListState) {
