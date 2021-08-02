@@ -70,6 +70,7 @@ class Landing extends StatefulWidget {
 }
 
 bool switchToClient = false;
+
 class LandingState extends State<Landing> {
   List<LandingCardWidget> cards = new List();
 
@@ -107,7 +108,6 @@ class LandingState extends State<Landing> {
     debugPrint('UI_U_landing: DEEP LINK EMPTY | selfBookingCode : $selfBookingCode');
     await storage.delete(key: 'selfBookingCode');
 
-
     if (selfBookingCode.isNotEmpty) {
       StoreProvider.of<AppState>(context).dispatch(BusinessRequest(selfBookingCode));
       await Future.delayed(Duration(milliseconds: 1000));
@@ -132,15 +132,13 @@ class LandingState extends State<Landing> {
     await storage.delete(key: 'onSiteUserId');
     await storage.delete(key: 'onSiteOrderId');
 
-
     if (userId.isNotEmpty && orderId.isNotEmpty) {
-      if(StoreProvider.of<AppState>(context).state.user.getRole() != Role.user){
+      if (StoreProvider.of<AppState>(context).state.user.getRole() != Role.user) {
         StoreProvider.of<AppState>(context).dispatch(OrderRequest(orderId));
         await Future.delayed(Duration(milliseconds: 3000));
         StoreProvider.of<AppState>(context).state.order.progress = 'paid';
         StoreProvider.of<AppState>(context).dispatch(UpdateOrderByManager(StoreProvider.of<AppState>(context).state.order, OrderStatus.paid));
-
-      }else{
+      } else {
         debugPrint('USER NO PERMISSION');
       }
 
@@ -148,6 +146,7 @@ class LandingState extends State<Landing> {
       await storage.write(key: 'onSiteOrderIdRead', value: 'false');
     }
   }
+
   ///List
   @override
   void initState() {
@@ -223,13 +222,12 @@ class LandingState extends State<Landing> {
           if (FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty) {
             debugPrint('UI_U_landing: USER Is LOGGED in onLink');
             //Navigator.of(context).push(MaterialPageRoute(builder: (context) => InviteGuestForm(id: id, fromLanding: true,)));
-            if(StoreProvider.of<AppState>(context).state.user.getRole() != Role.user){
+            if (StoreProvider.of<AppState>(context).state.user.getRole() != Role.user) {
               StoreProvider.of<AppState>(context).dispatch(OrderRequest(orderId));
               await Future.delayed(Duration(milliseconds: 3000));
               StoreProvider.of<AppState>(context).state.order.progress = 'paid';
               StoreProvider.of<AppState>(context).dispatch(UpdateOrderByManager(StoreProvider.of<AppState>(context).state.order, OrderStatus.paid));
-
-            }else{
+            } else {
               debugPrint('USER NO PERMISSION in LINK');
             }
 
@@ -336,13 +334,12 @@ class LandingState extends State<Landing> {
           if (FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty) {
             debugPrint('UI_U_landing: USER Is LOGGED in onLink');
             //Navigator.of(context).push(MaterialPageRoute(builder: (context) => InviteGuestForm(id: id, fromLanding: true,)));
-            if(StoreProvider.of<AppState>(context).state.user.getRole() != Role.user){
+            if (StoreProvider.of<AppState>(context).state.user.getRole() != Role.user) {
               StoreProvider.of<AppState>(context).dispatch(OrderRequest(orderId));
               await Future.delayed(Duration(milliseconds: 3000));
               StoreProvider.of<AppState>(context).state.order.progress = 'paid';
               StoreProvider.of<AppState>(context).dispatch(UpdateOrderByManager(StoreProvider.of<AppState>(context).state.order, OrderStatus.paid));
-
-            }else{
+            } else {
               debugPrint('USER NO PERMISSION in LINK');
             }
 
@@ -364,7 +361,7 @@ class LandingState extends State<Landing> {
             debugPrint('UI_U_landing: USER NOT LOGGED in onLink');
         } else
           debugPrint('UI_U_landing: USER NOT LOGGED in onLink');
-      }else if (deepLink.queryParameters.containsKey('selfBookingCode') && deepLink.queryParameters['selfBookingCode'].length > 5) {
+      } else if (deepLink.queryParameters.containsKey('selfBookingCode') && deepLink.queryParameters['selfBookingCode'].length > 5) {
         String tmSselfBookingCode = deepLink.queryParameters['selfBookingCode'];
         debugPrint('UI_U_landing: selfBookingCode from dynamic link: $tmSselfBookingCode');
         selfBookingCode = tmSselfBookingCode;
@@ -440,8 +437,7 @@ class LandingState extends State<Landing> {
                 snapshot.bookingList.bookingListState.removeLast();
                 bookingList.removeLast();
                 WidgetsBinding.instance.addPostFrameCallback((_) async {
-                  if(selfBookingCode.isEmpty)
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => ServiceExplorer()));
+                  if (selfBookingCode.isEmpty) Navigator.push(context, MaterialPageRoute(builder: (context) => ServiceExplorer()));
                 });
               } else {
                 DateTime currentTime = DateTime.now();
@@ -449,19 +445,24 @@ class LandingState extends State<Landing> {
                 DateTime endTime = DateTime.now();
                 //DateTime startTime = DateTime.now();
                 endTime = new DateTime(bookingList.first.end_date.year, bookingList.first.end_date.month, bookingList.first.end_date.day, 0, 0, 0, 0, 0);
+
+                debugPrint('UI_U_Landing => $currentTime $endTime ${bookingList.first.start_date}  ${bookingList.first.start_date.isAtSameMomentAs(currentTime)} ');
                 if (endTime.isBefore(currentTime)) {
                   //bookingStatus = 'Closed';
                   debugPrint('UI_U_Landing => No active booking found!');
+
                   WidgetsBinding.instance.addPostFrameCallback((_) async {
-                    if(selfBookingCode.isEmpty)
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => ServiceExplorer()));
+                    if (selfBookingCode.isEmpty) Navigator.push(context, MaterialPageRoute(builder: (context) => ServiceExplorer()));
                   });
                   //rippleLoading = false;
                 } else if (bookingList.first.start_date.isAtSameMomentAs(currentTime)) {
-                  //bookingStatus = 'Active';
-                  debugPrint('UI_U_Landing => Active booking found!');
-                  //StoreProvider.of<AppState>(context).dispatch(BookingRequestResponse(bookingList.first));
-                  //StoreProvider.of<AppState>(context).dispatch(BusinessAndNavigateRequest(bookingList.first.business_id));
+                  debugPrint('UI_U_Landing => Active booking found current day!');
+                  secondRippleLoading = true;
+                  if (bookingCode.isEmpty) {
+                    StoreProvider.of<AppState>(context).dispatch(BookingRequestResponse(bookingList.first));
+                    StoreProvider.of<AppState>(context).dispatch(BusinessServiceListAndNavigateRequest(bookingList.first.business_id));
+                  } else
+                    secondRippleLoading = false;
                 } else if (bookingList.first.start_date.isAfter(currentTime)) {
                   //bookingStatus = 'Upcoming';
                   debugPrint('UI_U_Landing => Upcoming booking found!');
@@ -754,7 +755,7 @@ class LandingState extends State<Landing> {
                                       child: Material(
                                         color: Colors.transparent,
                                         child: InkWell(
-                                          key: Key('log_out_key'),
+                                            key: Key('log_out_key'),
                                             onTap: () async {
                                               SharedPreferences prefs = await SharedPreferences.getInstance();
                                               await storage.write(key: 'bookingCode', value: '');
@@ -889,10 +890,11 @@ class _OpenContainerWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return OpenContainer<bool>(
-      key: index == 0 ?
-      StoreProvider.of<AppState>(context).state.bookingList.bookingListState.isEmpty ?
-        Key('invite_key') : Key('my_bookings_key'):
-      Key('discover_key'),
+      key: index == 0
+          ? StoreProvider.of<AppState>(context).state.bookingList.bookingListState.isEmpty
+              ? Key('invite_key')
+              : Key('my_bookings_key')
+          : Key('discover_key'),
       transitionType: ContainerTransitionType.fadeThrough,
       openBuilder: (BuildContext context, VoidCallback _) {
         if (index == 0) {
