@@ -6,6 +6,7 @@ import 'package:Buytime/UI/management/activity/widget/W_dashboard_list_item.dart
 import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:Buytime/reblox/model/order/order_entry.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
+import 'package:Buytime/reblox/model/service/service_slot_time_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/model/slot/interval_slot_state.dart';
 import 'package:Buytime/reblox/model/slot/slot_list_snippet_state.dart';
@@ -96,6 +97,7 @@ class _RServiceSlotManagementState extends State<RServiceSlotManagement> {
 
   Map<DateTime, List<List>> orderMap = new Map();
   Map<DateTime, Map<DateTime, List<SquareSlotState>>> allMap = new Map();
+  Map<DateTime, Map<DateTime, List<ServiceSlot>>> slotMap = new Map();
 
   List<Widget> widgets = [];
 
@@ -131,7 +133,7 @@ class _RServiceSlotManagementState extends State<RServiceSlotManagement> {
     }
   }
 
-  List<Widget> _list(DateTime key, Map<DateTime, List<SquareSlotState>> map) {
+  List<Widget> _list(DateTime date, Map<DateTime, List<SquareSlotState>> map) {
 
     DateTime currentTime = DateTime.now();
     currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0);
@@ -152,7 +154,7 @@ class _RServiceSlotManagementState extends State<RServiceSlotManagement> {
             alignment: Alignment.centerLeft,
             padding: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
             child: Text(
-                '${DateFormat('MMM yyyy').format(key).toUpperCase()}',
+                '${DateFormat('MMM yyyy').format(date).toUpperCase()}',
                 style: TextStyle(
                   letterSpacing: 1.25,
                   fontFamily: BuytimeTheme.FontFamily,
@@ -325,7 +327,8 @@ class _RServiceSlotManagementState extends State<RServiceSlotManagement> {
 
                                             });*/
                                             }, false,
-                                          0, index
+                                          0, index,
+                                       slotMap[date][key][index]
                                       ));
                                 },
                                   childCount: value.length,
@@ -811,6 +814,8 @@ class _RServiceSlotManagementState extends State<RServiceSlotManagement> {
     return null;
   }
 
+  List<ServiceSlot> serviceSlotList = [];
+
   @override
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context).size;
@@ -925,6 +930,7 @@ class _RServiceSlotManagementState extends State<RServiceSlotManagement> {
             builder: (context,AsyncSnapshot<QuerySnapshot> serviceSnapshot) {
               squareSlotList.clear();
               allMap.clear();
+              slotMap.clear();
               if (serviceSnapshot.hasError || serviceSnapshot.connectionState == ConnectionState.waiting) {
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -942,35 +948,76 @@ class _RServiceSlotManagementState extends State<RServiceSlotManagement> {
               slotSnippetListState.slotListSnippet.first.id = serviceSnapshot.data.docs.first.id;
               debugPrint("slotSnippetListState: ${slotSnippetListState.slotListSnippet.length}");
               squareSlotList.clear();
-              slotSnippetListState.slotListSnippet.forEach((element) {
+              for(int i = 0; i < slotSnippetListState.slotListSnippet.length; i++){
+                squareSlotList.addAll(slotSnippetListState.slotListSnippet[i].slot);
+                slotSnippetListState.slotListSnippet[i].slot.forEach((element) {
+                  serviceSlotList.add(widget.serviceState.serviceSlot[i]);
+                });
+              }
+              /*slotSnippetListState.slotListSnippet.forEach((element) {
                 squareSlotList.addAll(element.slot);
-              });
+              });*/
+              debugPrint("HOW MANY LIST OD SLOTS: ${slotSnippetListState.slotListSnippet.length}");
               //squareSlotList = slotSnippetListState.slotListSnippet.first.slot;
               allMap.clear();
-              squareSlotList.forEach((element) {
+              slotMap.clear();
+              for(int i = 0; i < squareSlotList.length; i++){
+                DateTime tmp = DateFormat('dd/MM/yyyy').parse(squareSlotList[i].date);
+                DateTime tmp2 = DateFormat('dd/MM/yyyy').parse(squareSlotList[i].date);
+                DateTime currentDate = DateTime.now();
+                currentDate = DateTime(start.year, start.month, start.day, 0,0,0,0,0);
+                DateTime slotTime = DateFormat('dd/MM/yyyy').parse(squareSlotList[i].date);
+                int hour = int.parse(squareSlotList[i].on.split(':').first);
+                int minute = int.parse(squareSlotList[i].on.split(':').last);
+                slotTime = DateTime(slotTime.year, slotTime.month, slotTime.day, hour,minute,0,0,0);
+                Map<DateTime, List<SquareSlotState>> tmpMap = Map();
+                Map<DateTime, List<ServiceSlot>> tmpSlotMap = Map();
+                tmp = DateTime(tmp.year, tmp.month, 1, 0,0,0,0,0);
+                tmp2 = DateTime(tmp2.year, tmp2.month, tmp2.day, 0,0,0,0,0);
+                if(tmp2.isAfter(currentDate) || tmp2.isAtSameMomentAs(currentDate)){
+                  if(slotTime.isAfter(DateTime.now()) || slotTime.isAtSameMomentAs(DateTime.now())){
+                    allMap.putIfAbsent(tmp, () => tmpMap);
+                    slotMap.putIfAbsent(tmp, () => tmpSlotMap);
+                    debugPrint('RUI_M_activity_management: VALUE LENGTH: ${squareSlotList[i].free}');
+                    if(allMap.containsKey(tmp)){
+                      allMap[tmp].putIfAbsent(tmp2, () => []);
+                      slotMap[tmp].putIfAbsent(tmp2, () => []);
+                      //debugPrint('RUI_M_activity_management: KEY: $key');
+                      if(allMap[tmp].containsKey(tmp2))
+                        allMap[tmp][tmp2].add(squareSlotList[i]);
+                        slotMap[tmp][tmp2].add(serviceSlotList[i]);
+                    }
+                  }
+                }
+              }
+              /*squareSlotList.forEach((element) {
                 DateTime tmp = DateFormat('dd/MM/yyyy').parse(element.date);
                 DateTime tmp2 = DateFormat('dd/MM/yyyy').parse(element.date);
                 DateTime currentDate = DateTime.now();
                 currentDate = DateTime(start.year, start.month, start.day, 0,0,0,0,0);
+                DateTime slotTime = DateFormat('dd/MM/yyyy').parse(element.date);
+                int hour = int.parse(element.on.split(':').first);
+                int minute = int.parse(element.on.split(':').last);
+                slotTime = DateTime(slotTime.year, slotTime.month, slotTime.day, hour,minute,0,0,0);
                 Map<DateTime, List<SquareSlotState>> tmpMap = Map();
+                Map<DateTime, List<ServiceSlot>> tmpSlotMap = Map();
                 tmp = DateTime(tmp.year, tmp.month, 1, 0,0,0,0,0);
                 tmp2 = DateTime(tmp2.year, tmp2.month, tmp2.day, 0,0,0,0,0);
                 if(tmp2.isAfter(currentDate) || tmp2.isAtSameMomentAs(currentDate)){
-                  allMap.putIfAbsent(tmp, () => tmpMap);
-                  debugPrint('RUI_M_activity_management: VALUE LENGTH: ${element.free}');
-                  if(allMap.containsKey(tmp)){
-                    allMap[tmp].putIfAbsent(tmp2, () => []);
-                    //debugPrint('RUI_M_activity_management: KEY: $key');
-                    if(allMap[tmp].containsKey(tmp2))
-                      allMap[tmp][tmp2].add(element);
-                    /*if(key.isAtSameMomentAs(currentTime) || (key.isAfter(currentTime) && key.isBefore(sevenDaysFromNow)) ){
-              debugPrint('RUI_M_activity_management: KEY TIME: $key | CURRENT TIME: $currentTime | SEVEN DAYS FROM NOW: $sevenDaysFromNow');
-              debugPrint('RUI_M_activity_management: VALUE LENGTH: ${allMap[tmp].last.length}');
-              weekOrderList.add(value);
-            }*/
+                  if(slotTime.isAfter(DateTime.now()) || slotTime.isAtSameMomentAs(DateTime.now())){
+                    allMap.putIfAbsent(tmp, () => tmpMap);
+                    slotMap.putIfAbsent(tmp, () => tmpSlotMap);
+                    debugPrint('RUI_M_activity_management: VALUE LENGTH: ${element.free}');
+                    if(allMap.containsKey(tmp)){
+                      allMap[tmp].putIfAbsent(tmp2, () => []);
+                      slotMap[tmp].putIfAbsent(tmp2, () => []);
+                      //debugPrint('RUI_M_activity_management: KEY: $key');
+                      if(allMap[tmp].containsKey(tmp2))
+                        allMap[tmp][tmp2].add(element);
+                    }
                   }
                 }
-              });
+              });*/
 
 
               return CustomScrollView(

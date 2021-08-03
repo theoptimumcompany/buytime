@@ -1,4 +1,5 @@
 import 'package:Buytime/UI/management/service_internal/RUI_M_service_list.dart';
+import 'package:Buytime/UI/user/service/UI_U_service_reserve.dart';
 import 'package:Buytime/app_state.dart';
 import 'package:Buytime/combined_epics.dart';
 import 'package:Buytime/environment_abstract.dart';
@@ -614,6 +615,7 @@ Future<void> loadApp(WidgetTester tester) async {
     providers: [
       //ChangeNotifierProvider(create: (_) => NavigationState()),
       ChangeNotifierProvider(create: (_) => Spinner([], [])),
+      ChangeNotifierProvider(create: (_) => ReserveList([], [], [])),
     ],
     child: Buytime(store: store),
   ));

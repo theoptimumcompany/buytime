@@ -23,7 +23,8 @@ class TimeSlotManagementWidget extends StatefulWidget {
   bool load;
   int first;
   int second;
-  TimeSlotManagementWidget(this.squareSlot, this.onChange, this.load, this.first, this.second);
+  ServiceSlot serviceSlot;
+  TimeSlotManagementWidget(this.squareSlot, this.onChange, this.load, this.first, this.second, this.serviceSlot);
 
   @override
   _TimeSlotManagementWidgetState createState() => _TimeSlotManagementWidgetState();
@@ -49,22 +50,21 @@ class _TimeSlotManagementWidgetState extends State<TimeSlotManagementWidget> {
 
   @override
   Widget build(BuildContext context) {
-
     free = widget.squareSlot.free;
     debugPrint('FREE: ${widget.squareSlot.free} - bool: ${widget.load}');
     DateTime tmp = DateFormat('dd/MM/yyyy').parse(widget.squareSlot.date);
     Map<DateTime, List<SquareSlotState>> tmpMap = Map();
     //tmp = DateTime(tmp.year, tmp.month, 1, 0,0,0,0,0);
-    if(tmp.day != 0){
-      if(tmp.day > 1){
-        duration = '${tmp.day} ${AppLocalizations.of(context).days}';
+    if(widget.serviceSlot.day != 0){
+      if(widget.serviceSlot.day > 1){
+        duration = '${widget.serviceSlot.day} ${AppLocalizations.of(context).days}';
       }else{
-        duration = '${tmp.day} ${AppLocalizations.of(context).day}';
+        duration = '${widget.serviceSlot.day} ${AppLocalizations.of(context).day}';
       }
     }else{
-      int tmpMin = tmp.hour * 60 + tmp.minute;
+      int tmpMin = widget.serviceSlot.hour * 60 + widget.serviceSlot.minute;
       if(tmpMin > 90)
-        duration = '${tmp.hour} h ${tmp.minute} ${AppLocalizations.of(context).min}';
+        duration = '${widget.serviceSlot.hour} h ${tmp.minute} ${AppLocalizations.of(context).min}';
       else
         duration = '$tmpMin ${AppLocalizations.of(context).min}';
     }
