@@ -1301,14 +1301,18 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
 
                                                                           debugPrint('SELECTED SLOT: ${selectQuantity[index]}');
                                                                           reserveState.selectedSquareSlotList[index].add([selectedQuantityNumber, selectedSquareSlot, i, serviceSlot[1]]);
+                                                                          //reserveState.selectedSquareSlotList[index].add([selectedQuantityNumber, selectedSquareSlot, i+1, serviceSlot[1]]);
                                                                           Provider.of<ReserveList>(context, listen: false).initSelectedSquareSlotList(reserveState.selectedSquareSlotList);
                                                                           //_controllerList[index][0] = selectedSquareSlotList[index].length - 1;
                                                                           Provider.of<ReserveList>(context, listen: false).updateControllerList(index, 0, reserveState.selectedSquareSlotList[index].length - 1);
+                                                                          /*reserveState.selectedSquareSlotList[index].removeLast();
+                                                                          Provider.of<ReserveList>(context, listen: false).initSelectedSquareSlotList(reserveState.selectedSquareSlotList);*/
                                                                           //Provider.of<ReserveList>(context, listen: false).updateSlotControllerList(index, 0, reserveState.selectedSquareSlotList[index].length - 1);
                                                                           debugPrint('QUANTITY SLOT: ${reserveState._controllerList[index][0]}');
                                                                           if (reserveState.selectedSquareSlotList[index].length > 1) {
                                                                             debugPrint('MOVE TO');
-                                                                            reserveState._controllerList[index][1].jumpTo(index: reserveState._controllerList[index][0]);
+                                                                            reserveState._controllerList[index][1].scrollTo(index: reserveState._controllerList[index][0], duration: Duration(milliseconds: 500));
+
                                                                             //Provider.of<ReserveList>(context, listen: false)._slotControllerList[index][1].scrollTo(index: i, duration: Duration(milliseconds: 500));
                                                                           }
                                                                           debugPrint('SELECTED SLOT LIST: ${reserveState.selectedSquareSlotList[index].length}');
@@ -1417,7 +1421,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                               width: SizeConfig.safeBlockHorizontal * 100,
                                               child: ScrollablePositionedList.builder(
                                                 //reverse: true,
-                                                  itemCount: reserveState.selectedSquareSlotList[index].length,
+                                                  itemCount: reserveState.selectedSquareSlotList[index].length+1,
                                                   itemScrollController: reserveState._controllerList.isNotEmpty ? reserveState._controllerList[index][1] : ItemScrollController(),
                                                   physics: NeverScrollableScrollPhysics(),
                                                   scrollDirection: Axis.horizontal,
