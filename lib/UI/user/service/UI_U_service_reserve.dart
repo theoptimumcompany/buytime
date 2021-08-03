@@ -744,8 +744,8 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                       Provider.of<ReserveList>(context, listen: false).updateSlotIndex(element[0], Provider.of<ReserveList>(context, listen: false).selectedSquareSlotList[element[0]][element[1]][2]);
                       Provider.of<ReserveList>(context, listen: false).updateControllerList(element[0], 0, Provider.of<ReserveList>(context, listen: false).selectedSquareSlotList[element[0]][element[1]][2]);
                       Provider.of<ReserveList>(context, listen: false).updateSlotControllerList(element[0], 0, Provider.of<ReserveList>(context, listen: false).selectedSquareSlotList[element[0]][element[1]][2]);
-                      Provider.of<ReserveList>(context, listen: false)._controllerList[element[0]][1].jumpTo(index: tmpSelectedSquareSlotList[element[0]].length-1);
-                      Provider.of<ReserveList>(context, listen: false)._slotControllerList[element[0]][1].jumpTo(index: tmpSelectedSquareSlotList[element[0]].length-1);
+                      Provider.of<ReserveList>(context, listen: false)._controllerList[element[0]][1].jumpTo(index: Provider.of<ReserveList>(context, listen: false).selectedSquareSlotList[element[0]][element[1]][2]);
+                      Provider.of<ReserveList>(context, listen: false)._slotControllerList[element[0]][1].jumpTo(index: Provider.of<ReserveList>(context, listen: false).selectedSquareSlotList[element[0]][element[1]][2]);
                     });
 
                   });
