@@ -65,7 +65,7 @@ class CartReservableState extends State<CartReservable> {
         serviceTotal = serviceTotal - (entry.price * entry.number);
         orderReservableState.total = serviceTotal;
         //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ServiceList()),);
-        Navigator.of(context).pop();
+        Navigator.of(context).pop(true);
       }
       StoreProvider.of<AppState>(context).dispatch(UpdateOrderReservable(orderReservableState));
     });
@@ -90,7 +90,7 @@ class CartReservableState extends State<CartReservable> {
 
       orderReservableState.itemList.remove(entry);
       //StoreProvider.of<AppState>(context).dispatch(UpdateOrderReservable(orderReservableState));
-      if (orderReservableState.itemList.length == 0) Navigator.of(context).pop();
+      if (orderReservableState.itemList.length == 0) Navigator.of(context).pop(true);
 
       StoreProvider.of<AppState>(context).dispatch(UpdateOrderReservable(orderReservableState));
     });
