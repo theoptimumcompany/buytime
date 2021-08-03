@@ -1421,36 +1421,37 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                               width: SizeConfig.safeBlockHorizontal * 100,
                                               child: ScrollablePositionedList.builder(
                                                 //reverse: true,
-                                                  itemCount: reserveState.selectedSquareSlotList[index].length+1,
+                                                  itemCount: reserveState.selectedSquareSlotList[index].length + 1,
                                                   itemScrollController: reserveState._controllerList.isNotEmpty ? reserveState._controllerList[index][1] : ItemScrollController(),
                                                   physics: NeverScrollableScrollPhysics(),
                                                   scrollDirection: Axis.horizontal,
                                                   //initialScrollIndex: selectedSquareSlotList[index].length - 1,
                                                   itemBuilder: (context, i) {
-                                                    SquareSlotState mySSS = reserveState.selectedSquareSlotList[index].elementAt(i)[1];
-                                                    ServiceSlot tmpService = reserveState.selectedSquareSlotList[index].elementAt(i)[3];
-                                                    debugPrint('UI_U_ServiceReserve => QUANTITY INDEXES: ${reserveState.selectedSquareSlotList[index].length}');
-                                                    return Row(
-                                                      mainAxisSize: MainAxisSize.min,
-                                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                                      children: [
-                                                        ///Left
-                                                        i != 0
-                                                            ? Container(
-                                                          height: 100,
-                                                          width: 24,
-                                                          decoration: BoxDecoration(
-                                                            //borderRadius: BorderRadius.all(Radius.circular(12)),
-                                                            color: widget.tourist ? BuytimeTheme.BackgroundCerulean.withOpacity(.2) : BuytimeTheme.UserPrimary.shade50,
-                                                          ),
-                                                          child: Material(
-                                                            color: Colors.transparent,
-                                                            child: InkWell(
+                                                    if(i != reserveState.selectedSquareSlotList[index].length){
+                                                      SquareSlotState mySSS = reserveState.selectedSquareSlotList[index].elementAt(i)[1];
+                                                      ServiceSlot tmpService = reserveState.selectedSquareSlotList[index].elementAt(i)[3];
+                                                      debugPrint('UI_U_ServiceReserve => QUANTITY INDEXES: ${reserveState.selectedSquareSlotList[index].length}');
+                                                      return Row(
+                                                        mainAxisSize: MainAxisSize.min,
+                                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                                        children: [
+                                                          ///Left
+                                                          i != 0
+                                                              ? Container(
+                                                            height: 100,
+                                                            width: 24,
+                                                            decoration: BoxDecoration(
                                                               //borderRadius: BorderRadius.all(Radius.circular(12)),
-                                                              onTap: () {
-                                                                int jump = i;
-                                                                --jump;
-                                                                debugPrint('JUMP: $jump');
+                                                              color: widget.tourist ? BuytimeTheme.BackgroundCerulean.withOpacity(.2) : BuytimeTheme.UserPrimary.shade50,
+                                                            ),
+                                                            child: Material(
+                                                              color: Colors.transparent,
+                                                              child: InkWell(
+                                                                //borderRadius: BorderRadius.all(Radius.circular(12)),
+                                                                onTap: () {
+                                                                  int jump = i;
+                                                                  --jump;
+                                                                  debugPrint('JUMP: $jump');
 
                                                                   //_controllerList[index][0] = jump;
                                                                   Provider.of<ReserveList>(context, listen: false).updateControllerList(index, 0, jump);
@@ -1461,64 +1462,64 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                                   //slotIndex[index] = selectedSquareSlotList[index].elementAt(jump)[2];
                                                                   Provider.of<ReserveList>(context, listen: false).updateSlotIndex(index, reserveState.selectedSquareSlotList[index].elementAt(jump)[2]);
 
-                                                              },
-                                                              child: Container(
-                                                                height: 24,
-                                                                width: 24,
-                                                                child: Icon(
-                                                                  Icons.keyboard_arrow_left,
-                                                                  color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
+                                                                },
+                                                                child: Container(
+                                                                  height: 24,
+                                                                  width: 24,
+                                                                  child: Icon(
+                                                                    Icons.keyboard_arrow_left,
+                                                                    color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
+                                                                  ),
                                                                 ),
                                                               ),
                                                             ),
-                                                          ),
-                                                        )
-                                                            : Container(),
+                                                          )
+                                                              : Container(),
 
-                                                        ///Text
-                                                        Flexible(
-                                                          child: Container(
-                                                            //color: Colors.black,
-                                                            alignment: Alignment.center,
-                                                            margin: EdgeInsets.only(left: 20, top: 25, right: 20),
-                                                            height: 100,
-                                                            width: i != 0 && i != reserveState.selectedSquareSlotList[index].length - 1
-                                                                ? SizeConfig.screenWidth - 40 - 24 - 24 - 10
-                                                                : i != 0
-                                                                ? SizeConfig.screenWidth - 40 - 24 - 10
-                                                                : i != reserveState.selectedSquareSlotList[index].length - 1
-                                                                ? SizeConfig.screenWidth - 40 - 24 - 10
-                                                                : SizeConfig.screenWidth - 40 - 10,
-                                                            child: Column(
-                                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                                              children: [
-                                                                ///Number
-                                                                Row(
-                                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                  children: [
-                                                                    ///Text
-                                                                    Container(
-                                                                      child: Text(
-                                                                        AppLocalizations.of(context).numberOfPeople,
-                                                                        style: TextStyle(fontFamily: BuytimeTheme.FontFamily, fontSize: 16, fontWeight: FontWeight.w400),
+                                                          ///Text
+                                                          Flexible(
+                                                            child: Container(
+                                                              //color: Colors.black,
+                                                              alignment: Alignment.center,
+                                                              margin: EdgeInsets.only(left: 20, top: 25, right: 20),
+                                                              height: 100,
+                                                              width: i != 0 && i != reserveState.selectedSquareSlotList[index].length - 1
+                                                                  ? SizeConfig.screenWidth - 40 - 24 - 24 - 10
+                                                                  : i != 0
+                                                                  ? SizeConfig.screenWidth - 40 - 24 - 10
+                                                                  : i != reserveState.selectedSquareSlotList[index].length - 1
+                                                                  ? SizeConfig.screenWidth - 40 - 24 - 10
+                                                                  : SizeConfig.screenWidth - 40 - 10,
+                                                              child: Column(
+                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                children: [
+                                                                  ///Number
+                                                                  Row(
+                                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                    children: [
+                                                                      ///Text
+                                                                      Container(
+                                                                        child: Text(
+                                                                          AppLocalizations.of(context).numberOfPeople,
+                                                                          style: TextStyle(fontFamily: BuytimeTheme.FontFamily, fontSize: 16, fontWeight: FontWeight.w400),
+                                                                        ),
                                                                       ),
-                                                                    ),
 
-                                                                    ///Icons
-                                                                    Row(
-                                                                      children: [
-                                                                        ///Remove
-                                                                        Container(
-                                                                          height: 24,
-                                                                          width: 24,
-                                                                          decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(12)), color: widget.tourist ? BuytimeTheme.BackgroundCerulean.withOpacity(.2) : BuytimeTheme.UserPrimary.shade50),
-                                                                          child: Material(
-                                                                            color: Colors.transparent,
-                                                                            child: InkWell(
-                                                                              borderRadius: BorderRadius.all(Radius.circular(12)),
-                                                                              onTap: reserveState.selectedSquareSlotList[index].elementAt(i)[0] > 1 && mySSS.free < mySSS.max
-                                                                                  ? () {
-                                                                                //setState(() {
+                                                                      ///Icons
+                                                                      Row(
+                                                                        children: [
+                                                                          ///Remove
+                                                                          Container(
+                                                                            height: 24,
+                                                                            width: 24,
+                                                                            decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(12)), color: widget.tourist ? BuytimeTheme.BackgroundCerulean.withOpacity(.2) : BuytimeTheme.UserPrimary.shade50),
+                                                                            child: Material(
+                                                                              color: Colors.transparent,
+                                                                              child: InkWell(
+                                                                                borderRadius: BorderRadius.all(Radius.circular(12)),
+                                                                                onTap: reserveState.selectedSquareSlotList[index].elementAt(i)[0] > 1 && mySSS.free < mySSS.max
+                                                                                    ? () {
+                                                                                  //setState(() {
                                                                                   reserveState.slots[index].forEach((el2) {
                                                                                     if (el2[2].uid == mySSS.uid) {
                                                                                       el2[2].free += 1;
@@ -1536,42 +1537,42 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                                                     reserveState.order.total += element.price;
                                                                                   });
                                                                                   Provider.of<ReserveList>(context, listen: false).updateOrder(reserveState.order);
-                                                                                //});
-                                                                              }
-                                                                                  : null,
-                                                                              child: Container(
-                                                                                height: 24,
-                                                                                width: 24,
-                                                                                child: Icon(
-                                                                                  Icons.remove,
-                                                                                  color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
+                                                                                  //});
+                                                                                }
+                                                                                    : null,
+                                                                                child: Container(
+                                                                                  height: 24,
+                                                                                  width: 24,
+                                                                                  child: Icon(
+                                                                                    Icons.remove,
+                                                                                    color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
+                                                                                  ),
                                                                                 ),
                                                                               ),
                                                                             ),
                                                                           ),
-                                                                        ),
 
-                                                                        ///Quantity
-                                                                        Container(
-                                                                          margin: EdgeInsets.only(top: 0, left: 10, right: 10),
-                                                                          child: Text(
-                                                                            '${reserveState.selectedSquareSlotList[index].elementAt(i)[0]}',
-                                                                            style: TextStyle(fontFamily: BuytimeTheme.FontFamily, fontSize: 16, fontWeight: FontWeight.w500),
+                                                                          ///Quantity
+                                                                          Container(
+                                                                            margin: EdgeInsets.only(top: 0, left: 10, right: 10),
+                                                                            child: Text(
+                                                                              '${reserveState.selectedSquareSlotList[index].elementAt(i)[0]}',
+                                                                              style: TextStyle(fontFamily: BuytimeTheme.FontFamily, fontSize: 16, fontWeight: FontWeight.w500),
+                                                                            ),
                                                                           ),
-                                                                        ),
 
-                                                                        ///Add
-                                                                        Container(
-                                                                          height: 24,
-                                                                          width: 24,
-                                                                          decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(12)), color: widget.tourist ? BuytimeTheme.BackgroundCerulean.withOpacity(.2) : BuytimeTheme.UserPrimary.shade50),
-                                                                          child: Material(
-                                                                            color: Colors.transparent,
-                                                                            child: InkWell(
-                                                                              borderRadius: BorderRadius.all(Radius.circular(12)),
-                                                                              onTap: mySSS.free > 0
-                                                                                  ? () {
-                                                                                //setState(() {
+                                                                          ///Add
+                                                                          Container(
+                                                                            height: 24,
+                                                                            width: 24,
+                                                                            decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(12)), color: widget.tourist ? BuytimeTheme.BackgroundCerulean.withOpacity(.2) : BuytimeTheme.UserPrimary.shade50),
+                                                                            child: Material(
+                                                                              color: Colors.transparent,
+                                                                              child: InkWell(
+                                                                                borderRadius: BorderRadius.all(Radius.circular(12)),
+                                                                                onTap: mySSS.free > 0
+                                                                                    ? () {
+                                                                                  //setState(() {
                                                                                   reserveState.slots[index].forEach((el2) {
                                                                                     if (el2[2].uid == mySSS.uid) {
                                                                                       el2[2].free -= 1;
@@ -1590,55 +1591,55 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                                                     reserveState.order.total += element.price;
                                                                                   });
                                                                                   Provider.of<ReserveList>(context, listen: false).updateOrder(reserveState.order);
-                                                                                //});
-                                                                              }
-                                                                                  : null,
-                                                                              child: Container(
-                                                                                height: 24,
-                                                                                width: 24,
-                                                                                child: Icon(
-                                                                                  Icons.add,
-                                                                                  color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
+                                                                                  //});
+                                                                                }
+                                                                                    : null,
+                                                                                child: Container(
+                                                                                  height: 24,
+                                                                                  width: 24,
+                                                                                  child: Icon(
+                                                                                    Icons.add,
+                                                                                    color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
+                                                                                  ),
                                                                                 ),
                                                                               ),
                                                                             ),
-                                                                          ),
-                                                                        )
-                                                                      ],
-                                                                    )
-                                                                  ],
-                                                                ),
-
-                                                                ///Spot
-                                                                Container(
-                                                                  margin: EdgeInsets.only(top: 5),
-                                                                  child: Text(
-                                                                    '${AppLocalizations.of(context).still} ${mySSS.free} ${AppLocalizations.of(context).spot}',
-                                                                    style: TextStyle(fontFamily: BuytimeTheme.FontFamily, fontSize: 16, fontWeight: FontWeight.w600),
+                                                                          )
+                                                                        ],
+                                                                      )
+                                                                    ],
                                                                   ),
-                                                                )
-                                                              ],
+
+                                                                  ///Spot
+                                                                  Container(
+                                                                    margin: EdgeInsets.only(top: 5),
+                                                                    child: Text(
+                                                                      '${AppLocalizations.of(context).still} ${mySSS.free} ${AppLocalizations.of(context).spot}',
+                                                                      style: TextStyle(fontFamily: BuytimeTheme.FontFamily, fontSize: 16, fontWeight: FontWeight.w600),
+                                                                    ),
+                                                                  )
+                                                                ],
+                                                              ),
                                                             ),
                                                           ),
-                                                        ),
 
-                                                        ///Right
-                                                        reserveState.selectedSquareSlotList[index].length != 1 && i != reserveState.selectedSquareSlotList[index].length - 1
-                                                            ? Container(
-                                                          height: 100,
-                                                          width: 24,
-                                                          decoration: BoxDecoration(
-                                                            //borderRadius: BorderRadius.all(Radius.circular(12)),
-                                                            color: widget.tourist ? BuytimeTheme.BackgroundCerulean.withOpacity(.2) : BuytimeTheme.UserPrimary.shade50,
-                                                          ),
-                                                          child: Material(
-                                                            color: Colors.transparent,
-                                                            child: InkWell(
+                                                          ///Right
+                                                          reserveState.selectedSquareSlotList[index].length != 1 && i != reserveState.selectedSquareSlotList[index].length - 1
+                                                              ? Container(
+                                                            height: 100,
+                                                            width: 24,
+                                                            decoration: BoxDecoration(
                                                               //borderRadius: BorderRadius.all(Radius.circular(12)),
-                                                              onTap: () {
-                                                                int jump = i;
-                                                                ++jump;
-                                                                debugPrint('JUMP: $jump');
+                                                              color: widget.tourist ? BuytimeTheme.BackgroundCerulean.withOpacity(.2) : BuytimeTheme.UserPrimary.shade50,
+                                                            ),
+                                                            child: Material(
+                                                              color: Colors.transparent,
+                                                              child: InkWell(
+                                                                //borderRadius: BorderRadius.all(Radius.circular(12)),
+                                                                onTap: () {
+                                                                  int jump = i;
+                                                                  ++jump;
+                                                                  debugPrint('JUMP: $jump');
                                                                   //_controllerList[index][0] = jump;
                                                                   Provider.of<ReserveList>(context, listen: false).updateControllerList(index, 0, jump);
                                                                   reserveState._controllerList[index][1].scrollTo(index: jump, duration: Duration(milliseconds: 500));
@@ -1647,21 +1648,23 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                                   reserveState._slotControllerList[index][1].scrollTo(index: reserveState.selectedSquareSlotList[index].elementAt(jump)[2], duration: Duration(milliseconds: 500));
                                                                   //slotIndex[index] = selectedSquareSlotList[index].elementAt(jump)[2];
                                                                   Provider.of<ReserveList>(context, listen: false).updateSlotIndex(index, reserveState.selectedSquareSlotList[index].elementAt(jump)[2]);
-                                                              },
-                                                              child: Container(
-                                                                height: 24,
-                                                                width: 24,
-                                                                child: Icon(
-                                                                  Icons.keyboard_arrow_right,
-                                                                  color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
+                                                                },
+                                                                child: Container(
+                                                                  height: 24,
+                                                                  width: 24,
+                                                                  child: Icon(
+                                                                    Icons.keyboard_arrow_right,
+                                                                    color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
+                                                                  ),
                                                                 ),
                                                               ),
                                                             ),
-                                                          ),
-                                                        )
-                                                            : Container(),
-                                                      ],
-                                                    );
+                                                          )
+                                                              : Container(),
+                                                        ],
+                                                      );
+                                                    }
+                                                    return Container();
                                                   }),
                                             ) : Container()
                                             /*Container(
