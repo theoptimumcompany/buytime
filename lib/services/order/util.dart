@@ -107,12 +107,15 @@ OrderReservableState configureOrderReservable(OrderReservableState orderStateFro
     orderState.business.thumbnail = store.state.business.wide;
   }
 
-  store.state.cardListState.cardList.forEach((element) {
-    if (element.selected) {
-      orderState.cardType = element.stripeState.stripeCard.brand;
-      orderState.cardLast4Digit = element.stripeState.stripeCard.last4;
-    }
-  });
+  if(store.state.cardListState != null  && store.state.cardListState.cardList != null && store.state.cardListState.cardList.isNotEmpty) {
+    store.state.cardListState.cardList.forEach((element) {
+      if (element.selected) {
+        orderState.cardType = element.stripeState.stripeCard.brand;
+        orderState.cardLast4Digit = element.stripeState.stripeCard.last4;
+      }
+    });
+  }
+
 
   /// set the creation date
   orderState.creationDate = DateTime.now().toUtc();
