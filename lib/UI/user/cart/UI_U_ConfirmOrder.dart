@@ -320,7 +320,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
         snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.applePay) ||
         snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.googlePay)) &&
     !snapshot.serviceState.paymentMethodCard ) ||
-    (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.room) && !snapshot.serviceState.paymentMethodRoom) ||
+    (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.room) && (!snapshot.serviceState.paymentMethodRoom || isExternal)) ||
     (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.onSite) && !snapshot.serviceState.paymentMethodOnSite)) {
       StoreProvider.of<AppState>(context).dispatch(ResetPaymentMethod());
     }
@@ -671,8 +671,8 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                 //     Navigator.of(context).pop();
                 //   },
                 // ),
-                !widget.tourist && snapshot.serviceState.paymentMethodRoom ? Divider() : Container(),
-                !widget.tourist && snapshot.serviceState.paymentMethodRoom ? ListTile(
+                !widget.tourist && snapshot.serviceState.paymentMethodRoom && !isExternal ? Divider() : Container(),
+                !widget.tourist && snapshot.serviceState.paymentMethodRoom && !isExternal ? ListTile(
                   leading: Image(width: SizeConfig.blockSizeHorizontal * 10, image: AssetImage('assets/img/room.png')),
                   title: new Text( AppLocalizations.of(context).room.replaceAll(":", "")),
                   onTap: () {
