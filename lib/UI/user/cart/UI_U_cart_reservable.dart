@@ -1,5 +1,6 @@
 import 'package:Buytime/UI/user/cart/UI_U_ConfirmOrder.dart';
 import 'package:Buytime/UI/user/login/tourist_session/UI_U_tourist_session.dart';
+import 'package:Buytime/UI/user/service/UI_U_service_reserve.dart';
 import 'package:Buytime/reblox/enum/order_time_intervals.dart';
 import 'package:Buytime/reblox/model/order/order_entry.dart';
 import 'package:Buytime/reblox/model/order/order_reservable_state.dart';
@@ -21,6 +22,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
+import 'package:provider/provider.dart';
 
 class CartReservable extends StatefulWidget {
   ServiceState serviceState;
@@ -67,6 +69,7 @@ class CartReservableState extends State<CartReservable> {
         //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ServiceList()),);
         Navigator.of(context).pop(true);
       }
+      Provider.of<ReserveList>(context, listen: false).updateOrder(orderReservableState);
       StoreProvider.of<AppState>(context).dispatch(UpdateOrderReservable(orderReservableState));
     });
   }
@@ -91,7 +94,7 @@ class CartReservableState extends State<CartReservable> {
       orderReservableState.itemList.remove(entry);
       //StoreProvider.of<AppState>(context).dispatch(UpdateOrderReservable(orderReservableState));
       if (orderReservableState.itemList.length == 0) Navigator.of(context).pop(true);
-
+      Provider.of<ReserveList>(context, listen: false).updateOrder(orderReservableState);
       StoreProvider.of<AppState>(context).dispatch(UpdateOrderReservable(orderReservableState));
     });
   }

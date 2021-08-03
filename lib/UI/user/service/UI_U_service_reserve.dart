@@ -334,13 +334,13 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
   }
 
   void deleteItem(OrderState snapshot, OrderEntry entry) {
-    setState(() {
+    //setState(() {
       //cartCounter = cartCounter - entry.number;
       Provider.of<ReserveList>(context, listen: false).order.cartCounter = Provider.of<ReserveList>(context, listen: false).order.cartCounter - entry.number;
       Provider.of<ReserveList>(context, listen: false).order.removeReserveItem(entry);
       Provider.of<ReserveList>(context, listen: false).order.itemList.remove(entry);
       StoreProvider.of<AppState>(context).dispatch(UpdateOrderReservable(Provider.of<ReserveList>(context, listen: false).order));
-    });
+    //});
   }
 
   bool isExternal = false;
@@ -739,16 +739,15 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                       //slotIndex[element[0]] = _slotControllerList[element[0]][0];
                       //_controller.initialScrollOffset;
                     }
-                    if (Provider.of<ReserveList>(context, listen: false).order.itemList.length == 1) {
-                      //slotIndex[element[0]] = selectedSquareSlotList[element[0]][0][2];
-                      //_slotControllerList[element[0]][0] = selectedSquareSlotList[element[0]][0][2];
-                      //_controllerList[element[0]][0] = selectedSquareSlotList[element[0]][0][2];
-                      WidgetsBinding.instance.addPostFrameCallback((_) {
-                        Provider.of<ReserveList>(context, listen: false).updateControllerList(element[0], 0, Provider.of<ReserveList>(context, listen: false).selectedSquareSlotList[element[0]][0][2]);
-                        Provider.of<ReserveList>(context, listen: false).updateSlotControllerList(element[0], 0, Provider.of<ReserveList>(context, listen: false).selectedSquareSlotList[element[0]][0][2]);
-                        Provider.of<ReserveList>(context, listen: false).updateSlotIndex(element[0], Provider.of<ReserveList>(context, listen: false).selectedSquareSlotList[element[0]][0][2]);
-                      });
-                    }
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      debugPrint('UPDATE');
+                      Provider.of<ReserveList>(context, listen: false).updateSlotIndex(element[0], Provider.of<ReserveList>(context, listen: false).selectedSquareSlotList[element[0]][element[1]][2]);
+                      Provider.of<ReserveList>(context, listen: false).updateControllerList(element[0], 0, Provider.of<ReserveList>(context, listen: false).selectedSquareSlotList[element[0]][element[1]][2]);
+                      Provider.of<ReserveList>(context, listen: false).updateSlotControllerList(element[0], 0, Provider.of<ReserveList>(context, listen: false).selectedSquareSlotList[element[0]][element[1]][2]);
+                      Provider.of<ReserveList>(context, listen: false)._controllerList[element[0]][1].scrollTo(index: tmpSelectedSquareSlotList[element[0]].length-1, duration: Duration(milliseconds: 500));
+                      Provider.of<ReserveList>(context, listen: false)._slotControllerList[element[0]][1].scrollTo(index: tmpSelectedSquareSlotList[element[0]].length-1, duration: Duration(milliseconds: 500));
+                    });
+
                   });
                   //selectedSquareSlotList.clear();
                   //selectedSquareSlotList = tmpSelectedSquareSlotList;
@@ -1309,7 +1308,10 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                                           debugPrint('QUANTITY SLOT: ${reserveState._controllerList[index][0]}');
                                                                           if (reserveState.selectedSquareSlotList[index].length > 1) {
                                                                             debugPrint('MOVE TO');
-                                                                            reserveState._controllerList[index][1].scrollTo(index: Provider.of<ReserveList>(context, listen: false)._controllerList[index][0], duration: Duration(milliseconds: 500));
+                                                                            setState(() {
+
+                                                                            });
+                                                                            //reserveState._controllerList[index][1].scrollTo(index: reserveState._controllerList[index][0], duration: Duration(milliseconds: 500));
                                                                             //Provider.of<ReserveList>(context, listen: false)._slotControllerList[index][1].scrollTo(index: i, duration: Duration(milliseconds: 500));
                                                                           }
                                                                           debugPrint('SELECTED SLOT LIST: ${reserveState.selectedSquareSlotList[index].length}');
@@ -1373,6 +1375,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                                         //order.selected.add(selected);
                                                                         reserveState.order.cartCounter++;
                                                                         //StoreProvider.of<AppState>(context).dispatch(SetOrderCartCounter(order.cartCounter));
+                                                                        Provider.of<ReserveList>(context, listen: false).updateOrder(reserveState.order);
                                                                         StoreProvider.of<AppState>(context).dispatch(SetOrderReservable(reserveState.order));
                                                                       } else {
                                                                         OrderEntry tmp;
