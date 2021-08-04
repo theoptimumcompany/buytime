@@ -1431,7 +1431,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                   scrollDirection: Axis.horizontal,
                                                   //initialScrollIndex: selectedSquareSlotList[index].length - 1,
                                                   itemBuilder: (context, i) {
-                                                    debugPrint('i: $i');
+                                                    debugPrint('i: $i - ${reserveState.selectedSquareSlotList[index].length}');
                                                     if(i != reserveState.selectedSquareSlotList[index].length){
                                                       SquareSlotState mySSS = reserveState.selectedSquareSlotList[index].elementAt(i)[1];
                                                       ServiceSlot tmpService = reserveState.selectedSquareSlotList[index].elementAt(i)[3];
