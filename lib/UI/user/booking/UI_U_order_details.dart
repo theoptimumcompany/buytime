@@ -241,6 +241,8 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
         debugPrint('UI_U_order_details => FROM GEOLOCATOR: $_currentPosition');
         currentLat = _currentPosition.latitude;
         currentLng = _currentPosition.longitude;
+        gettingLocation = false;
+        distanceFromCurrentPosition = calculateDistance('$currentLat, $currentLng');
       });
       AreaListState areaListState = StoreProvider.of<AppState>(context).state.areaList;
       StoreProvider.of<AppState>(context).dispatch(SetArea(Utils.getCurrentArea('$currentLat, $currentLng', areaListState)));

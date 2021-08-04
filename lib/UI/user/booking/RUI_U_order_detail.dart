@@ -203,6 +203,8 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
         debugPrint('UI_U_order_details => FROM GEOLOCATOR: $_currentPosition');
         currentLat = _currentPosition.latitude;
         currentLng = _currentPosition.longitude;
+        gettingLocation = false;
+        distanceFromCurrentPosition = calculateDistance('$currentLat, $currentLng');
       });
     }).catchError((e) {
       print(e);
