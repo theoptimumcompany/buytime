@@ -218,19 +218,22 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
     loc.Location location = new loc.Location();
 
     bool _serviceEnabled;
+    bool _requestService;
     loc.PermissionStatus _permissionGranted;
     loc.LocationData _locationData;
 
     _serviceEnabled = await location.serviceEnabled();
     if (!_serviceEnabled) {
-      _serviceEnabled = await location.requestService();
-      if (!_serviceEnabled) {
+      _requestService = await location.requestService();
+      if (!_requestService) {
         debugPrint('UI_U_order_details => LOCATION NOT ENABLED');
         setState(() {
           gettingLocation = false;
           distanceFromBusiness = calculateDistance(businessState.coordinate);
         });
         return;
+      }else{
+        debugPrint('UI_U_order_details => SERVICE NOT ENABLED');
       }
     }
 
@@ -238,22 +241,24 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
     if (_permissionGranted == loc.PermissionStatus.denied) {
       _permissionGranted = await location.requestPermission();
       if (_permissionGranted != loc.PermissionStatus.granted) {
-        debugPrint('UI_U_order_details => PERMISSION NOY GARANTED');
+        debugPrint('UI_U_order_details => PERMISSION NOT GARANTED');
         setState(() {
           gettingLocation = false;
           distanceFromBusiness = calculateDistance(businessState.coordinate);
         });
         return;
+      }else{
+        debugPrint('UI_U_order_details => PERMISSION GARANTED');
       }
     }
 
     _locationData = await location.getLocation();
     debugPrint('UI_U_order_details => FROM LOCATION: $_locationData');
     if (_locationData.latitude != null) {
-      setState(() {
+      /*setState(() {
         gettingLocation = false;
         distanceFromCurrentPosition = calculateDistance('$currentLat, $currentLng');
-      });
+      });*/
     }
     _getCurrentLocation();
   }

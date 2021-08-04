@@ -268,6 +268,8 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
           distanceFromBusiness = calculateDistance(businessState.coordinate);
         });
         return;
+      }else{
+        debugPrint('UI_U_order_details => SERVICE NOT ENABLED');
       }
     }
 
@@ -281,16 +283,18 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
           distanceFromBusiness = calculateDistance(businessState.coordinate);
         });
         return;
+      }else{
+        debugPrint('UI_U_order_details => PERMISSION GARANTED');
       }
     }
 
     _locationData = await location.getLocation();
     debugPrint('UI_U_order_details => FROM LOCATION: $_locationData');
     if(_locationData.latitude != null){
-      setState(() {
+      /*setState(() {
         gettingLocation = false;
-        distanceFromCurrentPosition = calculateDistance('$currentLat, $currentLng');
-      });
+        //distanceFromCurrentPosition = calculateDistance('$currentLat, $currentLng');
+      });*/
     }
     _getCurrentLocation();
   }
