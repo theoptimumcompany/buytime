@@ -775,7 +775,12 @@ class _BookingPageState extends State<BookingPage> {
                                               userOrderList.clear();
                                               orderList.clear();
                                               if (orderSnapshot.hasError || orderSnapshot.connectionState == ConnectionState.waiting) {
-                                                return CircularProgressIndicator();
+                                                return Row(
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  children: [
+                                                    CircularProgressIndicator()
+                                                  ],
+                                                );
                                               }
                                               DateTime currentTime = DateTime.now();
                                               orderSnapshot.data.docs.forEach((element) {
@@ -824,7 +829,7 @@ class _BookingPageState extends State<BookingPage> {
                                                             color: Colors.transparent,
                                                             child: InkWell(
                                                                 onTap: () {
-                                                                  //Navigator.push(context, MaterialPageRoute(builder: (context) => RAllBookings(tourist: false,)),);
+                                                                  //Navigator.push(context, MaterialPageRoute(builder: (context) => RAllBookings(fromConfirm: false, tourist: false,)),);
                                                                   Navigator.push(context, MaterialPageRoute(builder: (context) => AllBookings(orderStateList: orderList, tourist: false,)),);
                                                                 },
                                                                 borderRadius: BorderRadius.all(Radius.circular(5.0)),
