@@ -105,17 +105,17 @@ class AllCategoryListRequestService implements EpicClass<AppState> {
             .where("visibility", isEqualTo: 'Active');
       }
 
-      await query.get().then((value) {
-        value.docs.forEach((element) {
-          ServiceState serviceState = ServiceState.fromJson(element.data());
-          serviceStateList.add(serviceState);
-        });
-      });
-
       for (int i = 0; i < businessListFromFirebase.docs.length; i++) {
         /// TODO: replace with category from snippet
         BusinessState businessState = BusinessState.fromJson(businessListFromFirebase.docs[i].data());
         businessStateList.add(businessState);
+        await query.get().then((value) {
+          value.docs.forEach((element) {
+            ServiceState serviceState = ServiceState.fromJson(element.data());
+            if(businessState.id_firestore == serviceState.businessId)
+              serviceStateList.add(serviceState);
+          });
+        });
         /*QuerySnapshot snapshot = await FirebaseFirestore.instance
             /// 1 READ - ? DOC
             .collection("business")
