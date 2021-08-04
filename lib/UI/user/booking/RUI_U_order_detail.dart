@@ -104,7 +104,7 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
       case 'room':
         widget = ListTile(
           leading: Image(width: SizeConfig.blockSizeHorizontal * 10, image: AssetImage('assets/img/room.png')),
-          title: Text(AppLocalizations.of(context).room),
+          title: Text(AppLocalizations.of(context).roomPayment),
           onTap: () {},
         );
         break;
