@@ -379,6 +379,8 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
   List<SquareSlotState> squareSlotList = [];
   SlotListSnippetState slotSnippetListState = SlotListSnippetState(slotListSnippet: []);
 
+  bool reserve = false;
+
   @override
   Widget build(BuildContext context) {
     // the media containing information on width and height
@@ -777,7 +779,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                   return Consumer<ReserveList>(
                     builder: (_, reserveState, child) {
                       if(reserveState.selectedSquareSlotList.isNotEmpty && reserveState.selectedSquareSlotList.first.isNotEmpty)
-                        debugPrint('FREE ON BUILD: ${reserveState.selectedSquareSlotList.first.first.first}');
+                        debugPrint('FREE ON BUILD: ${reserveState.selectedSquareSlotList.first.first.first} - ${reserveState.selectedSquareSlotList.first.first[1].free}');
                       return Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
@@ -1431,12 +1433,15 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                   scrollDirection: Axis.horizontal,
                                                   //initialScrollIndex: selectedSquareSlotList[index].length - 1,
                                                   itemBuilder: (context, i) {
-                                                    debugPrint('i: $i - ${reserveState.selectedSquareSlotList[index].length}');
-                                                    if(i != reserveState.selectedSquareSlotList[index].length){
+                                                    //debugPrint('i OUT: $i - ${reserveState.selectedSquareSlotList[index].length}');
+                                                    if(i < reserveState.selectedSquareSlotList[index].length){
+                                                      //debugPrint('i IN: $i - ${reserveState.selectedSquareSlotList[index].length}');
                                                       SquareSlotState mySSS = reserveState.selectedSquareSlotList[index].elementAt(i)[1];
                                                       ServiceSlot tmpService = reserveState.selectedSquareSlotList[index].elementAt(i)[3];
-                                                      debugPrint('UI_U_ServiceReserve => QUANTITY INDEXES: ${reserveState.selectedSquareSlotList[index].length} '
-                                                          '- FREE: ${Provider.of<ReserveList>(context, listen: false).selectedSquareSlotList[index].elementAt(i)[1].free} - FREE MYSSS: ${mySSS.free}');
+                                                      debugPrint('UI_U_ServiceReserve => INDEX: $index - QUANTITY INDEXES: ${reserveState.selectedSquareSlotList[index].length} '
+                                                          '- FREE: ${Provider.of<ReserveList>(context, listen: false).selectedSquareSlotList[index][i][1].free} '
+                                                          '- FREE RESERVE STATE: ${reserveState.selectedSquareSlotList[index][i][1].free} '
+                                                          '- FREE MYSSS: ${mySSS.free}');
                                                       return Row(
                                                         mainAxisSize: MainAxisSize.min,
                                                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -1529,10 +1534,13 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                                                   reserveState.slots[index].forEach((el2) {
                                                                                     if (el2[2].uid == mySSS.uid) {
                                                                                       el2[2].free += 1;
+                                                                                      if(reserve)
+                                                                                        mySSS.free += 1;
                                                                                       reserveState.selectedSquareSlotList[index].elementAt(i)[0] -= 1;
                                                                                     }
                                                                                   });
                                                                                   Provider.of<ReserveList>(context, listen: false).initSelectedSquareSlotList(reserveState.selectedSquareSlotList);
+                                                                                  Provider.of<ReserveList>(context, listen: false).initSlot(reserveState.slots);
                                                                                   reserveState.order.total = 0;
                                                                                   reserveState.order.itemList.forEach((element) {
                                                                                     if (element.idSquareSlot == mySSS.uid) {
@@ -1582,11 +1590,13 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                                                   reserveState.slots[index].forEach((el2) {
                                                                                     if (el2[2].uid == mySSS.uid) {
                                                                                       el2[2].free -= 1;
-                                                                                      //mySSS.free -= 1;
+                                                                                      if(reserve)
+                                                                                        mySSS.free -= 1;
                                                                                       reserveState.selectedSquareSlotList[index].elementAt(i)[0] += 1;
                                                                                     }
                                                                                   });
                                                                                   Provider.of<ReserveList>(context, listen: false).initSelectedSquareSlotList(reserveState.selectedSquareSlotList);
+                                                                                  //Provider.of<ReserveList>(context, listen: false).initSlot(reserveState.slots);
                                                                                   reserveState.order.total = 0;
                                                                                   reserveState.order.itemList.forEach((element) {
                                                                                     if (element.idSquareSlot == mySSS.uid) {
@@ -1723,6 +1733,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                             );
                                             setState(() {
                                               bool r = refresh;
+                                              reserve = true;
                                             });
                                           } else {
                                             showDialog(
