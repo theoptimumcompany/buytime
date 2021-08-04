@@ -11,6 +11,8 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../UI_U_order_details.dart';
+
 class UserServiceCardWidget extends StatefulWidget {
   OrderState orderState;
   bool tourist;
