@@ -237,6 +237,10 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
       _permissionGranted = await location.requestPermission();
       if (_permissionGranted != loc.PermissionStatus.granted) {
         debugPrint('UI_U_order_details => PERMISSION NOY GARANTED');
+        setState(() {
+          gettingLocation = false;
+          distanceFromBusiness = calculateDistance(businessState.coordinate);
+        });
         return;
       }
     }
