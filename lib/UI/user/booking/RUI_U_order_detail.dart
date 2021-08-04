@@ -183,8 +183,8 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
   double currentLat = 0;
   double currentLng = 0;
   Position _currentPosition;
-  double distanceFromBusiness;
-  double distanceFromCurrentPosition;
+  double distanceFromBusiness = 0;
+  double distanceFromCurrentPosition = 0;
   bool gettingLocation = true;
 
   Future<bool> requestLocationPermission({Function onPermissionDenied}) async {
@@ -252,14 +252,14 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
       }
     }
 
-    _locationData = await location.getLocation();
-    debugPrint('UI_U_order_details => FROM LOCATION: $_locationData');
-    if (_locationData.latitude != null) {
-      /*setState(() {
-        gettingLocation = false;
-        distanceFromCurrentPosition = calculateDistance('$currentLat, $currentLng');
-      });*/
-    }
+    // _locationData = await location.getLocation();
+    // debugPrint('UI_U_order_details => FROM LOCATION: $_locationData');
+    // if (_locationData.latitude != null) {
+    //   /*setState(() {
+    //     gettingLocation = false;
+    //     distanceFromCurrentPosition = calculateDistance('$currentLat, $currentLng');
+    //   });*/
+    // }
     _getCurrentLocation();
   }
 
@@ -629,7 +629,7 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
                                       Flexible(
                                           flex: 3,
                                           child: Container(
-                                            height: 125,
+                                            height: 128,
                                             child: Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               mainAxisAlignment: MainAxisAlignment.spaceBetween,

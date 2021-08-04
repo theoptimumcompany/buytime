@@ -271,7 +271,11 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
       }else{
         debugPrint('UI_U_order_details => SERVICE NOT ENABLED');
       }
-    }
+    }else
+      {
+        debugPrint('UI_U_order_details => else 1');
+
+      }
 
     _permissionGranted = await location.hasPermission();
     if (_permissionGranted == loc.PermissionStatus.denied) {
@@ -286,16 +290,25 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
       }else{
         debugPrint('UI_U_order_details => PERMISSION GARANTED');
       }
-    }
+    }else
+    {
+      debugPrint('UI_U_order_details => else 2');
 
-    _locationData = await location.getLocation();
-    debugPrint('UI_U_order_details => FROM LOCATION: $_locationData');
-    if(_locationData.latitude != null){
-      /*setState(() {
-        gettingLocation = false;
-        //distanceFromCurrentPosition = calculateDistance('$currentLat, $currentLng');
-      });*/
     }
+    // debugPrint('UI_U_order_details => before FROM LOCATION: $_locationData');
+    //
+    // _locationData = await location.getLocation();
+    // debugPrint('UI_U_order_details => FROM LOCATION: $_locationData');
+    // if(_locationData.latitude != null){
+    //   /*setState(() {
+    //     gettingLocation = false;
+    //     //distanceFromCurrentPosition = calculateDistance('$currentLat, $currentLng');
+    //   });*/
+    // }else
+    // {
+    //   debugPrint('UI_U_order_details => else 3');
+    //
+    // }
     _getCurrentLocation();
   }
 
@@ -343,6 +356,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
   Widget build(BuildContext context) {
     // the media containing information on width and height
     var media = MediaQuery.of(context).size;
+    readDynamicLink(StoreProvider.of<AppState>(context).state.user.uid, StoreProvider.of<AppState>(context).state.orderDetail.orderId);
     refundAsked = false;
     SizeConfig().init(context);
 
