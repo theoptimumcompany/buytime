@@ -12,6 +12,8 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../RUI_U_order_detail.dart';
+
 class UserServiceCardWidget extends StatefulWidget {
   OrderState orderState;
   bool tourist;
@@ -84,11 +86,7 @@ class _UserServiceCardWidgetState extends State<UserServiceCardWidget> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => OrderDetails(
-                            orderState: widget.orderState,
-                            tourist: widget.tourist,
-                            serviceState: widget.serviceState,
-                          )));
+                      builder: (context) => RUI_U_OrderDetail('')));
               //Navigator.push(context, MaterialPageRoute(builder: (context) => OrderDetails(orderState: widget.orderState)));
               /* widget.fromBookingPage ?
               Navigator.push(context, MaterialPageRoute(builder: (context) => FilterByCategory(fromBookingPage: true, categoryState: widget.categoryState,))) :

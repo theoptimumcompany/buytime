@@ -731,6 +731,8 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                   //_controllerList = List.generate(dates.length, (index) => [ItemScrollController(initialScrollOffset: scrollPositionList[index])]);
                   idk.forEach((element) {
                     tmpSelectedSquareSlotList[element[0]].add(Provider.of<ReserveList>(context, listen: false).selectedSquareSlotList[element[0]][element[1]]);
+                    debugPrint('FREE: ${Provider.of<ReserveList>(context, listen: false).selectedSquareSlotList[element[0]][element[1]]}');
+                    debugPrint('FREE TMP: ${tmpSelectedSquareSlotList[element[0]]}');
                     if (tmpSelectedSquareSlotList[element[0]].length > 1) {
                       //debugPrint("UI_U_ServiceReserve =>JUMP TO: QUANTITY: ${_controllerList[element[0]][0]}");
                       //debugPrint("UI_U_ServiceReserve =>JUMP TO: SLOT: ${_slotControllerList[element[0]][0]}");
@@ -774,6 +776,8 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                   //debugPrint('UI_U_ServiceReserve => INTERVAL SLOTS LENGTH: ${widget.serviceState.serviceSlot.first.startTime.length}');
                   return Consumer<ReserveList>(
                     builder: (_, reserveState, child) {
+                      if(reserveState.selectedSquareSlotList.isNotEmpty && reserveState.selectedSquareSlotList.first.isNotEmpty)
+                        debugPrint('FREE ON BUILD: ${reserveState.selectedSquareSlotList.first.first.first}');
                       return Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
@@ -1427,10 +1431,12 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                   scrollDirection: Axis.horizontal,
                                                   //initialScrollIndex: selectedSquareSlotList[index].length - 1,
                                                   itemBuilder: (context, i) {
+                                                    debugPrint('i: $i');
                                                     if(i != reserveState.selectedSquareSlotList[index].length){
                                                       SquareSlotState mySSS = reserveState.selectedSquareSlotList[index].elementAt(i)[1];
                                                       ServiceSlot tmpService = reserveState.selectedSquareSlotList[index].elementAt(i)[3];
-                                                      debugPrint('UI_U_ServiceReserve => QUANTITY INDEXES: ${reserveState.selectedSquareSlotList[index].length}');
+                                                      debugPrint('UI_U_ServiceReserve => QUANTITY INDEXES: ${reserveState.selectedSquareSlotList[index].length} '
+                                                          '- FREE: ${Provider.of<ReserveList>(context, listen: false).selectedSquareSlotList[index].elementAt(i)[1].free} - FREE MYSSS: ${mySSS.free}');
                                                       return Row(
                                                         mainAxisSize: MainAxisSize.min,
                                                         crossAxisAlignment: CrossAxisAlignment.center,

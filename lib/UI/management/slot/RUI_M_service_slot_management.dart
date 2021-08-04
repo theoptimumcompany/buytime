@@ -875,13 +875,14 @@ class _RServiceSlotManagementState extends State<RServiceSlotManagement> {
                   child: IconButton(
                     key: Key('business_drawer_key'),
                     icon: const Icon(
-                      Icons.menu,
+                      Icons.keyboard_arrow_left_outlined,
                       color: Colors.white,
-                      size: 30.0,
+                      size: 24.0,
                     ),
                     tooltip: AppLocalizations.of(context).openMenu,
                     onPressed: () {
-                      _drawerKey.currentState.openDrawer();
+                      //_drawerKey.currentState.openDrawer();
+                      Navigator.of(context).pop();
                     },
                   ),
                 ),
