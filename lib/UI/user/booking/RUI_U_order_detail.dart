@@ -207,6 +207,9 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
     }).catchError((e) {
       print(e);
     });
+    setState(() {
+      gettingLocation = false;
+    });
   }
 
   _getLocation(BusinessState businessState) async {
@@ -1155,9 +1158,7 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
                                           ),
                                         )),
                                   )
-                                : Container(
-                                    child: Text(orderDetails.cardType),
-                                  ),
+                                : Container(),
                           ],
                         );
                         OrderState orderState = OrderState.fromJson(orderSnapshot.data.data());
