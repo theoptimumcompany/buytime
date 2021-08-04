@@ -866,6 +866,12 @@ class _BookingPageState extends State<BookingPage> {
                                                                 });
                                                               }
                                                             });
+                                                            order.itemList.forEach((element) {
+                                                              snapshot.serviceList.serviceListState.forEach((s) {
+                                                                if(element.id == s.serviceId)
+                                                                  service = s;
+                                                              });
+                                                            });
                                                             return Container(
                                                               width: 151,
                                                               height: 100,

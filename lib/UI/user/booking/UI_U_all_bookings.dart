@@ -266,6 +266,14 @@ class _AllBookingsState extends State<AllBookings> {
                                                 });
                                               }
                                             });
+
+                                            order.itemList.forEach((element) {
+                                              snapshot.serviceList.serviceListState.forEach((s) {
+                                                if(element.id == s.serviceId)
+                                                  service = s;
+                                              });
+                                            });
+
                                             return Column(
                                               children: [
                                                 UserServiceListItem(order, widget.tourist, service),
