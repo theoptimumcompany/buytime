@@ -820,7 +820,7 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
                                             height: 125,
                                             //margin: EdgeInsets.only(left:10.0, right: 10.0),
                                             child: CachedNetworkImage(
-                                              imageUrl: getShopLocationImage(businessState.coordinate),
+                                              imageUrl: getShopLocationImage(businessState.coordinate ?? ''),
                                               imageBuilder: (context, imageProvider) => Container(
                                                 decoration: BoxDecoration(
                                                     color: BuytimeTheme.BackgroundWhite,
