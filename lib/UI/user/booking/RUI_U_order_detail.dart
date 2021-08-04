@@ -59,7 +59,7 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
   List<String> cc = ['v', 'mc', 'e'];
   double lat = 0.0;
   double lng = 0.0;
-  BusinessState businessState;
+  BusinessState businessState = BusinessState().toEmpty();
   bool tourist;
   bool refundAsked = false;
   OrderDetailState orderDetails;
