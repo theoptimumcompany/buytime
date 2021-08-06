@@ -4,6 +4,7 @@ import 'package:Buytime/UI/user/booking/RUI_U_notifications.dart';
 import 'package:Buytime/UI/user/booking/RUI_notification_bell.dart';
 import 'package:Buytime/UI/user/booking/UI_U_all_bookings.dart';
 import 'package:Buytime/UI/user/booking/UI_U_notifications.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:Buytime/UI/user/booking/widget/user_service_card_widget.dart';
 import 'package:Buytime/UI/user/cart/UI_U_cart.dart';
@@ -337,6 +338,16 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context).size;
     SizeConfig().init(context);
+    DateTime currentTime = DateTime.now();
+    currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0).toUtc();
+    final Stream<QuerySnapshot> _orderStream =  FirebaseFirestore.instance
+        .collection("order")
+    //.where("businessId", isEqualTo: StoreProvider.of<AppState>(context).state.business.id_firestore)
+        .where("userId", isEqualTo: StoreProvider.of<AppState>(context).state.user.uid)
+    //.where("itemList[0][time]", isNotEqualTo: null)
+        .where("date", isGreaterThanOrEqualTo: currentTime)
+        .limit(50)
+        .snapshots(includeMetadataChanges: true);
     return StoreConnector<AppState, AppState>(
       converter: (store) => store.state,
       onInit: (store) async {
@@ -353,7 +364,7 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
         if (auth.FirebaseAuth != null && auth.FirebaseAuth.instance != null && auth.FirebaseAuth.instance.currentUser != null) {
           auth.User user = auth.FirebaseAuth.instance.currentUser;
           if (user != null) {
-            store.dispatch(UserOrderListRequest());
+            //store.dispatch(UserOrderListRequest());
             store.state.notificationListState.notificationListState.clear();
             store.dispatch(RequestNotificationList(store.state.user.uid, store.state.business.id_firestore));
           }
@@ -428,7 +439,7 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
         debugPrint('UI_U_service_explorer => SERVICE LIST: ${popularList.length}');
         order = snapshot.order.itemList != null ? (snapshot.order.itemList.length > 0 ? snapshot.order : OrderState().toEmpty()) : OrderState().toEmpty();
         debugPrint('UI_U_BookingPage => Order List LENGTH: ${snapshot.orderList.orderListState.length}');
-        orderList.clear();
+        /*orderList.clear();
         userOrderList.clear();
         DateTime currentTime = DateTime.now();
         currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0).toUtc();
@@ -441,7 +452,7 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
             ? -1
             : a.date.isAtSameMomentAs(b.date)
                 ? 0
-                : 1);
+                : 1);*/
 
         return GestureDetector(
           onTap: () {
@@ -721,96 +732,134 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
                                   ),
 
                                   ///My bookings & View all
-                                  _searchController.text.isEmpty && userOrderList.isNotEmpty
-                                      ? Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          ///My bookings
-                                          Container(
-                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1.5, bottom: SizeConfig.safeBlockVertical * 1),
-                                            child: Text(
-                                              AppLocalizations.of(context).myReservation,
-                                              style: TextStyle(
-                                                //letterSpacing: SizeConfig.safeBlockVertical * .4,
-                                                  fontFamily: BuytimeTheme.FontFamily,
-                                                  color: BuytimeTheme.TextBlack,
-                                                  fontWeight: FontWeight.w400,
-                                                  fontSize: 18
+                                  _searchController.text.isEmpty
+                                      ? StreamBuilder<QuerySnapshot>(
+                                      stream: _orderStream,
+                                      builder: (context, AsyncSnapshot<QuerySnapshot> orderSnapshot) {
+                                        userOrderList.clear();
+                                        orderList.clear();
+                                        if (orderSnapshot.hasError || orderSnapshot.connectionState == ConnectionState.waiting) {
+                                          return Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              CircularProgressIndicator()
+                                            ],
+                                          );
+                                        }
+                                        DateTime currentTime = DateTime.now();
+                                        orderSnapshot.data.docs.forEach((element) {
+                                          //allUserOrderList.add(element);
+                                          OrderState order = OrderState.fromJson(element.data());
+                                          if((order.progress == Utils.enumToString(OrderStatus.paid) ||
+                                              order.progress == Utils.enumToString(OrderStatus.pending) ||
+                                              order.progress == Utils.enumToString(OrderStatus.toBePaidAtCheckout) ||
+                                              order.progress == Utils.enumToString(OrderStatus.holding) ||
+                                              order.progress == Utils.enumToString(OrderStatus.accepted)) &&
+                                              (order.itemList.first.date.isAtSameMomentAs(currentTime) || order.itemList.first.date.isAfter(currentTime)) && order.itemList.first.time != null)
+                                            userOrderList.add(order);
+                                          orderList.add(order);
+                                        });
+                                        //debugPrint('asdsd');
+                                        userOrderList.sort((a,b) => a.itemList.first.date.isBefore(b.itemList.first.date) ? -1 : a.itemList.first.date.isAtSameMomentAs(b.itemList.first.date) ? 0 : 1);
+                                        orderList.sort((a,b) => a.date.isBefore(b.date) ? -1 : a.date.isAtSameMomentAs(b.date) ? 0 : 1);
+                                        return userOrderList.isNotEmpty ? Container(
+                                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  ///My bookings
+                                                  Container(
+                                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 1),
+                                                    child: Text(
+                                                      AppLocalizations.of(context).myReservation,
+                                                      style: TextStyle(
+                                                        //letterSpacing: SizeConfig.safeBlockVertical * .4,
+                                                          fontFamily: BuytimeTheme.FontFamily,
+                                                          color: BuytimeTheme.TextBlack,
+                                                          fontWeight: FontWeight.w400,
+                                                          fontSize: 18
 
-                                                ///SizeConfig.safeBlockHorizontal * 4
-                                              ),
-                                            ),
-                                          ),
-
-                                          ///View All
-                                          Container(
-                                              margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 2.5),
-                                              alignment: Alignment.center,
-                                              child: Material(
-                                                color: Colors.transparent,
-                                                child: InkWell(
-                                                    onTap: () {
-                                                      Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(builder: (context) => AllBookings(orderStateList: orderList, tourist: true)),
-                                                      );
-                                                    },
-                                                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                                                    child: Container(
-                                                      padding: EdgeInsets.all(5.0),
-                                                      child: Text(
-                                                        AppLocalizations.of(context).viewAll,
-                                                        style: TextStyle(letterSpacing: SizeConfig.safeBlockHorizontal * .2, fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.UserPrimary, fontWeight: FontWeight.w400, fontSize: 16
-
-                                                          ///SizeConfig.safeBlockHorizontal * 4
-                                                        ),
+                                                        ///SizeConfig.safeBlockHorizontal * 4
                                                       ),
-                                                    )),
-                                              ))
-                                        ],
-                                      ),
-                                      userOrderList.isNotEmpty
-                                          ?
+                                                    ),
+                                                  ),
+                                                  ///View All
+                                                  Container(
+                                                      margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 2.5),
+                                                      alignment: Alignment.center,
+                                                      child: Material(
+                                                        color: Colors.transparent,
+                                                        child: InkWell(
+                                                            onTap: () {
+                                                              //Navigator.push(context, MaterialPageRoute(builder: (context) => RAllBookings(fromConfirm: false, tourist: false,)),);
+                                                              Navigator.push(context, MaterialPageRoute(builder: (context) => AllBookings(orderStateList: orderList, tourist: true,)),);
+                                                            },
+                                                            borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                                            child: Container(
+                                                              padding: EdgeInsets.all(5.0),
+                                                              child: Text(
+                                                                AppLocalizations.of(context).viewAll,
+                                                                style: TextStyle(
+                                                                    letterSpacing: SizeConfig.safeBlockHorizontal * .2,
+                                                                    fontFamily: BuytimeTheme.FontFamily,
+                                                                    color: BuytimeTheme.UserPrimary,
+                                                                    fontWeight: FontWeight.w400,
+                                                                    fontSize: 16
 
-                                      ///List
-                                      Container(
-                                        height: 120,
-                                        width: double.infinity,
-                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
-                                        child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
-                                          SliverList(
-                                            delegate: SliverChildBuilderDelegate(
-                                                  (context, index) {
-                                                //MenuItemModel menuItem = menuItems.elementAt(index);
-                                                OrderState order = userOrderList.elementAt(index);
-                                                ServiceState service = ServiceState().toEmpty();
-                                                StoreProvider.of<AppState>(context).state.notificationListState.notificationListState.forEach((element) {
-                                                  if (element.notificationId != null && element.notificationId.isNotEmpty && order.orderId.isNotEmpty && order.orderId == element.data.state.orderId) {
-                                                    snapshot.serviceList.serviceListState.forEach((s) {
-                                                      if (element.data.state.serviceId == s.serviceId) service = s;
-                                                    });
-                                                  }
-                                                });
-                                                return Container(
-                                                  width: 151,
-                                                  height: 100,
-                                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1, right: SizeConfig.safeBlockHorizontal * 1),
-                                                  child: UserServiceCardWidget(order, true, service),
-                                                );
-                                              },
-                                              childCount: userOrderList.length,
-                                            ),
+                                                                  ///SizeConfig.safeBlockHorizontal * 4
+                                                                ),
+                                                              ),
+                                                            )),
+                                                      ))
+                                                ],
+                                              ),
+                                              ///List
+                                              Container(
+                                                height: 120,
+                                                width: double.infinity,
+                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
+                                                child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
+                                                  SliverList(
+                                                    delegate: SliverChildBuilderDelegate(
+                                                          (context, index) {
+                                                        //MenuItemModel menuItem = menuItems.elementAt(index);
+                                                        OrderState order = userOrderList.elementAt(index);
+                                                        ServiceState service = ServiceState().toEmpty();
+                                                        StoreProvider.of<AppState>(context).state.notificationListState.notificationListState.forEach((element) {
+                                                          if(element.notificationId != null && element.notificationId.isNotEmpty && order.orderId.isNotEmpty && order.orderId == element.data.state.orderId){
+                                                            snapshot.serviceList.serviceListState.forEach((s) {
+                                                              if(element.data.state.serviceId == s.serviceId)
+                                                                service = s;
+                                                            });
+                                                          }
+                                                        });
+                                                        order.itemList.forEach((element) {
+                                                          snapshot.serviceList.serviceListState.forEach((s) {
+                                                            if(element.id == s.serviceId)
+                                                              service = s;
+                                                          });
+                                                        });
+                                                        return Container(
+                                                          width: 151,
+                                                          height: 100,
+                                                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1, right: SizeConfig.safeBlockHorizontal * 1),
+                                                          child: UserServiceCardWidget(userOrderList.elementAt(index), true, service),
+                                                        );
+                                                      },
+                                                      childCount: userOrderList.length,
+                                                    ),
+                                                  ),
+                                                ]),
+                                              ),
+                                            ],
                                           ),
-                                        ]),
-                                      )
-                                          : Container(),
-                                    ],
-                                  )
-                                      : Container(),
+                                        ): Container();
+                                      }
+                                  ): Container(),
 
                                   ///Discover & Popular & Recommended & Log out
                                   _searchController.text.isEmpty

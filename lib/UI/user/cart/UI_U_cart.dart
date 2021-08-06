@@ -104,9 +104,19 @@ class CartState extends State<Cart> {
             converter: (store) => store.state,
             onInit: (store) {
               tmp = store.state.serviceState;
+              debugPrint('AREA: ${store.state.business.area} - ${store.state.business.area.length}');
               if (!widget.tourist) {
-                _locationController.text = store.state.business.area?.first;
-                store.state.order.location = store.state.business.area?.first;
+                if(store.state.business.area?.isEmpty){
+                  debugPrint('AREA EMPTY');
+                  _locationController.text = 'Reception';
+                  store.state.order.location = 'Reception';
+                }else{
+                  debugPrint('AREA NOT EMPTY');
+                  _locationController.text = store.state.business.area?.first;
+                  store.state.order.location = store.state.business.area?.first;
+                }
+                debugPrint('AREA FRO MCONTROLLER: ${_locationController.text}');
+
               }
             },
             builder: (context, snapshot) {
@@ -302,7 +312,8 @@ class CartState extends State<Cart> {
                                                             ),
                                                           ),
                                                           //value: _locationController.text,
-                                                          items: StoreProvider.of<AppState>(context).state.business.area?.map(
+                                                          items:  StoreProvider.of<AppState>(context).state.business.area.isNotEmpty ?
+                                                          StoreProvider.of<AppState>(context).state.business.area.map(
                                                             (val) {
                                                               return DropdownMenuItem<String>(
                                                                 value: val,
@@ -335,7 +346,36 @@ class CartState extends State<Cart> {
                                                                 ),
                                                               );
                                                             },
-                                                          )?.toList(),
+                                                          )?.toList() : [DropdownMenuItem<String>(
+                                                            value: 'Reception',
+                                                            child: Row(
+                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                              children: [
+                                                                Container(
+                                                                  child: Padding(
+                                                                    padding: const EdgeInsets.only(left: 10.0),
+                                                                    child: Text(
+                                                                      'Reception',
+                                                                      textAlign: TextAlign.start,
+                                                                      style: TextStyle(
+                                                                        fontSize: 16,
+                                                                        color: BuytimeTheme.TextMedium,
+                                                                        fontWeight: FontWeight.w400,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                _locationController.text == 'Reception' ? Icon(Icons.radio_button_checked, color: BuytimeTheme.SymbolGrey,) : Icon(Icons.radio_button_off, color: BuytimeTheme.SymbolGrey,),
+                                                                // Radio(
+                                                                //   toggleable: true,
+                                                                //   value: val,
+                                                                //   activeColor: BuytimeTheme.Secondary,
+                                                                //   groupValue: _locationController.text,
+                                                                //   onChanged: null,
+                                                                // )
+                                                              ],
+                                                            ),
+                                                          )],
                                                           onChanged: (value) {
                                                             setState(() {
                                                               _locationController.text = value;

@@ -383,7 +383,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
     /*if (notificationState.data.state.businessId.isNotEmpty)
       _businessStream = FirebaseFirestore.instance.collection('business').doc(notificationState.data.state.businessId).snapshots();*/
     if (widget.orderState.businessId.isNotEmpty)
-      _businessStream = FirebaseFirestore.instance.collection('business').doc(widget.orderState.businessId).snapshots();
+      _businessStream = FirebaseFirestore.instance.collection('business').doc(widget.orderState.itemList.first.id_business).snapshots();
     else
       _businessStream = FirebaseFirestore.instance.collection('business').doc(serviceState.businessId).snapshots();
     refundAsked = false;
@@ -627,7 +627,8 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                                               child: FittedBox(
                                                 fit: BoxFit.scaleDown,
                                                 child: Text(
-                                                  orderDetails.itemList.length > 1 ? AppLocalizations.of(context).multipleOrders : Utils.retriveField(Localizations.localeOf(context).languageCode, orderDetails.itemList[0].name),
+                                                  //orderDetails.itemList.length > 1 ? AppLocalizations.of(context).multipleOrders : Utils.retriveField(Localizations.localeOf(context).languageCode, orderDetails.itemList[0].name),
+                                                  businessState.name,
                                                   style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextWhite, fontWeight: FontWeight.bold, fontSize: 16
 
                                                     ///SizeConfig.safeBlockHorizontal * 4

@@ -256,7 +256,7 @@ class _BookingPageState extends State<BookingPage> {
     currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0).toUtc();
     final Stream<QuerySnapshot> _orderStream =  FirebaseFirestore.instance
         .collection("order")
-        .where("businessId", isEqualTo: StoreProvider.of<AppState>(context).state.business.id_firestore)
+        //.where("businessId", isEqualTo: StoreProvider.of<AppState>(context).state.business.id_firestore)
         .where("userId", isEqualTo: StoreProvider.of<AppState>(context).state.user.uid)
         //.where("itemList[0][time]", isNotEqualTo: null)
         .where("date", isGreaterThanOrEqualTo: currentTime)
