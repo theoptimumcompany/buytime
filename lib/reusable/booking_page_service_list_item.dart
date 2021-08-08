@@ -1,4 +1,5 @@
 import 'package:Buytime/reblox/model/service/service_state.dart';
+import 'package:Buytime/reusable/W_green_choice.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/utils/utils.dart';
@@ -9,9 +10,9 @@ import 'package:share/share.dart';
 import 'package:Buytime/UI/user/service/UI_U_service_details.dart';
 
 class BookingListServiceListItem extends StatefulWidget {
-
   ServiceState serviceState;
   bool tourist;
+
   BookingListServiceListItem(this.serviceState, this.tourist);
 
   @override
@@ -21,7 +22,6 @@ class BookingListServiceListItem extends StatefulWidget {
 class _BookingListServiceListItemState extends State<BookingListServiceListItem> {
   @override
   Widget build(BuildContext context) {
-
     //debugPrint('image: ${widget.serviceState.image1}');
     return Container(
         //margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 4, right: SizeConfig.safeBlockHorizontal * 4),
@@ -33,11 +33,17 @@ class _BookingListServiceListItemState extends State<BookingListServiceListItem>
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => ServiceDetails(serviceState: widget.serviceState, tourist: widget.tourist,)),
+                  MaterialPageRoute(
+                      builder: (context) => ServiceDetails(
+                            serviceState: widget.serviceState,
+                            tourist: widget.tourist,
+                          )),
                 );
               },
               child: Container(
-                height: 91,  ///SizeConfig.safeBlockVertical * 15
+                height: 100,
+
+                ///SizeConfig.safeBlockVertical * 15
                 margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 2.5, top: 1, bottom: 1),
                 child: Row(
                   children: [
@@ -49,8 +55,11 @@ class _BookingListServiceListItemState extends State<BookingListServiceListItem>
                         height: 91,
                         width: 91,
                         decoration: BoxDecoration(
-                          //borderRadius: BorderRadius.all(Radius.circular(SizeConfig.blockSizeHorizontal * 5)), ///12.5%
-                            image: DecorationImage(image: imageProvider, fit: BoxFit.cover,)),
+                            //borderRadius: BorderRadius.all(Radius.circular(SizeConfig.blockSizeHorizontal * 5)), ///12.5%
+                            image: DecorationImage(
+                          image: imageProvider,
+                          fit: BoxFit.cover,
+                        )),
                       ),
                       placeholder: (context, url) => Utils.imageShimmer(91, 91),
                       errorWidget: (context, url, error) => Icon(Icons.error),
@@ -68,10 +77,11 @@ class _BookingListServiceListItemState extends State<BookingListServiceListItem>
                           )
                       ),
                     ),*/
+
                     ///Service Name & Description
                     Container(
                       margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1),
-                      child:  Column(
+                      child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -81,49 +91,53 @@ class _BookingListServiceListItemState extends State<BookingListServiceListItem>
                             child: Container(
                               width: SizeConfig.safeBlockHorizontal * 50,
                               child: Text(
-                                widget.serviceState.name != null ? Utils.retriveField(Localizations.localeOf(context).languageCode, widget.serviceState.name) :  '',
+                                widget.serviceState.name != null ? Utils.retriveField(Localizations.localeOf(context).languageCode, widget.serviceState.name) : '',
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 1,
-                                style: TextStyle(
-                                    letterSpacing: 0.15,
-                                    fontFamily: BuytimeTheme.FontFamily,
-                                    color: BuytimeTheme.TextBlack,
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 16 /// SizeConfig.safeBlockHorizontal * 4
-                                ),
+                                style: TextStyle(letterSpacing: 0.15, fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w400, fontSize: 16
+
+                                    /// SizeConfig.safeBlockHorizontal * 4
+                                    ),
                               ),
                             ),
                           ),
+
                           ///Description
                           FittedBox(
                             fit: BoxFit.fitHeight,
                             child: Container(
-                              width: 180, ///SizeConfig.safeBlockHorizontal * 50
-                              height: 40, ///SizeConfig.safeBlockVertical * 10
+                              width: 180,
+
+                              ///SizeConfig.safeBlockHorizontal * 50
+                              height: 40,
+
+                              ///SizeConfig.safeBlockVertical * 10
                               margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
                               child: Text(
-                                widget.serviceState.description != null ? Utils.retriveField(Localizations.localeOf(context).languageCode, widget.serviceState.description) :  '',
+                                widget.serviceState.description != null ? Utils.retriveField(Localizations.localeOf(context).languageCode, widget.serviceState.description) : '',
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 2,
-                                style: TextStyle(
-                                    letterSpacing: 0.25,
-                                    fontFamily: BuytimeTheme.FontFamily,
-                                    color: BuytimeTheme.TextGrey,
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
-                                ),
+                                style: TextStyle(letterSpacing: 0.25, fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextGrey, fontWeight: FontWeight.w400, fontSize: 14
+
+                                    ///SizeConfig.safeBlockHorizontal * 4
+                                    ),
                               ),
                             ),
                           ),
+
+                          ///ECO label
+                          widget.serviceState.tag.contains('ECO')
+                              ? FittedBox(
+                                  fit: BoxFit.fitHeight,
+                                  child: W_GreenChoice(),
+                                )
+                              : Container(),
                         ],
                       ),
                     )
                   ],
                 ),
               ),
-            )
-        )
-    );
+            )));
   }
 }
-

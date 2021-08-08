@@ -594,5 +594,6 @@
   "roomPayment": "Pagamento addebitato alla Stanza",
   "cardPayment": "Carta di Credito",
   "noPaymentMethod": "Nessuno metodo di pagamento scelto",
-  "youAreInAnEcoHotel": "Sei in un ECO hotel"
+  "youAreInAnEcoHotel": "Sei in un ECO hotel",
+  "greenChoice": "Green Choice"
 }

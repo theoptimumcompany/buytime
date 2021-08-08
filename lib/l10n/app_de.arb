@@ -594,5 +594,6 @@
   "roomPayment": "Room Payment",
   "cardPayment": "Credit Card",
   "noPaymentMethod": "No chosen Payment Method",
-  "youAreInAnEcoHotel": "You are staying in an ECO hotel"
+  "youAreInAnEcoHotel": "You are staying in an ECO hotel",
+  "greenChoice": "Green Choice"
 }

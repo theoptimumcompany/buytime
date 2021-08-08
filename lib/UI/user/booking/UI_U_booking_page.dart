@@ -707,7 +707,7 @@ class _BookingPageState extends State<BookingPage> {
                                                   children: [
                                                     Image( image: AssetImage('assets/img/eco.png')),
                                                     Padding(
-                                                      padding: EdgeInsets.only(left: 10.0),
+                                                      padding: EdgeInsets.only(left: 10.0,top: 5.0),
                                                       child: Text(
                                                         '${AppLocalizations.of(context).youAreInAnEcoHotel}',
                                                         style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextMedium, fontWeight: FontWeight.w400, fontSize: 16
