@@ -595,5 +595,8 @@
   "cardPayment": "Carta di Credito",
   "noPaymentMethod": "Nessuno metodo di pagamento scelto",
   "youAreInAnEcoHotel": "Sei in un ECO hotel",
-  "greenChoice": "Green Choice"
+  "greenChoice": "Green Choice",
+  "carbonFootprintExplanation": "Con questo booking stai aiutando a ridurre l'impatto ambientale, in quanto soggiorni in un Hotel ECO",
+  "addA": "Aggiungi un",
+  "reduceEnvironmentalImpact": "per ridurre ulteriormente l'impatto ambientale"
 }
