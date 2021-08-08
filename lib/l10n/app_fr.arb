@@ -593,6 +593,6 @@
   "all": "All",
   "roomPayment": "Room Payment",
   "cardPayment": "Credit Card",
-  "noPaymentMethod": "No chosen Payment Method"
-
+  "noPaymentMethod": "No chosen Payment Method",
+  "youAreInAnEcoHotel": "You are staying in an ECO hotel"
 }

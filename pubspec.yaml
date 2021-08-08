@@ -11,7 +11,7 @@ description: Give you a star!
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 2.9.0
+version: 2.9.3
 
 environment:
   sdk: ">=2.10.0 <3.0.0"
@@ -146,7 +146,6 @@ flutter:
     - assets/img/golfCourt.png
     - assets/img/nobookings.png
     - assets/img/iceresort.png
-    - assets/img/hermitage.png
     - assets/img/placeholder.png
     - assets/img/image_placeholder.png
     - assets/img/image_placeholder_square.png
@@ -157,30 +156,10 @@ flutter:
     - assets/img/apple_logo.png
     - assets/img/google_logo.png
     - assets/img/facebook_logo.png
-    - assets/img/back_button.png
-    - assets/img/back_blue.png
     - assets/img/qr_code.png
-    - assets/img/pointer.png
-    - assets/img/3archi.jpg
-    - assets/img/approdo.jpeg
-    - assets/img/rifrullo.jpg
-    - assets/img/zucchetta.jpeg
-    - assets/img/mach1.jpg
-    - assets/img/star_off.png
-    - assets/img/star_on.png
-    - assets/img/pin_off.png
-    - assets/img/pin_on.png
-    - assets/img/search.png
-    - assets/img/user.png
-    - assets/img/euro_off.png
-    - assets/img/euro_on.png
+    - assets/img/eco.png
     - assets/img/hotel.png
-    - assets/img/food.png
-    - assets/img/back.png
     - assets/img/magic.png
-    - assets/img/white_plus.png
-    - assets/img/blue_plus.png
-    - assets/img/group.png
     - assets/img/fake_user.png
     - assets/img/lion_logo.png
     - assets/img/lion_photo.png
