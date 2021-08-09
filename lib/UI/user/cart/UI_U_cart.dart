@@ -268,7 +268,7 @@ class CartState extends State<Cart> {
                                             ),
 
                                             ///Total Order
-                                            OrderTotal(carbonCompensation: false, totalECO: 0,media: media, orderState: orderState),
+                                            OrderTotal(/*totalECO: 0*/,media: media, orderState: orderState),
 
                                             ///Divider
                                             Container(

@@ -9,8 +9,6 @@ import 'package:flutter_redux/flutter_redux.dart';
 class OrderTotal extends StatelessWidget {
   OrderTotal({
     @required this.orderState,
-    this.totalECO,
-    this.carbonCompensation,
     Key key,
     @required this.media,
   }) : super(key: key);
@@ -18,13 +16,25 @@ class OrderTotal extends StatelessWidget {
   final Size media;
   final OrderState orderState;
   double totalECO = 0;
-  bool carbonCompensation = false;
+  double partialECO = 0;
+
+  void calculateEcoTax() {
+
+      totalECO = orderState.total;
+      partialECO = (totalECO * 2.5) / 100;
+      if (orderState.carbonCompensation) {
+        totalECO = totalECO + partialECO;
+      } else {
+        totalECO = totalECO - partialECO;
+      }
+  }
+
 
   @override
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context).size;
     SizeConfig().init(context);
-
+    calculateEcoTax();
     double vat = 0.0;
     orderState.itemList.forEach((element) {
       vat += element.price * (element.vat / 100);
@@ -63,7 +73,7 @@ class OrderTotal extends StatelessWidget {
                 alignment: Alignment.center,
                 //margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 20),
                 child: Text(
-                  !carbonCompensation ? '${AppLocalizations.of(context).euroSpace} ${orderState.total.toStringAsFixed(2)}' : '${AppLocalizations.of(context).euroSpace} ${totalECO.toStringAsFixed(2)}',
+                  !orderState.carbonCompensation ? '${AppLocalizations.of(context).euroSpace} ${orderState.total.toStringAsFixed(2)}' : '${AppLocalizations.of(context).euroSpace} ${totalECO.toStringAsFixed(2)}',
                   style: TextStyle(
                       fontFamily: BuytimeTheme.FontFamily,
                       fontWeight: FontWeight.w600,

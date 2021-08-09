@@ -767,10 +767,10 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
               child: () {
             if (widget.reserve != null && widget.reserve) {
               // print("UI_U_ConfirmOrder => " + snapshot.orderReservable.itemList.length.toString());
-              return OrderTotal(carbonCompensation: carbonCompensation,totalECO: totalECO, media: media, orderState: OrderState.fromReservableState(snapshot.orderReservable));
+              return OrderTotal(/*totalECO: totalECO,*/ media: media, orderState: OrderState.fromReservableState(snapshot.orderReservable));
             } else {
               // print("UI_U_ConfirmOrder => " + snapshot.order.itemList.length.toString());
-              return OrderTotal(carbonCompensation: carbonCompensation, totalECO: totalECO, media: media, orderState: snapshot.order);
+              return OrderTotal(media: media, orderState: snapshot.order);
             }
           }()),
 
@@ -843,8 +843,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                               }
                               else
                                 {
-                                  StoreProvider.of<AppState>(context).dispatch((SetOrder(carbonCompensation)));
-
+                                  StoreProvider.of<AppState>(context).dispatch((SetOrderCarbonCompensation(carbonCompensation)));
                                 }
                               calculateEcoTax();
                               debugPrint('UI_U_ConfirmOrder => SWITCH FOOTPRINT : $value');
