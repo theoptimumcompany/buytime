@@ -767,38 +767,51 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
           ),
 
           ///ECO Section
-          Padding(
-            padding: const EdgeInsets.only(top: 10.0),
-            child: Container(
-              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 10, right: SizeConfig.safeBlockHorizontal * 10),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      W_GreenChoice(),
-                    ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 5.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
+          snapshot.business.business_type == 'ECO'
+              ? Padding(
+                  padding: const EdgeInsets.only(top: 10.0),
+                  child: Container(
+                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 10, right: SizeConfig.safeBlockHorizontal * 10),
+                    child: Column(
                       children: [
-                        Flexible(
-                          child: Container(
-                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * .5, bottom: SizeConfig.safeBlockVertical * 1, right: SizeConfig.safeBlockHorizontal * 2.5),
-                            child: Text(
-                              AppLocalizations.of(context).carbonFootprintExplanation,
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 3,
-                              style: TextStyle(fontFamily: BuytimeTheme.FontFamily, height: 1.5, fontWeight: FontWeight.w500, color: BuytimeTheme.TextGrey, fontSize: 14),
-                            ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            W_GreenChoice(),
+                          ],
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 5.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Flexible(
+                                child: Container(
+                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * .5, bottom: SizeConfig.safeBlockVertical * 1, right: SizeConfig.safeBlockHorizontal * 2.5),
+                                  child: Text(
+                                    AppLocalizations.of(context).carbonFootprintExplanation,
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 3,
+                                    style: TextStyle(fontFamily: BuytimeTheme.FontFamily, height: 1.5, fontWeight: FontWeight.w500, color: BuytimeTheme.TextGrey, fontSize: 14),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],
                     ),
                   ),
+                )
+              : Container(),
 
+          ///ECO Switch
+          Padding(
+            padding: const EdgeInsets.only(top: 5.0),
+            child: Container(
+              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 10, right: SizeConfig.safeBlockHorizontal * 10),
+              child: Column(
+                children: [
                   ///Switch Add On Environment
                   Padding(
                     padding: const EdgeInsets.only(top: 5.0),
