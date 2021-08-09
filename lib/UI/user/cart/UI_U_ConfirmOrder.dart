@@ -767,79 +767,77 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
           ),
 
           ///ECO Section
-          snapshot.business.business_type == 'ECO'
-              ? Padding(
-                  padding: const EdgeInsets.only(top: 10.0),
-                  child: Container(
-                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 10, right: SizeConfig.safeBlockHorizontal * 10),
-                    child: Column(
+          Padding(
+            padding: const EdgeInsets.only(top: 10.0),
+            child: Container(
+              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 10, right: SizeConfig.safeBlockHorizontal * 10),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      W_GreenChoice(),
+                    ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 5.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            W_GreenChoice(),
-                          ],
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 5.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Flexible(
-                                child: Container(
-                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * .5, bottom: SizeConfig.safeBlockVertical * 1, right: SizeConfig.safeBlockHorizontal * 2.5),
-                                  child: Text(
-                                    AppLocalizations.of(context).carbonFootprintExplanation,
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 3,
-                                    style: TextStyle(fontFamily: BuytimeTheme.FontFamily, height: 1.5, fontWeight: FontWeight.w500, color: BuytimeTheme.TextGrey, fontSize: 14),
-                                  ),
-                                ),
-                              ),
-                            ],
+                        Flexible(
+                          child: Container(
+                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * .5, bottom: SizeConfig.safeBlockVertical * 1, right: SizeConfig.safeBlockHorizontal * 2.5),
+                            child: Text(
+                              AppLocalizations.of(context).carbonFootprintExplanation,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 3,
+                              style: TextStyle(fontFamily: BuytimeTheme.FontFamily, height: 1.5, fontWeight: FontWeight.w500, color: BuytimeTheme.TextGrey, fontSize: 14),
+                            ),
                           ),
                         ),
-
-                        ///Switch Add On Environment
-                        Padding(
-                          padding: const EdgeInsets.only(top: 5.0),
-                          child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                            Switch(
-                                activeColor: BuytimeTheme.ManagerPrimary,
-                                value: switchCarbon,
-                                onChanged: (value) {
-                                  setState(() {
-                                    switchCarbon = value;
-                                    debugPrint('UI_U_ConfirmOrder => SWITCH FOOTPRINT : $value');
-                                  });
-                                }),
-                            Text('+ € 0,20'),
-                          ]),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 5.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Flexible(
-                                child: Container(
-                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * .5, bottom: SizeConfig.safeBlockVertical * 1, right: SizeConfig.safeBlockHorizontal * 2.5),
-                                  child: Text(
-                                    '${AppLocalizations.of(context).addA} 2,5% ${AppLocalizations.of(context).reduceEnvironmentalImpact}',
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 3,
-                                    style: TextStyle(fontFamily: BuytimeTheme.FontFamily, height: 1.5, fontWeight: FontWeight.w500, color: BuytimeTheme.TextGrey, fontSize: 14),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        )
                       ],
                     ),
                   ),
-                )
-              : Container(),
+
+                  ///Switch Add On Environment
+                  Padding(
+                    padding: const EdgeInsets.only(top: 5.0),
+                    child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                      Switch(
+                          activeColor: BuytimeTheme.ManagerPrimary,
+                          value: switchCarbon,
+                          onChanged: (value) {
+                            setState(() {
+                              switchCarbon = value;
+                              debugPrint('UI_U_ConfirmOrder => SWITCH FOOTPRINT : $value');
+                            });
+                          }),
+                      Text('+ € 0,20'),
+                    ]),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 5.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Flexible(
+                          child: Container(
+                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * .5, bottom: SizeConfig.safeBlockVertical * 1, right: SizeConfig.safeBlockHorizontal * 2.5),
+                            child: Text(
+                              '${AppLocalizations.of(context).addA} 2,5% ${AppLocalizations.of(context).reduceEnvironmentalImpact}',
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 3,
+                              style: TextStyle(fontFamily: BuytimeTheme.FontFamily, height: 1.5, fontWeight: FontWeight.w500, color: BuytimeTheme.TextGrey, fontSize: 14),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
 
           ///Location
           widget.reserve != null && !widget.reserve && !widget.tourist && !isExternal
