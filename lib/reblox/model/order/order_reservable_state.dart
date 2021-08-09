@@ -47,6 +47,7 @@ class OrderReservableState {
   String location;
   String openUntil;
   String cancellationReason;
+  bool carbonCompensation = false;
 
   OrderReservableState({
     @required this.itemList,
@@ -77,6 +78,7 @@ class OrderReservableState {
     this.location,
     this.openUntil,
     this.cancellationReason,
+    this.carbonCompensation,
   });
 
 
@@ -110,6 +112,7 @@ class OrderReservableState {
     this.location = state.location;
     this.openUntil = state.openUntil;
     this.cancellationReason = state.cancellationReason;
+    this.carbonCompensation = state.carbonCompensation;
   }
 
   OrderReservableState copyWith({
@@ -141,6 +144,7 @@ class OrderReservableState {
     String location,
     String openUntil,
     String cancellationReason,
+    bool carbonCompensation,
   }) {
     return OrderReservableState(
       itemList: itemList ?? this.itemList,
@@ -171,6 +175,7 @@ class OrderReservableState {
       location: location ?? this.location,
       openUntil: openUntil ?? this.openUntil,
       cancellationReason: cancellationReason ?? this.cancellationReason,
+      carbonCompensation: carbonCompensation ?? this.carbonCompensation,
     );
   }
 
@@ -204,6 +209,7 @@ class OrderReservableState {
         location: '',
         openUntil: '--:--',
       cancellationReason: 'Overbooking',
+      carbonCompensation: false,
     );
   }
 

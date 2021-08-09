@@ -7,14 +7,18 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
 class OrderTotal extends StatelessWidget {
-   OrderTotal({
+  OrderTotal({
     @required this.orderState,
+    this.totalECO,
+    this.carbonCompensation,
     Key key,
     @required this.media,
   }) : super(key: key);
 
   final Size media;
   final OrderState orderState;
+  double totalECO = 0;
+  bool carbonCompensation = false;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +27,7 @@ class OrderTotal extends StatelessWidget {
 
     double vat = 0.0;
     orderState.itemList.forEach((element) {
-      vat += element.price * (element.vat/100);
+      vat += element.price * (element.vat / 100);
     });
     return Container(
       width: media.width,
@@ -43,51 +47,55 @@ class OrderTotal extends StatelessWidget {
                 style: TextStyle(
                     fontFamily: BuytimeTheme.FontFamily,
                     fontWeight: FontWeight.w500,
-                    fontSize: 16, ///SizeConfig.safeBlockHorizontal * 4
+                    fontSize: 16,
+
+                    ///SizeConfig.safeBlockHorizontal * 4
                     color: BuytimeTheme.TextMedium,
-                    letterSpacing: 0.25
-                ),
+                    letterSpacing: 0.25),
               ),
             ),
           ),
+
           ///Total Value
-          Expanded(
-            flex: 1,
-            child: Container(
-              alignment: Alignment.center,
-              //margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 20),
-              child: Text(
-                '${AppLocalizations.of(context).euroSpace} ${orderState.total.toStringAsFixed(2)}',
-                style: TextStyle(
-                    fontFamily: BuytimeTheme.FontFamily,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 24, ///SizeConfig.safeBlockHorizontal * 7,
-                    color: BuytimeTheme.TextBlack
-                ),
-              ),
-            )
-          ),
-          ///Tax
           Expanded(
               flex: 1,
               child: Container(
-                alignment: Alignment.centerRight,
-                //margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 8),
+                alignment: Alignment.center,
+                //margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 20),
                 child: Text(
-                  AppLocalizations.of(context).vat + ' € ' + vat.toStringAsFixed(2),
-                  /*AppLocalizations.of(context).vat + (orderState.total != null ?
+                  !carbonCompensation ? '${AppLocalizations.of(context).euroSpace} ${orderState.total.toStringAsFixed(2)}' : '${AppLocalizations.of(context).euroSpace} ${totalECO.toStringAsFixed(2)}',
+                  style: TextStyle(
+                      fontFamily: BuytimeTheme.FontFamily,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 24,
+
+                      ///SizeConfig.safeBlockHorizontal * 7,
+                      color: BuytimeTheme.TextBlack),
+                ),
+              )),
+
+          ///Tax
+          Expanded(
+            flex: 1,
+            child: Container(
+              alignment: Alignment.centerRight,
+              //margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 8),
+              child: Text(
+                AppLocalizations.of(context).vat + ' € ' + vat.toStringAsFixed(2),
+                /*AppLocalizations.of(context).vat + (orderState.total != null ?
                   (orderState.total *
                       (StoreProvider.of<AppState>(context).state.serviceState.vat != null && StoreProvider.of<AppState>(context).state.serviceState.vat != 0 ?
                       StoreProvider.of<AppState>(context).state.serviceState.vat/100 : 0.22)).toStringAsFixed(2) : "0"),*/
-                  style: TextStyle(
-                      fontFamily: BuytimeTheme.FontFamily,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 16, ///SizeConfig.safeBlockHorizontal * 4
-                      color: BuytimeTheme.TextMedium,
-                      letterSpacing: 0.25
-                  ),
-                ),
+                style: TextStyle(
+                    fontFamily: BuytimeTheme.FontFamily,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 16,
+
+                    ///SizeConfig.safeBlockHorizontal * 4
+                    color: BuytimeTheme.TextMedium,
+                    letterSpacing: 0.25),
               ),
+            ),
           ),
         ],
       ),

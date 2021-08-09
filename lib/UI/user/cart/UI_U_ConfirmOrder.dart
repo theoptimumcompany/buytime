@@ -72,8 +72,9 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
   bool disableRoomPayment = false;
   List<Widget> cardWidgetList = [];
   bool deleting = false;
-  bool switchCarbon = false;
-
+  bool carbonCompensation = false;
+  double totalECO = 0;
+  double partialECO = 0;
   @override
   void initState() {
     super.initState();
@@ -92,6 +93,18 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
   void dispose() {
     StoreProvider.of<AppState>(context).dispatch(ResetOrderIfPaidOrCanceled()); //TODO: FRANCESCO CONTROLLA CHE QUESTA DA ERRORE SUL BACK PAGE
     super.dispose();
+  }
+
+  void calculateEcoTax() {
+    setState(() {
+      totalECO = orderState.total;
+      partialECO = (totalECO * 2.5) / 100;
+      if (carbonCompensation) {
+        totalECO = totalECO + partialECO;
+      } else {
+        totalECO = totalECO - partialECO;
+      }
+    });
   }
 
   bool waitingForUser = true;
@@ -145,6 +158,8 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
               debugPrint('UI_U_cart => ORDER BUSINESS ID: ${orderState.itemList.first.id_business} | BUSIENSS ID: ${snapshot.business.id_firestore}');
               isExternal = true;
             }
+
+              partialECO = (orderState.total * 2.5) / 100;
 
             _email = snapshot.user.email;
             _userId = snapshot.user.uid;
@@ -752,10 +767,10 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
               child: () {
             if (widget.reserve != null && widget.reserve) {
               // print("UI_U_ConfirmOrder => " + snapshot.orderReservable.itemList.length.toString());
-              return OrderTotal(media: media, orderState: OrderState.fromReservableState(snapshot.orderReservable));
+              return OrderTotal(carbonCompensation: carbonCompensation,totalECO: totalECO, media: media, orderState: OrderState.fromReservableState(snapshot.orderReservable));
             } else {
               // print("UI_U_ConfirmOrder => " + snapshot.order.itemList.length.toString());
-              return OrderTotal(media: media, orderState: snapshot.order);
+              return OrderTotal(carbonCompensation: carbonCompensation, totalECO: totalECO, media: media, orderState: snapshot.order);
             }
           }()),
 
@@ -818,14 +833,15 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                     child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                       Switch(
                           activeColor: BuytimeTheme.ManagerPrimary,
-                          value: switchCarbon,
+                          value: carbonCompensation,
                           onChanged: (value) {
                             setState(() {
-                              switchCarbon = value;
+                              carbonCompensation = value;
+                              calculateEcoTax();
                               debugPrint('UI_U_ConfirmOrder => SWITCH FOOTPRINT : $value');
                             });
                           }),
-                      Text('+ € 0,20'),
+                      Text('+ € ${partialECO}'),
                     ]),
                   ),
                   Padding(

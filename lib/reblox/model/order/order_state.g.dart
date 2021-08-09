@@ -44,6 +44,7 @@ OrderState _$OrderStateFromJson(Map<String, dynamic> json) {
     location: json['location'] as String,
     openUntil: json['openUntil'] as String,
     cancellationReason: json['cancellationReason'] as String,
+    carbonCompensation: json['carbonCompensation'] as bool,
   );
 }
 
@@ -73,4 +74,5 @@ Map<String, dynamic> _$OrderStateToJson(OrderState instance) =>
       'location': instance.location,
       'openUntil': instance.openUntil,
       'cancellationReason': instance.cancellationReason,
+      'carbonCompensation': instance.carbonCompensation,
     };
