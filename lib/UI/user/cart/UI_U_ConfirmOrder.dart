@@ -143,6 +143,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
               } else {
                 disableRoomPayment = false;
               }
+              partialECO = (orderReservableState.total * 2.5) / 100;
             } else {
               orderState = snapshot.order;
               if ((widget != null && widget.tourist != null && widget.tourist) ||
@@ -152,14 +153,14 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
               } else {
                 disableRoomPayment = false;
               }
+              partialECO = (orderState.total * 2.5) / 100;
             }
 
             if (orderState != null && orderState.itemList.isNotEmpty && orderState.itemList.first.id_business != snapshot.business.id_firestore) {
               debugPrint('UI_U_cart => ORDER BUSINESS ID: ${orderState.itemList.first.id_business} | BUSIENSS ID: ${snapshot.business.id_firestore}');
               isExternal = true;
+             // partialECO = (orderState.total * 2.5) / 100;
             }
-
-              partialECO = (orderState.total * 2.5) / 100;
 
             _email = snapshot.user.email;
             _userId = snapshot.user.uid;
@@ -839,17 +840,18 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                               carbonCompensation = value;
                               if (widget.reserve != null && widget.reserve)
                               {
+                                debugPrint('reservable order eco switch - ${orderReservableState.carbonCompensation}');
                                 StoreProvider.of<AppState>(context).dispatch((SetOrderReservableCarbonCompensation(carbonCompensation)));
-                              }
-                              else
+                              }else
                                 {
+                                  debugPrint('order eco switch - ${orderState.carbonCompensation}');
                                   StoreProvider.of<AppState>(context).dispatch((SetOrderCarbonCompensation(carbonCompensation)));
                                 }
-                              calculateEcoTax();
+                              //calculateEcoTax();
                               debugPrint('UI_U_ConfirmOrder => SWITCH FOOTPRINT : $value');
                             });
                           }),
-                      Text('+ € ${partialECO}'),
+                      Text('+ € ${Utils.calculateEcoTax(widget.reserve != null && widget.reserve ? OrderState.fromReservableState(orderReservableState) : orderState).toStringAsFixed(2)}'),
                     ]),
                   ),
                   Padding(

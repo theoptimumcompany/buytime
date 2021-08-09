@@ -35,6 +35,24 @@ class Utils {
   static String imageSizing600 =  "_600x600";
   static String imageSizing1000 =  "_1000x1000";
 
+
+
+  ///Calculate Eco
+  static double calculateEcoTax(OrderState orderState) {
+    double totalECO = 0;
+    double partialECO = 0;
+    debugPrint('TOTAL IN UTILS: ${orderState.total} - ${orderState.carbonCompensation}');
+    totalECO = orderState.total;
+    partialECO = (totalECO * 2.5) / 100;
+    if (orderState.carbonCompensation) {
+      totalECO = totalECO + partialECO;
+    } else {
+      totalECO = totalECO - partialECO;
+    }
+
+    return partialECO;
+  }
+
   ///Set image
   static String sizeImage(String image, String sizing) {
     //debugPrint('UTILS => SIZE IMAGE: $image');

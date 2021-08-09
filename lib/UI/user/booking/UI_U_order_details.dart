@@ -562,6 +562,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                         OrderDetailState orderDetails = OrderDetailState.fromOrderState(widget.orderState);
                         if (orderSnapshot != null && orderSnapshot.data != null && !orderSnapshot.hasError && orderSnapshot.connectionState != ConnectionState.waiting) {
                           orderDetails = OrderDetailState.fromJson(orderSnapshot.data.data());
+                          order = OrderState.fromJson(orderSnapshot.data.data());
                           debugPrint('YUI_U_order_detail => PRICE: ${orderDetails.total}');
                           debugPrint('YUI_U_order_detail => CARD TYPE: ${orderDetails.cardType}');
                         }
@@ -628,7 +629,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                                                 fit: BoxFit.scaleDown,
                                                 child: Text(
                                                   //orderDetails.itemList.length > 1 ? AppLocalizations.of(context).multipleOrders : Utils.retriveField(Localizations.localeOf(context).languageCode, orderDetails.itemList[0].name),
-                                                  businessState.name,
+                                                  businessState.name.isNotEmpty ? businessState.name : '-',
                                                   style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextWhite, fontWeight: FontWeight.bold, fontSize: 16
 
                                                     ///SizeConfig.safeBlockHorizontal * 4
@@ -1089,29 +1090,55 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                                 children: tmpOrders.map((e) => e).toList(),
                               );
                             }())
-                                : Container(
-                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    orderDetails.itemList.first.number > 1
-                                        ? '${orderDetails.itemList.first.number} x ${AppLocalizations.of(context).products}'
-                                        : '${orderDetails.itemList.first.number} x ${AppLocalizations.of(context).product}',
-                                    style: TextStyle(letterSpacing: 0.15, fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w500, fontSize: 14
+                                : Column(
+                              children: [
+                                Container(
+                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        orderDetails.itemList.first.number > 1
+                                            ? '${orderDetails.itemList.first.number} x ${AppLocalizations.of(context).products}'
+                                            : '${orderDetails.itemList.first.number} x ${AppLocalizations.of(context).product}',
+                                        style: TextStyle(letterSpacing: 0.15, fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w500, fontSize: 14
 
-                                      ///SizeConfig.safeBlockHorizontal * 4
-                                    ),
+                                          ///SizeConfig.safeBlockHorizontal * 4
+                                        ),
+                                      ),
+                                      Text(
+                                        '${orderDetails.itemList.first.number} x ${orderDetails.itemList.first.price.toStringAsFixed(2)} €',
+                                        style: TextStyle(letterSpacing: 0.15, fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w500, fontSize: 14
+
+                                          ///SizeConfig.safeBlockHorizontal * 4
+                                        ),
+                                      )
+                                    ],
                                   ),
-                                  Text(
-                                    '${orderDetails.itemList.first.number} x ${orderDetails.itemList.first.price.toStringAsFixed(2)} €',
-                                    style: TextStyle(letterSpacing: 0.15, fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w500, fontSize: 14
+                                ),
+                                Container(
+                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 2.5, ),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        '${orderDetails.itemList.first.number} x Eco',
+                                        style: TextStyle(letterSpacing: 0.15, fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w500, fontSize: 14
 
-                                      ///SizeConfig.safeBlockHorizontal * 4
-                                    ),
-                                  )
-                                ],
-                              ),
+                                          ///SizeConfig.safeBlockHorizontal * 4
+                                        ),
+                                      ),
+                                      Text(
+                                        '${orderDetails.itemList.first.number} x ${Utils.calculateEcoTax(order).toStringAsFixed(2)} €',
+                                        style: TextStyle(letterSpacing: 0.15, fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w500, fontSize: 14
+
+                                          ///SizeConfig.safeBlockHorizontal * 4
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                )
+                              ],
                             )
                                 : Container(),
 
@@ -1130,7 +1157,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                                     ),
                                   ),
                                   Text(
-                                    '${AppLocalizations.of(context).euroSpace} ${orderDetails.total.toStringAsFixed(2)}',
+                                    '${AppLocalizations.of(context).euroSpace} ${(orderDetails.total + Utils.calculateEcoTax(order)).toStringAsFixed(2)}',
                                     style: TextStyle(letterSpacing: 0.15, fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.bold, fontSize: 16
 
                                       ///SizeConfig.safeBlockHorizontal * 4
@@ -1144,6 +1171,8 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                               child: FittedBox(
                                 fit: BoxFit.scaleDown,
                                 child: Text(
+                                  order.carbonCompensation != null ?
+                                  '${AppLocalizations.of(context).euroSpace} ${(orderDetails.total + Utils.calculateEcoTax(order)).toStringAsFixed(2)}':
                                   '${AppLocalizations.of(context).euroSpace} ${orderDetails.total.toStringAsFixed(2)}',
                                   style: TextStyle(letterSpacing: 0.15, fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.bold, fontSize: 16
 

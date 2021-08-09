@@ -557,7 +557,7 @@ class _RActivityManagementItemDetailsState extends State<RActivityManagementItem
                               ),
                               ///Total Order
                               orderState.itemList.first == null ?
-                              OrderTotal(/*totalECO: 0*/, media: media, orderState: orderState) :
+                              OrderTotal(/*totalECO: 0*/ media: media, orderState: orderState) :
                               Container(
                                 width: media.width,
                                 height: SizeConfig.safeBlockVertical * 10,

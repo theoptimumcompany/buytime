@@ -101,10 +101,20 @@ OrderReservableState configureOrderReservable(OrderReservableState orderStateFro
 
   if (isExternal) {
     orderState.businessId = externalBusinessState.id_firestore;
+    orderState.business.id = externalBusinessState.id_firestore;
     orderState.business.thumbnail = externalBusinessState.wide;
   } else {
     orderState.businessId = store.state.business.id_firestore;
+    orderState.business.id = store.state.business.id_firestore;
     orderState.business.thumbnail = store.state.business.wide;
+
+    store.state.serviceListSnippetListState.serviceListSnippetListState.forEach((element) {
+      if(orderState.itemList.first.id_business == element.businessId){
+        orderState.businessId = element.businessId;
+        orderState.business.id = element.businessId;
+        orderState.business.thumbnail = element.businessImage;
+      }
+    });
   }
 
   if(store.state.cardListState != null  && store.state.cardListState.cardList != null && store.state.cardListState.cardList.isNotEmpty) {
@@ -126,6 +136,12 @@ OrderReservableState orderReservableInitialization(dynamic event, int i) {
   DateTime tmpDate = event.orderReservableState.itemList[i].date;
   tmpDate = DateTime(tmpDate.year, tmpDate.month, tmpDate.day, DateTime.now().hour, DateTime.now().minute, DateTime.now().second, DateTime.now().millisecond, DateTime.now().microsecond);
   return OrderReservableState(
+    carbonCompensation: event.orderReservableState.carbonCompensation,
+    cancellationReason: event.orderReservableState.cancellationReason,
+    cardLast4Digit: event.orderReservableState.cardLast4Digit,
+    cardType: event.orderReservableState.cardType,
+    confirmOrderWait: event.orderReservableState.confirmOrderWait,
+    creationDate: event.orderReservableState.creationDate,
     position: event.orderReservableState.position,
     date: event.orderReservableState.itemList[i].date,
     itemList: [event.orderReservableState.itemList[i]],

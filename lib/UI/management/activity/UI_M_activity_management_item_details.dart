@@ -446,7 +446,7 @@ class _ActivityManagementItemDetailsState extends State<ActivityManagementItemDe
                             ),
                             ///Total Order
                             widget.orderEntry == null ?
-                            OrderTotal(/*totalECO: 0*/, media: media, orderState: widget.orderState) :
+                            OrderTotal(/*totalECO: 0*/ media: media, orderState: widget.orderState) :
                             Container(
                               width: media.width,
                               height: SizeConfig.safeBlockVertical * 10,
