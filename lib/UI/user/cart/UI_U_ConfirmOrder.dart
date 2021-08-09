@@ -837,6 +837,15 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                           onChanged: (value) {
                             setState(() {
                               carbonCompensation = value;
+                              if (widget.reserve != null && widget.reserve)
+                              {
+                                StoreProvider.of<AppState>(context).dispatch((SetOrderReservableCarbonCompensation(carbonCompensation)));
+                              }
+                              else
+                                {
+                                  StoreProvider.of<AppState>(context).dispatch((SetOrder(carbonCompensation)));
+
+                                }
                               calculateEcoTax();
                               debugPrint('UI_U_ConfirmOrder => SWITCH FOOTPRINT : $value');
                             });

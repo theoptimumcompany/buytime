@@ -178,6 +178,14 @@ class SetOrderDate
   SetOrderDate(this._date);
   DateTime get date => _date;
 }
+
+class SetOrderCarbonCompensation
+{
+  bool _carbonCompensation;
+  SetOrderCarbonCompensation(this._carbonCompensation);
+  bool get carbonCompensation => _carbonCompensation;
+}
+
 class SetOrderPosition
 {
   String _position;
@@ -255,6 +263,10 @@ OrderState orderReducer(OrderState state, action) {
   OrderState orderState = new OrderState.fromState(state);
   if (action is SetOrderDate) {
     orderState.date = action.date;
+    return orderState;
+  }
+  if (action is SetOrderCarbonCompensation) {
+    orderState.carbonCompensation = action.carbonCompensation;
     return orderState;
   }
   if (action is SetOrderPosition) {

@@ -268,6 +268,13 @@ class SetOrderReservableProgress
   String get progress => _progress;
 }
 
+class SetOrderReservableCarbonCompensation
+{
+  bool _carbonCompensation;
+  SetOrderReservableCarbonCompensation(this._carbonCompensation);
+  bool get carbonCompensation => _carbonCompensation;
+}
+
 class SetOrderReservableOrderId
 {
   String _orderId;
@@ -334,6 +341,10 @@ OrderReservableState orderReservableReducer(OrderReservableState state, action) 
   }
   if (action is SetOrderReservableProgress) {
     orderReservableState.progress = action.progress;
+    return orderReservableState;
+  }
+  if (action is SetOrderReservableCarbonCompensation) {
+    orderReservableState.carbonCompensation = action.carbonCompensation;
     return orderReservableState;
   }
   if (action is SetOrderReservableOrderId) {
