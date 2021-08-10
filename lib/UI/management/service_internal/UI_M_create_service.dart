@@ -306,6 +306,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                     //  debugPrint('UI_M_create_service => Service Description: ${tmpService.description}');
                                     //  debugPrint('UI_M_create_service => Service Address: ${tmpService.serviceBusinessAddress}');
                                       StoreProvider.of<AppState>(context).dispatch(CreateService(tmpService));
+
                                     }
                                   }),
                             ),
