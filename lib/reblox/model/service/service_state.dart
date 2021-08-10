@@ -44,6 +44,8 @@ class ServiceState {
   bool paymentMethodCard = true;
   @JsonKey(defaultValue: false)
   bool paymentMethodOnSite = false;
+  @JsonKey(defaultValue: '')
+  String condition;
 
   ///Out Database
   @JsonKey(ignore: true)
@@ -78,6 +80,7 @@ class ServiceState {
     this.paymentMethodRoom,
     this.paymentMethodCard,
     this.paymentMethodOnSite,
+    this.condition,
   });
 
   ServiceState toEmpty() {
@@ -110,6 +113,7 @@ class ServiceState {
       paymentMethodRoom: true,
       paymentMethodCard: true,
       paymentMethodOnSite: false,
+      condition: '',
     );
   }
 
@@ -142,6 +146,7 @@ class ServiceState {
     this.paymentMethodCard = service.paymentMethodCard;
     this.paymentMethodOnSite = service.paymentMethodOnSite;
     this.paymentMethodRoom = service.paymentMethodRoom;
+    this.condition = service.condition;
   }
 
   ServiceState copyWith({
@@ -173,6 +178,7 @@ class ServiceState {
     bool paymentMethodRoom,
     bool paymentMethodCard,
     bool paymentMethodOnSite,
+    String condition,
   }) {
     return ServiceState(
       serviceId: serviceId ?? this.serviceId,
@@ -203,6 +209,7 @@ class ServiceState {
       paymentMethodRoom: paymentMethodRoom ?? this.paymentMethodRoom,
       paymentMethodCard: paymentMethodCard ?? this.paymentMethodCard,
       paymentMethodOnSite: paymentMethodOnSite ?? this.paymentMethodOnSite,
+      condition: condition ?? this.condition,
     );
   }
 

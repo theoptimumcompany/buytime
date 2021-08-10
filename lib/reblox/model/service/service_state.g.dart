@@ -40,6 +40,7 @@ ServiceState _$ServiceStateFromJson(Map<String, dynamic> json) {
     paymentMethodRoom: json['paymentMethodRoom'] as bool ?? true,
     paymentMethodCard: json['paymentMethodCard'] as bool ?? true,
     paymentMethodOnSite: json['paymentMethodOnSite'] as bool ?? false,
+    condition: json['condition'] as String ?? '',
   );
 }
 
@@ -72,4 +73,5 @@ Map<String, dynamic> _$ServiceStateToJson(ServiceState instance) =>
       'paymentMethodRoom': instance.paymentMethodRoom,
       'paymentMethodCard': instance.paymentMethodCard,
       'paymentMethodOnSite': instance.paymentMethodOnSite,
+      'condition': instance.condition,
     };

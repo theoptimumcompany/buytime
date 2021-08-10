@@ -598,5 +598,6 @@
   "greenChoice": "Green Choice",
   "carbonFootprintExplanation": "With this booking you are helping to reduce the environmental impact because you are staying in an ECO hotel",
   "addA": "Add a",
-  "reduceEnvironmentalImpact": "to further reduce the environmental impact"
+  "reduceEnvironmentalImpact": "to further reduce the environmental impact",
+  "condition": "Condition (Optional)"
 }
