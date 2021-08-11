@@ -6,6 +6,7 @@ part 'promotion_list_state.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class PromotionListState {
+  @JsonKey(defaultValue: [])
   List<PromotionState> promotionListState;
 
   PromotionListState({

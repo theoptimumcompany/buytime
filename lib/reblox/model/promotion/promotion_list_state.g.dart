@@ -9,10 +9,11 @@ part of 'promotion_list_state.dart';
 PromotionListState _$PromotionListStateFromJson(Map<String, dynamic> json) {
   return PromotionListState(
     promotionListState: (json['promotionListState'] as List)
-        ?.map((e) => e == null
-            ? null
-            : PromotionState.fromJson(e as Map<String, dynamic>))
-        ?.toList(),
+            ?.map((e) => e == null
+                ? null
+                : PromotionState.fromJson(e as Map<String, dynamic>))
+            ?.toList() ??
+        [],
   );
 }
 

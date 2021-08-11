@@ -22,6 +22,8 @@ import 'package:Buytime/reblox/model/notification/notification_state.dart';
 import 'package:Buytime/reblox/model/order/order_detail_state.dart';
 import 'package:Buytime/reblox/model/order/order_reservable_list_state.dart';
 import 'package:Buytime/reblox/model/order/order_reservable_state.dart';
+import 'package:Buytime/reblox/model/promotion/promotion_list_state.dart';
+import 'package:Buytime/reblox/model/promotion/promotion_state.dart';
 import 'package:Buytime/reblox/model/service/external_service_imported_list_state.dart';
 import 'package:Buytime/reblox/model/service/external_service_imported_state.dart';
 import 'package:Buytime/reblox/model/service/service_slot_time_state.dart';
@@ -89,4 +91,6 @@ externalServiceImportedState: ExternalServiceImportedState().toEmpty(),
 externalServiceImportedListState: ExternalServiceImportedListState().toEmpty(),
 businessSnippetState: BusinessSnippetState().toEmpty(),
 orderBusinessSnippetState: OrderBusinessSnippetState().toEmpty(),
-slotSnippetListState: SlotListSnippetState().toEmpty());
+slotSnippetListState: SlotListSnippetState().toEmpty(),
+promotionState: PromotionState().toEmpty(),
+promotionListState: PromotionListState().toEmpty());

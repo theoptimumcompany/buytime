@@ -34,12 +34,9 @@ class PromotionRequestService implements EpicClass<AppState> {
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     debugPrint("PROMOTION_SERVICE_EPIC - PromotionRequestService => Promotion Service CAUGHT ACTION");
-    debugPrint("PROMOTION_SERVICE_EPIC - PromotionRequestService => HERE -1");
     return actions.whereType<PromotionRequest>().asyncMap((event) async {
-      debugPrint("PROMOTION_SERVICE_EPIC - PromotionRequestService => HERE 0");
 
       var promotionSnapshot = await FirebaseFirestore.instance.collection('promotion').get();
-      debugPrint("PROMOTION_SERVICE_EPIC - PromotionRequestService => HERE 1");
 
       if (promotionSnapshot.docs.isEmpty) {
         promotionState = PromotionState().toEmpty();
@@ -49,7 +46,6 @@ class PromotionRequestService implements EpicClass<AppState> {
         });
       }
 
-      debugPrint("PROMOTION_SERVICE_EPIC - PromotionRequestService => HERE 3");
     }).expand((element) => [
           PromotionRequestResponse(promotionState),
         ]);
