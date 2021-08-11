@@ -28,6 +28,8 @@ import 'package:Buytime/reblox/model/order/order_reservable_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/model/pipeline/pipeline.dart';
 import 'package:Buytime/reblox/model/pipeline/pipeline_list_state.dart';
+import 'package:Buytime/reblox/model/promotion/promotion_list_state.dart';
+import 'package:Buytime/reblox/model/promotion/promotion_state.dart';
 import 'package:Buytime/reblox/model/service/external_service_imported_list_state.dart';
 import 'package:Buytime/reblox/model/service/external_service_imported_state.dart';
 import 'package:Buytime/reblox/model/service/service_list_state.dart';
@@ -121,6 +123,8 @@ class AppState {
   SlotListSnippetState slotSnippetListState;
   ReservationsOrdersListSnippetState reservationsOrdersListSnippetState;
   ReservationsOrdersListSnippetListState reservationsOrdersListSnippetListState;
+  PromotionState promotionState;
+  PromotionListState promotionListState;
 
   AppState({
     @required this.area,
@@ -171,7 +175,9 @@ class AppState {
     this.externalServiceImportedListState,
     this.slotSnippetListState,
     this.lastError = "",
-    this.previousError = ""
+    this.previousError = "",
+    this.promotionState,
+    this.promotionListState,
   });
 
   AppState.initialState() {
@@ -223,11 +229,11 @@ class AppState {
     slotSnippetListState = SlotListSnippetState();
     lastError = "";
     previousError = "";
-
+    promotionState = PromotionState();
+    promotionListState = PromotionListState();
   }
 
-  AppState.copyWith({
-      AreaState area,
+  AppState.copyWith({AreaState area,
       AreaListState areaList,
       BusinessState business,
       ExternalBusinessState externalBusiness,
@@ -240,7 +246,7 @@ class AppState {
       StripeState stripe,
       BusinessListState businessList,
       ExternalBusinessListState externalBusinessList,
-        BookingListState bookingList,
+      BookingListState bookingList,
       UserState user,
       CategoryState category,
       CategoryInviteState categoryInvite,
@@ -252,31 +258,32 @@ class AppState {
       PipelineList pipelineList,
       List<String> route,
       StatisticsState statistics,
-        CardState cardState,
-        CardListState cardListState,
-        AutoCompleteState autoCompleteState,
-        AutoCompleteListState autoCompleteListState,
-        NotificationState notificationState,
-        NotificationListState notificationListState,
-        EmailState emailState,
-        TemplateState templateState,
-        TemplateDataState templateDataState,
-    ServiceListSnippetState serviceListSnippetState,
-    ServiceListSnippetListState serviceListSnippetListState,
-    ReservationsOrdersListSnippetState reservationsOrdersListSnippetState,
-    ReservationsOrdersListSnippetListState reservationsOrdersListSnippetListState,
-    BusinessSnippetState businessSnippetState,
-    OrderBusinessSnippetState orderBusinessSnippetState,
-    CategorySnippetState categorySnippetState,
-    ServiceSnippetState serviceSnippetState,
-    ExternalBusinessImportedState externalBusinessImportedState,
-    ExternalBusinessImportedListState externalBusinessImportedListState,
-    ExternalServiceImportedState externalServiceImportedState,
-    ExternalServiceImportedListState externalServiceImportedListState,
-    SlotListSnippetState slotSnippetListState,
-    String lastError,
-    String previousError
-      }) {
+      CardState cardState,
+      CardListState cardListState,
+      AutoCompleteState autoCompleteState,
+      AutoCompleteListState autoCompleteListState,
+      NotificationState notificationState,
+      NotificationListState notificationListState,
+      EmailState emailState,
+      TemplateState templateState,
+      TemplateDataState templateDataState,
+      ServiceListSnippetState serviceListSnippetState,
+      ServiceListSnippetListState serviceListSnippetListState,
+      ReservationsOrdersListSnippetState reservationsOrdersListSnippetState,
+      ReservationsOrdersListSnippetListState reservationsOrdersListSnippetListState,
+      BusinessSnippetState businessSnippetState,
+      OrderBusinessSnippetState orderBusinessSnippetState,
+      CategorySnippetState categorySnippetState,
+      ServiceSnippetState serviceSnippetState,
+      ExternalBusinessImportedState externalBusinessImportedState,
+      ExternalBusinessImportedListState externalBusinessImportedListState,
+      ExternalServiceImportedState externalServiceImportedState,
+      ExternalServiceImportedListState externalServiceImportedListState,
+      SlotListSnippetState slotSnippetListState,
+      String lastError,
+      String previousError,
+      PromotionState promotionState,
+      PromotionListState promotionListState}) {
     this.business = business;
     this.area = area;
     this.areaList = areaList;
@@ -326,6 +333,8 @@ class AppState {
     this.slotSnippetListState = slotSnippetListState;
     this.lastError = lastError;
     this.previousError = previousError;
+    this.promotionState = promotionState;
+    this.promotionListState = promotionListState;
   }
   //
   // AppState.fromJson(Map json) {

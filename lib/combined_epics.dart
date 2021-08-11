@@ -1,4 +1,5 @@
 import 'package:Buytime/reblox/model/app_state.dart';
+import 'package:Buytime/services/promotion_service_epic.dart';
 import 'package:redux_epics/redux_epics.dart';
 import 'package:Buytime/services/area_service_epic.dart';
 import 'package:Buytime/services/category_invite_service_epic.dart';
@@ -132,7 +133,9 @@ CategoryTreeDeleteService(), */
   CreateOrderReservableOnSitePendingService(),
   CreateOrderReservableOnSiteAndPayService(),
   ServiceUpdateSlotSnippetService(),
-  StripeCardListRequestAndNavigatePop()
+  StripeCardListRequestAndNavigatePop(),
+  PromotionListRequestService(),
+  PromotionRequestService()
 //DefaultCategoryTreeAddService(),
 /*BusinessGenerateDefaultCategoryService(),
 DefaultCategoryCreateService(),

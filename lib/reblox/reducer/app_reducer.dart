@@ -16,7 +16,6 @@ import 'package:Buytime/reblox/model/card/card_state.dart';
 import 'package:Buytime/reblox/model/category/category_list_state.dart';
 import 'package:Buytime/reblox/model/category/category_state.dart';
 import 'package:Buytime/reblox/model/category/invitation/category_invite_state.dart';
-import 'package:Buytime/reblox/model/category/tree/category_tree_state.dart';
 import 'package:Buytime/reblox/model/email/email_state.dart';
 import 'package:Buytime/reblox/model/notification/notification_list_state.dart';
 import 'package:Buytime/reblox/model/notification/notification_state.dart';
@@ -27,6 +26,8 @@ import 'package:Buytime/reblox/model/order/order_reservable_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/model/pipeline/pipeline.dart';
 import 'package:Buytime/reblox/model/pipeline/pipeline_list_state.dart';
+import 'package:Buytime/reblox/model/promotion/promotion_list_state.dart';
+import 'package:Buytime/reblox/model/promotion/promotion_state.dart';
 import 'package:Buytime/reblox/model/service/external_service_imported_list_state.dart';
 import 'package:Buytime/reblox/model/service/external_service_imported_state.dart';
 import 'package:Buytime/reblox/model/service/service_list_state.dart';
@@ -60,6 +61,8 @@ import 'package:Buytime/reblox/reducer/order_reservable_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reservable_reducer.dart';
 import 'package:Buytime/reblox/reducer/pipeline_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/pipeline_reducer.dart';
+import 'package:Buytime/reblox/reducer/promotion/promotion_list_reducer.dart';
+import 'package:Buytime/reblox/reducer/promotion/promotion_reducer.dart';
 import 'package:Buytime/reblox/reducer/reservations_orders_list_snippet_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/reservations_orders_list_snippet_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/card_list_reducer.dart';
@@ -77,12 +80,9 @@ import 'package:Buytime/reblox/reducer/booking_reducer.dart';
 import 'package:Buytime/reblox/reducer/booking_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/external_business_imported_reducer.dart';
 import 'package:Buytime/reblox/reducer/external_business_imported_list_reducer.dart';
-import 'package:Buytime/utils/globals.dart';
-
 import 'business_reducer.dart';
 import 'business_list_reducer.dart';
 import 'category_reducer.dart';
-import 'category_tree_reducer.dart';
 import 'order_detail_reducer.dart';
 
 class ClickOnBusinessState {}
@@ -136,6 +136,8 @@ AppState appReducer(AppState state, dynamic action) {
   SlotListSnippetState slotSnippetListState = slotListSnippetReducer(state.slotSnippetListState, action);
   ReservationsOrdersListSnippetState reservationsOrdersListSnippetState = reservationsOrdersListSnippetReducer(state.reservationsOrdersListSnippetState, action);
   ReservationsOrdersListSnippetListState reservationsOrdersListSnippetListState = reservationsOrdersListSnippetListReducer(state.reservationsOrdersListSnippetListState, action);
+  PromotionState promotionState = promotionReducer(state.promotionState, action);
+  PromotionListState promotionListState = promotionListReducer(state.promotionListState, action);
 
   AppState newState = AppState.copyWith(
       //route: navigationReducer(state.route, action),
@@ -181,7 +183,9 @@ AppState appReducer(AppState state, dynamic action) {
       externalBusinessImportedListState: externalBusinessImportedListState,
     externalServiceImportedState: externalServiceImportedState,
     externalServiceImportedListState: externalServiceImportedListState,
-      slotSnippetListState: slotSnippetListState
+      slotSnippetListState: slotSnippetListState,
+    promotionState: promotionState,
+    promotionListState: promotionListState
   );
 
   if (action is ClickOnBusinessState) {
