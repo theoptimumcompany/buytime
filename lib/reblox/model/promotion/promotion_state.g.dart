@@ -8,16 +8,18 @@ part of 'promotion_state.dart';
 
 PromotionState _$PromotionStateFromJson(Map<String, dynamic> json) {
   return PromotionState(
-    area: json['area'] as String,
+    area: json['area'] as String ?? '',
     businessIdList:
-        (json['businessIdList'] as List)?.map((e) => e as String)?.toList(),
+        (json['businessIdList'] as List)?.map((e) => e as String)?.toList() ??
+            [],
     categoryIdList:
-        (json['categoryIdList'] as List)?.map((e) => e as String)?.toList(),
+        (json['categoryIdList'] as List)?.map((e) => e as String)?.toList() ??
+            [],
     dateStart: Utils.getDate(json['dateStart'] as Timestamp),
     dateStop: Utils.getDate(json['dateStop'] as Timestamp),
-    discount: json['discount'] as int,
-    discountType: json['discountType'] as String,
-    limit: json['limit'] as int,
+    discount: json['discount'] as int ?? 0,
+    discountType: json['discountType'] as String ?? 'fixedAmount',
+    limit: json['limit'] as int ?? 0,
   );
 }
 

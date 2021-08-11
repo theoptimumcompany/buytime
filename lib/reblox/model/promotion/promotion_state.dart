@@ -10,15 +10,21 @@ enum DiscountType {
 
 @JsonSerializable(explicitToJson: true)
 class PromotionState {
+  @JsonKey(defaultValue: '')
   String area;
+  @JsonKey(defaultValue: [])
   List<String> businessIdList;
+  @JsonKey(defaultValue: [])
   List<String> categoryIdList;
   @JsonKey(fromJson: Utils.getDate, toJson: Utils.setDate)
   DateTime dateStart;
   @JsonKey(fromJson: Utils.getDate, toJson: Utils.setDate)
   DateTime dateStop;
+  @JsonKey(defaultValue: 0)
   int discount;
+  @JsonKey(defaultValue: 'fixedAmount')
   String discountType;
+  @JsonKey(defaultValue: 0)
   int limit;
 
   PromotionState({

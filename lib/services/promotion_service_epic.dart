@@ -10,11 +10,11 @@ import 'package:rxdart/rxdart.dart';
 class PromotionListRequestService implements EpicClass<AppState> {
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-    debugPrint("PROMOTION_SERVICE_EPIC - PromotionListRequestService => Promotion ListService CATCHED ACTION");
+    debugPrint("PROMOTION_SERVICE_EPIC - PromotionListRequestService => PromotionList Service CAUGHT ACTION");
     List<PromotionState> promotionStateList = [];
     return actions.whereType<PromotionListRequest>().asyncMap((event) async {
       promotionStateList.clear();
-      var promotionListQuery = await FirebaseFirestore.instance.collection("promotion").get();
+      var promotionListQuery = await FirebaseFirestore.instance.collection('promotion').get();
 
       promotionListQuery.docs.forEach((element) {
         PromotionState promotionState = PromotionState.fromJson(element.data());
@@ -33,16 +33,23 @@ class PromotionRequestService implements EpicClass<AppState> {
 
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-    debugPrint("PROMOTION_SERVICE_EPIC - PromotionRequestService => Promotion Service CATCHED ACTION");
-
+    debugPrint("PROMOTION_SERVICE_EPIC - PromotionRequestService => Promotion Service CAUGHT ACTION");
+    debugPrint("PROMOTION_SERVICE_EPIC - PromotionRequestService => HERE -1");
     return actions.whereType<PromotionRequest>().asyncMap((event) async {
-      QuerySnapshot promotionSnapshot = await FirebaseFirestore.instance.collection("promotion").where('serviceId', isEqualTo: 'general_1').get();
+      debugPrint("PROMOTION_SERVICE_EPIC - PromotionRequestService => HERE 0");
 
-      if (promotionSnapshot.docs.isNotEmpty)
-        promotionState = PromotionState.fromJson(promotionSnapshot.docs.first.data());
-      else {
+      var promotionSnapshot = await FirebaseFirestore.instance.collection('promotion').get();
+      debugPrint("PROMOTION_SERVICE_EPIC - PromotionRequestService => HERE 1");
+
+      if (promotionSnapshot.docs.isEmpty) {
         promotionState = PromotionState().toEmpty();
+      } else {
+        promotionSnapshot.docs.forEach((element) {
+          promotionState = PromotionState.fromJson(element.data());
+        });
       }
+
+      debugPrint("PROMOTION_SERVICE_EPIC - PromotionRequestService => HERE 3");
     }).expand((element) => [
           PromotionRequestResponse(promotionState),
         ]);
