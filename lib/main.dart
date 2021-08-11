@@ -41,7 +41,7 @@ void main() {
         MultiProvider(
           providers: [
             //ChangeNotifierProvider(create: (_) => NavigationState()),
-            ChangeNotifierProvider(create: (_) => Spinner([], [])),
+            ChangeNotifierProvider(create: (_) => Spinner(true, [], [], [])),
             ChangeNotifierProvider(create: (_) => ReserveList([], OrderReservableState().toEmpty(),[], [], [], [])),
           ],
           child: Buytime(store: store),

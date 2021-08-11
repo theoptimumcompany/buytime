@@ -26,6 +26,7 @@ import 'package:Buytime/reusable/enterExitRoute.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/utils/utils.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -38,7 +39,7 @@ class RServiceList extends StatefulWidget {
   Widget create(BuildContext context) {
     //final pageIndex = context.watch<Spinner>();
     return ChangeNotifierProvider<Spinner>(
-      create: (_) => Spinner([],[]),
+      create: (_) => Spinner(true,[],[],[]),
       child: RServiceList(),
     );
   }
@@ -74,6 +75,7 @@ class RServiceListState extends State<RServiceList> {
     listOfServiceEachRoot = [];
     listDOfVisibility = [];
     listDDOfVisibility = [];
+    List<List<dynamic>> listAdd = [];
     for (int c = 0; c < categories.length; c++) {
       List<ServiceSnippetState> listRoot = [];
       List<bool> internalSpinnerVisibility = [];
@@ -86,12 +88,26 @@ class RServiceListState extends State<RServiceList> {
       listOfServiceEachRoot.add(listRoot);
       listDOfVisibility.add(internalSpinnerVisibility);
       listDDOfVisibility.add(internalSpinnerVisibility);
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        Provider.of<Spinner>(context, listen: false).initSpinner(listDOfVisibility);
-        Provider.of<Spinner>(context, listen: false).initDuplicateSpinner(listDDOfVisibility);
-      });
+      listAdd.add([false, listRoot.length]);
 
+      if(Provider.of<Spinner>(context, listen: false).add.isNotEmpty && Provider.of<Spinner>(context, listen: false).add.length == categories.length){
+        if(Provider.of<Spinner>(context, listen: false).add[c][0]){
+          debugPrint('ADD WAS TRUE');
+          listAdd.last[0] = true;
+        }
+        if(Provider.of<Spinner>(context, listen: false).add[c][1] != listRoot.length){
+          debugPrint('LIST SIZE DIFFERENCE');
+          listAdd.last[0] = false;
+        }
+      }
     }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<Spinner>(context, listen: false).initAdd(listAdd);
+      Provider.of<Spinner>(context, listen: false).initSpinner(listDOfVisibility);
+      Provider.of<Spinner>(context, listen: false).initDuplicateSpinner(listDDOfVisibility);
+      debugPrint('ADD List: $listAdd - ${Provider.of<Spinner>(context, listen: false).add}');
+    });
+
   }
 
   bool startRequest = false;
@@ -214,11 +230,12 @@ class RServiceListState extends State<RServiceList> {
                 icon: Icon(Icons.keyboard_arrow_left, color: Colors.white),
                 onPressed: () {
                   //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_Business()))
+                  Provider.of<Spinner>(context, listen: false).clear();
                   Navigator.pushReplacement(context, EnterExitRoute(enterPage: UI_M_Business(), exitPage: RServiceList(), from: false));
                 },
               ),
               Utils.barTitle(AppLocalizations.of(context).serviceList),
-              listOfServiceEachRoot.isNotEmpty && (StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin ||
+              /*listOfServiceEachRoot.isNotEmpty &&*/ (StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin ||
                   StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman ||
                   StoreProvider.of<AppState>(context).state.user.getRole() == Role.owner ||
                   StoreProvider.of<AppState>(context).state.user.getRole() == Role.manager) ? IconButton(
@@ -314,6 +331,7 @@ class RServiceListState extends State<RServiceList> {
                     return Container(
                       height: SizeConfig.safeBlockVertical * 78.9,
                       child: Column(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
                           categories.isNotEmpty ?
                           Expanded(
@@ -328,29 +346,64 @@ class RServiceListState extends State<RServiceList> {
                                   child: Column(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      ///Category Name
-                                      Padding(
-                                        padding: const EdgeInsets.only(left: 20.0, top: 10.0),
-                                        child: Container(
-                                          height: 36,
-                                          child: Row(
-                                            children: [
-                                              Text(
-                                                categories[i].categoryName,
-                                                textAlign: TextAlign.start,
-                                                style: TextStyle(
-                                                  fontSize: 18,
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          ///Category Name
+                                          Padding(
+                                            padding: const EdgeInsets.only(left: 20.0, top: 10.0),
+                                            child: Container(
+                                              height: 36,
+                                              child: Row(
+                                                children: [
+                                                  Text(
+                                                    categories[i].categoryName,
+                                                    textAlign: TextAlign.start,
+                                                    style: TextStyle(
+                                                      fontSize: 18,
 
-                                                  ///widget.mediaSize.height * 0.019
-                                                  //color: BuytimeTheme.ManagerPrimary.withOpacity(0.8),
-                                                  color: BuytimeTheme.TextBlack,
-                                                  fontFamily: BuytimeTheme.FontFamily,
-                                                  fontWeight: FontWeight.w600,
-                                                ),
-                                              )
-                                            ],
+                                                      ///widget.mediaSize.height * 0.019
+                                                      //color: BuytimeTheme.ManagerPrimary.withOpacity(0.8),
+                                                      color: BuytimeTheme.TextBlack,
+                                                      fontFamily: BuytimeTheme.FontFamily,
+                                                      fontWeight: FontWeight.w600,
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                            ),
                                           ),
-                                        ),
+                                          ///Static add service to category
+                                          canAccessService || canAccess(id(categories[i].categoryAbsolutePath))?
+                                          Material(
+                                              color: Colors.transparent,
+                                              child: InkWell(
+                                                //borderRadius: BorderRadius.all(Radius.circular(10)),
+                                                onTap: () async {
+                                                  StoreProvider.of<AppState>(context).dispatch(SetService(ServiceState().toEmpty()));
+                                                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                                                    Provider.of<Spinner>(context, listen: false).add[i][0] = true;
+                                                    //Provider.of<Spinner>(context, listen: false).initAdd(Provider.of<Spinner>(context, listen: false).add);
+                                                  });
+                                                  //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_CreateService(categoryId: categoryRootList[i].id)),);
+                                                  Navigator.push(context, EnterExitRoute(enterPage: UI_CreateService(categoryId: id(categories[i].categoryAbsolutePath)), exitPage: RServiceList(), from: true));
+                                                },
+                                                child: Container(
+                                                    padding: const EdgeInsets.only(right: 20.0, top: 10.0),
+                                                    child: Text(
+                                                      AppLocalizations.of(context).addNew,
+                                                      textAlign: TextAlign.start,
+                                                      style: TextStyle(
+                                                          fontSize: 16,
+                                                          ///widget.mediaSize.height * 0.019
+                                                          //color: BuytimeTheme.ManagerPrimary.withOpacity(0.5),
+                                                          color: BuytimeTheme.ManagerPrimary,
+                                                          fontFamily: BuytimeTheme.FontFamily,
+                                                          fontWeight: FontWeight.w600,
+                                                          letterSpacing: 0.15),
+                                                    )),
+                                              )) : Container(),
+                                        ],
                                       ),
                                       ///Divider under category name
                                       Divider(
@@ -359,68 +412,6 @@ class RServiceListState extends State<RServiceList> {
                                         color: BuytimeTheme.SymbolLightGrey,
                                         thickness: 0.5,
                                       ),
-                                      ///Static add service to category
-                                      canAccessService || canAccess(id(categories[i].categoryAbsolutePath))? Material(
-                                          color: Colors.transparent,
-                                          child: InkWell(
-                                            //borderRadius: BorderRadius.all(Radius.circular(10)),
-                                            onTap: () async {
-                                              StoreProvider.of<AppState>(context).dispatch(SetService(ServiceState().toEmpty()));
-                                              //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_CreateService(categoryId: categoryRootList[i].id)),);
-                                              Navigator.push(context, EnterExitRoute(enterPage: UI_CreateService(categoryId: id(categories[i].categoryAbsolutePath)), exitPage: RServiceList(), from: true));
-                                            },
-                                            child: Container(
-                                              height: 56,
-                                              child: Row(
-                                                // mainAxisAlignment: MainAxisAlignment.center,
-                                                children: [
-                                                  Padding(
-                                                    padding: EdgeInsets.only(left: mediaWidth * 0.12, right: mediaWidth * 0.07),
-                                                    child: Container(
-                                                      child: Icon(Icons.add_box_rounded,
-                                                          color: BuytimeTheme.ManagerPrimary.withOpacity(0.5),
-                                                          size: mediaWidth * 0.07),
-                                                    ),
-                                                  ),
-                                                  Expanded(
-                                                    child: Container(
-                                                      height: 56,
-                                                      decoration: BoxDecoration(
-                                                        border: Border(
-                                                          bottom: BorderSide(
-                                                              width: .5,
-                                                              //color: BuytimeTheme.ManagerPrimary.withOpacity(0.25)
-                                                              color: BuytimeTheme.SymbolLightGrey
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      child: Row(
-                                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                        children: [
-                                                          Container(
-                                                              child: Text(
-                                                                AppLocalizations.of(context).addA + ' ' + categories[i].categoryName,
-                                                                textAlign: TextAlign.start,
-                                                                style: TextStyle(
-                                                                    fontSize: 16,
-                                                                    ///widget.mediaSize.height * 0.019
-                                                                    //color: BuytimeTheme.ManagerPrimary.withOpacity(0.5),
-                                                                    color: BuytimeTheme.ManagerPrimary,
-                                                                    fontFamily: BuytimeTheme.FontFamily,
-                                                                    fontWeight: FontWeight.w600,
-                                                                    letterSpacing: 0.15),
-                                                              )),
-                                                          /*Container(
-                                                        child: Icon(Icons.keyboard_arrow_right, color: BuytimeTheme.SymbolGrey, size: 24),
-                                                      ),*/
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          )) : Container(),
                                       ///Service List
                                       // Container(
                                       //   //height: listOfServiceEachRoot.length > 0 ? listOfServiceEachRoot[i].length * 44.00 : 50,
@@ -648,11 +639,99 @@ class RServiceListState extends State<RServiceList> {
                                       // ),
                                       Consumer<Spinner>(
                                         builder: (_, spinnerState, child) {
+                                          int arraySize = 0;
+                                          listOfServiceEachRoot.length > 0 ?
+                                          Provider.of<Spinner>(context, listen: false).add.isNotEmpty && Provider.of<Spinner>(context, listen: false).add[i][0] ?
+                                            arraySize = listOfServiceEachRoot[i].length + 1 :
+                                            arraySize = listOfServiceEachRoot[i].length : arraySize = 0;
+
                                           return ListView.builder(
                                             shrinkWrap: true,
                                             physics: const NeverScrollableScrollPhysics(),
-                                            itemCount: listOfServiceEachRoot.length > 0 ? listOfServiceEachRoot[i].length : 0,
+                                            itemCount: arraySize,
                                             itemBuilder: (context, index) {
+
+                                              if(Provider.of<Spinner>(context, listen: false).add.isNotEmpty && Provider.of<Spinner>(context, listen: false).add[i][0] && index == listOfServiceEachRoot[i].length && arraySize == listOfServiceEachRoot[i].length + 1 ){
+                                                debugPrint('not full service length');
+                                                return Column(
+                                                  children: [
+                                                    Container(
+                                                      margin: EdgeInsets.only(left: 18, top: 7, bottom: 1),
+                                                      padding: EdgeInsets.only(bottom: 7),
+                                                      child: Row(
+                                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                        children: [
+                                                          ///Image
+                                                          Container(
+                                                            height: 92,
+                                                            width: 92,
+                                                            child: Utils.imageShimmer(92, 92),
+                                                          ),
+                                                          Expanded(
+                                                            child: GestureDetector(
+                                                              onTap: () {},
+                                                              child: Container(
+                                                                height: 56,
+                                                                child: Row(
+                                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                  children: [
+                                                                    ///Service Name
+                                                                    Flexible(
+                                                                      child: Container(
+                                                                          margin: EdgeInsets.only(left: 10),
+                                                                        child: Utils.textShimmer(100, 16),
+                                                                      )
+                                                                    ),
+                                                                    ///Visibility & Copy
+                                                                    Container(
+                                                                      child: Row(
+                                                                        mainAxisAlignment: MainAxisAlignment.end,
+                                                                        children: [
+                                                                          ///Visibility
+                                                                          GestureDetector(
+                                                                            onTap: (){},
+                                                                            child: Padding(
+                                                                              //padding: EdgeInsets.only(left: mediaWidth * 0.12, right: mediaWidth * 0.07),
+                                                                                padding: EdgeInsets.only(left: 0),
+                                                                                child: Container(
+                                                                                  child: Utils.iconShimmer(Icon(Icons.visibility_off, color: BuytimeTheme.SymbolGrey, size: mediaWidth * 0.07)),
+                                                                                )),
+                                                                          ),
+                                                                          ///Copy
+                                                                          Container(
+                                                                            padding: EdgeInsets.only(left: 5.0, right: 5.0),
+                                                                            child: spinnerState.getDuplicateSpinner(i, index) ?
+                                                                            Padding(
+                                                                              padding: const EdgeInsets.all(5.0),
+                                                                              child: spinner,
+                                                                            ) :
+                                                                            IconButton(
+                                                                                onPressed: () {},
+                                                                                icon: Utils.iconShimmer(Icon(Icons.copy, color: BuytimeTheme.SymbolGrey, size: 24))),
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    )
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    Container(
+                                                      margin: EdgeInsets.only(left: 110),
+                                                      decoration: BoxDecoration(
+                                                        border: Border(
+                                                          bottom: BorderSide(width: 1.0, color: BuytimeTheme.DividerGrey),
+                                                        ),
+                                                      ),
+                                                    )
+                                                  ],
+                                                );
+                                              }
+
                                               debugPrint('RUI_M_service_list => SERVICE NAME: ${listOfServiceEachRoot[i][index].serviceName}');
                                               canWorkerAccessService = canWorkerAccess(id(id(categories[i].categoryAbsolutePath)));
                                               Widget iconVisibility;
@@ -679,6 +758,7 @@ class RServiceListState extends State<RServiceList> {
                                                   }
                                                   break;
                                               }
+
                                               return Material(
                                                   color: Colors.transparent,
                                                   child: InkWell(
@@ -765,102 +845,158 @@ class RServiceListState extends State<RServiceList> {
                                                       categories.sort((a,b) => a.categoryName.compareTo(b.categoryName));
                                                       setServiceLists(categories);*/
                                                         },
-                                                        child: Container(
-                                                          child: Row(
-                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                            children: [
-                                                              GestureDetector(
-                                                                onTap: canWorkerAccessService && canEditVisibility() ? () {
-                                                                  /*setState(() {
+                                                        child: Column(
+                                                          children: [
+                                                            Container(
+                                                              margin: EdgeInsets.only(left: 18, top: 7, bottom: 1),
+                                                              padding: EdgeInsets.only(bottom: 7),
+                                                              child: Row(
+                                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                children: [
+                                                                  ///Image
+                                                                  GestureDetector(
+                                                                    key: Key('service_${i}_${index}_key'),
+                                                                    onTap: () {
+                                                                      debugPrint('RUI_M_service_list => TAP SERVICE in Gesture');
+                                                                      /// TODO we are not sure about this, look at the history of this if @Nipuna
+                                                                      if(StoreProvider.of<AppState>(context).state.category.id != listOfServiceEachRoot[i][index].serviceAbsolutePath.split('/')[1]){
+                                                                        debugPrint('RUI_M_service_list => NOT SAME CATEGORY');
+                                                                        StoreProvider.of<AppState>(context).dispatch(CategoryRequest(listOfServiceEachRoot[i][index].serviceAbsolutePath.split('/')[1]));
+                                                                      }
 
-                                                                });*/
-                                                                  switch (listOfServiceEachRoot[i][index].serviceVisibility) {
-                                                                    case 'Active':
-                                                                      listOfServiceEachRoot[i][index].serviceVisibility = 'Deactivated';
-                                                                      break;
-                                                                    case 'Deactivated':
-                                                                      listOfServiceEachRoot[i][index].serviceVisibility = 'Invisible';
-                                                                      break;
-                                                                    case 'Invisible':
-                                                                      listOfServiceEachRoot[i][index].serviceVisibility = 'Active';
-                                                                      break;
-                                                                  }
-                                                                  Provider.of<Spinner>(context, listen: false).updateSpinner(listDOfVisibility, i, index);
-                                                                  debugPrint('RUI_M_service_list => CALLING UPDATE SPINNER');
-                                                                  debugPrint('RUI_M_service_list => SERVICE ID: ${id(listOfServiceEachRoot[i][index].serviceAbsolutePath)}');
-
-                                                                  ///Aggiorno Database
-                                                                  StoreProvider.of<AppState>(context).dispatch(SetServiceListVisibilityOnFirebase(id(listOfServiceEachRoot[i][index].serviceAbsolutePath), listOfServiceEachRoot[i][index].serviceVisibility));
-                                                                } : null,
-                                                                child: Padding(
-                                                                    padding: EdgeInsets.only(left: mediaWidth * 0.12, right: mediaWidth * 0.07),
+                                                                      //StoreProvider.of<AppState>(context).dispatch(SetService(listOfServiceEachRoot[i][index]));
+                                                                      //Navigator.push(context, MaterialPageRoute(builder: (context) => UI_EditService()),);
+                                                                      Navigator.push(context, EnterExitRoute(enterPage: UI_EditService(id(listOfServiceEachRoot[i][index].serviceAbsolutePath),listOfServiceEachRoot[i][index].serviceName), exitPage: RServiceList(), from: true));
+                                                                    },
                                                                     child: Container(
-                                                                      child: iconVisibility,
-                                                                    )),
-                                                              ),
-                                                              Expanded(
-                                                                child: GestureDetector(
-                                                                  key: Key('service_${i}_${index}_key'),
-                                                                  onTap: () {
-                                                                    debugPrint('RUI_M_service_list => TAP SERVICE in Gesture');
-                                                                    /// TODO we are not sure about this, look at the history of this if @Nipuna
-                                                                    if(StoreProvider.of<AppState>(context).state.category.id != listOfServiceEachRoot[i][index].serviceAbsolutePath.split('/')[1]){
-                                                                      debugPrint('RUI_M_service_list => NOT SAME CATEGORY');
-                                                                      StoreProvider.of<AppState>(context).dispatch(CategoryRequest(listOfServiceEachRoot[i][index].serviceAbsolutePath.split('/')[1]));
-                                                                    }
-
-                                                                    //StoreProvider.of<AppState>(context).dispatch(SetService(listOfServiceEachRoot[i][index]));
-                                                                    //Navigator.push(context, MaterialPageRoute(builder: (context) => UI_EditService()),);
-                                                                    Navigator.push(context, EnterExitRoute(enterPage: UI_EditService(id(listOfServiceEachRoot[i][index].serviceAbsolutePath),listOfServiceEachRoot[i][index].serviceName), exitPage: RServiceList(), from: true));
-                                                                  },
-                                                                  child: Container(
-                                                                    height: 56,
-                                                                    decoration: BoxDecoration(
-                                                                      border: Border(
-                                                                        bottom: BorderSide(width: 1.0, color: BuytimeTheme.DividerGrey),
+                                                                      height: 92,
+                                                                      width: 92,
+                                                                      child: CachedNetworkImage(
+                                                                        imageUrl: Utils.version200(listOfServiceEachRoot[i][index].serviceImage),
+                                                                        imageBuilder: (context, imageProvider) => Container(
+                                                                          //margin: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 5), ///5%
+                                                                          height: 92,
+                                                                          width: 92,
+                                                                          decoration: BoxDecoration(
+                                                                            //borderRadius: BorderRadius.all(Radius.circular(SizeConfig.blockSizeHorizontal * 5)), ///12.5%
+                                                                              image: DecorationImage(image: imageProvider, fit: BoxFit.cover)),
+                                                                        ),
+                                                                        placeholder: (context, url) => Container(
+                                                                            height: 92,
+                                                                            width: 92,
+                                                                            child: Utils.imageShimmer(92, 92)
+                                                                        ),
+                                                                        errorWidget: (context, url, error) => Icon(Icons.error),
                                                                       ),
                                                                     ),
-                                                                    child: Row(
-                                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                      children: [
-                                                                        Flexible(
-                                                                          child: Container(
-                                                                              child: Text(
-                                                                                Utils.retriveField(Localizations.localeOf(context).languageCode, listOfServiceEachRoot[i][index].serviceName),
-                                                                                textAlign: TextAlign.start,
-                                                                                overflow: TextOverflow.ellipsis,
-                                                                                style: TextStyle(
-                                                                                  fontSize: 16,
-                                                                                  ///widget.mediaSize.height * 0.019
-                                                                                  color: BuytimeTheme.TextBlack,
-                                                                                  fontFamily: BuytimeTheme.FontFamily,
-                                                                                  fontWeight: FontWeight.w400,
-                                                                                ),
-                                                                              )),
+                                                                  ),
+                                                                  Expanded(
+                                                                    child: GestureDetector(
+                                                                      key: Key('service_${i}_${index}_key'),
+                                                                      onTap: () {
+                                                                        debugPrint('RUI_M_service_list => TAP SERVICE in Gesture');
+                                                                        /// TODO we are not sure about this, look at the history of this if @Nipuna
+                                                                        if(StoreProvider.of<AppState>(context).state.category.id != listOfServiceEachRoot[i][index].serviceAbsolutePath.split('/')[1]){
+                                                                          debugPrint('RUI_M_service_list => NOT SAME CATEGORY');
+                                                                          StoreProvider.of<AppState>(context).dispatch(CategoryRequest(listOfServiceEachRoot[i][index].serviceAbsolutePath.split('/')[1]));
+                                                                        }
+
+                                                                        //StoreProvider.of<AppState>(context).dispatch(SetService(listOfServiceEachRoot[i][index]));
+                                                                        //Navigator.push(context, MaterialPageRoute(builder: (context) => UI_EditService()),);
+                                                                        Navigator.push(context, EnterExitRoute(enterPage: UI_EditService(id(listOfServiceEachRoot[i][index].serviceAbsolutePath),listOfServiceEachRoot[i][index].serviceName), exitPage: RServiceList(), from: true));
+                                                                      },
+                                                                      child: Container(
+                                                                        height: 92,
+                                                                        child: Row(
+                                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                          children: [
+                                                                            ///Service Name
+                                                                            Flexible(
+                                                                              child: Container(
+                                                                                  margin: EdgeInsets.only(left: 10),
+                                                                                  child: Text(
+                                                                                    Utils.retriveField(Localizations.localeOf(context).languageCode, listOfServiceEachRoot[i][index].serviceName),
+                                                                                    textAlign: TextAlign.start,
+                                                                                    overflow: TextOverflow.ellipsis,
+                                                                                    style: TextStyle(
+                                                                                      fontSize: 16,
+                                                                                      ///widget.mediaSize.height * 0.019
+                                                                                      color: BuytimeTheme.TextBlack,
+                                                                                      fontFamily: BuytimeTheme.FontFamily,
+                                                                                      fontWeight: FontWeight.w400,
+                                                                                    ),
+                                                                                  )),
+                                                                            ),
+                                                                            ///Visibility & Copy
+                                                                            Container(
+                                                                              child: Row(
+                                                                                mainAxisAlignment: MainAxisAlignment.end,
+                                                                                children: [
+                                                                                  ///Visibility
+                                                                                  GestureDetector(
+                                                                                    onTap: canWorkerAccessService && canEditVisibility() ? () {
+                                                                                      switch (listOfServiceEachRoot[i][index].serviceVisibility) {
+                                                                                        case 'Active':
+                                                                                          listOfServiceEachRoot[i][index].serviceVisibility = 'Deactivated';
+                                                                                          break;
+                                                                                        case 'Deactivated':
+                                                                                          listOfServiceEachRoot[i][index].serviceVisibility = 'Invisible';
+                                                                                          break;
+                                                                                        case 'Invisible':
+                                                                                          listOfServiceEachRoot[i][index].serviceVisibility = 'Active';
+                                                                                          break;
+                                                                                      }
+                                                                                      Provider.of<Spinner>(context, listen: false).updateSpinner(listDOfVisibility, i, index);
+                                                                                      debugPrint('RUI_M_service_list => CALLING UPDATE SPINNER');
+                                                                                      debugPrint('RUI_M_service_list => SERVICE ID: ${id(listOfServiceEachRoot[i][index].serviceAbsolutePath)}');
+
+                                                                                      ///Aggiorno Database
+                                                                                      StoreProvider.of<AppState>(context).dispatch(SetServiceListVisibilityOnFirebase(id(listOfServiceEachRoot[i][index].serviceAbsolutePath), listOfServiceEachRoot[i][index].serviceVisibility));
+                                                                                    } : null,
+                                                                                    child: Padding(
+                                                                                      //padding: EdgeInsets.only(left: mediaWidth * 0.12, right: mediaWidth * 0.07),
+                                                                                        padding: EdgeInsets.only(left: 0),
+                                                                                        child: Container(
+                                                                                          child: iconVisibility,
+                                                                                        )),
+                                                                                  ),
+                                                                                  ///Copy
+                                                                                  Container(
+                                                                                    padding: EdgeInsets.only(left: 5.0, right: 5.0),
+                                                                                    child: spinnerState.getDuplicateSpinner(i, index) ?
+                                                                                    Padding(
+                                                                                      padding: const EdgeInsets.all(5.0),
+                                                                                      child: spinner,
+                                                                                    ) :
+                                                                                    IconButton(
+                                                                                        onPressed: () {
+                                                                                          /// chiamare la epic per duplicare il servizio.
+                                                                                          StoreProvider.of<AppState>(context).dispatch(DuplicateService(id(listOfServiceEachRoot[i][index].serviceAbsolutePath)));
+                                                                                          /// far partire un caricamento e bloccare tutti i duplicates
+                                                                                          Provider.of<Spinner>(context, listen: false).updateDuplicateSpinner(listDDOfVisibility, i, index);
+                                                                                        },
+                                                                                        icon: Icon(Icons.copy, color: BuytimeTheme.SymbolGrey, size: 24)),
+                                                                                  ),
+                                                                                ],
+                                                                              ),
+                                                                            )
+                                                                          ],
                                                                         ),
-                                                                        Container(
-                                                                          padding: EdgeInsets.only(left: 5.0, right: 5.0),
-                                                                          child: spinnerState.getDuplicateSpinner(i, index) ?
-                                                                          Padding(
-                                                                            padding: const EdgeInsets.all(5.0),
-                                                                            child: spinner,
-                                                                          ) :
-                                                                          IconButton(
-                                                                              onPressed: () {
-                                                                                /// chiamare la epic per duplicare il servizio.
-                                                                                StoreProvider.of<AppState>(context).dispatch(DuplicateService(id(listOfServiceEachRoot[i][index].serviceAbsolutePath)));
-                                                                                /// far partire un caricamento e bloccare tutti i duplicates
-                                                                                Provider.of<Spinner>(context, listen: false).updateDuplicateSpinner(listDDOfVisibility, i, index);
-                                                                              },
-                                                                              icon: Icon(Icons.copy, color: BuytimeTheme.SymbolGrey, size: 24)),
-                                                                        ),
-                                                                      ],
+                                                                      ),
                                                                     ),
                                                                   ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                            Container(
+                                                              margin: EdgeInsets.only(left: 110),
+                                                              decoration: BoxDecoration(
+                                                                border: Border(
+                                                                  bottom: BorderSide(width: 1.0, color: BuytimeTheme.DividerGrey),
                                                                 ),
                                                               ),
-                                                            ],
-                                                          ),
+                                                            )
+                                                          ],
                                                         ),
                                                       ),
                                                     ),
@@ -906,31 +1042,43 @@ Widget spinner = Container(
 );
 
 class Spinner with ChangeNotifier{
+  bool load;
+  List<List<dynamic>> add;
   List<List<bool>> spinners;
   List<List<bool>> duplicateSpinners;
-  Spinner(this.spinners, this.duplicateSpinners);
+  Spinner(this.load, this.add, this.spinners, this.duplicateSpinners);
 
+  initLoad(bool load){
+    this.load = load;
+    debugPrint('LOAD INIT');
+    notifyListeners();
+  }
+  initAdd(List<List<dynamic>> add){
+    this.add = add;
+    debugPrint('ADD INIT');
+    notifyListeners();
+  }
   initSpinner(List<List<bool>> spinnerList){
-    spinners = spinnerList;
+    this.spinners = spinnerList;
     debugPrint('SPINNER INIT');
     notifyListeners();
   }
   initDuplicateSpinner(List<List<bool>> spinnerList){
-    duplicateSpinners = spinnerList;
+    this.duplicateSpinners = spinnerList;
     debugPrint('DUPLICATE SPINNER INIT');
     notifyListeners();
   }
 
   updateSpinner(List<List<bool>> spinnerList, int i, int index){
     spinnerList[i][index] = true;
-    spinners = spinnerList;
+    this.spinners = spinnerList;
     debugPrint('SPINNER UPDATE VISIBILITY: ${spinners[i][index]}');
     notifyListeners();
   }
 
    updateDuplicateSpinner(List<List<bool>> spinnerList, int i, int index){
     spinnerList[i][index] = true;
-    duplicateSpinners = spinnerList;
+    this.duplicateSpinners = spinnerList;
     debugPrint('SPINNER DUPLICATE UPDATE VISIBILITY: ${duplicateSpinners[i][index]}');
     notifyListeners();
   }
@@ -957,6 +1105,13 @@ class Spinner with ChangeNotifier{
   List<List<bool>> getDuplicateSpinnerList(){
     //debugPrint('SPINNER GET VISIBILITY: ${spinners[i][index]}');
     return duplicateSpinners;
+  }
+
+  clear(){
+    this.load = false;
+    this.add = [];
+    this.spinners = [];
+    this.duplicateSpinners = [];
   }
 
 }

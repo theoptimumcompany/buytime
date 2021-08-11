@@ -25,6 +25,9 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
+
+import 'RUI_M_service_list.dart';
 
 class UI_EditService extends StatefulWidget {
   String serviceId;
@@ -455,7 +458,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                     tmpService.serviceSlot.forEach((element) {
                                                       debugPrint('UI_M_edit_service => MAX QUANTITY: ${element.maxQuantity}');
                                                     });
-
+                                                    Provider.of<Spinner>(context, listen: false).initLoad(true);
                                                     StoreProvider.of<AppState>(context).dispatch(UpdateService(tmpService));
                                                   }
                                                 }),

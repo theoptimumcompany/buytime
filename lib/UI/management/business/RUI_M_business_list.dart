@@ -276,7 +276,7 @@ class RBusinessListState extends State<RBusinessList> {
                                         //businessSnippetListState.add(serviceListSnippetState);
                                       });
 
-                                    //  debugPrint('RUI_M_business_list => BUSINESS SNIPPET | ${businessState.name}');
+                                      // debugPrint('RUI_M_business_list => BUSINESS SNIPPET | ${businessState.name}');
 
                                       for(int i = 0; i < businessListState.length; i++){
                                         if(serviceListSnippetState.businessId != null) {

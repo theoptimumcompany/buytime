@@ -23,6 +23,9 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
+
+import 'RUI_M_service_list.dart';
 
 class UI_CreateService extends StatefulWidget {
   @override
@@ -102,18 +105,20 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
   void setCategoryList() {
     List<dynamic> snippet = StoreProvider.of<AppState>(context).state.serviceListSnippetState.businessSnippet;
     List<Parent> items = [];
+    if(snippet != null && snippet.isNotEmpty){
       for (var i = 0; i < snippet.length; i++) {
         String categoryPath = snippet[i].categoryAbsolutePath;
         List<String> categoryRoute = categoryPath.split('/');
         if (categoryRoute.first == StoreProvider.of<AppState>(context).state.serviceListSnippetState.businessId) {
-        items.add(
-          Parent(
-            name: snippet[i].categoryName,
-            id: categoryRoute.last,
-            level: categoryRoute.length - 1,
-            //parentRootId: categoryRoute[1],
-          ),
-        );
+          items.add(
+            Parent(
+              name: snippet[i].categoryName,
+              id: categoryRoute.last,
+              level: categoryRoute.length - 1,
+              //parentRootId: categoryRoute[1],
+            ),
+          );
+        }
       }
     }
     categoryList = items;
@@ -141,31 +146,39 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
 
   _buildChoiceList() {
     List<Widget> choices = [];
-    categoryList.forEach((item) {
+    debugPrint('size: ${categoryList.length}');
+    for(int i = 0; i < categoryList.length; i++){
       choices.add(Container(
         padding: const EdgeInsets.all(2.0),
         child: ChoiceChip(
-          label: Text(item.name),
-          selected: selectedCategoryList.any((element) => element.id == item.id),
+          label: Text(categoryList[i].name),
+          selected: selectedCategoryList.any((element) => element.id == categoryList[i].id),
           selectedColor: Theme.of(context).accentColor,
-          labelStyle: TextStyle(color: selectedCategoryList.any((element) => element.id == item.id) ? BuytimeTheme.TextBlack : canAccess(item.id) ? BuytimeTheme.TextWhite : BuytimeTheme.TextBlack),
-          onSelected: canAccess(item.id) ? (selected) {
-            if (widget.categoryId != null && widget.categoryId != "" && searchCategoryRoot(item.id) != widget.categoryId) {
+          labelStyle: TextStyle(color: selectedCategoryList.any((element) => element.id == categoryList[i].id) ? BuytimeTheme.TextBlack : canAccess(categoryList[i].id) ? BuytimeTheme.TextWhite : BuytimeTheme.TextBlack),
+          onSelected: canAccess(categoryList[i].id) ? (selected) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              Provider.of<Spinner>(context, listen: false).add[i][0] = false;
+              //Provider.of<Spinner>(context, listen: false).initAdd(Provider.of<Spinner>(context, listen: false).add);
+            });
+            if (widget.categoryId != null && widget.categoryId != "" && searchCategoryRoot(categoryList[i].id) != widget.categoryId) {
               return null;
             } else {
               setState(() {
                 selectedCategoryList.clear();
-                selectedCategoryList.add(item);
+                selectedCategoryList.add(categoryList[i]);
                 validateChosenCategories();
               });
-
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                Provider.of<Spinner>(context, listen: false).add[i][0] = true;
+                //Provider.of<Spinner>(context, listen: false).initAdd(Provider.of<Spinner>(context, listen: false).add);
+              });
               ///Aggiorno lo store con la lista di categorie selezionate salvando id e rootId
               StoreProvider.of<AppState>(context).dispatch(SetServiceSelectedCategories(selectedCategoryList));
             }
           } : null,
         ),
       ));
-    });
+    }
     return choices;
   }
 
@@ -305,6 +318,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                     //  debugPrint('UI_M_create_service => Service Name: ${tmpService.name}');
                                     //  debugPrint('UI_M_create_service => Service Description: ${tmpService.description}');
                                     //  debugPrint('UI_M_create_service => Service Address: ${tmpService.serviceBusinessAddress}');
+                                      Provider.of<Spinner>(context, listen: false).initLoad(true);
                                       StoreProvider.of<AppState>(context).dispatch(CreateService(tmpService));
 
                                     }
