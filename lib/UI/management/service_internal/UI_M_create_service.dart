@@ -285,6 +285,10 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                 child: IconButton(
                                     icon: Icon(Icons.keyboard_arrow_left, color: Colors.white, size: 24),
                                     onPressed: () {
+                                      Provider.of<Spinner>(context, listen: false).add.forEach((element) {
+                                        element[0] = false;
+                                      });
+                                      Provider.of<Spinner>(context, listen: false).initAdd( Provider.of<Spinner>(context, listen: false).add);
                                       //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_ServiceList()),);
                                       Navigator.of(context).pop();
                                       //Navigator.pushReplacement(context, EnterExitRoute(enterPage: UI_M_ServiceList(), exitPage: UI_CreateService(), from: false));
