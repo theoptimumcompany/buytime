@@ -410,19 +410,26 @@ class Utils {
       });
     }
     bool isName = false;
+    bool isDescription = false;
     bool fieldIsEqual = true;
     bool translating = true;
 
     if(field == AppLocalizations.of(context).name)
       isName = true;
+    else if(field == AppLocalizations.of(context).description)
+      isDescription = true;
 
     if(isName){
       debugPrint('Field of the Name');
       if(retriveField(myLanguage, stateField) != retriveField(myLanguage, StoreProvider.of<AppState>(context).state.serviceState.name))
         fieldIsEqual = false;
-    }else{
+    }else if(isDescription){
       debugPrint('Field of the Description');
       if(retriveField(myLanguage, stateField) != retriveField(myLanguage, StoreProvider.of<AppState>(context).state.serviceState.description))
+        fieldIsEqual = false;
+    }else{
+      debugPrint('Field of the condition');
+      if(retriveField(myLanguage, stateField) != retriveField(myLanguage, StoreProvider.of<AppState>(context).state.serviceState.condition))
         fieldIsEqual = false;
     }
 
@@ -637,8 +644,10 @@ class Utils {
                           debugPrint('MultiLingualTranslate => $serviceField');
                           if(isName)
                             StoreProvider.of<AppState>(context).dispatch(SetServiceName(serviceField));
-                          else
+                          else if(isDescription)
                             StoreProvider.of<AppState>(context).dispatch(SetServiceDescription(serviceField));
+                          else
+                            StoreProvider.of<AppState>(context).dispatch(SetServiceCondition(serviceField));
                           //nextPage();
                           Navigator.of(context).pop();
                         },

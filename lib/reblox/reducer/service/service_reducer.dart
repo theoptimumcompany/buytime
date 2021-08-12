@@ -207,6 +207,13 @@ class SetServiceDescription {
 
   String get description => _description;
 }
+class SetServiceCondition {
+  String _condition;
+
+  SetServiceCondition(this._condition);
+
+  String get condition => _condition;
+}
 class SetServiceAddress {
   String _address;
 
@@ -360,6 +367,10 @@ ServiceState serviceReducer(ServiceState state, action) {
   }
   if (action is SetServiceDescription) {
     serviceState.description = action.description;
+    return serviceState;
+  }
+  if (action is SetServiceCondition) {
+    serviceState.condition = action.condition;
     return serviceState;
   }
   if (action is SetServiceAddress) {
