@@ -392,7 +392,7 @@ class ServiceListByIdsRequestNavigateService implements EpicClass<AppState> {
 
       for(int i = 0; i < event.serviceIds.length; i++){
         CollectionReference servicesFirebase = FirebaseFirestore.instance.collection("service");
-        Query query = servicesFirebase.where("serviceId", isEqualTo: event.serviceIds[i]);
+        Query query = servicesFirebase.where("serviceId", isEqualTo: event.serviceIds[i]).where("visibility", isEqualTo: 'Active');
 
         /// 1 READ - ? DOC
         //   query = query.where("id_category", isEqualTo: categoryInviteState.id_category);

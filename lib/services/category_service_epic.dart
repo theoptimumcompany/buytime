@@ -69,6 +69,111 @@ class CategoryListRequestService implements EpicClass<AppState> {
   }
 }
 
+///Normal explorer
+// class AllCategoryListRequestService implements EpicClass<AppState> {
+//   StatisticsState statisticsState;
+//   List<CategoryState> categoryStateList;
+//   List<ServiceState> serviceStateList;
+//   List<BusinessState> businessStateList;
+//   List<ServiceListSnippetState> serviceListSnippetListState;
+//
+//   @override
+//   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
+//     debugPrint("AllCategoryListRequestService - AllCategoryListRequestService => CATCHED ACTION");
+//     return actions.whereType<AllRequestListCategory>().asyncMap((event) async {
+//       QuerySnapshot businessListFromFirebase;
+//       businessStateList = [];
+//       businessListFromFirebase = await FirebaseFirestore.instance
+//           .collection("business")
+//           .where("draft", isEqualTo: false)
+//           .get();
+//
+//       List<QuerySnapshot> queryList = [];
+//       categoryStateList = [];
+//       serviceStateList = [];
+//       serviceListSnippetListState = [];
+//       List<String> tmpBusinessIdList = [];
+//
+//       CollectionReference servicesFirebase = FirebaseFirestore.instance.collection("service");
+//       Query query;
+//
+//       if (store.state.area != null && store.state.area.areaId != null && store.state.area.areaId.isNotEmpty) {
+//         query = servicesFirebase
+//             .where("tag", arrayContains: store.state.area.areaId)
+//             .where("visibility", isEqualTo: 'Active');
+//       } else {
+//         query = servicesFirebase
+//             .where("visibility", isEqualTo: 'Active');
+//       }
+//
+//       for (int i = 0; i < businessListFromFirebase.docs.length; i++) {
+//         /// TODO: replace with category from snippet
+//         BusinessState businessState = BusinessState.fromJson(businessListFromFirebase.docs[i].data());
+//         businessStateList.add(businessState);
+//         await query.get().then((value) {
+//           value.docs.forEach((element) {
+//             ServiceState serviceState = ServiceState.fromJson(element.data());
+//             if(businessState.id_firestore == serviceState.businessId)
+//               serviceStateList.add(serviceState);
+//           });
+//         });
+//         /*QuerySnapshot snapshot = await FirebaseFirestore.instance
+//             /// 1 READ - ? DOC
+//             .collection("business")
+//             .doc(businessListFromFirebase.docs[i].id)
+//             .collection("category")
+//             //.where("level", isEqualTo: 0)
+//             .limit(10)
+//             .get();
+//         snapshot.docs.forEach((element) {
+//           CategoryState categoryState = CategoryState.fromJson(element.data());
+//           categoryState.businessId = businessListFromFirebase.docs[i].id;
+//           categoryState.id = element.id;
+//           categoryStateList.add(categoryState);
+//         });*/
+//         /// END TODO
+//         tmpBusinessIdList.add(businessListFromFirebase.docs[i].id);
+//         var servicesFirebaseShadow = await FirebaseFirestore.instance.collection("business").doc(businessListFromFirebase.docs[i].id).collection('service_list_snippet').get();
+//         if (servicesFirebaseShadow.docs.isNotEmpty){
+//           ServiceListSnippetState tmp = ServiceListSnippetState.fromJson(servicesFirebaseShadow.docs.first.data());
+//           serviceListSnippetListState.add(tmp);
+//           tmp.businessSnippet.forEach((category) {
+//             //String categoryId = category.categoryAbsolutePath.split('/')[1];
+//             String businessId = category.categoryAbsolutePath.split('/')[0];
+//             if(businessId == businessState.id_firestore){
+//               CategoryState categoryState = CategoryState().toEmpty();
+//               categoryState.businessId = businessId;
+//               categoryState.id = category.categoryAbsolutePath.split('/').last;
+//               categoryState.name = category.categoryName;
+//               categoryState.categoryImage = category.categoryImage;
+//               if(category.categoryAbsolutePath.split('/').length == 2){
+//                 categoryState.level = 0;
+//                 categoryState.parent = Parent(id: 'no_parent');
+//               }else{
+//                 categoryState.level = 1;
+//                 categoryState.parent = Parent(id: category.categoryAbsolutePath.split('/')[1]);
+//               }
+//               categoryState.customTag = category.tags.isNotEmpty ? category.tags.first : '';
+//               categoryStateList.add(categoryState);
+//             }
+//           });
+//         }
+//       }
+//       debugPrint('CATEGORY_SERVICE_EPIC - AllCategoryListRequestService => CATEGORY LENGHT: ${categoryStateList.length}');
+//       debugPrint("CATEGORY_SERVICE_EPIC - AllCategoryListRequestService => Return list with ${categoryStateList.length}");
+//       if (categoryStateList.isEmpty) categoryStateList.add(CategoryState());
+//       if (serviceStateList.isEmpty) serviceStateList.add(ServiceState());
+//     }).expand((element) => [
+//           BusinessListReturned(businessStateList),
+//           CategoryListReturned(categoryStateList),
+//           ServiceListReturned(serviceStateList),
+//           ServiceListSnippetListRequestResponse(serviceListSnippetListState),
+//           UpdateStatistics(statisticsState),
+//         ]);
+//   }
+// }
+
+///Real time explorer
 class AllCategoryListRequestService implements EpicClass<AppState> {
   StatisticsState statisticsState;
   List<CategoryState> categoryStateList;
@@ -93,29 +198,29 @@ class AllCategoryListRequestService implements EpicClass<AppState> {
       serviceListSnippetListState = [];
       List<String> tmpBusinessIdList = [];
 
-      CollectionReference servicesFirebase = FirebaseFirestore.instance.collection("service");
+      //CollectionReference servicesFirebase = FirebaseFirestore.instance.collection("service");
       Query query;
 
-      if (store.state.area != null && store.state.area.areaId != null && store.state.area.areaId.isNotEmpty) {
+      /*if (store.state.area != null && store.state.area.areaId != null && store.state.area.areaId.isNotEmpty) {
         query = servicesFirebase
             .where("tag", arrayContains: store.state.area.areaId)
             .where("visibility", isEqualTo: 'Active');
       } else {
         query = servicesFirebase
             .where("visibility", isEqualTo: 'Active');
-      }
+      }*/
 
       for (int i = 0; i < businessListFromFirebase.docs.length; i++) {
         /// TODO: replace with category from snippet
         BusinessState businessState = BusinessState.fromJson(businessListFromFirebase.docs[i].data());
         businessStateList.add(businessState);
-        await query.get().then((value) {
+        /*await query.get().then((value) {
           value.docs.forEach((element) {
             ServiceState serviceState = ServiceState.fromJson(element.data());
             if(businessState.id_firestore == serviceState.businessId)
               serviceStateList.add(serviceState);
           });
-        });
+        });*/
         /*QuerySnapshot snapshot = await FirebaseFirestore.instance
             /// 1 READ - ? DOC
             .collection("business")
@@ -163,12 +268,12 @@ class AllCategoryListRequestService implements EpicClass<AppState> {
       if (categoryStateList.isEmpty) categoryStateList.add(CategoryState());
       if (serviceStateList.isEmpty) serviceStateList.add(ServiceState());
     }).expand((element) => [
-          BusinessListReturned(businessStateList),
-          CategoryListReturned(categoryStateList),
-          ServiceListReturned(serviceStateList),
-          ServiceListSnippetListRequestResponse(serviceListSnippetListState),
-          UpdateStatistics(statisticsState),
-        ]);
+      BusinessListReturned(businessStateList),
+      CategoryListReturned(categoryStateList),
+      //ServiceListReturned(serviceStateList),
+      ServiceListSnippetListRequestResponse(serviceListSnippetListState),
+      UpdateStatistics(statisticsState),
+    ]);
   }
 }
 

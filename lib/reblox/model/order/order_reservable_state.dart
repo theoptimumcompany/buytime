@@ -296,7 +296,10 @@ class OrderReservableState {
 
     this.totalPromoDiscount -= (Utils.calculatePromoDiscount(entry.price, context));
     this.total -= entry.price;
-    this.total += (totalPromoDiscount / this.itemList.length);
+    if(this.itemList.length!= 0)
+      this.total += (totalPromoDiscount / this.itemList.length);
+    else
+      this.total = 0;
   }
 
   bool isOrderAutoConfirmable() {

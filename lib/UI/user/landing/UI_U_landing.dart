@@ -8,6 +8,7 @@ import 'package:Buytime/UI/user/booking/UI_U_booking_self_creation.dart';
 import 'package:Buytime/UI/user/booking/UI_U_my_bookings.dart';
 import 'package:Buytime/UI/user/landing/invite_guest_form.dart';
 import 'package:Buytime/UI/user/login/UI_U_home.dart';
+import 'package:Buytime/UI/user/turist/RUI_U_service_explorer.dart';
 import 'package:Buytime/UI/user/turist/UI_U_service_explorer.dart';
 import 'package:Buytime/environment_abstract.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
@@ -442,7 +443,7 @@ class LandingState extends State<Landing> {
                 snapshot.bookingList.bookingListState.removeLast();
                 bookingList.removeLast();
                 WidgetsBinding.instance.addPostFrameCallback((_) async {
-                  if (selfBookingCode.isEmpty) Navigator.push(context, MaterialPageRoute(builder: (context) => ServiceExplorer()));
+                  if (selfBookingCode.isEmpty) Navigator.push(context, MaterialPageRoute(builder: (context) => RServiceExplorer()));
                 });
               } else {
                 DateTime currentTime = DateTime.now();
@@ -457,7 +458,7 @@ class LandingState extends State<Landing> {
                   debugPrint('UI_U_Landing => No active booking found!');
 
                   WidgetsBinding.instance.addPostFrameCallback((_) async {
-                    if (selfBookingCode.isEmpty) Navigator.push(context, MaterialPageRoute(builder: (context) => ServiceExplorer()));
+                    if (selfBookingCode.isEmpty) Navigator.push(context, MaterialPageRoute(builder: (context) => RServiceExplorer()));
                   });
                   //rippleLoading = false;
                 } else if (bookingList.first.start_date.isAtSameMomentAs(currentTime)) {
@@ -913,7 +914,7 @@ class _OpenContainerWrapper extends StatelessWidget {
               fromLanding: true,
             );
         } else {
-          return ServiceExplorer();
+          return RServiceExplorer();
         }
       },
       onClosed: onClosed,

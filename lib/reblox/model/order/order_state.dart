@@ -285,6 +285,7 @@ class OrderState {
       }
       this.total += itemToAdd.price;
       this.totalPromoDiscount += Utils.calculatePromoDiscount(itemToAdd.price, context);
+      this.total -= Utils.calculatePromoDiscount(itemToAdd.price, context);
   }
 
   addingFromAnotherBusiness(String businessId) {

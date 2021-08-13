@@ -18,6 +18,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'UI/management/service_internal/RUI_M_service_list.dart';
 import 'UI/user/service/UI_U_service_reserve.dart';
+import 'UI/user/turist/RUI_U_service_explorer.dart';
 import 'app_routes.dart';
 import 'app_state.dart';
 import 'combined_epics.dart';
@@ -43,6 +44,7 @@ void main() {
             //ChangeNotifierProvider(create: (_) => NavigationState()),
             ChangeNotifierProvider(create: (_) => Spinner(true, [], [], [])),
             ChangeNotifierProvider(create: (_) => ReserveList([], OrderReservableState().toEmpty(),[], [], [], [])),
+            ChangeNotifierProvider(create: (_) => Explorer(false, [])),
           ],
           child: Buytime(store: store),
         ));

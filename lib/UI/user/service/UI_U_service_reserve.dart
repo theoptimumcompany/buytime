@@ -336,9 +336,11 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
   void deleteItem(OrderState snapshot, OrderEntry entry) {
     //setState(() {
       //cartCounter = cartCounter - entry.number;
-      Provider.of<ReserveList>(context, listen: false).order.cartCounter = Provider.of<ReserveList>(context, listen: false).order.cartCounter - entry.number;
+      debugPrint('PROVIDE RENTRY NUMBER: ${entry.number}');
+      Provider.of<ReserveList>(context, listen: false).order.cartCounter = Provider.of<ReserveList>(context, listen: false).order.cartCounter - 1;
       Provider.of<ReserveList>(context, listen: false).order.itemList.remove(entry);
       Provider.of<ReserveList>(context, listen: false).order.removeReserveItem(entry,context);
+      debugPrint('PROVIDER ITEM LIST: ${Provider.of<ReserveList>(context, listen: false).order.itemList.length}');
       StoreProvider.of<AppState>(context).dispatch(UpdateOrderReservable(Provider.of<ReserveList>(context, listen: false).order));
     //});
   }

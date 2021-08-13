@@ -390,6 +390,7 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
                       ),
                       tooltip: AppLocalizations.of(context).comeBack,
                       onPressed: () {
+                        StoreProvider.of<AppState>(context).dispatch(SetOrderToEmpty(''));
                         Future.delayed(Duration(seconds: 1), () {
                           Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => Landing()), (Route<dynamic> route) => false);
                         });
@@ -1096,6 +1097,7 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
                                             ],
                                           ),
                                         ),
+                                        order.carbonCompensation != null && order.carbonCompensation?
                                         Container(
                                           margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 2.5, ),
                                           child: Row(
@@ -1117,7 +1119,7 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
                                               )
                                             ],
                                           ),
-                                        )
+                                        ) : Container()
                                       ],
                                     )
                                 : Container(),
@@ -1137,7 +1139,9 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
                                               ),
                                         ),
                                         Text(
-                                          '${AppLocalizations.of(context).euroSpace} ${(orderDetails.total + Utils.calculateEcoTax(order)).toStringAsFixed(2)}',
+                                          order.carbonCompensation != null && order.carbonCompensation?
+                                          '${AppLocalizations.of(context).euroSpace} ${(orderDetails.total + Utils.calculateEcoTax(order)).toStringAsFixed(2)}' :
+                                          '${AppLocalizations.of(context).euroSpace} ${(orderDetails.total.toStringAsFixed(2))}',
                                           style: TextStyle(letterSpacing: 0.15, fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.bold, fontSize: 16
 
                                               ///SizeConfig.safeBlockHorizontal * 4

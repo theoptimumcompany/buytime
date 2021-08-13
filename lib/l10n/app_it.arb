@@ -600,5 +600,7 @@
   "addA": "Aggiungi un",
   "reduceEnvironmentalImpact": "per ridurre ulteriormente l'impatto ambientale",
   "condition": "Condition (Optional)",
-  "promo": "Promo"
+  "promo": "Promo",
+  "discoverStart": "Discover the",
+  "discoverEnd": "services around you"
 }

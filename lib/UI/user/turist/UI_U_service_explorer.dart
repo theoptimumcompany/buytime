@@ -806,7 +806,7 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
                                                                 style: TextStyle(
                                                                     letterSpacing: SizeConfig.safeBlockHorizontal * .2,
                                                                     fontFamily: BuytimeTheme.FontFamily,
-                                                                    color: BuytimeTheme.UserPrimary,
+                                                                    color: BuytimeTheme.BackgroundCerulean,
                                                                     fontWeight: FontWeight.w400,
                                                                     fontSize: 16
 
@@ -859,7 +859,7 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
                                           ),
                                         ): Container();
                                       }
-                                  ): Container(),
+                                  ) : Container(),
 
                                   ///Discover & Popular & Recommended & Log out
                                   _searchController.text.isEmpty
