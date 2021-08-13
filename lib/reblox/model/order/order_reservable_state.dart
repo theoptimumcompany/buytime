@@ -48,6 +48,7 @@ class OrderReservableState {
   String openUntil;
   String cancellationReason;
   bool carbonCompensation = false;
+  double totalPromoDiscount = 0.0;
 
   OrderReservableState({
     @required this.itemList,
@@ -79,6 +80,7 @@ class OrderReservableState {
     this.openUntil,
     this.cancellationReason,
     this.carbonCompensation,
+    this.totalPromoDiscount,
   });
 
 
@@ -113,6 +115,7 @@ class OrderReservableState {
     this.openUntil = state.openUntil;
     this.cancellationReason = state.cancellationReason;
     this.carbonCompensation = state.carbonCompensation;
+    this.totalPromoDiscount = state.totalPromoDiscount;
   }
 
   OrderReservableState copyWith({
@@ -145,6 +148,7 @@ class OrderReservableState {
     String openUntil,
     String cancellationReason,
     bool carbonCompensation,
+    bool totalPromoDiscount,
   }) {
     return OrderReservableState(
       itemList: itemList ?? this.itemList,
@@ -176,6 +180,7 @@ class OrderReservableState {
       openUntil: openUntil ?? this.openUntil,
       cancellationReason: cancellationReason ?? this.cancellationReason,
       carbonCompensation: carbonCompensation ?? this.carbonCompensation,
+      totalPromoDiscount: totalPromoDiscount ?? this.totalPromoDiscount,
     );
   }
 
@@ -210,6 +215,7 @@ class OrderReservableState {
         openUntil: '--:--',
       cancellationReason: 'Overbooking',
       carbonCompensation: false,
+      totalPromoDiscount: 0.0,
     );
   }
 
@@ -239,7 +245,7 @@ class OrderReservableState {
     this.total += itemToAdd.price;
   }
 
-  addReserveItem(ServiceState itemToAdd, String idOwner, String time, String minutes, DateTime date, dynamic price, String slotId) {
+  addReserveItem(ServiceState itemToAdd, String idOwner, String time, String minutes, DateTime date, dynamic price, String slotId,  BuildContext context) {
     /*bool added = false;
     itemList.forEach((element) {
       if (!added && element.id == itemToAdd.serviceId) {
@@ -268,6 +274,7 @@ class OrderReservableState {
       vat: itemToAdd.vat != null && itemToAdd.vat != 0 ? itemToAdd.vat : 22
     ));
     this.total += price;
+    this.totalPromoDiscount += Utils.calculatePromoDiscount(price, context);
   }
 
   void removeItem(OrderEntry entry) {

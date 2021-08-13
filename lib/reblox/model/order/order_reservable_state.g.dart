@@ -46,6 +46,7 @@ OrderReservableState _$OrderReservableStateFromJson(Map<String, dynamic> json) {
     openUntil: json['openUntil'] as String,
     cancellationReason: json['cancellationReason'] as String,
     carbonCompensation: json['carbonCompensation'] as bool,
+    totalPromoDiscount: (json['totalPromoDiscount'] as num)?.toDouble(),
   );
 }
 
@@ -78,4 +79,5 @@ Map<String, dynamic> _$OrderReservableStateToJson(
       'openUntil': instance.openUntil,
       'cancellationReason': instance.cancellationReason,
       'carbonCompensation': instance.carbonCompensation,
+      'totalPromoDiscount': instance.totalPromoDiscount,
     };

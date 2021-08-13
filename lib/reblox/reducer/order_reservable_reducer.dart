@@ -275,6 +275,13 @@ class SetOrderReservableCarbonCompensation
   bool get carbonCompensation => _carbonCompensation;
 }
 
+class SetOrderReservableTotalPromotionDiscount
+{
+  double _totalPromoDiscount;
+  SetOrderReservableTotalPromotionDiscount(this._totalPromoDiscount);
+  double get totalPromoDiscount => _totalPromoDiscount;
+}
+
 class SetOrderReservableOrderId
 {
   String _orderId;
@@ -345,6 +352,10 @@ OrderReservableState orderReservableReducer(OrderReservableState state, action) 
   }
   if (action is SetOrderReservableCarbonCompensation) {
     orderReservableState.carbonCompensation = action.carbonCompensation;
+    return orderReservableState;
+  }
+  if (action is SetOrderReservableTotalPromotionDiscount) {
+    orderReservableState.totalPromoDiscount = action.totalPromoDiscount;
     return orderReservableState;
   }
   if (action is SetOrderReservableOrderId) {

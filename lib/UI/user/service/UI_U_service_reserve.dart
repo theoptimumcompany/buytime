@@ -1377,7 +1377,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                                         }
                                                                         reserveState.order.user.name = userState.name;
                                                                         reserveState.order.user.id = userState.uid;
-                                                                        reserveState.order.addReserveItem(widget.serviceState, businessState.ownerId, serviceSlot[2].on, duration, dates[index], serviceSlot[1].price, serviceSlot[2].uid);
+                                                                        reserveState.order.addReserveItem(widget.serviceState, businessState.ownerId, serviceSlot[2].on, duration, dates[index], serviceSlot[1].price, serviceSlot[2].uid, context);
                                                                         reserveState.order.selected.add(indexes[index][i]);
                                                                         //order.selected.add(selected);
                                                                         reserveState.order.cartCounter++;

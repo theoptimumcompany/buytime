@@ -67,6 +67,7 @@ class OrderState {
   String openUntil;
   String cancellationReason;
   bool carbonCompensation = false;
+  double totalPromoDiscount = 0.0;
 
   OrderState({
     @required this.itemList,
@@ -96,6 +97,7 @@ class OrderState {
     this.openUntil,
     this.cancellationReason,
     this.carbonCompensation,
+    this.totalPromoDiscount,
   });
 
 
@@ -128,6 +130,7 @@ class OrderState {
     this.openUntil = state.openUntil;
     this.cancellationReason = state.cancellationReason;
     this.carbonCompensation = state.carbonCompensation;
+    this.totalPromoDiscount = state.totalPromoDiscount;
   }
 
   OrderState.fromReservableState(OrderReservableState state) {
@@ -158,6 +161,7 @@ class OrderState {
     this.openUntil = state.openUntil;
     this.cancellationReason = state.cancellationReason;
     this.carbonCompensation = state.carbonCompensation;
+    this.totalPromoDiscount = state.totalPromoDiscount;
   }
 
   OrderState copyWith({
@@ -189,6 +193,7 @@ class OrderState {
     String openUntil,
     String cancellationReason,
     bool carbonCompensation,
+    double totalPromoDiscount,
   }) {
     return OrderState(
       itemList: itemList ?? this.itemList,
@@ -218,6 +223,7 @@ class OrderState {
       openUntil: openUntil ?? this.openUntil,
       cancellationReason: cancellationReason ?? this.cancellationReason,
       carbonCompensation: carbonCompensation ?? this.carbonCompensation,
+      totalPromoDiscount: totalPromoDiscount ?? this.totalPromoDiscount,
     );
   }
 
@@ -250,6 +256,7 @@ class OrderState {
       openUntil: '--:--',
       cancellationReason: 'Overbooking',
       carbonCompensation: false,
+      totalPromoDiscount: 0.0,
     );
   }
 
@@ -277,6 +284,7 @@ class OrderState {
         ));
       }
       this.total += itemToAdd.price;
+      this.totalPromoDiscount += Utils.calculatePromoDiscount(itemToAdd.price, context);
   }
 
   addingFromAnotherBusiness(String businessId) {
@@ -288,7 +296,7 @@ class OrderState {
     return false;
   }
 
-  addReserveItem(ServiceState itemToAdd, String idOwner, String time, String minutes, DateTime date, dynamic price) {
+  addReserveItem(ServiceState itemToAdd, String idOwner, String time, String minutes, DateTime date, dynamic price, BuildContext context) {
     /*bool added = false;
     itemList.forEach((element) {
       if (!added && element.id == itemToAdd.serviceId) {
@@ -312,6 +320,7 @@ class OrderState {
       switchAutoConfirm: itemToAdd.switchAutoConfirm
     ));
     this.total += price;
+    this.totalPromoDiscount += Utils.calculatePromoDiscount(price, context);
   }
 
   void removeItem(OrderEntry entry) {

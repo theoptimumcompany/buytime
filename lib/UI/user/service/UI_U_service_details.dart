@@ -158,6 +158,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
         debugPrint('UI_U_ServiceDetails => SNAPSHOT CART COUNT: ${snapshot.order}');
         order = snapshot.order.itemList != null ? (snapshot.order.itemList.length > 0 ? snapshot.order : OrderState().toEmpty()) : OrderState().toEmpty();
         debugPrint('UI_U_ServiceDetails => CART COUNT: ${order.cartCounter}');
+
         return GestureDetector(
           onTap: () {
             FocusScopeNode currentFocus = FocusScope.of(context);

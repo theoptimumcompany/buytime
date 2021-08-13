@@ -7,6 +7,7 @@ import 'package:Buytime/reblox/model/order/order_reservable_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/reducer/order_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reservable_reducer.dart';
+import 'package:Buytime/reusable/W_promo_discount.dart';
 import 'package:Buytime/reusable/buytime_icons.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
@@ -179,6 +180,16 @@ class CartReservableState extends State<CartReservable> {
                           ),
                         ),
                       ),*/
+                            ///Promotion Label
+                            Utils.checkPromoDiscount('general_1', context).promotionId != 'empty'
+                                ? Padding(
+                              padding: const EdgeInsets.only(top: 20.0),
+                              child: Center(
+                                child: W_PromoDiscount(),
+                              ),
+                            )
+                                : Container(),
+
                             ///Service List
                             Expanded(
                               flex: 2,

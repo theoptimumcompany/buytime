@@ -23,6 +23,7 @@ class PromotionListRequestService implements EpicClass<AppState> {
 
       if (promotionStateList.isEmpty) promotionStateList.add(PromotionState());
     }).expand((element) => [
+          SetPromotion(promotionStateList.first),
           PromotionListReturned(promotionStateList),
         ]);
   }

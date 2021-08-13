@@ -5,6 +5,7 @@ import 'package:Buytime/reblox/model/order/order_entry.dart';
 import 'package:Buytime/reblox/model/order/order_reservable_state.dart';
 import 'package:Buytime/reblox/model/role/role.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
+import 'package:Buytime/reusable/W_promo_discount.dart';
 import 'package:Buytime/reusable/buytime_icons.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
@@ -92,6 +93,7 @@ class CartState extends State<Cart> {
   ServiceState tmp;
 
   bool isExternal = false;
+
   @override
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context).size;
@@ -106,25 +108,25 @@ class CartState extends State<Cart> {
               tmp = store.state.serviceState;
               debugPrint('AREA: ${store.state.business.area} - ${store.state.business.area.length}');
               if (!widget.tourist) {
-                if(store.state.business.area?.isEmpty){
+                if (store.state.business.area?.isEmpty) {
                   debugPrint('AREA EMPTY');
                   _locationController.text = 'Reception';
                   store.state.order.location = 'Reception';
-                }else{
+                } else {
                   debugPrint('AREA NOT EMPTY');
                   _locationController.text = store.state.business.area?.first;
                   store.state.order.location = store.state.business.area?.first;
                 }
                 debugPrint('AREA FRO MCONTROLLER: ${_locationController.text}');
-
               }
             },
             builder: (context, snapshot) {
               orderState = snapshot.order;
-              if(orderState != null && orderState.itemList.isNotEmpty && orderState.itemList.first.id_business != snapshot.business.id_firestore){
+              if (orderState != null && orderState.itemList.isNotEmpty && orderState.itemList.first.id_business != snapshot.business.id_firestore) {
                 debugPrint('UI_U_cart => ORDER BUSINESS ID: ${orderState.itemList.first.id_business} | BUSIENSS ID: ${snapshot.business.id_firestore}');
                 isExternal = true;
               }
+
               return Scaffold(
                   resizeToAvoidBottomInset: false,
                   appBar: BuytimeAppbar(
@@ -133,7 +135,7 @@ class CartState extends State<Cart> {
                     children: [
                       ///Back Button
                       IconButton(
-                        key: Key('back_from_cart_key'),
+                          key: Key('back_from_cart_key'),
                           icon: Icon(Icons.chevron_left, color: BuytimeTheme.TextWhite),
                           onPressed: () {
                             /*Navigator.pushReplacement(
@@ -177,6 +179,16 @@ class CartState extends State<Cart> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
+                            ///Promotion Label
+                            Utils.checkPromoDiscount('general_1', context).promotionId != 'empty'
+                                ? Padding(
+                                    padding: const EdgeInsets.only(top: 20.0),
+                                    child: Center(
+                                      child: W_PromoDiscount(),
+                                    ),
+                                  )
+                                : Container(),
+
                             ///Service List
                             Expanded(
                               flex: 2,
@@ -268,7 +280,7 @@ class CartState extends State<Cart> {
                                             ),
 
                                             ///Total Order
-                                            OrderTotal(/*totalECO: 0*/media: media, orderState: orderState),
+                                            OrderTotal(/*totalECO: 0*/ media: media, orderState: orderState),
 
                                             ///Divider
                                             Container(
@@ -312,70 +324,89 @@ class CartState extends State<Cart> {
                                                             ),
                                                           ),
                                                           //value: _locationController.text,
-                                                          items:  StoreProvider.of<AppState>(context).state.business.area.isNotEmpty ?
-                                                          StoreProvider.of<AppState>(context).state.business.area.map(
-                                                            (val) {
-                                                              return DropdownMenuItem<String>(
-                                                                value: val,
-                                                                child: Row(
-                                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                  children: [
-                                                                    Container(
-                                                                      child: Padding(
-                                                                        padding: const EdgeInsets.only(left: 10.0),
-                                                                        child: Text(
-                                                                          val,
-                                                                          textAlign: TextAlign.start,
-                                                                          style: TextStyle(
-                                                                            fontSize: 16,
-                                                                            color: BuytimeTheme.TextMedium,
-                                                                            fontWeight: FontWeight.w400,
+                                                          items: StoreProvider.of<AppState>(context).state.business.area.isNotEmpty
+                                                              ? StoreProvider.of<AppState>(context).state.business.area.map(
+                                                                  (val) {
+                                                                    return DropdownMenuItem<String>(
+                                                                      value: val,
+                                                                      child: Row(
+                                                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                        children: [
+                                                                          Container(
+                                                                            child: Padding(
+                                                                              padding: const EdgeInsets.only(left: 10.0),
+                                                                              child: Text(
+                                                                                val,
+                                                                                textAlign: TextAlign.start,
+                                                                                style: TextStyle(
+                                                                                  fontSize: 16,
+                                                                                  color: BuytimeTheme.TextMedium,
+                                                                                  fontWeight: FontWeight.w400,
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                          _locationController.text == val
+                                                                              ? Icon(
+                                                                                  Icons.radio_button_checked,
+                                                                                  color: BuytimeTheme.SymbolGrey,
+                                                                                )
+                                                                              : Icon(
+                                                                                  Icons.radio_button_off,
+                                                                                  color: BuytimeTheme.SymbolGrey,
+                                                                                ),
+                                                                          // Radio(
+                                                                          //   toggleable: true,
+                                                                          //   value: val,
+                                                                          //   activeColor: BuytimeTheme.Secondary,
+                                                                          //   groupValue: _locationController.text,
+                                                                          //   onChanged: null,
+                                                                          // )
+                                                                        ],
+                                                                      ),
+                                                                    );
+                                                                  },
+                                                                )?.toList()
+                                                              : [
+                                                                  DropdownMenuItem<String>(
+                                                                    value: 'Reception',
+                                                                    child: Row(
+                                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                      children: [
+                                                                        Container(
+                                                                          child: Padding(
+                                                                            padding: const EdgeInsets.only(left: 10.0),
+                                                                            child: Text(
+                                                                              'Reception',
+                                                                              textAlign: TextAlign.start,
+                                                                              style: TextStyle(
+                                                                                fontSize: 16,
+                                                                                color: BuytimeTheme.TextMedium,
+                                                                                fontWeight: FontWeight.w400,
+                                                                              ),
+                                                                            ),
                                                                           ),
                                                                         ),
-                                                                      ),
+                                                                        _locationController.text == 'Reception'
+                                                                            ? Icon(
+                                                                                Icons.radio_button_checked,
+                                                                                color: BuytimeTheme.SymbolGrey,
+                                                                              )
+                                                                            : Icon(
+                                                                                Icons.radio_button_off,
+                                                                                color: BuytimeTheme.SymbolGrey,
+                                                                              ),
+                                                                        // Radio(
+                                                                        //   toggleable: true,
+                                                                        //   value: val,
+                                                                        //   activeColor: BuytimeTheme.Secondary,
+                                                                        //   groupValue: _locationController.text,
+                                                                        //   onChanged: null,
+                                                                        // )
+                                                                      ],
                                                                     ),
-                                                                    _locationController.text == val ? Icon(Icons.radio_button_checked, color: BuytimeTheme.SymbolGrey,) : Icon(Icons.radio_button_off, color: BuytimeTheme.SymbolGrey,),
-                                                                    // Radio(
-                                                                    //   toggleable: true,
-                                                                    //   value: val,
-                                                                    //   activeColor: BuytimeTheme.Secondary,
-                                                                    //   groupValue: _locationController.text,
-                                                                    //   onChanged: null,
-                                                                    // )
-                                                                  ],
-                                                                ),
-                                                              );
-                                                            },
-                                                          )?.toList() : [DropdownMenuItem<String>(
-                                                            value: 'Reception',
-                                                            child: Row(
-                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                              children: [
-                                                                Container(
-                                                                  child: Padding(
-                                                                    padding: const EdgeInsets.only(left: 10.0),
-                                                                    child: Text(
-                                                                      'Reception',
-                                                                      textAlign: TextAlign.start,
-                                                                      style: TextStyle(
-                                                                        fontSize: 16,
-                                                                        color: BuytimeTheme.TextMedium,
-                                                                        fontWeight: FontWeight.w400,
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                                _locationController.text == 'Reception' ? Icon(Icons.radio_button_checked, color: BuytimeTheme.SymbolGrey,) : Icon(Icons.radio_button_off, color: BuytimeTheme.SymbolGrey,),
-                                                                // Radio(
-                                                                //   toggleable: true,
-                                                                //   value: val,
-                                                                //   activeColor: BuytimeTheme.Secondary,
-                                                                //   groupValue: _locationController.text,
-                                                                //   onChanged: null,
-                                                                // )
-                                                              ],
-                                                            ),
-                                                          )],
+                                                                  )
+                                                                ],
                                                           onChanged: (value) {
                                                             setState(() {
                                                               _locationController.text = value;
@@ -415,7 +446,9 @@ class CartState extends State<Cart> {
                                           ///SizeConfig.safeBlockHorizontal * 40
                                           height: 44,
                                           margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, bottom: SizeConfig.safeBlockVertical * 2, right: SizeConfig.safeBlockHorizontal * 2.5),
-                                          decoration: BoxDecoration(borderRadius: new BorderRadius.circular(5), border: Border.all(color: StoreProvider.of<AppState>(context).state.user.getRole() == Role.user ? (widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary) : BuytimeTheme.SymbolGrey)),
+                                          decoration: BoxDecoration(
+                                              borderRadius: new BorderRadius.circular(5),
+                                              border: Border.all(color: StoreProvider.of<AppState>(context).state.user.getRole() == Role.user ? (widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary) : BuytimeTheme.SymbolGrey)),
                                           child: MaterialButton(
                                             elevation: 0,
                                             hoverElevation: 0,

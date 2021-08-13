@@ -186,6 +186,13 @@ class SetOrderCarbonCompensation
   bool get carbonCompensation => _carbonCompensation;
 }
 
+class SetOrderTotalPromotionDiscount
+{
+  double _totalPromoDiscount;
+  SetOrderTotalPromotionDiscount(this._totalPromoDiscount);
+  double get totalPromoDiscount => _totalPromoDiscount;
+}
+
 class SetOrderPosition
 {
   String _position;
@@ -267,6 +274,10 @@ OrderState orderReducer(OrderState state, action) {
   }
   if (action is SetOrderCarbonCompensation) {
     orderState.carbonCompensation = action.carbonCompensation;
+    return orderState;
+  }
+  if (action is SetOrderTotalPromotionDiscount) {
+    orderState.totalPromoDiscount = action.totalPromoDiscount;
     return orderState;
   }
   if (action is SetOrderPosition) {

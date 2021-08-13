@@ -5,7 +5,8 @@ import 'package:json_annotation/json_annotation.dart';
 part 'promotion_state.g.dart';
 
 enum DiscountType {
-  fixedAmount
+  fixedAmount,
+  percentageAmount
 }
 
 @JsonSerializable(explicitToJson: true)
