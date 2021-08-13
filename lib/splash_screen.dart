@@ -12,6 +12,7 @@ import 'package:Buytime/reblox/reducer/area_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/auto_complete_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/notification_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_list_reducer.dart';
+import 'package:Buytime/reblox/reducer/promotion/promotion_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/card_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/stripe_list_payment_reducer.dart';
 import 'package:Buytime/utils/size_config.dart';
@@ -413,6 +414,7 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
     // double spinnerY = 120;
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
+
     return Scaffold(
       backgroundColor: Color(0xFF207CC3),
       body: Center(

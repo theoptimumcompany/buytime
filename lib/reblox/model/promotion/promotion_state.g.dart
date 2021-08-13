@@ -9,6 +9,7 @@ part of 'promotion_state.dart';
 PromotionState _$PromotionStateFromJson(Map<String, dynamic> json) {
   return PromotionState(
     area: json['area'] as String ?? '',
+    promotionId: json['promotionId'] as String ?? '',
     businessIdList:
         (json['businessIdList'] as List)?.map((e) => e as String)?.toList() ??
             [],
@@ -26,6 +27,7 @@ PromotionState _$PromotionStateFromJson(Map<String, dynamic> json) {
 Map<String, dynamic> _$PromotionStateToJson(PromotionState instance) =>
     <String, dynamic>{
       'area': instance.area,
+      'promotionId': instance.promotionId,
       'businessIdList': instance.businessIdList,
       'categoryIdList': instance.categoryIdList,
       'dateStart': Utils.setDate(instance.dateStart),

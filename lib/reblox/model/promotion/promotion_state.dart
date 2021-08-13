@@ -12,6 +12,8 @@ enum DiscountType {
 class PromotionState {
   @JsonKey(defaultValue: '')
   String area;
+  @JsonKey(defaultValue: '')
+  String promotionId;
   @JsonKey(defaultValue: [])
   List<String> businessIdList;
   @JsonKey(defaultValue: [])
@@ -29,6 +31,7 @@ class PromotionState {
 
   PromotionState({
     this.area,
+    this.promotionId,
     this.businessIdList,
     this.categoryIdList,
     this.dateStart,
@@ -41,6 +44,7 @@ class PromotionState {
   PromotionState toEmpty() {
     return PromotionState(
       area: '',
+      promotionId: '',
       businessIdList: [],
       categoryIdList: [],
       dateStart: DateTime.now(),
@@ -53,6 +57,7 @@ class PromotionState {
 
   PromotionState.fromState(PromotionState promotionState) {
     this.area = promotionState.area;
+    this.promotionId = promotionState.promotionId;
     this.businessIdList = promotionState.businessIdList;
     this.categoryIdList = promotionState.categoryIdList;
     this.dateStart = promotionState.dateStart;
@@ -64,6 +69,7 @@ class PromotionState {
 
   PromotionState copyWith({
   String area,
+  String promotionId,
   List<String> businessIdList,
   List<String> categoryIdList,
   DateTime dateStart,
@@ -74,6 +80,7 @@ class PromotionState {
   }) {
     return PromotionState(
       area: area ?? this.area,
+      promotionId: promotionId ?? this.promotionId,
       businessIdList: businessIdList ?? this.businessIdList,
       categoryIdList: categoryIdList ?? this.categoryIdList,
       dateStart: dateStart ?? this.dateStart,

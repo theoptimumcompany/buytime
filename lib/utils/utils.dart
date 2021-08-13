@@ -10,6 +10,8 @@ import 'package:Buytime/reblox/model/notification/id_state.dart';
 import 'package:Buytime/reblox/model/order/order_reservable_state.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
+import 'package:Buytime/reblox/model/promotion/promotion_list_state.dart';
+import 'package:Buytime/reblox/model/promotion/promotion_state.dart';
 import 'package:Buytime/reblox/reducer/service/service_reducer.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_config.dart';
@@ -35,7 +37,22 @@ class Utils {
   static String imageSizing600 =  "_600x600";
   static String imageSizing1000 =  "_1000x1000";
 
+  ///Check Promo Discount
+  static PromotionState checkPromoDiscount(String promoName, context) {
 
+    if(StoreProvider.of<AppState>(context).state.promotionListState.promotionListState.isNotEmpty && StoreProvider.of<AppState>(context).state.promotionListState != null)
+    {
+      List<PromotionState> promotionListState = StoreProvider.of<AppState>(context).state.promotionListState.promotionListState;
+      for(var a = 0; a < promotionListState.length; a++)
+      {
+        if(promotionListState[a].promotionId == promoName)
+        {
+          return promotionListState[a];
+        }
+      }
+    }
+    return PromotionState(promotionId: 'empty');
+  }
 
   ///Calculate Eco
   static double calculateEcoTax(OrderState orderState) {
