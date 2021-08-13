@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:Buytime/UI/user/booking/RUI_U_order_detail.dart';
 import 'package:Buytime/UI/user/cart/tab/T_room.dart';
 import 'package:Buytime/UI/user/cart/tab/T_room_disabled.dart';
 import 'package:Buytime/UI/user/cart/widget/W_credit_card_simple.dart';
@@ -8,11 +9,13 @@ import 'package:Buytime/main.dart';
 import 'package:Buytime/reblox/enum/order_time_intervals.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:Buytime/reblox/model/card/card_list_state.dart';
+import 'package:Buytime/reblox/model/order/order_detail_state.dart';
 import 'package:Buytime/reblox/model/order/order_entry.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/model/stripe/stripe_card_response.dart';
 import 'package:Buytime/reblox/navigation/navigation_reducer.dart';
 import 'package:Buytime/reblox/reducer/business_reducer.dart';
+import 'package:Buytime/reblox/reducer/order_detail_reducer.dart';
 import 'package:Buytime/reblox/reducer/stripe_payment_reducer.dart';
 import 'package:Buytime/reusable/W_green_choice.dart';
 import 'package:Buytime/services/order/util.dart';
@@ -246,6 +249,38 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                   ],
                                 ),
                               ),
+                              /// TEST API infopark WIP
+                              // MaterialButton(
+                              //   textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
+                              //   color: widget.tourist != null && widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
+                              //   disabledColor: BuytimeTheme.SymbolLightGrey,
+                              //   //padding: EdgeInsets.all(media.width * 0.03),
+                              //   shape: RoundedRectangleBorder(
+                              //     borderRadius: new BorderRadius.circular(5),
+                              //   ),
+                              //   child: Container(
+                              //     alignment: Alignment.center,
+                              //     width: SizeConfig.blockSizeHorizontal * 57,
+                              //     height: 44,
+                              //     child: Text(
+                              //       AppLocalizations.of(context).test,
+                              //       textAlign: TextAlign.center,
+                              //       style: TextStyle(
+                              //         letterSpacing: 1.25,
+                              //         fontSize: 14,
+                              //         fontFamily: BuytimeTheme.FontFamily,
+                              //         fontWeight: FontWeight.w500,
+                              //         color: BuytimeTheme.TextWhite,
+                              //       ),
+                              //     ),
+                              //   ),
+                              //   onPressed: () async {
+                              //     /// crea metodo di pagamento con la loro chiave pubblica
+                              //
+                              //     /// conferma il client secret ricevuto
+                              //
+                              //   },
+                              // ),
                               snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.applePay)
                                   ? ApplePayButton(
                                       width: SizeConfig.blockSizeHorizontal * 65,
@@ -1193,38 +1228,49 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
 
     BusinessState businessState = BusinessState.fromJson(businessSnapshot.data());
     Stripe.stripeAccountId = businessState.stripeCustomerId;
-
-    debugPrint("UI_U_ConfirmOrder >>>>>>>> state.business.stripeCustomerId" + businessState.stripeCustomerId);
-
-    if (businessState.stripeCustomerId == null || businessState.stripeCustomerId.isEmpty) {
-      debugPrint("UI_U_ConfirmOrder >>>>>>>> state.business.stripeCustomerId is MISSING");
-    }
-
-    List<ApplePayCartSummaryItem> items = [];
-    // initializePaymentValues(orderState, orderState.business.name, orderState.total, items);
-    for (int i = 0; i < orderState.itemList.length; i++) {
-      OrderEntry orderEntry = orderState.itemList[i];
-      String totalItemPrice = (orderEntry.price * orderEntry.number).toString();
-      ApplePayCartSummaryItem item = ApplePayCartSummaryItem(label: Utils.retriveField(Localizations.localeOf(context).languageCode, orderEntry.name), amount: totalItemPrice);
-      items.add(item);
-    }
-    debugPrint("stripe_payment_service_epic createPaymentServiceNative");
-    // try {
-    // 1. Present Apple Pay sheet
-    var presentApplePay = await Stripe.instance.presentApplePay(
-      ApplePayPresentParams(
-        cartItems: items,
-        country: 'It',
-        currency: 'EUR',
-      ),
+    //
+    // debugPrint("UI_U_ConfirmOrder >>>>>>>> state.business.stripeCustomerId" + businessState.stripeCustomerId);
+    //
+    // if (businessState.stripeCustomerId == null || businessState.stripeCustomerId.isEmpty) {
+    //   debugPrint("UI_U_ConfirmOrder >>>>>>>> state.business.stripeCustomerId is MISSING");
+    // }
+    //
+    // List<ApplePayCartSummaryItem> items = [];
+    // // initializePaymentValues(orderState, orderState.business.name, orderState.total, items);
+    // for (int i = 0; i < orderState.itemList.length; i++) {
+    //   OrderEntry orderEntry = orderState.itemList[i];
+    //   String totalItemPrice = (orderEntry.price * orderEntry.number).toString();
+    //   ApplePayCartSummaryItem item = ApplePayCartSummaryItem(label: Utils.retriveField(Localizations.localeOf(context).languageCode, orderEntry.name), amount: totalItemPrice);
+    //   items.add(item);
+    // }
+    // debugPrint("stripe_payment_service_epic createPaymentServiceNative");
+    // // try {
+    // // 1. Present Apple Pay sheet
+    // var presentApplePay = await Stripe.instance.presentApplePay(
+    //   ApplePayPresentParams(
+    //     cartItems: items,
+    //     country: 'It',
+    //     currency: 'EUR',
+    //   ),
+    // );
+    // final response = await fetchPaymentIntentClientSecret(orderState);
+    // final clientSecret = response['client_secret'];
+    // var resultOfConfirmation = await Stripe.instance.confirmApplePayPayment(clientSecret);
+    // debugPrint("Apple Pay payment succesfully completed");
+    // ScaffoldMessenger.of(context).showSnackBar(
+    //   const SnackBar(content: Text('Apple Pay payment succesfully completed')),
+    // );
+// ---------------
+    /// TODO LOAD ORDER IN THE STORE!!!!
+    // StoreProvider.of<AppState>(context).dispatch(SetOrder(orderState));
+    StoreProvider.of<AppState>(context).dispatch(SetOrderDetail(OrderDetailState.fromOrderState(orderState)));
+    /// TODO NAVIGATE TO ORDER DETAILS
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => RUI_U_OrderDetail("")),
     );
-    final response = await fetchPaymentIntentClientSecret(orderState);
-    final clientSecret = response['client_secret'];
-    var resultOfConfirmation = await Stripe.instance.confirmApplePayPayment(clientSecret);
-    debugPrint("Apple Pay payment succesfully completed");
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Apple Pay payment succesfully completed')),
-    );
+    // StoreProvider.of<AppState>(context).dispatch(NavigatePushAction(AppRoutes.orderDetailsRealtime));
+
     // } catch (e) {
     //   debugPrint('Error: $e');
     //

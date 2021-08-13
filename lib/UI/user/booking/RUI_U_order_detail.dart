@@ -416,7 +416,9 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
                     child: Text(
                       orderDetails.itemList.length > 1
                           ? Utils.retriveField(Localizations.localeOf(context).languageCode, orderDetails.business.name)
-                          : Utils.retriveField(Localizations.localeOf(context).languageCode, orderDetails.itemList.first.name),
+                          : orderDetails.itemList.length > 0 ?
+                      Utils.retriveField(Localizations.localeOf(context).languageCode, orderDetails.itemList.first.name):
+                      "loading...",
                       textAlign: TextAlign.start,
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
@@ -540,7 +542,11 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
                           order = OrderState.fromJson(orderSnapshot.data.data());
                           debugPrint('YUI_U_order_detail => PRICE: ${orderDetails.total}');
                           debugPrint('YUI_U_order_detail => CARD TYPE: ${orderDetails.cardType}');
+                        } else {
+                          return CircularProgressIndicator();
                         }
+
+                        /// TODO giropirulanza quando orderDetails.itemList.lenght < 1
 
                         return Column(
                           mainAxisAlignment: MainAxisAlignment.start,

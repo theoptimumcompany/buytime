@@ -310,17 +310,13 @@ class OrderCreateCardAndPayService implements EpicClass<AppState> {
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<CreateOrderCardAndPay>().asyncMap((event) async {
         /// add needed data to the order state
-      // orderState = configureOrder(event.orderState, store);
+      // orderState = configureOrder(event.orderState, store.state);
         if (event.selectedCardPaymentMethodId != null && store.state.booking != null && store.state.booking.booking_id != null) {
           /// This is a time based id, meaning that even if 2 users are going to generate a document at the same moment in time
           /// there are really low chances that the rest of the id is also colliding.
           String timeBasedId = Uuid().v1();
-          orderState.orderId = timeBasedId;
-
-          debugPrint('OrderCreateCardAndPayService - creating order from card: ' + orderState.toString());
-          debugPrint('OrderCreateCardAndPayService - creating order from card: ' + orderState.toJson().toString());
           orderState = configureOrder(event.orderState, store.state);
-
+          orderState.orderId = timeBasedId;
 
           /// send document to orders collection
           var addedOrder = await FirebaseFirestore.instance.collection("order").doc(timeBasedId).set(orderState.toJson());

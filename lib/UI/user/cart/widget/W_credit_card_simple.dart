@@ -62,7 +62,7 @@ class _CreditCardSimpleListElementState extends State<CreditCardSimpleListElemen
                 child: InkWell(
                     onTap: !deleting ? (){
                       deleting = true;
-                      StoreProvider.of<AppState>(context).dispatch(DeletingStripePaymentMethod());
+                      StoreProvider.of<AppState>(context).dispatch(DeletingStripePaymentMethodOR());
                       StoreProvider.of<AppState>(context).dispatch(CreateDisposePaymentMethodIntent(firestoreCardId, StoreProvider.of<AppState>(context).state.user.uid));
                     } : null,
                     borderRadius: BorderRadius.all(Radius.circular(5.0)),

@@ -34,7 +34,7 @@ class CreditCards extends StatelessWidget {
                 onInit: (store) {
                   /// check if the stripe customer have been created for this user:
                   store?.dispatch(CheckStripeCustomer(true));
-                  store?.dispatch(AddingStripePaymentMethodReset());
+                  store?.dispatch(AddingStripePaymentMethodResetOR());
                   initializeCardList(store.state.cardListState);
                   debugPrint('T_credit_cards => ON INIT');
                 },

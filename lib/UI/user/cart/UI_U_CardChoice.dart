@@ -77,7 +77,7 @@ class CardChoiceState extends State<CardChoice> with SingleTickerProviderStateMi
       child: StoreConnector<AppState, AppState>(
           onInit: (store) {
             store?.dispatch(CheckStripeCustomer(true));
-            store?.dispatch(AddingStripePaymentMethodReset());
+            store?.dispatch(AddingStripePaymentMethodResetOR());
             initializeCardList(store.state.cardListState);
             debugPrint('UI_U_ConfirmOrder => ON INIT');
           },
