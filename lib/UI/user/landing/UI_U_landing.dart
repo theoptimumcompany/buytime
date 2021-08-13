@@ -30,6 +30,7 @@ import 'package:Buytime/reblox/reducer/order_reservable_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reservable_reducer.dart';
 import 'package:Buytime/reblox/reducer/pipeline_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/pipeline_reducer.dart';
+import 'package:Buytime/reblox/reducer/promotion/promotion_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/service_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/service_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/service_slot_time_reducer.dart';
@@ -153,6 +154,8 @@ class LandingState extends State<Landing> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       debugPrint('UI_U_Landing => initState()');
+      ///Download Promotions
+      StoreProvider.of<AppState>(context).dispatch(PromotionListRequest());
     });
     initDynamicLinks();
   }

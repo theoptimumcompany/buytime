@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 import 'package:Buytime/UI/user/cart/UI_U_cart.dart';
 import 'package:Buytime/UI/user/login/tourist_session/UI_U_tourist_session.dart';
+import 'package:Buytime/reblox/model/promotion/promotion_state.dart';
 import 'package:Buytime/reblox/reducer/order_reservable_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/service_reducer.dart';
 import 'package:Buytime/UI/user/map/UI_U_map.dart';
@@ -15,6 +16,7 @@ import 'package:Buytime/reblox/navigation/navigation_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reservable_list_reducer.dart';
 import 'package:Buytime/reusable/W_green_choice.dart';
+import 'package:Buytime/reusable/W_promo_discount.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
 import 'package:Buytime/reusable/buytime_icons.dart';
 import 'package:Buytime/utils/utils.dart';
@@ -70,7 +72,6 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
     var media = MediaQuery.of(context).size;
 
     SizeConfig().init(context);
-
     return StoreConnector<AppState, AppState>(
       converter: (store) => store.state,
       onInit: (store) {
@@ -338,6 +339,19 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                                         crossAxisAlignment: CrossAxisAlignment.start,
                                                         mainAxisAlignment: MainAxisAlignment.end,
                                                         children: [
+                                                          ///Promo Discount label
+                                                          Utils.checkPromoDiscount('general_1', context).promotionId != 'empty'
+                                                              ? Container(
+                                                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
+                                                                  child: Padding(
+                                                                    padding: const EdgeInsets.symmetric(vertical: 5.0,horizontal: 0.0),
+                                                                    child: FittedBox(
+                                                                      fit: BoxFit.fitHeight,
+                                                                      child: W_PromoDiscount(),
+                                                                    ),
+                                                                  ),
+                                                                )
+                                                              : Container(),
                                                           ///ECO label
                                                           widget.serviceState.tag.contains('ECO')
                                                               ? Container(
@@ -972,7 +986,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                     MaterialPageRoute(builder: (context) => ConfirmOrder(reserve: false, tourist: widget.tourist,)),
                                   );*/
 
-                                              ///Discriminare se è un tuista o un utente loggato a premere BUY
+                                              ///Discriminare se è un turista o un utente loggato a premere BUY
                                               ///Controllare se c'è utente loggato con firebase
                                               //     if (auth.FirebaseAuth != null && auth.FirebaseAuth.instance != null && auth.FirebaseAuth.instance.currentUser != null)
                                             }

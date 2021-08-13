@@ -59,6 +59,7 @@ class BuytimeTheme {
   static const Color SymbolLightGrey = Color.fromARGB(255, 196, 196, 196);
   static const Color Indigo = Color.fromARGB(255, 121, 134, 203);
   static const Color GreenChoice = Color.fromARGB(255, 1, 191, 165);
+  static const Color Promotion = Color.fromARGB(255, 251, 36, 36);
 
 
 

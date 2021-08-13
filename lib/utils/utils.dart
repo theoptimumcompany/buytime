@@ -10,6 +10,8 @@ import 'package:Buytime/reblox/model/notification/id_state.dart';
 import 'package:Buytime/reblox/model/order/order_reservable_state.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
+import 'package:Buytime/reblox/model/promotion/promotion_list_state.dart';
+import 'package:Buytime/reblox/model/promotion/promotion_state.dart';
 import 'package:Buytime/reblox/reducer/service/service_reducer.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_config.dart';
@@ -35,7 +37,22 @@ class Utils {
   static String imageSizing600 =  "_600x600";
   static String imageSizing1000 =  "_1000x1000";
 
+  ///Check Promo Discount
+  static PromotionState checkPromoDiscount(String promoName, context) {
 
+    if(StoreProvider.of<AppState>(context).state.promotionListState.promotionListState.isNotEmpty && StoreProvider.of<AppState>(context).state.promotionListState != null)
+    {
+      List<PromotionState> promotionListState = StoreProvider.of<AppState>(context).state.promotionListState.promotionListState;
+      for(var a = 0; a < promotionListState.length; a++)
+      {
+        if(promotionListState[a].promotionId == promoName)
+        {
+          return promotionListState[a];
+        }
+      }
+    }
+    return PromotionState(promotionId: 'empty');
+  }
 
   ///Calculate Eco
   static double calculateEcoTax(OrderState orderState) {
@@ -410,19 +427,26 @@ class Utils {
       });
     }
     bool isName = false;
+    bool isDescription = false;
     bool fieldIsEqual = true;
     bool translating = true;
 
     if(field == AppLocalizations.of(context).name)
       isName = true;
+    else if(field == AppLocalizations.of(context).description)
+      isDescription = true;
 
     if(isName){
       debugPrint('Field of the Name');
       if(retriveField(myLanguage, stateField) != retriveField(myLanguage, StoreProvider.of<AppState>(context).state.serviceState.name))
         fieldIsEqual = false;
-    }else{
+    }else if(isDescription){
       debugPrint('Field of the Description');
       if(retriveField(myLanguage, stateField) != retriveField(myLanguage, StoreProvider.of<AppState>(context).state.serviceState.description))
+        fieldIsEqual = false;
+    }else{
+      debugPrint('Field of the condition');
+      if(retriveField(myLanguage, stateField) != retriveField(myLanguage, StoreProvider.of<AppState>(context).state.serviceState.condition))
         fieldIsEqual = false;
     }
 
@@ -637,8 +661,10 @@ class Utils {
                           debugPrint('MultiLingualTranslate => $serviceField');
                           if(isName)
                             StoreProvider.of<AppState>(context).dispatch(SetServiceName(serviceField));
-                          else
+                          else if(isDescription)
                             StoreProvider.of<AppState>(context).dispatch(SetServiceDescription(serviceField));
+                          else
+                            StoreProvider.of<AppState>(context).dispatch(SetServiceCondition(serviceField));
                           //nextPage();
                           Navigator.of(context).pop();
                         },

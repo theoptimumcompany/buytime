@@ -158,7 +158,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
           onSelected: canAccess(categoryList[i].id) ? (selected) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               Provider.of<Spinner>(context, listen: false).add[i][0] = false;
-              //Provider.of<Spinner>(context, listen: false).initAdd(Provider.of<Spinner>(context, listen: false).add);
+              Provider.of<Spinner>(context, listen: false).initAdd(Provider.of<Spinner>(context, listen: false).add);
             });
             if (widget.categoryId != null && widget.categoryId != "" && searchCategoryRoot(categoryList[i].id) != widget.categoryId) {
               return null;
@@ -170,7 +170,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
               });
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 Provider.of<Spinner>(context, listen: false).add[i][0] = true;
-                //Provider.of<Spinner>(context, listen: false).initAdd(Provider.of<Spinner>(context, listen: false).add);
+                Provider.of<Spinner>(context, listen: false).initAdd(Provider.of<Spinner>(context, listen: false).add);
               });
               ///Aggiorno lo store con la lista di categorie selezionate salvando id e rootId
               StoreProvider.of<AppState>(context).dispatch(SetServiceSelectedCategories(selectedCategoryList));
@@ -313,7 +313,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                       tmpService.description = Utils.saveField(myLocale.languageCode, descriptionController.text, snapshot.serviceState.description);
                                       tmpService.serviceAddress = addressController.text;
                                       tmpService.serviceBusinessAddress = _serviceBusinessAddress;
-                                      tmpService.condition = conditionController.text;
+                                      tmpService.condition =  Utils.saveField(myLocale.languageCode, conditionController.text, snapshot.serviceState.condition);
                                       if(_serviceVAT == 0)
                                         tmpService.vat = 22;
                                       else
@@ -525,6 +525,71 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                       ],
                                     ),
                                   ),
+                                  ///Condition
+                                  Container(
+                                    margin: EdgeInsets.only(top: 10.0, bottom: 5.0, left: 32.0, right: 28.0),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Flexible(
+                                          child: Container(
+                                            //width: SizeConfig.safeBlockHorizontal * 60,
+                                            // decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
+                                              child: TextFormField(
+                                                  controller: conditionController,
+                                                  //validator: (value) => value.isEmpty ? AppLocalizations.of(context).serviceNameBlank : null,
+                                                  onChanged: (value) {
+                                                    setState(() {
+                                                      serviceCondition = value;
+                                                    });
+                                                    //StoreProvider.of<AppState>(context).dispatch(SetServiceName(Utils.saveField(myLocale.languageCode, nameController.text, snapshot.serviceState.name)));
+                                                  },
+                                                  onSaved: (value) {
+                                                    if (validateAndSave()) {
+                                                      //_serviceName = value;
+                                                      //StoreProvider.of<AppState>(context).dispatch(SetServiceName(Utils.saveField(myLocale.languageCode, nameController.text, snapshot.serviceState.name)));
+                                                    }
+                                                  },
+                                                  onEditingComplete: (){
+                                                    //StoreProvider.of<AppState>(context).dispatch(SetServiceName(Utils.saveField(myLocale.languageCode, nameController.text, snapshot.serviceState.name)));
+                                                    currentFocus.unfocus();
+                                                  },
+                                                  decoration: InputDecoration(
+                                                    labelText: AppLocalizations.of(context).condition,
+                                                    enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                    focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                    errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                                                  ))
+                                          ),
+                                        ),
+                                        IconButton(
+                                          icon: Icon(
+                                            Icons.g_translate,
+                                            color: serviceCondition.isNotEmpty ? BuytimeTheme.ManagerPrimary : BuytimeTheme.TextGrey,
+                                          ),
+                                          onPressed: serviceCondition.isNotEmpty ? (){
+                                            setState(() {
+                                              rippleTranslate = true;
+                                            });
+                                            currentFocus.unfocus();
+                                            //StoreProvider.of<AppState>(context).dispatch(SetServiceName(Utils.saveField(myLocale.languageCode, nameController.text, snapshot.serviceState.name)));
+                                            String newField = Utils.saveField(myLocale.languageCode, conditionController.text, snapshot.serviceState.condition);
+                                            Utils.multiLingualTranslate(
+                                                context, flagsCharCode, languageCode,
+                                                AppLocalizations.of(context).condition, newField,
+                                                currentFocus, (value){
+                                              if(!value){
+                                                setState(() {
+                                                  rippleTranslate = false;
+                                                });
+                                              }
+                                            });
+                                          } : null,
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  ///Price
                                   snapshot.serviceState.switchSlots != null && snapshot.serviceState.switchSlots
                                       ? Container()
                                       : Container(
@@ -714,51 +779,6 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                             );
                                           },
                                         )
-                                      ],
-                                    ),
-                                  ),
-                                  ///Condition
-                                  Container(
-                                    margin: EdgeInsets.only(top: 10.0, bottom: 5.0, left: 32.0, right: 28.0),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Flexible(
-                                          child: Container(
-                                            //width: SizeConfig.safeBlockHorizontal * 60,
-                                            // decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
-                                              child: TextFormField(
-                                                  //enabled: canEditService,
-                                                  controller: conditionController,
-                                                  //validator: (value) => value.isEmpty ? AppLocalizations.of(context).serviceNameBlank : null,
-                                                  onChanged: (value) {
-                                                    setState(() {
-                                                      serviceCondition = value;
-                                                    });
-                                                    //StoreProvider.of<AppState>(context).dispatch(SetServiceName(value + '-' + myLocale.languageCode));
-                                                  },
-                                                  /*onChanged: (value) {
-                                                    StoreProvider.of<AppState>(context).dispatch(SetServiceName(value + '-' + myLocale.languageCode));
-                                                  },
-                                                  onSaved: (value) {
-                                                    if (validateAndSave()) {
-                                                      //_serviceName = value;
-                                                      StoreProvider.of<AppState>(context).dispatch(SetServiceName(value + '-' + myLocale.languageCode));
-                                                    }
-                                                  },*/
-                                                  onEditingComplete: () {
-                                                    //StoreProvider.of<AppState>(context).dispatch(SetServiceName(Utils.saveField(myLocale.languageCode, nameController.text, snapshot.serviceState.name)));
-                                                    currentFocus.unfocus();
-                                                  },
-                                                  style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack),
-                                                  decoration: InputDecoration(
-                                                    labelText: AppLocalizations.of(context).condition,
-                                                    enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                                    border: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                                    focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                                    errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                                                  ))),
-                                        ),
                                       ],
                                     ),
                                   ),
