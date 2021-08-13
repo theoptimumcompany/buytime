@@ -78,6 +78,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
   bool carbonCompensation = false;
   double totalECO = 0;
   double partialECO = 0;
+
   @override
   void initState() {
     super.initState();
@@ -162,7 +163,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
             if (orderState != null && orderState.itemList.isNotEmpty && orderState.itemList.first.id_business != snapshot.business.id_firestore) {
               debugPrint('UI_U_cart => ORDER BUSINESS ID: ${orderState.itemList.first.id_business} | BUSIENSS ID: ${snapshot.business.id_firestore}');
               isExternal = true;
-             // partialECO = (orderState.total * 2.5) / 100;
+              // partialECO = (orderState.total * 2.5) / 100;
             }
 
             _email = snapshot.user.email;
@@ -249,6 +250,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                   ],
                                 ),
                               ),
+
                               /// TEST API infopark WIP
                               // MaterialButton(
                               //   textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
@@ -312,6 +314,8 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                           ),
                                         ),
                                         onPressed: () {
+
+
                                           if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.card)) {
                                             String selectedCardPaymentMethodId = snapshot.cardListState.cardList[0].stripeState.stripeCard.paymentMethodId;
                                             confirmationCard(context, snapshot, snapshot.stripe.stripeCard.last4, snapshot.stripe.stripeCard.brand, snapshot.stripe.stripeCard.country, selectedCardPaymentMethodId);
@@ -873,15 +877,13 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                           onChanged: (value) {
                             setState(() {
                               carbonCompensation = value;
-                              if (widget.reserve != null && widget.reserve)
-                              {
+                              if (widget.reserve != null && widget.reserve) {
                                 debugPrint('reservable order eco switch - ${orderReservableState.carbonCompensation}');
                                 StoreProvider.of<AppState>(context).dispatch((SetOrderReservableCarbonCompensation(carbonCompensation)));
-                              }else
-                                {
-                                  debugPrint('order eco switch - ${orderState.carbonCompensation}');
-                                  StoreProvider.of<AppState>(context).dispatch((SetOrderCarbonCompensation(carbonCompensation)));
-                                }
+                              } else {
+                                debugPrint('order eco switch - ${orderState.carbonCompensation}');
+                                StoreProvider.of<AppState>(context).dispatch((SetOrderCarbonCompensation(carbonCompensation)));
+                              }
                               //calculateEcoTax();
                               debugPrint('UI_U_ConfirmOrder => SWITCH FOOTPRINT : $value');
                             });
@@ -1264,6 +1266,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
     /// TODO LOAD ORDER IN THE STORE!!!!
     // StoreProvider.of<AppState>(context).dispatch(SetOrder(orderState));
     StoreProvider.of<AppState>(context).dispatch(SetOrderDetail(OrderDetailState.fromOrderState(orderState)));
+
     /// TODO NAVIGATE TO ORDER DETAILS
     Navigator.push(
       context,

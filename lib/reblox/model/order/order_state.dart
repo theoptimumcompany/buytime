@@ -323,21 +323,22 @@ class OrderState {
     this.totalPromoDiscount += Utils.calculatePromoDiscount(price, context);
   }
 
-  void removeItem(OrderEntry entry) {
+  void removeItem(OrderEntry entry, BuildContext context) {
     bool deleted = false;
     itemList.forEach((element) {
       //debugPrint('order_state => DATES: ${element.date} - ${entry.date}');
       if (!deleted && element.id == entry.id) {
         this.total -= (entry.price * element.number);
+        this.totalPromoDiscount -= (Utils.calculatePromoDiscount(entry.price, context) * element.number);
         element.number = 0;
         deleted = true;
       }
     });
   }
 
-  void removeReserveItem(OrderEntry entry) {
+  void removeReserveItem(OrderEntry entry, BuildContext context) {
     this.total -= (entry.price);
-
+    this.totalPromoDiscount -= (Utils.calculatePromoDiscount(entry.price, context));
   }
 
   bool isOrderAutoConfirmable() {

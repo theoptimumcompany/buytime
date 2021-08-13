@@ -273,24 +273,30 @@ class OrderReservableState {
         switchAutoConfirm: itemToAdd.switchAutoConfirm,
       vat: itemToAdd.vat != null && itemToAdd.vat != 0 ? itemToAdd.vat : 22
     ));
-    this.total += price;
+
     this.totalPromoDiscount += Utils.calculatePromoDiscount(price, context);
+    this.total += price;
+    this.total -= (totalPromoDiscount / itemList.length);
   }
 
-  void removeItem(OrderEntry entry) {
-    bool deleted = false;
-    itemList.forEach((element) {
-      //debugPrint('order_state => DATES: ${element.date} - ${entry.date}');
-      if (!deleted && element.id == entry.id) {
-        this.total -= (entry.price * element.number);
-        element.number = 0;
-        deleted = true;
-      }
-    });
-  }
+  // void removeItem(OrderEntry entry, BuildContext context) {
+  //   bool deleted = false;
+  //   itemList.forEach((element) {
+  //     //debugPrint('order_state => DATES: ${element.date} - ${entry.date}');
+  //     if (!deleted && element.id == entry.id) {
+  //       this.totalPromoDiscount -= (Utils.calculatePromoDiscount(entry.price, context));
+  //       this.total -= ((entry.price + this.totalPromoDiscount ) * element.number);
+  //       element.number = 0;
+  //       deleted = true;
+  //     }
+  //   });
+  // }
 
-  void removeReserveItem(OrderEntry entry) {
-    this.total -= (entry.price);
+  void removeReserveItem(OrderEntry entry, BuildContext context) {
+
+    this.totalPromoDiscount -= (Utils.calculatePromoDiscount(entry.price, context));
+    this.total -= entry.price;
+    this.total += (totalPromoDiscount / this.itemList.length);
   }
 
   bool isOrderAutoConfirmable() {

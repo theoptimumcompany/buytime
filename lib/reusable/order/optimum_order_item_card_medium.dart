@@ -58,11 +58,11 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
     setState(() {
       if (snapshot.itemList.length > 1) {
         snapshot.cartCounter = snapshot.cartCounter - snapshot.itemList[index].number;
-        snapshot.removeItem(snapshot.itemList[index]);
+        snapshot.removeItem(snapshot.itemList[index],context);
         snapshot.itemList.removeAt(index);
       } else {
         snapshot.cartCounter = snapshot.cartCounter - snapshot.itemList[index].number;
-        snapshot.removeItem(snapshot.itemList[index]);
+        snapshot.removeItem(snapshot.itemList[index],context);
         snapshot.itemList.removeAt(index);
         //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ServiceList()),);
         Navigator.of(context).pop();
@@ -90,7 +90,7 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
         snapshot.itemList.removeAt(index);*/
         }else{
           snapshot.cartCounter = snapshot.cartCounter - snapshot.itemList[index].number;
-          snapshot.removeItem(snapshot.itemList[index]);
+          snapshot.removeItem(snapshot.itemList[index],context);
           snapshot.itemList.removeAt(index);
           //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ServiceList()),);
           //Navigator.of(context).pop();
@@ -112,7 +112,7 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
         snapshot.itemList.removeAt(index);*/
         }else{
           snapshot.cartCounter = snapshot.cartCounter - snapshot.itemList[index].number;
-          snapshot.removeItem(snapshot.itemList[index]);
+          snapshot.removeItem(snapshot.itemList[index],context);
           snapshot.itemList.removeAt(index);
           //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ServiceList()),);
           Navigator.of(context).pop();

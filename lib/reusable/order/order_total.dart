@@ -36,7 +36,7 @@ class OrderTotal extends StatelessWidget {
     calculateEcoTax();
     double vat = 0.0;
     orderState.itemList.forEach((element) {
-      vat += element.price * (element.vat / 100);
+      vat += (element.price - Utils.checkPromoDiscount('general_1', context).discount) * (element.vat / 100);
     });
     return Container(
       width: media.width,
@@ -135,9 +135,7 @@ class OrderTotal extends StatelessWidget {
                     alignment: Alignment.center,
                     //margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 20),
                     child: Text(
-                      Utils.checkPromoDiscount('general_1', context).promotionId != 'empty'
-                          ? (!orderState.carbonCompensation ? '${AppLocalizations.of(context).euroSpace} ${(orderState.total - orderState.totalPromoDiscount).toStringAsFixed(2)}' : '${AppLocalizations.of(context).euroSpace} ${(totalECO - orderState.totalPromoDiscount).toStringAsFixed(2)}')
-                          : (!orderState.carbonCompensation ? '${AppLocalizations.of(context).euroSpace} ${orderState.total.toStringAsFixed(2)}' : '${AppLocalizations.of(context).euroSpace} ${totalECO.toStringAsFixed(2)}'),
+                      !orderState.carbonCompensation ? '${AppLocalizations.of(context).euroSpace} ${orderState.total.toStringAsFixed(2)}' : '${AppLocalizations.of(context).euroSpace} ${totalECO.toStringAsFixed(2)}',
                       style: TextStyle(
                           fontFamily: BuytimeTheme.FontFamily,
                           fontWeight: FontWeight.w600,

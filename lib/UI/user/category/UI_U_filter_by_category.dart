@@ -968,7 +968,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                                                               // StoreProvider.of<AppState>(context).dispatch(());
                                                                               /// fare la nuova add
                                                                               for (int i = 0; i < order.itemList.length; i++) {
-                                                                                order.removeItem(order.itemList[i]);
+                                                                                order.removeItem(order.itemList[i],context);
                                                                               }
                                                                               order.itemList = [];
                                                                               order.cartCounter = 0;

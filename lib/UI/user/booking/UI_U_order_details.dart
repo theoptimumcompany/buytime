@@ -1171,7 +1171,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                               child: FittedBox(
                                 fit: BoxFit.scaleDown,
                                 child: Text(
-                                  order.carbonCompensation != null ?
+                                  order.carbonCompensation != null && order.carbonCompensation?
                                   '${AppLocalizations.of(context).euroSpace} ${(orderDetails.total + Utils.calculateEcoTax(order)).toStringAsFixed(2)}':
                                   '${AppLocalizations.of(context).euroSpace} ${orderDetails.total.toStringAsFixed(2)}',
                                   style: TextStyle(letterSpacing: 0.15, fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.bold, fontSize: 16

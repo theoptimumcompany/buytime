@@ -89,7 +89,7 @@ class CartReservableState extends State<CartReservable> {
         });
       });
       orderReservableState.cartCounter = orderReservableState.cartCounter - entry.number;
-      orderReservableState.removeReserveItem(entry);
+      orderReservableState.removeReserveItem(entry,context);
       orderReservableState.selected.removeAt(index);
 
       orderReservableState.itemList.remove(entry);

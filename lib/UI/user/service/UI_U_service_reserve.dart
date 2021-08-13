@@ -337,8 +337,8 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
     //setState(() {
       //cartCounter = cartCounter - entry.number;
       Provider.of<ReserveList>(context, listen: false).order.cartCounter = Provider.of<ReserveList>(context, listen: false).order.cartCounter - entry.number;
-      Provider.of<ReserveList>(context, listen: false).order.removeReserveItem(entry);
       Provider.of<ReserveList>(context, listen: false).order.itemList.remove(entry);
+      Provider.of<ReserveList>(context, listen: false).order.removeReserveItem(entry,context);
       StoreProvider.of<AppState>(context).dispatch(UpdateOrderReservable(Provider.of<ReserveList>(context, listen: false).order));
     //});
   }
@@ -1549,6 +1549,8 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                                                       element.number -= 1;
                                                                                     }
                                                                                     reserveState.order.total += element.price;
+                                                                                    reserveState.order.total -= (reserveState.order.totalPromoDiscount / reserveState.order.itemList.length);
+
                                                                                   });
                                                                                   Provider.of<ReserveList>(context, listen: false).updateOrder(reserveState.order);
                                                                                   //});
@@ -1605,6 +1607,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                                                       element.number += 1;
                                                                                     }
                                                                                     reserveState.order.total += element.price;
+                                                                                    reserveState.order.total -= (reserveState.order.totalPromoDiscount / reserveState.order.itemList.length);
                                                                                   });
                                                                                   Provider.of<ReserveList>(context, listen: false).updateOrder(reserveState.order);
                                                                                   //});

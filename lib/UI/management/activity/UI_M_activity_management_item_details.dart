@@ -97,7 +97,7 @@ class _ActivityManagementItemDetailsState extends State<ActivityManagementItemDe
     debugPrint('UI_U_Cart => Remove Normal Item');
     setState(() {
       snapshot.cartCounter = snapshot.cartCounter - entry.number;
-      snapshot.removeReserveItem(entry);
+      snapshot.removeReserveItem(entry,context);
       snapshot.selected.removeAt(index);
       snapshot.itemList.remove(entry);
       if (snapshot.itemList.length == 0) Navigator.of(context).pop();
