@@ -1639,28 +1639,31 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                             categoryList.forEach((element) async {
                                               List<ServiceState> s = [];
                                               List<ServiceState> tmpServiceList = [];
-                                              s.addAll(snapshot.serviceList.serviceListState);
+                                              s.addAll(popularList);
                                               s.forEach((service) {
                                                 if (service.categoryId != null) {
                                                   service.categoryId.forEach((element2) {
                                                     //debugPrint('CATEGORY ID: ${element2}');
-                                                    if (categoryListIds[element.name].contains(element2)) {
-                                                      //tmpServiceList.add(element);
-                                                      tmpServiceList.add(service);
+                                                    if (!tmpServiceList.contains(service)) {
+                                                      if(categoryListIds[element.name].contains(element2)) {
+                                                        //tmpServiceList.add(element);
+                                                        tmpServiceList.add(service);
+                                                      }
                                                     }
+                                                    snapshot.serviceListSnippetListState.serviceListSnippetListState.forEach((sl) {
+                                                      sl.businessSnippet.forEach((c) {
+                                                        if(!tmpServiceList.contains(service) && c.categoryAbsolutePath.contains(element2) && c.categoryAbsolutePath.contains(element.id))
+                                                          tmpServiceList.add(service);
+                                                      });
+                                                    });
                                                   });
-                                                  if (!tmp.contains(element)) {
-                                                    if (categoryListIds[element.name].contains(searchCategoryRootId(service.categoryId.first, service.serviceId))) {
-                                                      //tmpServiceList.add(element);
-                                                      tmpServiceList.add(service);
-                                                    }
-                                                  }
+
                                               }});
                                               childrens.add(Flexible(
                                                 child: Container(
                                                   margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0),
                                                   padding: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 2),
-                                                  height: popularList.isNotEmpty || noActivity ? 310 : 200,
+                                                  height: tmpServiceList.isNotEmpty || noActivity ? 310 : 200,
                                                   color: BuytimeTheme.ManagerPrimary.withOpacity(.6),
                                                   child: Column(
                                                     mainAxisAlignment: MainAxisAlignment.start,
