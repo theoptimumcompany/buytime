@@ -1282,7 +1282,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                                 (context, index) {
                                                               //MenuItemModel menuItem = menuItems.elementAt(index);
                                                               CategoryState category = categoryList.elementAt(index);
-                                                              //debugPrint('UI_U_service_explorer => ${category.name}: ${categoryListIds[category.name]}');
+                                                              debugPrint('UI_U_service_explorer => ${category.name}: ${categoryListIds[category.name]}');
                                                               return Container(
                                                                 width: 80,
                                                                 margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0, right: SizeConfig.safeBlockHorizontal * 1),
@@ -1636,6 +1636,8 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                               ),
                                             ));
                                             int i = 0;
+
+                                            List<CategoryState> tmpCategoryList = [];
                                             categoryList.forEach((element) async {
                                               List<ServiceState> s = [];
                                               List<ServiceState> tmpServiceList = [];
@@ -1647,17 +1649,37 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                     if (!tmpServiceList.contains(service)) {
                                                       if(categoryListIds[element.name].contains(element2)) {
                                                         //tmpServiceList.add(element);
+                                                        //debugPrint('SERVICE CATEGORY ID: $element2 - CATEGORY ID: ${element.id} - CATEGORY LIST: ${categoryListIds[element.name]}' );
                                                         tmpServiceList.add(service);
                                                       }
                                                     }
+                                                    //debugPrint('SERVICE NAME: ${service.name} - CATEGORY ID: ${element.id} - SERVICE CATEGORY ID: $element2' );
                                                     snapshot.serviceListSnippetListState.serviceListSnippetListState.forEach((sl) {
                                                       sl.businessSnippet.forEach((c) {
-                                                        if(!tmpServiceList.contains(service) && c.categoryAbsolutePath.contains(element2) && c.categoryAbsolutePath.contains(element.id))
+                                                        if(!tmpServiceList.contains(service) && (c.categoryAbsolutePath.contains(element2) && categoryListIds[element.name].contains(c.categoryAbsolutePath.split('/')[1]))){
                                                           tmpServiceList.add(service);
+                                                        }
                                                       });
                                                     });
+                                                    /*snapshot.serviceListSnippetListState.serviceListSnippetListState.forEach((sl) {
+                                                      sl.businessSnippet.forEach((c) {
+                                                        c.serviceList.forEach((s) {
+                                                          if(!tmpServiceList.contains(service) && s.serviceAbsolutePath.contains(element2) && s.serviceAbsolutePath.contains(element.id) && s.serviceAbsolutePath.contains(service.serviceId))
+                                                            tmpServiceList.add(service);
+                                                        });
+                                                       
+                                                      });
+                                                    });*/
+                                                    /*snapshot.categoryList.categoryListState.forEach((element3) {
+                                                      snapshot.serviceListSnippetListState.serviceListSnippetListState.forEach((sl) {
+                                                        sl.businessSnippet.forEach((c) {
+                                                          //debugPrint('CATEGORY ABSOLUTE PATH: ${c.categoryAbsolutePath} - CATEGORY ID: ${element.id} - SERVICE CATEGORY ID: $element2' );
+                                                          if(!tmpServiceList.contains(service) && c.categoryAbsolutePath.contains(element.id) && c.categoryAbsolutePath.contains(element2)  && c.categoryAbsolutePath.contains(element3.id)  && c.categoryAbsolutePath.contains(service.businessId))
+                                                            tmpServiceList.add(service);
+                                                        });
+                                                      });
+                                                    });*/
                                                   });
-
                                               }});
                                               childrens.add(Flexible(
                                                 child: Container(

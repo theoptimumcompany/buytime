@@ -396,11 +396,8 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                   serviceList.add(element);
                 }
               });
-
               if (!tmpServiceList.contains(element) && !serviceList.contains(element)) {
-
             //    debugPrint('categoryListIds   => ${widget.categoryListIds}');
-
                 if (widget.categoryListIds != null && widget.categoryListIds.contains(searchCategoryRootId(element.categoryId.first, element.serviceId))) {
                     tmpServiceList.add(element);
                     serviceList.add(element);
