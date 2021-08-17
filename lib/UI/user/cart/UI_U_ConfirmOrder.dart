@@ -252,53 +252,55 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                               ),
 
                               /// TEST API infopark WIP
-                              MaterialButton(
-                                textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
-                                color: widget.tourist != null && widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
-                                disabledColor: BuytimeTheme.SymbolLightGrey,
-                                //padding: EdgeInsets.all(media.width * 0.03),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: new BorderRadius.circular(5),
-                                ),
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  width: SizeConfig.blockSizeHorizontal * 57,
-                                  height: 44,
-                                  child: Text(
-                                    AppLocalizations.of(context).test,
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      letterSpacing: 1.25,
-                                      fontSize: 14,
-                                      fontFamily: BuytimeTheme.FontFamily,
-                                      fontWeight: FontWeight.w500,
-                                      color: BuytimeTheme.TextWhite,
-                                    ),
-                                  ),
-                                ),
-                                onPressed: () async {
+                              // MaterialButton(
+                              //   textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
+                              //   color: widget.tourist != null && widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
+                              //   disabledColor: BuytimeTheme.SymbolLightGrey,
+                              //   //padding: EdgeInsets.all(media.width * 0.03),
+                              //   shape: RoundedRectangleBorder(
+                              //     borderRadius: new BorderRadius.circular(5),
+                              //   ),
+                              //   child: Container(
+                              //     alignment: Alignment.center,
+                              //     width: SizeConfig.blockSizeHorizontal * 57,
+                              //     height: 44,
+                              //     child: Text(
+                              //       AppLocalizations.of(context).test,
+                              //       textAlign: TextAlign.center,
+                              //       style: TextStyle(
+                              //         letterSpacing: 1.25,
+                              //         fontSize: 14,
+                              //         fontFamily: BuytimeTheme.FontFamily,
+                              //         fontWeight: FontWeight.w500,
+                              //         color: BuytimeTheme.TextWhite,
+                              //       ),
+                              //     ),
+                              //   ),
+                              //   onPressed: () async {
+                              //
+                              //     // TODO mostrare form infopark
+                              //
+                              //
+                              //     // TODO inoltrare richiesta post con i campi necessari per verificare la disponibilitá
+                              //
+                              //     String infoparkStripeTestKey = "pk_test_D913jo5bMZtK6kAANKTpsulW00omqUEEHd";
+                              //     // TODO richiedere carta di credito
+                              //     // TODO crea metodo di pagamento con la loro chiave pubblica
+                              //
+                              //
+                              //     // TODO conferma il client secret ricevuto
+                              //
+                              //     // TODO esito negativo: visualizza l'errore
+                              //     // TODO esito positivo: crea l'ordine buytime associato
+                              //     // TODO inserire l'ordine nello store
+                              //     // TODO redirect al dettaglio dell'ordine
+                              //
+                              //
+                              //
+                              //   },
+                              // ),
 
-                                  // TODO mostrare form infopark
 
-
-                                  // TODO inoltrare richiesta post con i campi necessari per verificare la disponibilitá
-
-                                  String infoparkStripeTestKey = "pk_test_D913jo5bMZtK6kAANKTpsulW00omqUEEHd";
-                                  // TODO richiedere carta di credito
-                                  // TODO crea metodo di pagamento con la loro chiave pubblica
-
-
-                                  // TODO conferma il client secret ricevuto
-
-                                  // TODO esito negativo: visualizza l'errore
-                                  // TODO esito positivo: crea l'ordine buytime associato
-                                  // TODO inserire l'ordine nello store
-                                  // TODO redirect al dettaglio dell'ordine
-
-
-
-                                },
-                              ),
                               snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.applePay)
                                   ? ApplePayButton(
                                       width: SizeConfig.blockSizeHorizontal * 65,
