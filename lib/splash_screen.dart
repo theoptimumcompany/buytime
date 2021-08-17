@@ -234,9 +234,9 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
       ],
       // All of the previous Flushbars could be dismissed by swiping down
       // now we want to swipe to the sides
-      //dismissDirection: FlushbarDismissDirection.HORIZONTAL,
+      dismissDirection: FlushbarDismissDirection.HORIZONTAL,
       // The default curve is Curves.easeOut
-      duration: Duration(seconds: 4),
+      //duration: Duration(seconds: 4),
       forwardAnimationCurve: Curves.fastLinearToSlowEaseIn,
       messageText: Text(
         message,
