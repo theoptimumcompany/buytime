@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
+import 'package:Buytime/UI/management/activity/UI_M_activity_management.dart';
 import 'package:Buytime/UI/user/landing/UI_U_landing.dart';
 import 'package:Buytime/reblox/model/autoComplete/auto_complete_state.dart';
 import 'package:Buytime/reblox/model/card/card_state.dart';
@@ -155,7 +156,7 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
             notifyFlushbar('OM: ' + notification.title);
             /*Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => UI_U_OrderDetail()), /// TODO: @nipuna, redirect the user to the right UI (notification list?)
+              MaterialPageRoute(builder: (context) => ActivityManagement()), /// TODO: @nipuna, redirect the user to the right UI (notification list?)
             );*/
           }
         });
@@ -236,7 +237,7 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
       // now we want to swipe to the sides
       dismissDirection: FlushbarDismissDirection.HORIZONTAL,
       // The default curve is Curves.easeOut
-      //duration: Duration(seconds: 4),
+      duration: Duration(seconds: 10),
       forwardAnimationCurve: Curves.fastLinearToSlowEaseIn,
       messageText: Text(
         message,
