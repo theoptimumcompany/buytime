@@ -111,11 +111,14 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
     WidgetsBinding.instance.addObserver(this);
     super.initState();
 
-    getAppInfo();
+
 
 
 
     Firebase.initializeApp().then((value) {
+
+      getAppInfo();
+
       final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
       if (!kIsWeb) {
         //TODO: TEST Funzionamento notifiche dopo upgrade pacchetto firebase_messaging
@@ -144,20 +147,37 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
         FirebaseMessaging.onMessage.listen((RemoteMessage message) {
           debugPrint('ON MESSAGE');
           RemoteNotification notification = message.notification;
-          AndroidNotification android = message.notification?.android;
-
-          // If `onMessage` is triggered with a notification, construct our own
-          // local notification to show to users using the created channel.
-          if (notification != null && android != null) {
-            //String messages = AppLocalizations.of(context).sendEmail;
-            //StoreProvider.of<AppState>(context).state.notificationListState.notificationListState.clear();
-            StoreProvider.of<AppState>(context)..dispatch(UserOrderListRequest());
-            StoreProvider.of<AppState>(context).dispatch(RequestNotificationList(StoreProvider.of<AppState>(context).state.user.uid, StoreProvider.of<AppState>(context).state.business.id_firestore));
-            notifyFlushbar('OM: ' + notification.title);
-            /*Navigator.push(
+          if(Platform.isAndroid)
+          {
+            AndroidNotification android = message.notification?.android;          // If `onMessage` is triggered with a notification, construct our own
+            // local notification to show to users using the created channel.
+            if (notification != null && android != null) {
+              //String messages = AppLocalizations.of(context).sendEmail;
+              //StoreProvider.of<AppState>(context).state.notificationListState.notificationListState.clear();
+              StoreProvider.of<AppState>(context)..dispatch(UserOrderListRequest());
+              StoreProvider.of<AppState>(context).dispatch(RequestNotificationList(StoreProvider.of<AppState>(context).state.user.uid, StoreProvider.of<AppState>(context).state.business.id_firestore));
+              notifyFlushbar('OM: ' + notification.title);
+              /*Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => ActivityManagement()), /// TODO: @nipuna, redirect the user to the right UI (notification list?)
             );*/
+            }
+
+          }
+          else if(Platform.isIOS)
+          {
+            AppleNotification apple = message.notification?.apple;
+            if (notification != null && apple != null) {
+              //String messages = AppLocalizations.of(context).sendEmail;
+              //StoreProvider.of<AppState>(context).state.notificationListState.notificationListState.clear();
+              StoreProvider.of<AppState>(context)..dispatch(UserOrderListRequest());
+              StoreProvider.of<AppState>(context).dispatch(RequestNotificationList(StoreProvider.of<AppState>(context).state.user.uid, StoreProvider.of<AppState>(context).state.business.id_firestore));
+              notifyFlushbar('OM : ' + notification.title);
+              /*Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ActivityManagement()), /// TODO: @nipuna, redirect the user to the right UI (notification list?)
+            );*/
+            }
           }
         });
         FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
@@ -237,7 +257,7 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
       // now we want to swipe to the sides
       dismissDirection: FlushbarDismissDirection.HORIZONTAL,
       // The default curve is Curves.easeOut
-      duration: Duration(seconds: 10),
+    //  duration: Duration(seconds: 10),
       forwardAnimationCurve: Curves.fastLinearToSlowEaseIn,
       messageText: Text(
         message,
