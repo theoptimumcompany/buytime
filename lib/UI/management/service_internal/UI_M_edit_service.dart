@@ -490,7 +490,8 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                         flex: 2,
                                                         child: Container(
                                                           child: WidgetServicePhoto(
-                                                            remotePath: "service/" + (snapshot.business.name != null ? snapshot.business.name + "/" : "") + snapshot.serviceState.name + "_1",
+                                                            remotePath: "service/" + (snapshot.business.name != null ? snapshot.business.name + "/" : "") +
+                                                                snapshot.serviceState.serviceId + "_1",
                                                             maxPhoto: 1,
                                                             image: snapshot.serviceState.image1,
                                                             cropAspectRatioPreset: CropAspectRatioPreset.square,
@@ -508,7 +509,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                           children: [
                                                             Container(
                                                               child: WidgetServicePhoto(
-                                                                remotePath: "service/" + (snapshot.business.name != null ? snapshot.business.name + "/" : "") + snapshot.serviceState.name + "_2",
+                                                                remotePath: "service/" + (snapshot.business.name != null ? snapshot.business.name + "/" : "") + snapshot.serviceState.serviceId + "_2",
                                                                 maxPhoto: 1,
                                                                 cropAspectRatioPreset: CropAspectRatioPreset.square,
                                                                 image: snapshot.serviceState.image2,
@@ -519,7 +520,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                               ),
                                                             ),
                                                             WidgetServicePhoto(
-                                                              remotePath: "service/" + (snapshot.business.name != null ? snapshot.business.name + "/" : "") + snapshot.serviceState.name + "_3",
+                                                              remotePath: "service/" + (snapshot.business.name != null ? snapshot.business.name + "/" : "") + snapshot.serviceState.serviceId + "_3",
                                                               maxPhoto: 1,
                                                               cropAspectRatioPreset: CropAspectRatioPreset.square,
                                                               image: snapshot.serviceState.image3,

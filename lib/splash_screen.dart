@@ -89,7 +89,21 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
     version = packageInfo.version;
     String buildNumber = packageInfo.buildNumber;
     debugPrint('splash_screen => VERSION: $version');
+
+    NotificationSettings settings = await FirebaseMessaging.instance.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
+
+    print('User granted permission: ${settings.authorizationStatus}');
   }
+
+
 
   @override
   void initState() {
@@ -97,6 +111,8 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
     super.initState();
 
     getAppInfo();
+
+
 
     Firebase.initializeApp().then((value) {
       final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
@@ -106,6 +122,7 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
         StoreProvider.of<AppState>(context)..dispatch(AreaListRequest());
 
         FirebaseMessaging.onMessage.first.then((message) => () {
+          debugPrint('ON MESSAGE FIRST');
               print("onMessage: $message");
               var data = message.data['data'] ?? message;
               RemoteNotification notification = message.notification;
@@ -124,6 +141,7 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
 
         /// Triggers to manage the messages when the app is in foreground (otherwise the notification is not displayed in android)
         FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+          debugPrint('ON MESSAGE');
           RemoteNotification notification = message.notification;
           AndroidNotification android = message.notification?.android;
 
@@ -142,6 +160,7 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
           }
         });
         FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+          debugPrint('ON MESSAGE OPENED APP');
           var data = message.data['data'] ?? message;
           RemoteNotification notification = message.notification;
           String orderId = data['orderId'];

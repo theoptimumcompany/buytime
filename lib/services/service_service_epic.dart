@@ -931,11 +931,11 @@ Future<ServiceState> uploadFiles(List<OptimumFileToUpload> fileToUploadList, Ser
     String fileUrl = await uploadToFirebaseStorage(fileToUploadList[index]);
     debugPrint('service_service_epic => IMAGE: ${fileUrl.toString()}');
     debugPrint('service_service_epic => URI PARSE: ${Uri.parse(fileUrl).toString()}');
-    if (Uri.decodeFull(fileUrl).contains(serviceState.name + '_1')) {
+    if (Uri.decodeFull(fileUrl).contains(serviceState.serviceId + '_1')) {
       serviceState.image1 = fileUrl.toString();
-    } else if (Uri.decodeFull(fileUrl).contains(serviceState.name + '_2')) {
+    } else if (Uri.decodeFull(fileUrl).contains(serviceState.serviceId + '_2')) {
       serviceState.image2 = fileUrl.toString();
-    } else if (Uri.decodeFull(fileUrl).contains(serviceState.name + '_3')) {
+    } else if (Uri.decodeFull(fileUrl).contains(serviceState.serviceId + '_3')) {
       serviceState.image3 = fileUrl.toString();
     }
     /*if (Uri.parse(fileUrl).toString().contains(serviceState.name + '_1')) {

@@ -22,6 +22,7 @@ import 'package:flutter/material.dart';
 
 import 'UI/management/business/RUI_M_business_list.dart';
 import 'UI/management/service_internal/RUI_M_service_list.dart';
+import 'UI/user/turist/RUI_U_service_explorer.dart';
 
 MaterialPageRoute<dynamic> appRoutes(RouteSettings settings) {
   switch (settings.name) {
@@ -62,7 +63,7 @@ MaterialPageRoute<dynamic> appRoutes(RouteSettings settings) {
     case AppRoutes.serviceDetails:
       return FabRoute(ServiceDetails(), settings: settings);
     case AppRoutes.serviceExplorer:
-      return FabRoute(ServiceExplorer(), settings: settings);
+      return FabRoute(RServiceExplorer(), settings: settings);
     default:
       return MainRoute(Home(), settings: settings);
   }

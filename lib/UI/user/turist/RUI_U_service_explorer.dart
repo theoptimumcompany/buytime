@@ -755,7 +755,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                   ),
 
                                   ///My bookings & View all
-                                  _searchController.text.isEmpty && snapshot.user.getRole() == Role.user
+                                  _searchController.text.isEmpty && snapshot.user.getRole() == Role.user && auth.FirebaseAuth.instance.currentUser != null
                                       ? StreamBuilder<QuerySnapshot>(
                                       stream: _orderStream,
                                       builder: (context, AsyncSnapshot<QuerySnapshot> orderSnapshot) {

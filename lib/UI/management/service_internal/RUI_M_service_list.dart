@@ -650,6 +650,7 @@ class RServiceListState extends State<RServiceList> {
                                             physics: const NeverScrollableScrollPhysics(),
                                             itemCount: arraySize,
                                             itemBuilder: (context, index) {
+                                              debugPrint('SERVICE IMAGE: ${listOfServiceEachRoot[i][index].serviceImage}');
 
                                               if(Provider.of<Spinner>(context, listen: false).add.isNotEmpty && Provider.of<Spinner>(context, listen: false).add[i][0] && index == listOfServiceEachRoot[i].length && arraySize == listOfServiceEachRoot[i].length + 1 ){
                                                 debugPrint('not full service length');

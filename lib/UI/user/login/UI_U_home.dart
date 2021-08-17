@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:math';
+import 'package:Buytime/UI/user/turist/RUI_U_service_explorer.dart';
 import 'package:Buytime/UI/user/turist/UI_U_service_explorer.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -585,7 +586,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                 child: InkWell(
                                   key: Key('free_access_key'),
                                     onTap: () {
-                                      Navigator.of(context).pushNamed(ServiceExplorer.route);
+                                      Navigator.of(context).pushNamed(RServiceExplorer.route);
                                     },
                                     borderRadius: BorderRadius.all(Radius.circular(5.0)),
                                     child: Container(

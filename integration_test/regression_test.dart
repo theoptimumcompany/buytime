@@ -16,6 +16,7 @@ import 'package:redux/redux.dart';
 ///
 ///Android Command
 ///flutter drive --driver integration_test/driver.dart --target --dart-define=ENVIRONMENT=PROD --flavor prod -t integration_test/app_test.dart --debug
+///flutter drive --driver integration_test/driver.dart --target --dart-define=ENVIRONMENT=PROD --flavor prod -t integration_test/regression_test.dart --debug
 ///
 ///iOS Command
 ///flutter drive --driver integration_test/driver.dart --target --dart-define=ENVIRONMENT=PROD -t integration_test/app_test.dart --debug
@@ -495,7 +496,7 @@ Future<void> loadApp(WidgetTester tester) async {
   await tester.pumpWidget(MultiProvider(
     providers: [
       //ChangeNotifierProvider(create: (_) => NavigationState()),
-      ChangeNotifierProvider(create: (_) => Spinner([], [])),
+      ChangeNotifierProvider(create: (_) => Spinner(true,[],[], [])),
     ],
     child: Buytime(store: store),
   ));
