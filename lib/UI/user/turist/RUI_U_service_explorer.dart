@@ -1686,7 +1686,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                   margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0),
                                                   padding: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 2),
                                                   height: tmpServiceList.isNotEmpty || noActivity ? 310 : 200,
-                                                  color: BuytimeTheme.ManagerPrimary.withOpacity(.6),
+                                                  color: BuytimeTheme.BackgroundWhite,
                                                   child: Column(
                                                     mainAxisAlignment: MainAxisAlignment.start,
                                                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -1699,7 +1699,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                           style: TextStyle(
                                                             //letterSpacing: SizeConfig.safeBlockVertical * .4,
                                                               fontFamily: BuytimeTheme.FontFamily,
-                                                              color: BuytimeTheme.TextWhite,
+                                                              color: BuytimeTheme.TextBlack,
                                                               fontWeight: FontWeight.w700,
                                                               fontSize: 18
 
@@ -1715,7 +1715,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                           style: TextStyle(
                                                             //letterSpacing: SizeConfig.safeBlockVertical * .4,
                                                               fontFamily: BuytimeTheme.FontFamily,
-                                                              color: BuytimeTheme.TextWhite,
+                                                              color: BuytimeTheme.TextBlack,
                                                               fontWeight: FontWeight.w500,
                                                               fontSize: 14
 
@@ -1736,7 +1736,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                                 //MenuItemModel menuItem = menuItems.elementAt(index);
                                                                 ServiceState service = tmpServiceList.elementAt(index);
                                                                 return Container(
-                                                                  child: PRCardWidget(182, 182, service, false, false),
+                                                                  child: PRCardWidget(182, 182, service, false, true),
                                                                 );
                                                               },
                                                               childCount: tmpServiceList.length,
@@ -1828,13 +1828,13 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                   ),
                                                 ),
                                               ));
-                                              childrens.add(
+                                              /*childrens.add(
                                                   Container(
                                                     height: 1,
                                                     width: SizeConfig.screenWidth,
                                                     margin: EdgeInsets.symmetric(horizontal: 10),
                                                     color: BuytimeTheme.SymbolWhite,
-                                                  ));
+                                                  ));*/
                                               i++;
                                             });
 
