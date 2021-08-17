@@ -28,6 +28,7 @@ import 'package:Buytime/reblox/reducer/stripe_payment_reducer.dart';
 import 'package:Buytime/reblox/reducer/user_reducer.dart';
 import 'package:Buytime/utils/theme/buytime_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -142,15 +143,15 @@ class _UI_M_BusinessListDrawerState extends State<UI_M_BusinessListDrawer> {
                         child: Padding(
                           padding: const EdgeInsets.only(top: 5.0),
                           child: Text(
-                              snapshot.user.admin ?
-                                  AppLocalizations.of(context).admin :
-                              snapshot.user.salesman ?
-                              AppLocalizations.of(context).salesman :
+                            snapshot.user.admin ?
+                            AppLocalizations.of(context).admin :
+                            snapshot.user.salesman ?
+                            AppLocalizations.of(context).salesman :
                             snapshot.user.owner
                                 ?  AppLocalizations.of(context).owner
                                 : snapshot.user.manager
-                                    ?  AppLocalizations.of(context).manager
-                                    : AppLocalizations.of(context).worker
+                                ?  AppLocalizations.of(context).manager
+                                : AppLocalizations.of(context).worker
                             ,
                             overflow: TextOverflow.ellipsis,
                             textAlign: TextAlign.start,
@@ -194,7 +195,7 @@ class _UI_M_BusinessListDrawerState extends State<UI_M_BusinessListDrawer> {
                 ),
               ),
               ///Notification Center
-              Container(
+              /*Container(
                 decoration: BoxDecoration(border: Border(bottom: BorderSide(color: BuytimeTheme.DividerGrey))),
                 child: ListTile(
                   key: Key('notification_center_key'),
@@ -219,6 +220,62 @@ class _UI_M_BusinessListDrawerState extends State<UI_M_BusinessListDrawer> {
                     setState(() {
                       drawerSelection = DrawerSelection.NotificationCenter;
                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => RNotificationCenter()));
+                    });
+                  },
+                ),
+              ),*/
+              Container(
+                decoration: BoxDecoration(border: Border(bottom: BorderSide(color: BuytimeTheme.DividerGrey))),
+                child: ListTile(
+                  key: Key('notification_center_key'),
+                  selected: drawerSelection == DrawerSelection.NotificationCenter,
+                  //selectedTileColor: Color.fromRGBO(32, 124, 195, 0.3),
+                  autofocus: false,
+                  title: Text(
+                    AppLocalizations.of(context).notificationCenter,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.start,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 14,
+                      fontFamily: BuytimeTheme.FontFamily,
+                      letterSpacing: 0.1,
+                      color: drawerSelection == DrawerSelection.NotificationCenter ? BuytimeTheme.ManagerPrimary : BuytimeTheme.TextBlack,
+                    ),
+                  ),/*trailing: Container(
+                  width: 15,
+                  height: 15,
+                  decoration: BoxDecoration(
+                      color: BuytimeTheme.AccentRed,
+                      borderRadius: BorderRadius.all(Radius.circular(7.5))
+                  ),
+                ),*/
+                  /*leading: StreamBuilder<DocumentSnapshot>(
+                      stream: FirebaseFirestore.instance.collection('user').doc(StoreProvider.of<AppState>(context).state.user.uid).collection('userNotification').doc('userNotificationDoc').snapshots(includeMetadataChanges: true),
+                      builder: (context, AsyncSnapshot<DocumentSnapshot> userNotificationSnapshot) {
+                        if(userNotificationSnapshot.connectionState == ConnectionState.waiting)
+                          return Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              CircularProgressIndicator()
+                            ],
+                          );
+                        return userNotificationSnapshot.data != null && userNotificationSnapshot.data.get('hasNotification') ?
+                        Container(
+                          width: 15,
+                          height: 15,
+                          decoration: BoxDecoration(
+                              color: BuytimeTheme.AccentRed,
+                              borderRadius: BorderRadius.all(Radius.circular(7.5))
+                          ),
+                        ): Container();
+                      }
+                  ),*/
+                  onTap: () {
+                    //Navigator.pop(context);
+                    setState(() {
+                      drawerSelection = DrawerSelection.NotificationCenter;
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => RNotificationCenter()));
                     });
                   },
                 ),
@@ -293,8 +350,8 @@ class _UI_M_BusinessListDrawerState extends State<UI_M_BusinessListDrawer> {
                       Container(
                         decoration: BoxDecoration(
                             border: Border(
-                                top: BorderSide(color: BuytimeTheme.DividerGrey),
-                                //bottom: BorderSide(color: BuytimeTheme.DividerGrey)
+                              top: BorderSide(color: BuytimeTheme.DividerGrey),
+                              //bottom: BorderSide(color: BuytimeTheme.DividerGrey)
                             )
                         ),
                         child: ListTile(
@@ -305,9 +362,9 @@ class _UI_M_BusinessListDrawerState extends State<UI_M_BusinessListDrawer> {
                             String url = BuytimeConfig.FlaviosNumber.trim();
                             debugPrint('Restaurant phonenumber: ' + url);
                             if (await canLaunch('tel:$url')) {
-                            await launch('tel:$url');
+                              await launch('tel:$url');
                             } else {
-                            throw 'Could not launch $url';
+                              throw 'Could not launch $url';
                             }
                           },
                           title: Text(

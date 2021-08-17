@@ -181,14 +181,14 @@ class CartReservableState extends State<CartReservable> {
                         ),
                       ),*/
                             ///Promotion Label
-                            Utils.checkPromoDiscount('general_1', context).promotionId != 'empty'
+                            /*Utils.checkPromoDiscount('general_1', context).promotionId != 'empty'
                                 ? Padding(
                               padding: const EdgeInsets.only(top: 20.0),
                               child: Center(
-                                child: W_PromoDiscount(),
+                                child: W_PromoDiscount(false),
                               ),
                             )
-                                : Container(),
+                                : Container(),*/
 
                             ///Service List
                             Expanded(

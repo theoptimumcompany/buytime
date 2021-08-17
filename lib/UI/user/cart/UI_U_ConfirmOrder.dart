@@ -850,7 +850,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            W_GreenChoice(),
+                            W_GreenChoice(false),
                           ],
                         ),
                         Padding(

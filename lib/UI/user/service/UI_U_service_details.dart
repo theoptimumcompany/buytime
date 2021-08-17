@@ -348,7 +348,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                                                     padding: const EdgeInsets.symmetric(vertical: 5.0,horizontal: 0.0),
                                                                     child: FittedBox(
                                                                       fit: BoxFit.fitHeight,
-                                                                      child: W_PromoDiscount(),
+                                                                      child: W_PromoDiscount(false),
                                                                     ),
                                                                   ),
                                                                 )
@@ -359,7 +359,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                                                   margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
                                                                   child: FittedBox(
                                                                     fit: BoxFit.fitHeight,
-                                                                    child: W_GreenChoice(),
+                                                                    child: W_GreenChoice(false),
                                                                   ),
                                                                 )
                                                               : Container(),

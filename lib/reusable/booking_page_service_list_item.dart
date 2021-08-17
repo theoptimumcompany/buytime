@@ -9,6 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:share/share.dart';
 import 'package:Buytime/UI/user/service/UI_U_service_details.dart';
 
+import 'W_promo_discount.dart';
+
 class BookingListServiceListItem extends StatefulWidget {
   ServiceState serviceState;
   bool tourist;
@@ -89,7 +91,7 @@ class _BookingListServiceListItemState extends State<BookingListServiceListItem>
                           FittedBox(
                             fit: BoxFit.scaleDown,
                             child: Container(
-                              width: SizeConfig.safeBlockHorizontal * 50,
+                              width: SizeConfig.safeBlockHorizontal * 60,
                               child: Text(
                                 widget.serviceState.name != null ? Utils.retriveField(Localizations.localeOf(context).languageCode, widget.serviceState.name) : '',
                                 overflow: TextOverflow.ellipsis,
@@ -106,7 +108,7 @@ class _BookingListServiceListItemState extends State<BookingListServiceListItem>
                           FittedBox(
                             fit: BoxFit.fitHeight,
                             child: Container(
-                              width: 180,
+                              width: SizeConfig.safeBlockHorizontal * 60,
 
                               ///SizeConfig.safeBlockHorizontal * 50
                               height: 40,
@@ -125,13 +127,32 @@ class _BookingListServiceListItemState extends State<BookingListServiceListItem>
                             ),
                           ),
 
-                          ///ECO label
-                          widget.serviceState.tag.contains('ECO')
-                              ? FittedBox(
-                                  fit: BoxFit.fitHeight,
-                                  child: W_GreenChoice(),
-                                )
-                              : Container(),
+                          Flexible(
+                            child: Container(
+                              margin: EdgeInsets.only(bottom: 5),
+                              child: Row(
+                                children: [
+                                  ///ECO label
+                                  widget.serviceState.tag.contains('ECO')
+                                      ? FittedBox(
+                                    fit: BoxFit.contain,
+                                    child: W_GreenChoice(true),
+                                  )
+                                      : Container(),
+                                  ///Promo Discount label
+                                  Utils.checkPromoDiscount('general_1', context).promotionId != 'empty'
+                                      ? Container(
+                                    margin: EdgeInsets.only(left: 5),
+                                        child: FittedBox(
+                                    fit: BoxFit.contain,
+                                    child: W_PromoDiscount(true),
+                                  ),
+                                      ): Container(),
+                                ],
+                              ),
+                            ),
+                          )
+
                         ],
                       ),
                     )
