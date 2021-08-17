@@ -252,37 +252,53 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                               ),
 
                               /// TEST API infopark WIP
-                              // MaterialButton(
-                              //   textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
-                              //   color: widget.tourist != null && widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
-                              //   disabledColor: BuytimeTheme.SymbolLightGrey,
-                              //   //padding: EdgeInsets.all(media.width * 0.03),
-                              //   shape: RoundedRectangleBorder(
-                              //     borderRadius: new BorderRadius.circular(5),
-                              //   ),
-                              //   child: Container(
-                              //     alignment: Alignment.center,
-                              //     width: SizeConfig.blockSizeHorizontal * 57,
-                              //     height: 44,
-                              //     child: Text(
-                              //       AppLocalizations.of(context).test,
-                              //       textAlign: TextAlign.center,
-                              //       style: TextStyle(
-                              //         letterSpacing: 1.25,
-                              //         fontSize: 14,
-                              //         fontFamily: BuytimeTheme.FontFamily,
-                              //         fontWeight: FontWeight.w500,
-                              //         color: BuytimeTheme.TextWhite,
-                              //       ),
-                              //     ),
-                              //   ),
-                              //   onPressed: () async {
-                              //     /// crea metodo di pagamento con la loro chiave pubblica
-                              //
-                              //     /// conferma il client secret ricevuto
-                              //
-                              //   },
-                              // ),
+                              MaterialButton(
+                                textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
+                                color: widget.tourist != null && widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
+                                disabledColor: BuytimeTheme.SymbolLightGrey,
+                                //padding: EdgeInsets.all(media.width * 0.03),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: new BorderRadius.circular(5),
+                                ),
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  width: SizeConfig.blockSizeHorizontal * 57,
+                                  height: 44,
+                                  child: Text(
+                                    AppLocalizations.of(context).test,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      letterSpacing: 1.25,
+                                      fontSize: 14,
+                                      fontFamily: BuytimeTheme.FontFamily,
+                                      fontWeight: FontWeight.w500,
+                                      color: BuytimeTheme.TextWhite,
+                                    ),
+                                  ),
+                                ),
+                                onPressed: () async {
+
+                                  // TODO mostrare form infopark
+
+
+                                  // TODO inoltrare richiesta post con i campi necessari per verificare la disponibilitá
+
+                                  String infoparkStripeTestKey = "pk_test_D913jo5bMZtK6kAANKTpsulW00omqUEEHd";
+                                  // TODO richiedere carta di credito
+                                  // TODO crea metodo di pagamento con la loro chiave pubblica
+
+
+                                  // TODO conferma il client secret ricevuto
+
+                                  // TODO esito negativo: visualizza l'errore
+                                  // TODO esito positivo: crea l'ordine buytime associato
+                                  // TODO inserire l'ordine nello store
+                                  // TODO redirect al dettaglio dell'ordine
+
+
+
+                                },
+                              ),
                               snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.applePay)
                                   ? ApplePayButton(
                                       width: SizeConfig.blockSizeHorizontal * 65,
@@ -1230,41 +1246,38 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
 
     BusinessState businessState = BusinessState.fromJson(businessSnapshot.data());
     Stripe.stripeAccountId = businessState.stripeCustomerId;
-    //
-    // debugPrint("UI_U_ConfirmOrder >>>>>>>> state.business.stripeCustomerId" + businessState.stripeCustomerId);
-    //
-    // if (businessState.stripeCustomerId == null || businessState.stripeCustomerId.isEmpty) {
-    //   debugPrint("UI_U_ConfirmOrder >>>>>>>> state.business.stripeCustomerId is MISSING");
-    // }
-    //
-    // List<ApplePayCartSummaryItem> items = [];
-    // // initializePaymentValues(orderState, orderState.business.name, orderState.total, items);
-    // for (int i = 0; i < orderState.itemList.length; i++) {
-    //   OrderEntry orderEntry = orderState.itemList[i];
-    //   String totalItemPrice = (orderEntry.price * orderEntry.number).toString();
-    //   ApplePayCartSummaryItem item = ApplePayCartSummaryItem(label: Utils.retriveField(Localizations.localeOf(context).languageCode, orderEntry.name), amount: totalItemPrice);
-    //   items.add(item);
-    // }
-    // debugPrint("stripe_payment_service_epic createPaymentServiceNative");
-    // // try {
-    // // 1. Present Apple Pay sheet
-    // var presentApplePay = await Stripe.instance.presentApplePay(
-    //   ApplePayPresentParams(
-    //     cartItems: items,
-    //     country: 'It',
-    //     currency: 'EUR',
-    //   ),
-    // );
-    // final response = await fetchPaymentIntentClientSecret(orderState);
-    // final clientSecret = response['client_secret'];
-    // var resultOfConfirmation = await Stripe.instance.confirmApplePayPayment(clientSecret);
-    // debugPrint("Apple Pay payment succesfully completed");
-    // ScaffoldMessenger.of(context).showSnackBar(
-    //   const SnackBar(content: Text('Apple Pay payment succesfully completed')),
-    // );
-// ---------------
-    /// TODO LOAD ORDER IN THE STORE!!!!
-    // StoreProvider.of<AppState>(context).dispatch(SetOrder(orderState));
+
+    debugPrint("UI_U_ConfirmOrder >>>>>>>> state.business.stripeCustomerId" + businessState.stripeCustomerId);
+
+    if (businessState.stripeCustomerId == null || businessState.stripeCustomerId.isEmpty) {
+      debugPrint("UI_U_ConfirmOrder >>>>>>>> state.business.stripeCustomerId is MISSING");
+    }
+
+    List<ApplePayCartSummaryItem> items = [];
+    // initializePaymentValues(orderState, orderState.business.name, orderState.total, items);
+    for (int i = 0; i < orderState.itemList.length; i++) {
+      OrderEntry orderEntry = orderState.itemList[i];
+      String totalItemPrice = (orderEntry.price * orderEntry.number).toString();
+      ApplePayCartSummaryItem item = ApplePayCartSummaryItem(label: Utils.retriveField(Localizations.localeOf(context).languageCode, orderEntry.name), amount: totalItemPrice);
+      items.add(item);
+    }
+    debugPrint("stripe_payment_service_epic createPaymentServiceNative");
+    // try {
+    // 1. Present Apple Pay sheet
+    var presentApplePay = await Stripe.instance.presentApplePay(
+      ApplePayPresentParams(
+        cartItems: items,
+        country: 'It',
+        currency: 'EUR',
+      ),
+    );
+    final response = await fetchPaymentIntentClientSecret(orderState);
+    final clientSecret = response['client_secret'];
+    var resultOfConfirmation = await Stripe.instance.confirmApplePayPayment(clientSecret);
+    debugPrint("Apple Pay payment succesfully completed");
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Apple Pay payment succesfully completed')),
+    );
     StoreProvider.of<AppState>(context).dispatch(SetOrderDetail(OrderDetailState.fromOrderState(orderState)));
 
     /// TODO NAVIGATE TO ORDER DETAILS
@@ -1272,15 +1285,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
       context,
       MaterialPageRoute(builder: (context) => RUI_U_OrderDetail("")),
     );
-    // StoreProvider.of<AppState>(context).dispatch(NavigatePushAction(AppRoutes.orderDetailsRealtime));
 
-    // } catch (e) {
-    //   debugPrint('Error: $e');
-    //
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     SnackBar(content: Text('Error: $e')),
-    //   );
-    // }
   }
 
   Future<Map<String, dynamic>> fetchPaymentIntentClientSecret(OrderState orderState) async {
