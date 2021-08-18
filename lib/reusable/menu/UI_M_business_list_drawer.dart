@@ -349,6 +349,40 @@ class _UI_M_BusinessListDrawerState extends State<UI_M_BusinessListDrawer> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
+                                ///Speak with
+                                StoreProvider.of<AppState>(context).state.business.salesmanName != null &&
+                                    StoreProvider.of<AppState>(context).state.business.salesmanName.isNotEmpty ?
+                                Container(
+                                  decoration: BoxDecoration(
+                                      border: Border(
+                                        top: BorderSide(color: BuytimeTheme.DividerGrey),
+                                        //bottom: BorderSide(color: BuytimeTheme.DividerGrey)
+                                      )
+                                  ),
+                                  child: ListTile(
+                                    leading: Icon(Icons.call, color: BuytimeTheme.TextMedium, size: 24),
+                                    onTap: () async{
+                                      String url = StoreProvider.of<AppState>(context).state.business.phoneSalesman.isNotEmpty ?
+                                      StoreProvider.of<AppState>(context).state.business.phoneSalesman : BuytimeConfig.FlaviosNumber.trim();
+                                      //String url = BuytimeConfig.FlaviosNumber.trim();
+                                      debugPrint('Restaurant phonenumber: ' + url);
+                                      if (await canLaunch('tel:$url')) {
+                                        await launch('tel:$url');
+                                      } else {
+                                        throw 'Could not launch $url';
+                                      }
+                                    },
+                                    title: Text(
+                                        '${AppLocalizations.of(context).speakWith} ${StoreProvider.of<AppState>(context).state.business.salesmanName}',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 14,
+                                          fontFamily: BuytimeTheme.FontFamily,
+                                          letterSpacing: 0.1,
+                                          color: BuytimeTheme.TextMedium,
+                                        )),
+                                  ),
+                                ) : Container(),
                                 ///Customer service
                                 Container(
                                   decoration: BoxDecoration(
@@ -372,38 +406,6 @@ class _UI_M_BusinessListDrawerState extends State<UI_M_BusinessListDrawer> {
                                     },
                                     title: Text(
                                         AppLocalizations.of(context).speakWithCustomerService,
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 14,
-                                          fontFamily: BuytimeTheme.FontFamily,
-                                          letterSpacing: 0.1,
-                                          color: BuytimeTheme.TextMedium,
-                                        )),
-                                  ),
-                                ),
-                                ///Speak with
-                                Container(
-                                  decoration: BoxDecoration(
-                                      border: Border(
-                                        top: BorderSide(color: BuytimeTheme.DividerGrey),
-                                        //bottom: BorderSide(color: BuytimeTheme.DividerGrey)
-                                      )
-                                  ),
-                                  child: ListTile(
-                                    leading: Icon(Icons.call, color: BuytimeTheme.TextMedium, size: 24),
-                                    onTap: () async{
-                                      String url = StoreProvider.of<AppState>(context).state.business.phoneSalesman.isNotEmpty ?
-                                      StoreProvider.of<AppState>(context).state.business.phoneSalesman : BuytimeConfig.FlaviosNumber.trim();
-                                      //String url = BuytimeConfig.FlaviosNumber.trim();
-                                      debugPrint('Restaurant phonenumber: ' + url);
-                                      if (await canLaunch('tel:$url')) {
-                                        await launch('tel:$url');
-                                      } else {
-                                        throw 'Could not launch $url';
-                                      }
-                                    },
-                                    title: Text(
-                                        '${AppLocalizations.of(context).speakWith} ${StoreProvider.of<AppState>(context).state.business.salesmanName}',
                                         style: TextStyle(
                                           fontWeight: FontWeight.w500,
                                           fontSize: 14,
