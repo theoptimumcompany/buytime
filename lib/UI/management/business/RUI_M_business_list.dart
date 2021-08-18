@@ -162,7 +162,7 @@ class RBusinessListState extends State<RBusinessList> {
                       );
                     }
 
-                    if (businessSnippet.hasError || businessSnippet.data.docs.isEmpty) {
+                    if (businessSnippet.hasError || (businessSnippet.data != null && businessSnippet.data.docs.isEmpty)) {
                       return Container(
                         height: SizeConfig.safeBlockVertical * 8,
                         margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),

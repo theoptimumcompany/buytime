@@ -506,7 +506,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                           ),
                         ),
                       ),
-                      order.cartCounter > 0
+                      /*order.cartCounter > 0
                           ? Positioned.fill(
                         top: 5,
                         left: 2.5,
@@ -523,7 +523,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                           ),
                         ),
                       )
-                          : Container(),
+                          : Container(),*/
                     ],
                   ),
                 ),

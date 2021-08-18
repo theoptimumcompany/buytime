@@ -111,10 +111,6 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
     WidgetsBinding.instance.addObserver(this);
     super.initState();
 
-
-
-
-
     Firebase.initializeApp().then((value) {
 
       getAppInfo();

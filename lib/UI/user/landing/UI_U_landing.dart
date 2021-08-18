@@ -200,7 +200,7 @@ class LandingState extends State<Landing> {
             debugPrint('UI_U_landing: USER NOT LOGGED in onLink');
         } else if (deepLink.queryParameters.containsKey('categoryInvite') && categoryInviteRead != 'true') {
           String categoryInvite = deepLink.queryParameters['categoryInvite'];
-          debugPrint('UI_U_landing: categoryInvite: $categoryInvite');
+          debugPrint('v: $categoryInvite');
           await storage.write(key: 'categoryInvite', value: categoryInvite);
           await storage.write(key: 'categoryInviteRead', value: 'true');
 

@@ -258,6 +258,7 @@ class RServiceListState extends State<RServiceList> {
             ],
           ),
           body: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
               ///Container Redirect To Managing Categories of the Business
               Container(
@@ -970,12 +971,12 @@ class RServiceListState extends State<RServiceList> {
                                                                                       child: spinner,
                                                                                     ) :
                                                                                     IconButton(
-                                                                                        onPressed: () {
+                                                                                        onPressed: canAccess(id(categories[i].categoryAbsolutePath)) ? () {
                                                                                           /// chiamare la epic per duplicare il servizio.
                                                                                           StoreProvider.of<AppState>(context).dispatch(DuplicateService(id(listOfServiceEachRoot[i][index].serviceAbsolutePath)));
                                                                                           /// far partire un caricamento e bloccare tutti i duplicates
                                                                                           Provider.of<Spinner>(context, listen: false).updateDuplicateSpinner(listDDOfVisibility, i, index);
-                                                                                        },
+                                                                                        } : null,
                                                                                         icon: Icon(Icons.copy, color: BuytimeTheme.SymbolGrey, size: 24)),
                                                                                   ),
                                                                                 ],
@@ -1028,7 +1029,6 @@ class RServiceListState extends State<RServiceList> {
                     );
                   }
               ),
-
             ],
           ),
         ));

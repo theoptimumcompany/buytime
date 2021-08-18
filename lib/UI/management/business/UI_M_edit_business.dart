@@ -295,11 +295,11 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
                                         _businessNameController.text = store.state.business.name;
                                         _responsiblePersonNameController.text = store.state.business.responsible_person_name;
                                         _responsiblePersonSurnameController.text = store.state.business.responsible_person_surname;
-                                        _responsiblePersonEmailController.text = store.state.business.email;
+                                        _responsiblePersonEmailController.text = store.state.business.responsible_person_email;
                                         _salesmanNameController.text = store.state.business.salesmanName;
                                         _salesmanPhonenumberController.text = store.state.business.phoneSalesman;
                                         _conciergePhonenumberController.text = store.state.business.phoneConcierge;
-                                        _emailController.text = store.state.business.responsible_person_email;
+                                        _emailController.text = store.state.business.email;
                                         _vatController.text = store.state.business.VAT;
 
                                         ///Address

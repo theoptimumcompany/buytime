@@ -70,132 +70,135 @@ class _UI_M_BusinessListDrawerState extends State<UI_M_BusinessListDrawer> {
     var mediaHeight = media.height;
     var mediaWidth = media.width;
     return Drawer(
-      // Add a ListView to the drawer. This ensures the user can scroll
-      // through the options in the drawer if there isn't enough vertical
-      // space to fit everything.
-      child: StoreConnector<AppState, AppState>(
-        converter: (store) => store.state,
-        builder: (context, snapshot) {
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              ///Header
-              Container(
-                height: 235,
-                child: DrawerHeader(
-                  margin: EdgeInsets.all(0),
-                  child: Column(
-                    children: [
-                      ///Logo
-                      Container(
-                        alignment: Alignment.centerLeft,
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 10.0),
-                          child: Image.asset('assets/img/img_buytime.png', height: 40),
-                        ),
-                      ),
+      child: LayoutBuilder(
+        builder: (context, constraint) {
+          return SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minHeight: constraint.maxHeight),
+              child: IntrinsicHeight(
+                child: StoreConnector<AppState, AppState>(
+                  converter: (store) => store.state,
+                  builder: (context, snapshot) {
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        ///Header
+                        Container(
+                          height: 235,
+                          child: DrawerHeader(
+                            margin: EdgeInsets.all(0),
+                            child: Column(
+                              children: [
+                                ///Logo
+                                Container(
+                                  alignment: Alignment.centerLeft,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(top: 10.0),
+                                    child: Image.asset('assets/img/img_buytime.png', height: 40),
+                                  ),
+                                ),
 
-                      ///Buytime text
-                      Container(
-                        alignment: Alignment.centerLeft,
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 15.0),
-                          child: Text(
-                            AppLocalizations.of(context).buytime,
-                            overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.start,
-                            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 20, fontFamily: BuytimeTheme.FontFamily, letterSpacing: 0.15, color: BuytimeTheme.TextBlack),
+                                ///Buytime text
+                                Container(
+                                  alignment: Alignment.centerLeft,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(top: 15.0),
+                                    child: Text(
+                                      AppLocalizations.of(context).buytime,
+                                      overflow: TextOverflow.ellipsis,
+                                      textAlign: TextAlign.start,
+                                      style: TextStyle(fontWeight: FontWeight.w600, fontSize: 20, fontFamily: BuytimeTheme.FontFamily, letterSpacing: 0.15, color: BuytimeTheme.TextBlack),
+                                    ),
+                                  ),
+                                ),
+
+                                ///Sub text
+                                Container(
+                                  alignment: Alignment.centerLeft,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(top: 5.0),
+                                    child: Text(
+                                      AppLocalizations.of(context).enterpriseManagement,
+                                      overflow: TextOverflow.ellipsis,
+                                      textAlign: TextAlign.start,
+                                      style: TextStyle(fontWeight: FontWeight.w500, fontSize: 20, fontFamily: BuytimeTheme.FontFamily, letterSpacing: 0.25, color: BuytimeTheme.TextMedium),
+                                    ),
+                                  ),
+                                ),
+
+                                ///User E-Mail
+                                Container(
+                                  alignment: Alignment.centerLeft,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(top: 10.0),
+                                    child: Text(
+                                      snapshot.user.email,
+                                      overflow: TextOverflow.ellipsis,
+                                      textAlign: TextAlign.start,
+                                      style: TextStyle(fontWeight: FontWeight.w300, fontSize: 12, fontFamily: BuytimeTheme.FontFamily, letterSpacing: 0.25, color: BuytimeTheme.TextMedium),
+                                    ),
+                                  ),
+                                ),
+
+                                ///User Role
+                                Container(
+                                  alignment: Alignment.centerLeft,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(top: 5.0),
+                                    child: Text(
+                                      snapshot.user.admin ?
+                                      AppLocalizations.of(context).admin :
+                                      snapshot.user.salesman ?
+                                      AppLocalizations.of(context).salesman :
+                                      snapshot.user.owner
+                                          ?  AppLocalizations.of(context).owner
+                                          : snapshot.user.manager
+                                          ?  AppLocalizations.of(context).manager
+                                          : AppLocalizations.of(context).worker
+                                      ,
+                                      overflow: TextOverflow.ellipsis,
+                                      textAlign: TextAlign.start,
+                                      style: TextStyle(fontWeight: FontWeight.w300, fontSize: 12, fontFamily: BuytimeTheme.FontFamily, letterSpacing: 0.25, color: BuytimeTheme.TextMedium),
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
                           ),
                         ),
-                      ),
 
-                      ///Sub text
-                      Container(
-                        alignment: Alignment.centerLeft,
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 5.0),
-                          child: Text(
-                            AppLocalizations.of(context).enterpriseManagement,
-                            overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.start,
-                            style: TextStyle(fontWeight: FontWeight.w500, fontSize: 20, fontFamily: BuytimeTheme.FontFamily, letterSpacing: 0.25, color: BuytimeTheme.TextMedium),
+                        ///Business List
+                        Container(
+                          decoration: BoxDecoration(border: Border(bottom: BorderSide(color: BuytimeTheme.DividerGrey))),
+                          child: ListTile(
+                            key: Key('business_list_key'),
+                            selected: drawerSelection == DrawerSelection.BusinessList,
+                            //selectedTileColor: Color.fromRGBO(32, 124, 195, 0.3),
+                            autofocus: false,
+                            title: Text(
+                              AppLocalizations.of(context).businessList,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.start,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w400,
+                                fontSize: 14,
+                                fontFamily: BuytimeTheme.FontFamily,
+                                letterSpacing: 0.1,
+                                color: drawerSelection == DrawerSelection.BusinessList ? BuytimeTheme.ManagerPrimary : BuytimeTheme.TextBlack,
+                              ),
+                            ),
+                            //leading: Icon(Icons.list),
+                            onTap: () {
+                              //Navigator.pop(context);
+                              setState(() {
+                                drawerSelection = DrawerSelection.BusinessList;
+                                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => RBusinessList()));
+                              });
+                            },
                           ),
                         ),
-                      ),
-
-                      ///User E-Mail
-                      Container(
-                        alignment: Alignment.centerLeft,
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 10.0),
-                          child: Text(
-                            snapshot.user.email,
-                            overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.start,
-                            style: TextStyle(fontWeight: FontWeight.w300, fontSize: 12, fontFamily: BuytimeTheme.FontFamily, letterSpacing: 0.25, color: BuytimeTheme.TextMedium),
-                          ),
-                        ),
-                      ),
-
-                      ///User Role
-                      Container(
-                        alignment: Alignment.centerLeft,
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 5.0),
-                          child: Text(
-                            snapshot.user.admin ?
-                            AppLocalizations.of(context).admin :
-                            snapshot.user.salesman ?
-                            AppLocalizations.of(context).salesman :
-                            snapshot.user.owner
-                                ?  AppLocalizations.of(context).owner
-                                : snapshot.user.manager
-                                ?  AppLocalizations.of(context).manager
-                                : AppLocalizations.of(context).worker
-                            ,
-                            overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.start,
-                            style: TextStyle(fontWeight: FontWeight.w300, fontSize: 12, fontFamily: BuytimeTheme.FontFamily, letterSpacing: 0.25, color: BuytimeTheme.TextMedium),
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-
-              ///Business List
-              Container(
-                decoration: BoxDecoration(border: Border(bottom: BorderSide(color: BuytimeTheme.DividerGrey))),
-                child: ListTile(
-                  key: Key('business_list_key'),
-                  selected: drawerSelection == DrawerSelection.BusinessList,
-                  //selectedTileColor: Color.fromRGBO(32, 124, 195, 0.3),
-                  autofocus: false,
-                  title: Text(
-                    AppLocalizations.of(context).businessList,
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.start,
-                    style: TextStyle(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 14,
-                      fontFamily: BuytimeTheme.FontFamily,
-                      letterSpacing: 0.1,
-                      color: drawerSelection == DrawerSelection.BusinessList ? BuytimeTheme.ManagerPrimary : BuytimeTheme.TextBlack,
-                    ),
-                  ),
-                  //leading: Icon(Icons.list),
-                  onTap: () {
-                    //Navigator.pop(context);
-                    setState(() {
-                      drawerSelection = DrawerSelection.BusinessList;
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => RBusinessList()));
-                    });
-                  },
-                ),
-              ),
-              ///Notification Center
-              /*Container(
+                        ///Notification Center
+                        /*Container(
                 decoration: BoxDecoration(border: Border(bottom: BorderSide(color: BuytimeTheme.DividerGrey))),
                 child: ListTile(
                   key: Key('notification_center_key'),
@@ -224,25 +227,25 @@ class _UI_M_BusinessListDrawerState extends State<UI_M_BusinessListDrawer> {
                   },
                 ),
               ),*/
-              Container(
-                decoration: BoxDecoration(border: Border(bottom: BorderSide(color: BuytimeTheme.DividerGrey))),
-                child: ListTile(
-                  key: Key('notification_center_key'),
-                  selected: drawerSelection == DrawerSelection.NotificationCenter,
-                  //selectedTileColor: Color.fromRGBO(32, 124, 195, 0.3),
-                  autofocus: false,
-                  title: Text(
-                    AppLocalizations.of(context).notificationCenter,
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.start,
-                    style: TextStyle(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 14,
-                      fontFamily: BuytimeTheme.FontFamily,
-                      letterSpacing: 0.1,
-                      color: drawerSelection == DrawerSelection.NotificationCenter ? BuytimeTheme.ManagerPrimary : BuytimeTheme.TextBlack,
-                    ),
-                  ),/*trailing: Container(
+                        Container(
+                          decoration: BoxDecoration(border: Border(bottom: BorderSide(color: BuytimeTheme.DividerGrey))),
+                          child: ListTile(
+                            key: Key('notification_center_key'),
+                            selected: drawerSelection == DrawerSelection.NotificationCenter,
+                            //selectedTileColor: Color.fromRGBO(32, 124, 195, 0.3),
+                            autofocus: false,
+                            title: Text(
+                              AppLocalizations.of(context).notificationCenter,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.start,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w400,
+                                fontSize: 14,
+                                fontFamily: BuytimeTheme.FontFamily,
+                                letterSpacing: 0.1,
+                                color: drawerSelection == DrawerSelection.NotificationCenter ? BuytimeTheme.ManagerPrimary : BuytimeTheme.TextBlack,
+                              ),
+                            ),/*trailing: Container(
                   width: 15,
                   height: 15,
                   decoration: BoxDecoration(
@@ -250,7 +253,7 @@ class _UI_M_BusinessListDrawerState extends State<UI_M_BusinessListDrawer> {
                       borderRadius: BorderRadius.all(Radius.circular(7.5))
                   ),
                 ),*/
-                  /*leading: StreamBuilder<DocumentSnapshot>(
+                            /*leading: StreamBuilder<DocumentSnapshot>(
                       stream: FirebaseFirestore.instance.collection('user').doc(StoreProvider.of<AppState>(context).state.user.uid).collection('userNotification').doc('userNotificationDoc').snapshots(includeMetadataChanges: true),
                       builder: (context, AsyncSnapshot<DocumentSnapshot> userNotificationSnapshot) {
                         if(userNotificationSnapshot.connectionState == ConnectionState.waiting)
@@ -271,171 +274,171 @@ class _UI_M_BusinessListDrawerState extends State<UI_M_BusinessListDrawer> {
                         ): Container();
                       }
                   ),*/
-                  onTap: () {
-                    //Navigator.pop(context);
-                    setState(() {
-                      drawerSelection = DrawerSelection.NotificationCenter;
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => RNotificationCenter()));
-                    });
-                  },
-                ),
-              ),
-              ///Activity Management
-              Container(
-                decoration: BoxDecoration(border: Border(bottom: BorderSide(color: BuytimeTheme.DividerGrey))),
-                child: ListTile(
-                  key: Key('activity_management_key'),
-                  selected: drawerSelection == DrawerSelection.ActivityManagement,
-                  //selectedTileColor: Color.fromRGBO(32, 124, 195, 0.3),
-                  autofocus: false,
-                  title: Text(
-                    AppLocalizations.of(context).activityManagement,
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.start,
-                    style: TextStyle(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 14,
-                      fontFamily: BuytimeTheme.FontFamily,
-                      letterSpacing: 0.1,
-                      color: drawerSelection == DrawerSelection.ActivityManagement ? BuytimeTheme.ManagerPrimary : BuytimeTheme.TextBlack,
-                    ),
-                  ),
-                  //leading: Icon(Icons.list),
-                  onTap: () {
-                    //Navigator.pop(context);
-                    setState(() {
-                      drawerSelection = DrawerSelection.ActivityManagement;
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => RActivityManagement()));
-                    });
-                  },
-                ),
-              ),
-              ///Slot Management
-              Container(
-                decoration: BoxDecoration(border: Border(bottom: BorderSide(color: BuytimeTheme.DividerGrey))),
-                child: ListTile(
-                  key: Key('slot_management_key'),
-                  selected: drawerSelection == DrawerSelection.SlotManagement,
-                  //selectedTileColor: Color.fromRGBO(32, 124, 195, 0.3),
-                  autofocus: false,
-                  title: Text(
-                    AppLocalizations.of(context).slotManagement,
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.start,
-                    style: TextStyle(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 14,
-                      fontFamily: BuytimeTheme.FontFamily,
-                      letterSpacing: 0.1,
-                      color: drawerSelection == DrawerSelection.SlotManagement ? BuytimeTheme.ManagerPrimary : BuytimeTheme.TextBlack,
-                    ),
-                  ),
-                  //leading: Icon(Icons.list),
-                  onTap: () {
-                    //Navigator.pop(context);
-                    setState(() {
-                      drawerSelection = DrawerSelection.SlotManagement;
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SlotManagement()));
-                    });
-                  },
-                ),
-              ),
-              Expanded(
-                child: Align(
-                  alignment: FractionalOffset.bottomLeft,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      ///Customer service
-                      Container(
-                        decoration: BoxDecoration(
-                            border: Border(
-                              top: BorderSide(color: BuytimeTheme.DividerGrey),
-                              //bottom: BorderSide(color: BuytimeTheme.DividerGrey)
-                            )
+                            onTap: () {
+                              //Navigator.pop(context);
+                              setState(() {
+                                drawerSelection = DrawerSelection.NotificationCenter;
+                                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => RNotificationCenter()));
+                              });
+                            },
+                          ),
                         ),
-                        child: ListTile(
-                          leading: Icon(Icons.call, color: BuytimeTheme.TextMedium, size: 24),
-                          onTap: () async{
-                            /*String url = StoreProvider.of<AppState>(context).state.business.phoneConcierge.isNotEmpty ?
+                        ///Activity Management
+                        Container(
+                          decoration: BoxDecoration(border: Border(bottom: BorderSide(color: BuytimeTheme.DividerGrey))),
+                          child: ListTile(
+                            key: Key('activity_management_key'),
+                            selected: drawerSelection == DrawerSelection.ActivityManagement,
+                            //selectedTileColor: Color.fromRGBO(32, 124, 195, 0.3),
+                            autofocus: false,
+                            title: Text(
+                              AppLocalizations.of(context).activityManagement,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.start,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w400,
+                                fontSize: 14,
+                                fontFamily: BuytimeTheme.FontFamily,
+                                letterSpacing: 0.1,
+                                color: drawerSelection == DrawerSelection.ActivityManagement ? BuytimeTheme.ManagerPrimary : BuytimeTheme.TextBlack,
+                              ),
+                            ),
+                            //leading: Icon(Icons.list),
+                            onTap: () {
+                              //Navigator.pop(context);
+                              setState(() {
+                                drawerSelection = DrawerSelection.ActivityManagement;
+                                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => RActivityManagement()));
+                              });
+                            },
+                          ),
+                        ),
+                        ///Slot Management
+                        Container(
+                          decoration: BoxDecoration(border: Border(bottom: BorderSide(color: BuytimeTheme.DividerGrey))),
+                          child: ListTile(
+                            key: Key('slot_management_key'),
+                            selected: drawerSelection == DrawerSelection.SlotManagement,
+                            //selectedTileColor: Color.fromRGBO(32, 124, 195, 0.3),
+                            autofocus: false,
+                            title: Text(
+                              AppLocalizations.of(context).slotManagement,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.start,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w400,
+                                fontSize: 14,
+                                fontFamily: BuytimeTheme.FontFamily,
+                                letterSpacing: 0.1,
+                                color: drawerSelection == DrawerSelection.SlotManagement ? BuytimeTheme.ManagerPrimary : BuytimeTheme.TextBlack,
+                              ),
+                            ),
+                            //leading: Icon(Icons.list),
+                            onTap: () {
+                              //Navigator.pop(context);
+                              setState(() {
+                                drawerSelection = DrawerSelection.SlotManagement;
+                                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SlotManagement()));
+                              });
+                            },
+                          ),
+                        ),
+                        Expanded(
+                          child: Align(
+                            alignment: FractionalOffset.bottomLeft,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                ///Customer service
+                                Container(
+                                  decoration: BoxDecoration(
+                                      border: Border(
+                                        top: BorderSide(color: BuytimeTheme.DividerGrey),
+                                        //bottom: BorderSide(color: BuytimeTheme.DividerGrey)
+                                      )
+                                  ),
+                                  child: ListTile(
+                                    leading: Icon(Icons.call, color: BuytimeTheme.TextMedium, size: 24),
+                                    onTap: () async{
+                                      /*String url = StoreProvider.of<AppState>(context).state.business.phoneConcierge.isNotEmpty ?
                             StoreProvider.of<AppState>(context).state.business.phoneConcierge : BuytimeConfig.FlaviosNumber.trim();*/
-                            String url = BuytimeConfig.FlaviosNumber.trim();
-                            debugPrint('Restaurant phonenumber: ' + url);
-                            if (await canLaunch('tel:$url')) {
-                              await launch('tel:$url');
-                            } else {
-                              throw 'Could not launch $url';
-                            }
-                          },
-                          title: Text(
-                              AppLocalizations.of(context).speakWithCustomerService,
-                              style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 14,
-                                fontFamily: BuytimeTheme.FontFamily,
-                                letterSpacing: 0.1,
-                                color: BuytimeTheme.TextMedium,
-                              )),
-                        ),
-                      ),
-                      ///Speak with
-                      Container(
-                        decoration: BoxDecoration(
-                            border: Border(
-                              top: BorderSide(color: BuytimeTheme.DividerGrey),
-                              //bottom: BorderSide(color: BuytimeTheme.DividerGrey)
-                            )
-                        ),
-                        child: ListTile(
-                          leading: Icon(Icons.call, color: BuytimeTheme.TextMedium, size: 24),
-                          onTap: () async{
-                            String url = StoreProvider.of<AppState>(context).state.business.phoneSalesman.isNotEmpty ?
-                            StoreProvider.of<AppState>(context).state.business.phoneSalesman : BuytimeConfig.FlaviosNumber.trim();
-                            //String url = BuytimeConfig.FlaviosNumber.trim();
-                            debugPrint('Restaurant phonenumber: ' + url);
-                            if (await canLaunch('tel:$url')) {
-                              await launch('tel:$url');
-                            } else {
-                              throw 'Could not launch $url';
-                            }
-                          },
-                          title: Text(
-                              '${AppLocalizations.of(context).speakWith} ${StoreProvider.of<AppState>(context).state.business.salesmanName}',
-                              style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 14,
-                                fontFamily: BuytimeTheme.FontFamily,
-                                letterSpacing: 0.1,
-                                color: BuytimeTheme.TextMedium,
-                              )),
-                        ),
-                      ),
-                      ///Client mode
-                      Container(
-                        decoration: BoxDecoration(border: Border(top: BorderSide(color: BuytimeTheme.DividerGrey), bottom: BorderSide(color: BuytimeTheme.DividerGrey))),
-                        child: ListTile(
-                          leading: Icon(Icons.emoji_emotions_outlined, color: BuytimeTheme.TextMedium, size: 24),
-                          onTap: () {
-                            /*StoreProvider.of<AppState>(context)
+                                      String url = BuytimeConfig.FlaviosNumber.trim();
+                                      debugPrint('Restaurant phonenumber: ' + url);
+                                      if (await canLaunch('tel:$url')) {
+                                        await launch('tel:$url');
+                                      } else {
+                                        throw 'Could not launch $url';
+                                      }
+                                    },
+                                    title: Text(
+                                        AppLocalizations.of(context).speakWithCustomerService,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 14,
+                                          fontFamily: BuytimeTheme.FontFamily,
+                                          letterSpacing: 0.1,
+                                          color: BuytimeTheme.TextMedium,
+                                        )),
+                                  ),
+                                ),
+                                ///Speak with
+                                Container(
+                                  decoration: BoxDecoration(
+                                      border: Border(
+                                        top: BorderSide(color: BuytimeTheme.DividerGrey),
+                                        //bottom: BorderSide(color: BuytimeTheme.DividerGrey)
+                                      )
+                                  ),
+                                  child: ListTile(
+                                    leading: Icon(Icons.call, color: BuytimeTheme.TextMedium, size: 24),
+                                    onTap: () async{
+                                      String url = StoreProvider.of<AppState>(context).state.business.phoneSalesman.isNotEmpty ?
+                                      StoreProvider.of<AppState>(context).state.business.phoneSalesman : BuytimeConfig.FlaviosNumber.trim();
+                                      //String url = BuytimeConfig.FlaviosNumber.trim();
+                                      debugPrint('Restaurant phonenumber: ' + url);
+                                      if (await canLaunch('tel:$url')) {
+                                        await launch('tel:$url');
+                                      } else {
+                                        throw 'Could not launch $url';
+                                      }
+                                    },
+                                    title: Text(
+                                        '${AppLocalizations.of(context).speakWith} ${StoreProvider.of<AppState>(context).state.business.salesmanName}',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 14,
+                                          fontFamily: BuytimeTheme.FontFamily,
+                                          letterSpacing: 0.1,
+                                          color: BuytimeTheme.TextMedium,
+                                        )),
+                                  ),
+                                ),
+                                ///Client mode
+                                Container(
+                                  decoration: BoxDecoration(border: Border(top: BorderSide(color: BuytimeTheme.DividerGrey), bottom: BorderSide(color: BuytimeTheme.DividerGrey))),
+                                  child: ListTile(
+                                    leading: Icon(Icons.emoji_emotions_outlined, color: BuytimeTheme.TextMedium, size: 24),
+                                    onTap: () {
+                                      /*StoreProvider.of<AppState>(context)
                               .dispatch(SetBusinessListToEmpty());
                           StoreProvider.of<AppState>(context)
                               .dispatch(SetOrderListToEmpty());*/
-                            switchToClient = true;
-                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Landing()));
-                          },
-                          title: Text(AppLocalizations.of(context).clientMode,
-                              style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 14,
-                                fontFamily: BuytimeTheme.FontFamily,
-                                letterSpacing: 0.1,
-                                color: BuytimeTheme.TextMedium,
-                              )),
-                        ),
-                      ),
+                                      switchToClient = true;
+                                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Landing()));
+                                    },
+                                    title: Text(AppLocalizations.of(context).clientMode,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 14,
+                                          fontFamily: BuytimeTheme.FontFamily,
+                                          letterSpacing: 0.1,
+                                          color: BuytimeTheme.TextMedium,
+                                        )),
+                                  ),
+                                ),
 
-                      ///Settings
-                      /*ListTile(
+                                ///Settings
+                                /*ListTile(
                         leading: Icon(Icons.settings, color: BuytimeTheme.TextMedium, size: 24),
                         onTap: () {},
                         title: Text(AppLocalizations.of(context).userSettings,
@@ -448,58 +451,63 @@ class _UI_M_BusinessListDrawerState extends State<UI_M_BusinessListDrawer> {
                             )),
                       ),*/
 
-                      ///Log out
-                      ListTile(
-                        key: Key('log_out_key'),
-                        leading: Icon(Icons.logout, color: BuytimeTheme.TextMedium, size: 24),
-                        onTap: () async {
-                          SharedPreferences prefs = await SharedPreferences.getInstance();
-                          await storage.write(key: 'bookingCode', value: '');
-                          FirebaseAuth.instance.signOut().then((_) {
-                            googleSignIn.signOut();
-                            //Resetto il carrello
-                            //cartCounter = 0;
-                            //Svuotare lo Store sul Logout
-                            StoreProvider.of<AppState>(context).dispatch(SetServiceToEmpty());
-                            StoreProvider.of<AppState>(context).dispatch(SetBookingToEmpty(''));
-                            StoreProvider.of<AppState>(context).dispatch(SetBookingListToEmpty());
-                            StoreProvider.of<AppState>(context).dispatch(SetBusinessListToEmpty());
-                            StoreProvider.of<AppState>(context).dispatch(SetCategoryListToEmpty());
-                            StoreProvider.of<AppState>(context).dispatch(SetCategoryToEmpty());
-                            StoreProvider.of<AppState>(context).dispatch(SetBusinessToEmpty());
-                            StoreProvider.of<AppState>(context).dispatch(SetOrderListToEmpty());
-                            StoreProvider.of<AppState>(context).dispatch(SetOrderToEmpty(''));
-                            StoreProvider.of<AppState>(context).dispatch(SetPipelineListToEmpty());
-                            StoreProvider.of<AppState>(context).dispatch(SetPipelineToEmpty());
-                            StoreProvider.of<AppState>(context).dispatch(SetServiceListToEmpty());
-                            StoreProvider.of<AppState>(context).dispatch(SetServiceSlotToEmpty());
-                            StoreProvider.of<AppState>(context).dispatch(SetStripeToEmpty());
-                            StoreProvider.of<AppState>(context).dispatch(SetUserStateToEmpty());
-                            StoreProvider.of<AppState>(context).dispatch(SetOrderReservableToEmpty(''));
-                            StoreProvider.of<AppState>(context).dispatch(SetCategoryInviteToEmpty());
-                            StoreProvider.of<AppState>(context).dispatch(SetExternalBusinessListToEmpty());
-                            StoreProvider.of<AppState>(context).dispatch(SetOrderDetailToEmpty(''));
-                            StoreProvider.of<AppState>(context).dispatch(SetOrderReservableListToEmpty());
-                            //Torno al Login
-                            drawerSelection = DrawerSelection.BusinessList;
-                            //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()),);
-                            Navigator.of(context).pushReplacementNamed(Home.route);
-                          });
-                        },
-                        title: Text(AppLocalizations.of(context).logout,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 14,
-                              fontFamily: BuytimeTheme.FontFamily,
-                              letterSpacing: 0.1,
-                              color: BuytimeTheme.TextMedium,
-                            )),
-                      ),
-                    ],
-                  ),
+                                ///Log out
+                                ListTile(
+                                  key: Key('log_out_key'),
+                                  leading: Icon(Icons.logout, color: BuytimeTheme.TextMedium, size: 24),
+                                  onTap: () async {
+                                    SharedPreferences prefs = await SharedPreferences.getInstance();
+                                    await storage.write(key: 'bookingCode', value: '');
+                                    FirebaseAuth.instance.signOut().then((_) {
+                                      googleSignIn.signOut();
+                                      //Resetto il carrello
+                                      //cartCounter = 0;
+                                      //Svuotare lo Store sul Logout
+                                      StoreProvider.of<AppState>(context).dispatch(SetServiceToEmpty());
+                                      StoreProvider.of<AppState>(context).dispatch(SetBookingToEmpty(''));
+                                      StoreProvider.of<AppState>(context).dispatch(SetBookingListToEmpty());
+                                      StoreProvider.of<AppState>(context).dispatch(SetBusinessListToEmpty());
+                                      StoreProvider.of<AppState>(context).dispatch(SetCategoryListToEmpty());
+                                      StoreProvider.of<AppState>(context).dispatch(SetCategoryToEmpty());
+                                      StoreProvider.of<AppState>(context).dispatch(SetBusinessToEmpty());
+                                      StoreProvider.of<AppState>(context).dispatch(SetOrderListToEmpty());
+                                      StoreProvider.of<AppState>(context).dispatch(SetOrderToEmpty(''));
+                                      StoreProvider.of<AppState>(context).dispatch(SetPipelineListToEmpty());
+                                      StoreProvider.of<AppState>(context).dispatch(SetPipelineToEmpty());
+                                      StoreProvider.of<AppState>(context).dispatch(SetServiceListToEmpty());
+                                      StoreProvider.of<AppState>(context).dispatch(SetServiceSlotToEmpty());
+                                      StoreProvider.of<AppState>(context).dispatch(SetStripeToEmpty());
+                                      StoreProvider.of<AppState>(context).dispatch(SetUserStateToEmpty());
+                                      StoreProvider.of<AppState>(context).dispatch(SetOrderReservableToEmpty(''));
+                                      StoreProvider.of<AppState>(context).dispatch(SetCategoryInviteToEmpty());
+                                      StoreProvider.of<AppState>(context).dispatch(SetExternalBusinessListToEmpty());
+                                      StoreProvider.of<AppState>(context).dispatch(SetOrderDetailToEmpty(''));
+                                      StoreProvider.of<AppState>(context).dispatch(SetOrderReservableListToEmpty());
+                                      //Torno al Login
+                                      drawerSelection = DrawerSelection.BusinessList;
+                                      //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()),);
+                                      Navigator.of(context).pushReplacementNamed(Home.route);
+                                    });
+                                  },
+                                  title: Text(AppLocalizations.of(context).logout,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 14,
+                                        fontFamily: BuytimeTheme.FontFamily,
+                                        letterSpacing: 0.1,
+                                        color: BuytimeTheme.TextMedium,
+                                      )),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
                 ),
               ),
-            ],
+            ),
           );
         },
       ),

@@ -483,7 +483,7 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
                           ),
                         ),
                       ),
-                      order.cartCounter > 0
+                      /*order.cartCounter > 0
                           ? Positioned.fill(
                               top: 5,
                               left: 2.5,
@@ -500,7 +500,7 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
                                 ),
                               ),
                             )
-                          : Container(),
+                          : Container(),*/
                     ],
                   ),
                 ),
