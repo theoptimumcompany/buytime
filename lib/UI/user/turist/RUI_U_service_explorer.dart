@@ -719,8 +719,8 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                 FocusScope.of(context).unfocus();
                                                 searchedList.clear();
                                                 searchCategory(snapshot.categoryList.categoryListState);
-                                                searchPopular(snapshot.serviceList.serviceListState);
-                                                searchRecommended(snapshot.serviceList.serviceListState);
+                                                searchPopular(Provider.of<Explorer>(context, listen: false).serviceList);
+                                                searchRecommended(Provider.of<Explorer>(context, listen: false).serviceList);
                                               },
                                               onTap: () {
                                                 /*setState(() {
