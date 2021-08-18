@@ -795,6 +795,19 @@ class ServiceDuplicateService implements EpicClass<AppState> {
       DocumentSnapshot documentGet = await FirebaseFirestore.instance.collection('service').doc(event.serviceId).get();
       ServiceState serviceState = ServiceState.fromJson(documentGet.data());
       serviceState.name = 'COPY_OF_' + serviceState.name;
+      serviceState.name = serviceState.name.replaceAll('|', '|COPY_OF_');
+      List<String> serviceNames = serviceState.name.split('|');
+      /*serviceNames.forEach((element) {
+        element =  'COPY_OF_' + element;
+      });
+      serviceState.name = '';
+      for(int i = 0; i < serviceNames.length; i++){
+        if(i == 0)
+          serviceState.name = serviceNames[i];
+        else if(i < serviceNames.length-1)
+          serviceState.name = serviceState.name + '|' + serviceNames[i];
+      }*/
+      debugPrint('SERVICE NAME WITH COPY OF: ${serviceState.name}');
       DocumentReference docReference = FirebaseFirestore.instance.collection('service').doc();
       serviceState.serviceId = docReference.id;
       docReference.set(serviceState.toJson()).then((value) {
