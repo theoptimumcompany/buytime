@@ -82,6 +82,7 @@ class _BookingListServiceListItemState extends State<BookingListServiceListItem>
 
                     ///Service Name & Description
                     Container(
+                      //width: SizeConfig.safeBlockHorizontal * 60,
                       margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -91,7 +92,7 @@ class _BookingListServiceListItemState extends State<BookingListServiceListItem>
                           FittedBox(
                             fit: BoxFit.scaleDown,
                             child: Container(
-                              width: SizeConfig.safeBlockHorizontal * 60,
+                              width: SizeConfig.safeBlockHorizontal * 55,
                               child: Text(
                                 widget.serviceState.name != null ? Utils.retriveField(Localizations.localeOf(context).languageCode, widget.serviceState.name) : '',
                                 overflow: TextOverflow.ellipsis,
@@ -108,8 +109,7 @@ class _BookingListServiceListItemState extends State<BookingListServiceListItem>
                           FittedBox(
                             fit: BoxFit.fitHeight,
                             child: Container(
-                              width: SizeConfig.safeBlockHorizontal * 60,
-
+                              width: SizeConfig.safeBlockHorizontal * 55,
                               ///SizeConfig.safeBlockHorizontal * 50
                               height: 40,
 

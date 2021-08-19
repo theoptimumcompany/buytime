@@ -11,6 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:intl/intl.dart';
 
+import '../UI_U_order_details.dart';
+
 class UserServiceListItem extends StatefulWidget {
 
   OrderState orderState;
@@ -37,8 +39,8 @@ class _UserServiceListItemState extends State<UserServiceListItem> {
               borderRadius: BorderRadius.all(Radius.circular(10)),
               onTap: () async {
 
-                StoreProvider.of<AppState>(context).dispatch(SetOrderDetailAndNavigatePop(widget.orderState.orderId, widget.orderState.itemList.first.id));
-                //Navigator.push(context, MaterialPageRoute(builder: (context) => OrderDetails(orderState: widget.orderState, tourist: widget.tourist, serviceState: widget.serviceState,)));
+                //StoreProvider.of<AppState>(context).dispatch(SetOrderDetailAndNavigatePop(widget.orderState.orderId, widget.orderState.itemList.first.id));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => OrderDetails(orderState: widget.orderState, tourist: widget.tourist, serviceState: widget.serviceState,)));
               },
               child: Container(
                 height: 91,  ///SizeConfig.safeBlockVertical * 15

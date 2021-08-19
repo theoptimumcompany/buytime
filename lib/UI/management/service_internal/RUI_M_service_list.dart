@@ -915,11 +915,13 @@ class RServiceListState extends State<RServiceList> {
                                                                             ///Service Name
                                                                             Flexible(
                                                                               child: Container(
-                                                                                  margin: EdgeInsets.only(left: 10),
+                                                                                height: 92,
+                                                                                  margin: EdgeInsets.only(left: 12.5),
+                                                                                  alignment: Alignment.centerLeft,
                                                                                   child: Text(
                                                                                     Utils.retriveField(Localizations.localeOf(context).languageCode, listOfServiceEachRoot[i][index].serviceName),
                                                                                     textAlign: TextAlign.start,
-                                                                                    overflow: TextOverflow.ellipsis,
+                                                                                    //overflow: TextOverflow.ellipsis,
                                                                                     style: TextStyle(
                                                                                       fontSize: 16,
                                                                                       ///widget.mediaSize.height * 0.019

@@ -416,7 +416,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                       ),
                       tooltip: AppLocalizations.of(context).comeBack,
                       onPressed: () {
-                        StoreProvider.of<AppState>(context).dispatch(SetOrderToEmpty(''));
+                        //toreProvider.of<AppState>(context).dispatch(SetOrderToEmpty(''));
                         Navigator.of(context).pop();
 
                         // if (widget.route == '/bookingRoomPaymentList') {
@@ -453,7 +453,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
               ),
 
               ///Cart
-              Padding(
+              /*Padding(
                 padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 10.0),
                 child: Container(
                   width: 50,
@@ -473,7 +473,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                             onPressed: () {
                               if (order.cartCounter > 0) {
                                 // dispatch the order
-                                StoreProvider.of<AppState>(context).dispatch(SetOrder(order));
+                                //StoreProvider.of<AppState>(context).dispatch(SetOrder(order));
                                 // go to the cart page
                                 Navigator.push(
                                   context,
@@ -506,7 +506,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                           ),
                         ),
                       ),
-                      /*order.cartCounter > 0
+                      order.cartCounter > 0
                           ? Positioned.fill(
                         top: 5,
                         left: 2.5,
@@ -523,10 +523,13 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                           ),
                         ),
                       )
-                          : Container(),*/
+                          : Container(),
                     ],
                   ),
                 ),
+              )*/
+              SizedBox(
+                width: 56.0,
               )
             ],
           ),

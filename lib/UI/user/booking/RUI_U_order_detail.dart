@@ -430,7 +430,7 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
               ),
 
               ///Cart
-              Padding(
+              /*Padding(
                 padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 10.0),
                 child: Container(
                   width: 50,
@@ -483,7 +483,7 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
                           ),
                         ),
                       ),
-                      /*order.cartCounter > 0
+                      order.cartCounter > 0
                           ? Positioned.fill(
                               top: 5,
                               left: 2.5,
@@ -500,10 +500,13 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
                                 ),
                               ),
                             )
-                          : Container(),*/
+                          : Container(),
                     ],
                   ),
                 ),
+              ),*/
+              SizedBox(
+                width: 56.0,
               )
             ],
           ),
