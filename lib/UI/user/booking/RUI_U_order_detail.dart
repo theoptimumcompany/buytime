@@ -565,7 +565,7 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
                                 //width: double.infinity,
                                 //height: double.infinity,
                                 //width: 200, ///SizeConfig.safeBlockVertical * widget.width
-                                height: 375,
+                                height: 275,
 
                                 ///SizeConfig.safeBlockVertical * widget.width
                                 decoration: BoxDecoration(
@@ -577,7 +577,7 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
                                     )),
                                 child: Container(
                                   //width: 375,
-                                  height: 375,
+                                  height: 275,
                                   decoration: BoxDecoration(
                                       //borderRadius: BorderRadius.all(Radius.circular(5)),
                                       //color: Colors.black.withOpacity(.2)
@@ -608,7 +608,7 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
                                         child: Column(
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
-                                            Container(
+                                            /*Container(
                                               margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
                                               child: FittedBox(
                                                 fit: BoxFit.scaleDown,
@@ -620,7 +620,7 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
                                                       ),
                                                 ),
                                               ),
-                                            ),
+                                            ),*/
                                           ],
                                         ),
                                       ),
@@ -1010,6 +1010,67 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
                             ///Chosen Payment Method
                             ///orderDetails.cardType == Utils.enumToString(PaymentType.onSite)
                             Container(child: chosenPaymentMethod(orderDetails.cardType)),
+
+                            ///Supplied by
+                            Container(
+                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
+                              child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Text(
+                                  AppLocalizations.of(context).suppliedBy.toUpperCase(),
+                                  style: TextStyle(letterSpacing: 1.5, fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextMedium, fontWeight: FontWeight.w500, fontSize: 10
+
+                                    ///SizeConfig.safeBlockHorizontal * 4
+                                  ),
+                                ),
+                              ),
+                            ),
+
+                            ///Supplied Value
+                            Container(
+                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
+                              child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Text(
+                                  businessState.name,
+                                  style: TextStyle(letterSpacing: 0.15, fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.BackgroundCerulean, fontWeight: FontWeight.w500, fontSize: 16
+
+                                    ///SizeConfig.safeBlockHorizontal * 4
+                                  ),
+                                ),
+                              ),
+                            ),
+
+                            ///Condition Text
+                            serviceState.condition != null &&  serviceState.condition.isNotEmpty ?
+                            Container(
+                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1.5),
+                              child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Text(
+                                  AppLocalizations.of(context).conditions.toUpperCase(),
+                                  style: TextStyle(letterSpacing: 1.5, fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextMedium, fontWeight: FontWeight.w500, fontSize: 10
+
+                                    ///SizeConfig.safeBlockHorizontal * 4
+                                  ),
+                                ),
+                              ),
+                            ) : Container(),
+                            ///Condition Value
+                            serviceState.condition != null &&  serviceState.condition.isNotEmpty ?
+                            Container(
+                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
+                              child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Text(
+                                  Utils.retriveField(Localizations.localeOf(context).languageCode, serviceState.condition),
+                                  style: TextStyle(letterSpacing: 0.15, fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w500, fontSize: 16
+
+                                    ///SizeConfig.safeBlockHorizontal * 4
+                                  ),
+                                ),
+                              ),
+                            ) : Container(),
 
                             ///Price
                             Container(
