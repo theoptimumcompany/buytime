@@ -4,8 +4,10 @@ import 'dart:io';
 import 'dart:ui';
 import 'package:Buytime/UI/management/activity/UI_M_activity_management.dart';
 import 'package:Buytime/UI/user/landing/UI_U_landing.dart';
+import 'package:Buytime/UI/user/turist/UI_U_service_explorer.dart';
 import 'package:Buytime/reblox/model/autoComplete/auto_complete_state.dart';
 import 'package:Buytime/reblox/model/card/card_state.dart';
+import 'package:Buytime/reblox/model/role/role.dart';
 import 'package:Buytime/reblox/model/snippet/device.dart';
 import 'package:Buytime/reblox/model/snippet/token.dart';
 import 'package:Buytime/reblox/model/statistics_state.dart';
@@ -40,6 +42,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 // import 'package:stripe_payment/stripe_payment.dart';
 import 'package:package_info/package_info.dart';
 import 'UI/user/booking/RUI_U_notifications.dart';
+import 'UI/user/turist/RUI_U_service_explorer.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -213,6 +216,7 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
     checkIfNativePayReady();
     initPlatformState();
   }
+
 
   Flushbar notifyFlushbar(String message) {
     return Flushbar(
@@ -424,23 +428,32 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
             print('Failed to get platform version');
           }
         }
-        print("Device ID : " + deviceId);
-        StoreProvider.of<AppState>(context).dispatch(new LoggedUser(UserState.fromFirebaseUser(user, deviceId, [serverToken])));
+
+        UserState tmpUser = UserState.fromFirebaseUser(user, deviceId, [serverToken]);
+        StoreProvider.of<AppState>(context).dispatch(new LoggedUser(tmpUser));
         Device device = Device(name: "device", id: deviceId, user_uid: user.uid);
         StoreProvider.of<AppState>(context).dispatch(new UpdateUserDevice(device));
         TokenB token = TokenB(name: "token", id: serverToken, user_uid: user.uid);
         StoreProvider.of<AppState>(context).dispatch(new UpdateUserToken(token));
         StoreProvider.of<AppState>(context).dispatch(StripeCardListRequest(user.uid));
+        Future.delayed(Duration(seconds: 1), (){
+          print("Device ID : " + deviceId + 'USER ROLE: ${StoreProvider.of<AppState>(context).state.user.getRole()}');
+          //StoreProvider.of<AppState>(context).dispatch(new UserBookingRequest(user.email));
+          if(StoreProvider.of<AppState>(context).state.user.getRole() != Role.user)
+            Navigator.push(context, MaterialPageRoute(builder: (context) => Landing()));
+          else
+            Navigator.push(context, MaterialPageRoute(builder: (context) => RServiceExplorer()));
+        });
 
-        //StoreProvider.of<AppState>(context).dispatch(new UserBookingRequest(user.email));
-        Navigator.push(context, MaterialPageRoute(builder: (context) => Landing()));
       } else {
         //Navigator.push(context, MaterialPageRoute(builder: (context) => Home()),);
-        Navigator.of(context).pushNamed(Home.route);
+        //Navigator.of(context).pushNamed(Home.route);
+        Navigator.push(context, MaterialPageRoute(builder: (context) => RServiceExplorer()));
       }
     } else {
       //Navigator.push(context, MaterialPageRoute(builder: (context) => Home()),);
-      Navigator.of(context).pushNamed(Home.route);
+      //Navigator.of(context).pushNamed(Home.route);
+      Navigator.push(context, MaterialPageRoute(builder: (context) => RServiceExplorer()));
     }
   }
 

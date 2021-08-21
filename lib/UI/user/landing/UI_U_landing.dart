@@ -179,6 +179,7 @@ class LandingState extends State<Landing> {
         String onSiteUserIdRead = await storage.containsKey(key: 'onSiteUserIdRead') ? await storage.read(key: 'onSiteUserIdRead') ?? '' : '';
         String onSiteOrderIdRead = await storage.containsKey(key: 'onSiteOrderIdRead') ? await storage.read(key: 'onSiteOrderIdRead') ?? '' : '';
         debugPrint('UI_U_landing: after reading secure storage');
+        debugPrint('UI_U_landing: bookingCodeRead: ${bookingCodeRead}');
 
         if (deepLink.queryParameters.containsKey('booking') && bookingCodeRead != 'true') {
           String id = deepLink.queryParameters['booking'];
@@ -444,7 +445,7 @@ class LandingState extends State<Landing> {
                 snapshot.bookingList.bookingListState.removeLast();
                 bookingList.removeLast();
                 WidgetsBinding.instance.addPostFrameCallback((_) async {
-                  if (selfBookingCode.isEmpty) Navigator.push(context, MaterialPageRoute(builder: (context) => RServiceExplorer()));
+                  //if (selfBookingCode.isEmpty) Navigator.push(context, MaterialPageRoute(builder: (context) => RServiceExplorer()));
                 });
               } else {
                 DateTime currentTime = DateTime.now();
@@ -459,13 +460,13 @@ class LandingState extends State<Landing> {
                   debugPrint('UI_U_Landing => No active booking found!');
 
                   WidgetsBinding.instance.addPostFrameCallback((_) async {
-                    if (selfBookingCode.isEmpty) Navigator.push(context, MaterialPageRoute(builder: (context) => RServiceExplorer()));
+                   // if (selfBookingCode.isEmpty) Navigator.push(context, MaterialPageRoute(builder: (context) => RServiceExplorer()));
                   });
                   //rippleLoading = false;
                 } else if (bookingList.first.start_date.isAtSameMomentAs(currentTime)) {
                   debugPrint('UI_U_Landing => Active booking found current day!');
                   secondRippleLoading = true;
-                  if (bookingCode.isEmpty) {
+                  if (bookingCode.isEmpty && selfBookingCode.isEmpty) {
                     StoreProvider.of<AppState>(context).dispatch(BookingRequestResponse(bookingList.first));
                     StoreProvider.of<AppState>(context).dispatch(BusinessServiceListAndNavigateRequest(bookingList.first.business_id));
                   } else
@@ -487,7 +488,7 @@ class LandingState extends State<Landing> {
                   secondRippleLoading = true;
                   debugPrint('UI_U_Landing => Active booking found!');
                   //Navigator.push(context, MaterialPageRoute(builder: (context) => BookingPage()));
-                  if (bookingCode.isEmpty) {
+                  if (bookingCode.isEmpty && selfBookingCode.isEmpty) {
                     StoreProvider.of<AppState>(context).dispatch(BookingRequestResponse(bookingList.first));
                     StoreProvider.of<AppState>(context).dispatch(BusinessServiceListAndNavigateRequest(bookingList.first.business_id));
                   } else

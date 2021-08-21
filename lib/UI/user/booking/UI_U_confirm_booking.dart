@@ -82,6 +82,7 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
                 color: Colors.white,
               ),
               onPressed: () async{
+                await storage.write(key: 'bookingCodeRead', value: 'false');
                 await storage.delete(key: 'bookingCode').whenComplete(() => {
                   Navigator.of(context).pop()
                 });
@@ -243,6 +244,7 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
                                                 )
                                             );
                                           });*/
+                                        await storage.write(key: 'bookingCodeRead', value: 'false');
                                         await storage.delete(key: 'bookingCode');
                                         bookingState.status = Utils.enumToString(BookingStatus.opened);
                                         StoreProvider.of<AppState>(context).dispatch(UpdateBookingOnConfirm(bookingState));
@@ -291,6 +293,7 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
                                       focusElevation: 0,
                                       highlightElevation: 0,
                                       onPressed: () async {
+                                        await storage.write(key: 'bookingCodeRead', value: 'false');
                                         await storage.delete(key: 'bookingCode');
                                         Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => Landing()), (Route<dynamic> route) => false);
                                         //Navigator.of(context).pushNamedAndRemoveUntil(Landing.route, (Route<dynamic> route) => false);

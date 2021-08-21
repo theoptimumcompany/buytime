@@ -152,8 +152,7 @@ class UserState {
     );
   }
 
-  UserState.fromFirebaseUser(User user, String deviceId, List<String> serverToken)
-      : name = user.displayName,
+  UserState.fromFirebaseUser(User user, String deviceId, List<String> serverToken): name = user.displayName,
         surname = "",
         email = user.email,
         uid = user.uid,

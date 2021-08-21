@@ -1,10 +1,19 @@
 import 'dart:math';
 
+import 'package:Buytime/UI/management/business/RUI_M_business_list.dart';
 import 'package:Buytime/UI/user/booking/RUI_U_notifications.dart';
 import 'package:Buytime/UI/user/booking/RUI_notification_bell.dart';
 import 'package:Buytime/UI/user/booking/UI_U_all_bookings.dart';
+import 'package:Buytime/UI/user/booking/UI_U_booking_self_creation.dart';
 import 'package:Buytime/UI/user/booking/UI_U_notifications.dart';
+import 'package:Buytime/UI/user/landing/UI_U_landing.dart';
+import 'package:Buytime/UI/user/landing/invite_guest_form.dart';
+import 'package:Buytime/UI/user/login/UI_U_home.dart';
+import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reblox/model/role/role.dart';
+import 'package:Buytime/reblox/reducer/booking_list_reducer.dart';
+import 'package:Buytime/reblox/reducer/business_reducer.dart';
+import 'package:Buytime/reblox/reducer/order_detail_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/service_list_reducer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
@@ -33,9 +42,12 @@ import 'package:Buytime/reusable/buytime_icons.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/utils/utils.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:location/location.dart' as loc;
@@ -76,12 +88,10 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
   OrderState order = OrderState().toEmpty();
 
 
-
   @override
   void initState() {
     super.initState();
     _searchController.text = widget.searched;
-
   }
 
   /*void undoDeletion(index, item) {
@@ -528,17 +538,22 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                 Padding(
                                   padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
                                   child: IconButton(
-                                    icon: const Icon(
-                                      Icons.keyboard_arrow_left,
+                                    icon: Icon(
+                                      FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty ?
+                                      Icons.home : Icons.login,
                                       color: Colors.white,
                                       size: 25.0,
                                     ),
                                     tooltip: AppLocalizations.of(context).comeBack,
                                     onPressed: () {
                                       //widget.fromConfirm != null ? Navigator.of(context).pop() : Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Landing()),);
-                                      Future.delayed(Duration.zero, () {
+                                      if(FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty)
+                                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Landing()),);
+                                      else
+                                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()),);
+                                      /*Future.delayed(Duration.zero, () {
                                         Navigator.of(context).pop();
-                                      });
+                                      });*/
                                     },
                                   ),
                                 ),

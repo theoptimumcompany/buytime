@@ -9,6 +9,7 @@ import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -79,6 +80,9 @@ class _InviteGuestFormState extends State<InviteGuestForm> {
     }));*/
   }
 
+  ///Storage
+  final storage = new FlutterSecureStorage();
+
 
   @override
   void dispose() {
@@ -141,7 +145,8 @@ class _InviteGuestFormState extends State<InviteGuestForm> {
                             if (!currentFocus.hasPrimaryFocus) {
                               currentFocus.unfocus();
                             }
-
+                            await storage.delete(key: 'bookingCode');
+                            await storage.write(key: 'bookingCodeRead', value: 'false');
                             await Future.delayed(const Duration(milliseconds: 500));
                             StoreProvider.of<AppState>(context).dispatch(BookingRequestResponse(BookingState().toEmpty()));
                             if(widget.fromLanding)
