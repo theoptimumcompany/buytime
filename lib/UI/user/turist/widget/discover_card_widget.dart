@@ -6,6 +6,7 @@ import 'package:Buytime/reblox/reducer/service_list_snippet_reducer.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/utils/utils.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -56,6 +57,14 @@ class _DiscoverCardWidgetState extends State<DiscoverCardWidget> {
             key: Key('category_${widget.index}_key'),
             splashColor: Colors.black.withOpacity(.3),
             onTap: (){
+              FirebaseAnalytics().logEvent(
+                  name: 'category_discover',
+                  parameters: {
+                    'userEmail': StoreProvider.of<AppState>(context).state.user.email,
+                    'date': DateTime.now(),
+                    'categoryName': widget.categoryState.name,
+                    'categoryPosition': widget.index,
+                  });
               List<ServiceListSnippetState> serviceListSnippetListState = StoreProvider.of<AppState>(context).state.serviceListSnippetListState.serviceListSnippetListState;
               for (var z = 0; z < serviceListSnippetListState.length; z++) {
                   if(widget.categoryState.businessId == serviceListSnippetListState[z].businessId)
