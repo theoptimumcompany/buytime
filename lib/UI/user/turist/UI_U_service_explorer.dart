@@ -1013,7 +1013,7 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
                                                         //MenuItemModel menuItem = menuItems.elementAt(index);
                                                         ServiceState service = popularList.elementAt(index);
                                                         return Container(
-                                                          child: PRCardWidget(182, 182, service, false, false),
+                                                          child: PRCardWidget(182, 182, service, false, false, index, 'popular'),
                                                         );
                                                       },
                                                       childCount: popularList.length,
@@ -1166,7 +1166,7 @@ class _ServiceExplorerState extends State<ServiceExplorer> {
                                                         ServiceState service = recommendedList.elementAt(index);
                                                         return Container(
                                                           //margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 2),
-                                                          child: PRCardWidget(182, 182, service, false, true),
+                                                          child: PRCardWidget(182, 182, service, false, true, index, 'recommended'),
                                                         );
                                                       },
                                                       childCount: recommendedList.length,

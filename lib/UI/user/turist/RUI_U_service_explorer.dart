@@ -1,4 +1,3 @@
-import 'dart:math';
 
 import 'package:Buytime/UI/management/business/RUI_M_business_list.dart';
 import 'package:Buytime/UI/user/booking/RUI_U_notifications.dart';
@@ -16,6 +15,7 @@ import 'package:Buytime/reblox/reducer/business_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_detail_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/service_list_reducer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:Buytime/UI/user/booking/widget/user_service_card_widget.dart';
 import 'package:Buytime/UI/user/cart/UI_U_cart.dart';
@@ -24,9 +24,7 @@ import 'package:Buytime/UI/user/turist/widget/p_r_card_widget.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/area/area_list_state.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
-import 'package:Buytime/reblox/model/business/snippet/business_snippet_state.dart';
 import 'package:Buytime/reblox/model/category/category_state.dart';
-import 'package:Buytime/reblox/model/category/snippet/category_snippet_state.dart';
 import 'package:Buytime/reblox/model/notification/notification_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
@@ -34,7 +32,6 @@ import 'package:Buytime/reblox/model/snippet/service_list_snippet_state.dart';
 import 'package:Buytime/reblox/reducer/area_reducer.dart';
 import 'package:Buytime/reblox/reducer/category_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/notification_list_reducer.dart';
-import 'package:Buytime/reblox/reducer/order_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
 import 'package:Buytime/reusable/booking_page_service_list_item.dart';
@@ -53,7 +50,6 @@ import 'package:geolocator/geolocator.dart';
 import 'package:location/location.dart' as loc;
 import 'package:palette_generator/palette_generator.dart';
 import 'package:provider/provider.dart';
-import 'package:video_player/video_player.dart';
 
 class RServiceExplorer extends StatefulWidget {
   static String route = '/serviceExplorer';
@@ -546,12 +542,20 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                     ),
                                     tooltip: AppLocalizations.of(context).comeBack,
                                     onPressed: () {
+                                      FirebaseAnalytics().logEvent(
+                                          name: 'back_button_discover',
+                                          parameters: {
+                                            'userEmail': snapshot.user.email,
+                                            'date': DateTime.now(),
+                                          });
                                       //widget.fromConfirm != null ? Navigator.of(context).pop() : Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Landing()),);
                                       if(FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty)
                                         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Landing()),);
                                       else
                                         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()),);
                                       /*Future.delayed(Duration.zero, () {
+
+                                      Future.delayed(Duration.zero, () {
                                         Navigator.of(context).pop();
                                       });*/
                                     },
@@ -599,6 +603,12 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                     size: 24.0,
                                                   ),
                                                   onPressed: () {
+                                                    FirebaseAnalytics().logEvent(
+                                                        name: 'cart_discover',
+                                                        parameters: {
+                                                          'userEmail': snapshot.user.email,
+                                                          'date': DateTime.now(),
+                                                        });
                                                     if (order.cartCounter > 0) {
                                                       // dispatch the order
                                                       StoreProvider.of<AppState>(context).dispatch(SetOrder(order));
@@ -730,6 +740,13 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                               ),
                                               style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextMedium, fontWeight: FontWeight.w400, fontSize: 16),
                                               onEditingComplete: () {
+                                                FirebaseAnalytics().logEvent(
+                                                    name: 'search_discover',
+                                                    parameters: {
+                                                      'userEmail': snapshot.user.email,
+                                                      'date': DateTime.now(),
+                                                      'string_searched': _searchController.text
+                                                    });
                                                 debugPrint('done');
                                                 FocusScope.of(context).unfocus();
                                                 searchedList.clear();
@@ -1405,7 +1422,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                               //MenuItemModel menuItem = menuItems.elementAt(index);
                                                               ServiceState service = popularList.elementAt(index);
                                                               return Container(
-                                                                child: PRCardWidget(182, 182, service, false, false),
+                                                                child: PRCardWidget(182, 182, service, false, false, index, 'popular'),
                                                               );
                                                             },
                                                             childCount: popularList.length,
@@ -1557,7 +1574,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                               ServiceState service = recommendedList.elementAt(index);
                                                               return Container(
                                                                 //margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 2),
-                                                                child: PRCardWidget(182, 182, service, false, true),
+                                                                child: PRCardWidget(182, 182, service, false, true, index, 'recommended'),
                                                               );
                                                             },
                                                             childCount: recommendedList.length,
@@ -1751,7 +1768,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                                 //MenuItemModel menuItem = menuItems.elementAt(index);
                                                                 ServiceState service = tmpServiceList.elementAt(index);
                                                                 return Container(
-                                                                  child: PRCardWidget(182, 182, service, false, true),
+                                                                  child: PRCardWidget(182, 182, service, false, true, index, element.name),
                                                                 );
                                                               },
                                                               childCount: tmpServiceList.length,
@@ -1886,6 +1903,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                         delegate: SliverChildBuilderDelegate(
                                                               (context, index) {
                                                             //MenuItemModel menuItem = menuItems.elementAt(index);
+
                                                             CategoryState category = categoryList.elementAt(index);
                                                             debugPrint('UI_U_service_explorer => ${categoryListIds[category.name]}');
                                                             return Container(
