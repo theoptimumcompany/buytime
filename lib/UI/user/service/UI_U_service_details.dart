@@ -556,9 +556,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                           ),
                                           address.endsWith('.')
                                               ? Container()
-                                              :
-
-                                              ///Directions
+                                              :///Directions
                                               Container(
                                                   margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 0.5),
                                                   child: Row(
@@ -749,16 +747,59 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                             ],
                                           )
                                         : Container(),
+                                ///Condition Text
+                                widget.serviceState.condition != null &&  widget.serviceState.condition.isNotEmpty ?
+                                Container(
+                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                  child: FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    child: Text(
+                                      AppLocalizations.of(context).conditions.toUpperCase(),
+                                      style: TextStyle(letterSpacing: 1.5, fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextMedium, fontWeight: FontWeight.w500, fontSize: 10
 
+                                        ///SizeConfig.safeBlockHorizontal * 4
+                                      ),
+                                    ),
+                                  ),
+                                ) : Container(),
+                                ///Condition Value
+                                widget.serviceState.condition != null &&  widget.serviceState.condition.isNotEmpty ?
+                                Container(
+                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
+                                  child: FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    child: Text(
+                                      Utils.retriveField(Localizations.localeOf(context).languageCode, widget.serviceState.condition),
+                                      style: TextStyle(letterSpacing: 0.15, fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w500, fontSize: 16
+
+                                        ///SizeConfig.safeBlockHorizontal * 4
+                                      ),
+                                    ),
+                                  ),
+                                ) : Container(),
+                                ///Description text
+                                Container(
+                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                  child: FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    child: Text(
+                                      AppLocalizations.of(context).description.toUpperCase(),
+                                      style: TextStyle(letterSpacing: 1.5, fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextMedium, fontWeight: FontWeight.w500, fontSize: 10
+
+                                        ///SizeConfig.safeBlockHorizontal * 4
+                                      ),
+                                    ),
+                                  ),
+                                ),
                                 ///Description
                                 Flexible(
                                   child: Container(
                                     width: double.infinity,
-                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, bottom: SizeConfig.safeBlockVertical * 1, top: SizeConfig.safeBlockVertical * 2),
+                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, bottom: SizeConfig.safeBlockVertical * 1, top: SizeConfig.safeBlockVertical * .5),
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Container(
+                                        /*Container(
                                           margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3),
                                           child: Text(
                                             AppLocalizations.of(context).serviceDescription,
@@ -767,9 +808,9 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                                 ///SizeConfig.safeBlockHorizontal * 5
                                                 ),
                                           ),
-                                        ),
+                                        ),*/
                                         Container(
-                                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 2),
+                                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 2),
                                           child: Text(
                                             widget.serviceState.description.isNotEmpty ? Utils.retriveField(Localizations.localeOf(context).languageCode, widget.serviceState.description) : AppLocalizations.of(context).loreIpsum,
                                             style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w400, fontSize: 16
