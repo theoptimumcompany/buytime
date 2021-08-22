@@ -48,7 +48,15 @@ class Utils {
       debugPrint('PROMO ' + promotionState.promotionId);
       switch (promotionState.discountType) {
         case 'fixedAmount':
-          promoPrice = (promotionState.discount).toDouble();
+          if ((fullPrice - (promotionState.discount).toDouble()) >= 3.0) {
+            promoPrice = (promotionState.discount).toDouble();
+          } else {
+             if (fullPrice - (promotionState.discount).toDouble() >= 0) { // 4 5 6 7
+               promoPrice = fullPrice - 3;
+             } else { // 1
+               promoPrice = 0.0;
+             }
+          }
           break;
         case 'percentageAmount':
           promoPrice = ((fullPrice * promotionState.discount)/100);

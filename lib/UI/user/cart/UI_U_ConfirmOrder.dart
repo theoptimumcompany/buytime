@@ -244,12 +244,19 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                       leading: getCurrentLeadingImage(context, snapshot),
                                       title: getCurrentPaymentMethod(context, snapshot),
                                       onTap: () {
+                                        String serviceNameFromOrder = "";
+                                        if (widget.reserve != null && widget.reserve && snapshot.orderReservable != null && snapshot.orderReservable.itemList.isNotEmpty) {
+                                          serviceNameFromOrder = snapshot.orderReservable.itemList.first.name;
+                                        } else {
+                                          serviceNameFromOrder = snapshot.order.itemList.first.name;
+                                        }
+
                                         FirebaseAnalytics().logEvent(
                                             name: 'open_payment_method_confirm_order',
                                             parameters: {
                                               'user_email': snapshot.user.email,
                                               'date': DateTime.now().toString(),
-                                              'service_name': snapshot.order.itemList.first.name
+                                              'service_name': serviceNameFromOrder
                                             });
                                         _modalChoosePaymentMethod(context, snapshot);
                                       },
@@ -955,6 +962,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                               debugPrint('UI_U_ConfirmOrder => SWITCH FOOTPRINT : $value');
                             });
                           }),
+                      snapshot.business.business_type != 'ECO' ? W_GreenChoice(false) : Container(),
                       Text('+ € ${Utils.calculateEcoTax(widget.reserve != null && widget.reserve ? OrderState.fromReservableState(orderReservableState) : orderState).toStringAsFixed(2)}'),
                     ]),
                   ),
