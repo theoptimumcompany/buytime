@@ -20,6 +20,7 @@ import 'package:Buytime/reblox/reducer/stripe_payment_reducer.dart';
 import 'package:Buytime/reusable/W_green_choice.dart';
 import 'package:Buytime/services/order/util.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:pay/pay.dart' as pay;
 import 'package:Buytime/reblox/model/order/order_reservable_state.dart';
 import 'package:Buytime/reblox/model/stripe/stripe_state.dart';
@@ -243,6 +244,16 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                       leading: getCurrentLeadingImage(context, snapshot),
                                       title: getCurrentPaymentMethod(context, snapshot),
                                       onTap: () {
+                                        FirebaseAnalytics().logEvent(
+                                            name: 'open_payment_method_confirm_order',
+                                            parameters: {
+                                              'user_email': snapshot.user.email,
+                                              'date': DateTime.now().toString(),
+                                              'string_searched': _searchController.text
+                                            });
+
+
+
                                         _modalChoosePaymentMethod(context, snapshot);
                                       },
                                     ),
@@ -282,18 +293,19 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                               //
                               //
                               //     // TODO inoltrare richiesta post con i campi necessari per verificare la disponibilitá
-                              //
-                              //     String infoparkStripeTestKey = "pk_test_D913jo5bMZtK6kAANKTpsulW00omqUEEHd";
-                              //     // TODO richiedere carta di credito
-                              //     // TODO crea metodo di pagamento con la loro chiave pubblica
-                              //
-                              //
-                              //     // TODO conferma il client secret ricevuto
-                              //
-                              //     // TODO esito negativo: visualizza l'errore
-                              //     // TODO esito positivo: crea l'ordine buytime associato
-                              //     // TODO inserire l'ordine nello store
-                              //     // TODO redirect al dettaglio dell'ordine
+                              //     // TODO se disponibile procedere con la richiesta del pagamento e la conferma
+                                    //     String infoparkStripeTestKey = "pk_test_D913jo5bMZtK6kAANKTpsulW00omqUEEHd";
+                                    //     // TODO richiedere carta di credito
+                                    //     // TODO crea metodo di pagamento con la loro chiave pubblica
+                                    //
+                                    //
+                                    //     // TODO conferma il client secret ricevuto
+                                    //
+                                    //     // TODO esito negativo: visualizza l'errore
+                                    //     // TODO esito positivo: crea l'ordine buytime associato
+                                    //     // TODO inserire l'ordine nello store
+                                    //     // TODO redirect al dettaglio dell'ordine
+                                    // TODO se non disponibile mostrare messaggio di non disponibilitá
                               //
                               //
                               //

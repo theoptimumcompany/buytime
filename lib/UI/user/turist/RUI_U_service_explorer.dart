@@ -545,8 +545,8 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                       FirebaseAnalytics().logEvent(
                                           name: 'back_button_discover',
                                           parameters: {
-                                            'userEmail': snapshot.user.email,
-                                            'date': DateTime.now(),
+                                            'user_email': snapshot.user.email,
+                                            'date': DateTime.now().toString(),
                                           });
                                       //widget.fromConfirm != null ? Navigator.of(context).pop() : Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Landing()),);
                                       if(FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty)
@@ -603,11 +603,12 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                     size: 24.0,
                                                   ),
                                                   onPressed: () {
+                                                    debugPrint("RUI_U_service_explorer + cart_discover");
                                                     FirebaseAnalytics().logEvent(
                                                         name: 'cart_discover',
                                                         parameters: {
-                                                          'userEmail': snapshot.user.email,
-                                                          'date': DateTime.now(),
+                                                          'user_email': snapshot.user.email,
+                                                          'date': DateTime.now().toString(),
                                                         });
                                                     if (order.cartCounter > 0) {
                                                       // dispatch the order
@@ -743,8 +744,8 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                 FirebaseAnalytics().logEvent(
                                                     name: 'search_discover',
                                                     parameters: {
-                                                      'userEmail': snapshot.user.email,
-                                                      'date': DateTime.now(),
+                                                      'user_email': snapshot.user.email,
+                                                      'date': DateTime.now().toString(),
                                                       'string_searched': _searchController.text
                                                     });
                                                 debugPrint('done');

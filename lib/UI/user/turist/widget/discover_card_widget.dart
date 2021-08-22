@@ -60,10 +60,10 @@ class _DiscoverCardWidgetState extends State<DiscoverCardWidget> {
               FirebaseAnalytics().logEvent(
                   name: 'category_discover',
                   parameters: {
-                    'userEmail': StoreProvider.of<AppState>(context).state.user.email,
-                    'date': DateTime.now(),
-                    'categoryName': widget.categoryState.name,
-                    'categoryPosition': widget.index,
+                    'user_email': StoreProvider.of<AppState>(context).state.user.email,
+                    'date': DateTime.now().toString(),
+                    'category_name': widget.categoryState.name.isNotEmpty ? widget.categoryState.name : 'no name found',
+                    'category_position': widget.index,
                   });
               List<ServiceListSnippetState> serviceListSnippetListState = StoreProvider.of<AppState>(context).state.serviceListSnippetListState.serviceListSnippetListState;
               for (var z = 0; z < serviceListSnippetListState.length; z++) {

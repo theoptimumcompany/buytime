@@ -68,10 +68,10 @@ class _PRCardWidgetState extends State<PRCardWidget> {
                     FirebaseAnalytics().logEvent(
                         name: 'category_discover',
                         parameters: {
-                          'userEmail': StoreProvider.of<AppState>(context).state.user.email,
-                          'date': DateTime.now(),
-                          'serviceName': widget.serviceState.name,
-                          'servicePosition': widget.section  + ', pos: ' + widget.index.toString(),
+                          'user_email': StoreProvider.of<AppState>(context).state.user.email,
+                          'date': DateTime.now().toString(),
+                          'service_name': widget.serviceState.name.isNotEmpty ? widget.serviceState.name : 'no name found',
+                          'service_position': widget.section  + ', pos: ' + widget.index.toString(),
                         });
                     Navigator.push(context, MaterialPageRoute(builder: (context) => ServiceDetails(serviceState: widget.serviceState, tourist: true,)));
                     /*widget.fromBookingPage ?
