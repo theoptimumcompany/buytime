@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:Buytime/UI/user/landing/UI_U_landing.dart';
+import 'package:Buytime/UI/user/turist/RUI_U_service_explorer.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:Buytime/reblox/model/notification/notification_state.dart';
@@ -392,7 +393,7 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
                       onPressed: () {
                         StoreProvider.of<AppState>(context).dispatch(SetOrderToEmpty(''));
                         Future.delayed(Duration(seconds: 1), () {
-                          Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => Landing()), (Route<dynamic> route) => false);
+                          Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => RServiceExplorer()), (Route<dynamic> route) => false);
                         });
                         // if (widget.route == '/bookingRoomPaymentList') {
                         //   Navigator.of(context).pop();

@@ -238,11 +238,9 @@ class _RNotificationsState extends State<RNotifications> {
                                 ),
                               );
                             }
-
                             if (notificationSnapshot.connectionState == ConnectionState.waiting) {
                               return CircularProgressIndicator();
                             }
-
                             for (int j = 0; j < notificationSnapshot.data.docs.length; j++) {
                               String idNotification = notificationSnapshot.data.docs[j].id;
                               debugPrint('RUI_U_notifications => NOTIFICATION ID: $idNotification');
@@ -307,16 +305,18 @@ class _RNotificationsState extends State<RNotifications> {
                                                     //StoreProvider.of<AppState>(context).dispatch(SetServiceToEmpty());
                                                     //StoreProvider.of<AppState>(context).dispatch(ServiceRequestByID(notification.data.state.serviceId));
                                                     ServiceState serviceState = ServiceState().toEmpty();
+                                                    OrderState orderState = OrderState().toEmpty();
                                                     StoreProvider.of<AppState>(context).state.serviceList.serviceListState.forEach((service) {
                                                       if(service.serviceId == notification.data.state.serviceId)
                                                         serviceState = service;
                                                     });
-                                                    // widget.orderStateList.forEach((element) {
-                                                    //   if(notification.data.state != null && element.orderId == notification.data.state.orderId){
-                                                    //     debugPrint('UI_U_notification => ${element.orderId}');
-                                                    //     orderState = element;
-                                                    //   }
-                                                    // });
+                                                    debugPrint('RUI_U_notification => OUT: ${notification.data.state.orderId}');
+                                                    widget.orderStateList.forEach((element) {
+                                                      if(notification.data.state != null && element.orderId == notification.data.state.orderId){
+                                                        debugPrint('RUI_U_notification => IN: ${element.orderId}');
+                                                        orderState = element;
+                                                      }
+                                                    });
                                                     // snapshot.serviceList.serviceListState.forEach((element) {
                                                     //   if(notification.data.state != null && element.serviceId == notification.data.state.serviceId){
                                                     //     //debugPrint('UI_U_notification => ${element.orderId}');
@@ -324,7 +324,7 @@ class _RNotificationsState extends State<RNotifications> {
                                                     //   }
                                                     // });
                                                     // if (orderState != null) {
-                                                    return UserNotificationListItem(notification, serviceState, widget.tourist);
+                                                    return UserNotificationListItem(notification, serviceState, widget.tourist, orderState);
                                                     // }
                                                     return Container();
 
