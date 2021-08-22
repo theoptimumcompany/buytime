@@ -28,6 +28,7 @@ import 'package:Buytime/reusable/time_slot_widget.dart';
 import 'package:Buytime/utils/globals.dart';
 import 'package:Buytime/utils/utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
@@ -435,6 +436,12 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                       ),
                       tooltip: AppLocalizations.of(context).comeBack,
                       onPressed: () {
+                        FirebaseAnalytics().logEvent(
+                            name: 'back_time_slots',
+                            parameters: {
+                              'user_email': StoreProvider.of<AppState>(context).state.user.email,
+                              'date': DateTime.now().toString(),
+                            });
                         //StoreProvider.of<AppState>(context).dispatch(SetOrderCartCounter(0));
                         setState(() {
                           startRequest = true;
@@ -1297,6 +1304,14 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                                         selectQuantity[index] = select[i];
                                                                         scrollPositionList[index][i] = select[i];
                                                                         if (select[i]) {
+                                                                          FirebaseAnalytics().logEvent(
+                                                                              name: 'slot_choice_time_slots',
+                                                                              parameters: {
+                                                                                'user_email': StoreProvider.of<AppState>(context).state.user.email,
+                                                                                'date': date,
+                                                                                'service_name': widget.serviceState.name,
+                                                                                'slot_time': serviceSlot[1].on,
+                                                                              });
                                                                           //slotIndex[index] = i;
                                                                           Provider.of<ReserveList>(context, listen: false).updateSlotIndex(index, i);
                                                                           //_slotControllerList[index][0] = i;
@@ -1325,6 +1340,14 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                                           }
                                                                           debugPrint('SELECTED SLOT LIST: ${reserveState.selectedSquareSlotList[index].length}');
                                                                         } else {
+                                                                          FirebaseAnalytics().logEvent(
+                                                                              name: 'slot_remove_time_slots',
+                                                                              parameters: {
+                                                                                'user_email': StoreProvider.of<AppState>(context).state.user.email,
+                                                                                'date': date,
+                                                                                'service_name': widget.serviceState.name,
+                                                                                'slot_time': serviceSlot[1].on,
+                                                                              });
                                                                           serviceSlot[2].free = serviceSlot[2].max;
                                                                           selectedQuantityNumber = serviceSlot[2].max - serviceSlot[2].free;
                                                                           int mSQQIndex = 0;
@@ -1728,6 +1751,13 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                         focusElevation: 0,
                                         highlightElevation: 0,
                                         onPressed: () async{
+                                          FirebaseAnalytics().logEvent(
+                                              name: 'reserve_time_slots',
+                                              parameters: {
+                                                'user_email': StoreProvider.of<AppState>(context).state.user.email,
+                                                'date': DateTime.now().toString(),
+                                                'service_name': widget.serviceState.name
+                                              });
                                           if (reserveState.order.cartCounter > 0) {
                                             // dispatch the order
                                             StoreProvider.of<AppState>(context).dispatch(SetOrderReservable(reserveState.order));
