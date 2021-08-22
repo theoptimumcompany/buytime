@@ -36,7 +36,9 @@ class OrderTotal extends StatelessWidget {
     calculateEcoTax();
     double vat = 0.0;
     orderState.itemList.forEach((element) {
-      vat += (element.price - Utils.checkPromoDiscount('general_1', context).discount) * (element.vat / 100);
+      if (element.vat != null && element.price != null && Utils.checkPromoDiscount('general_1', context).discount != null) {
+        vat += (element.price - Utils.checkPromoDiscount('general_1', context).discount) * (element.vat / 100);
+      }
     });
     return Container(
       width: media.width,
@@ -66,7 +68,8 @@ class OrderTotal extends StatelessWidget {
                     : Container(),
 
                 ///Promo Value
-                Expanded(
+                Utils.checkPromoDiscount('general_1', context).promotionId != 'empty'
+                    ? Expanded(
                     flex: 1,
                     child: Container(
                       alignment: Alignment.center,
@@ -81,7 +84,7 @@ class OrderTotal extends StatelessWidget {
                             ///SizeConfig.safeBlockHorizontal * 7,
                             color: BuytimeTheme.TextBlack),
                       ),
-                    )),
+                    )) : Container(),
 
                 ///Empty Space
                 Expanded(

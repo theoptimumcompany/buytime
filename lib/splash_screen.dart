@@ -114,6 +114,7 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
     WidgetsBinding.instance.addObserver(this);
     super.initState();
 
+
     Firebase.initializeApp().then((value) {
 
       getAppInfo();
@@ -210,10 +211,15 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
       });
       readFromStorage();
       Timer(Duration(seconds: 1), () => check_logged());
+      StoreProvider.of<AppState>(context).dispatch(PromotionListRequest());
+
     }).catchError((onError) {
       print("error on firebase application start: " + onError.toString());
     });
     checkIfNativePayReady();
+
+
+
     initPlatformState();
   }
 

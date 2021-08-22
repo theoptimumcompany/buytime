@@ -1310,7 +1310,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                                                 'user_email': StoreProvider.of<AppState>(context).state.user.email,
                                                                                 'date': date,
                                                                                 'service_name': widget.serviceState.name,
-                                                                                'slot_time': serviceSlot[1].on,
+                                                                                'slot_time': serviceSlot[2].on,
                                                                               });
                                                                           //slotIndex[index] = i;
                                                                           Provider.of<ReserveList>(context, listen: false).updateSlotIndex(index, i);
@@ -1346,7 +1346,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                                                 'user_email': StoreProvider.of<AppState>(context).state.user.email,
                                                                                 'date': date,
                                                                                 'service_name': widget.serviceState.name,
-                                                                                'slot_time': serviceSlot[1].on,
+                                                                                'slot_time': serviceSlot[2].on,
                                                                               });
                                                                           serviceSlot[2].free = serviceSlot[2].max;
                                                                           selectedQuantityNumber = serviceSlot[2].max - serviceSlot[2].free;
