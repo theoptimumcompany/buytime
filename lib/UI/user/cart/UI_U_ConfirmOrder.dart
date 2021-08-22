@@ -249,11 +249,8 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                             parameters: {
                                               'user_email': snapshot.user.email,
                                               'date': DateTime.now().toString(),
-                                              'string_searched': _searchController.text
+                                              'service_name': snapshot.order.itemList.first.name
                                             });
-
-
-
                                         _modalChoosePaymentMethod(context, snapshot);
                                       },
                                     ),
@@ -344,8 +341,13 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                           ),
                                         ),
                                         onPressed: () {
-
-
+                                          FirebaseAnalytics().logEvent(
+                                              name: 'ok_confirm_order',
+                                              parameters: {
+                                                'user_email': snapshot.user.email,
+                                                'date': DateTime.now().toString(),
+                                                'payment_method': snapshot.stripe.chosenPaymentMethod
+                                              });
                                           if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.card)) {
                                             String selectedCardPaymentMethodId = snapshot.cardListState.cardList[0].stripeState.stripeCard.paymentMethodId;
                                             confirmationCard(context, snapshot, snapshot.stripe.stripeCard.last4, snapshot.stripe.stripeCard.brand, snapshot.stripe.stripeCard.country, selectedCardPaymentMethodId);
@@ -716,6 +718,13 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                             title: creditCardText(context, cardFromFirestore),
                             trailing: creditCardTrailing(context, cardFromFirestore),
                             onTap: () {
+                              FirebaseAnalytics().logEvent(
+                                  name: 'payment_method_specific_confirm_order',
+                                  parameters: {
+                                    'user_email': snapshot.user.email,
+                                    'date': DateTime.now().toString(),
+                                    'payment_method': Utils.enumToString(PaymentType.card)
+                                  });
                               if (cardFromFirestore != null) {
                                 StoreProvider.of<AppState>(context).dispatch(ChoosePaymentMethod(Utils.enumToString(PaymentType.card)));
                                 Navigator.of(context).pop();
@@ -735,6 +744,13 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                         leading: Image(width: SizeConfig.blockSizeHorizontal * 10, image: AssetImage('assets/img/applePay.png')),
                         title: new Text(AppLocalizations.of(context).applePay),
                         onTap: () {
+                          FirebaseAnalytics().logEvent(
+                              name: 'payment_method_specific_confirm_order',
+                              parameters: {
+                                'user_email': snapshot.user.email,
+                                'date': DateTime.now().toString(),
+                                'payment_method': Utils.enumToString(PaymentType.applePay)
+                              });
                           StoreProvider.of<AppState>(context).dispatch(ChoosePaymentMethod(Utils.enumToString(PaymentType.applePay)));
                           Navigator.of(context).pop();
                         },
@@ -755,6 +771,13 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                         leading: Image(width: SizeConfig.blockSizeHorizontal * 10, image: AssetImage('assets/img/room.png')),
                         title: new Text(AppLocalizations.of(context).room.replaceAll(":", "")),
                         onTap: () {
+                          FirebaseAnalytics().logEvent(
+                              name: 'payment_method_specific_confirm_order',
+                              parameters: {
+                                'user_email': snapshot.user.email,
+                                'date': DateTime.now().toString(),
+                                'payment_method': Utils.enumToString(PaymentType.room)
+                              });
                           StoreProvider.of<AppState>(context).dispatch(ChoosePaymentMethod(Utils.enumToString(PaymentType.room)));
                           Navigator.of(context).pop();
                         },
@@ -766,6 +789,13 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                         leading: Image(width: SizeConfig.blockSizeHorizontal * 10, image: AssetImage('assets/img/cash.png')),
                         title: new Text(AppLocalizations.of(context).onSite),
                         onTap: () {
+                          FirebaseAnalytics().logEvent(
+                              name: 'payment_method_specific_confirm_order',
+                              parameters: {
+                                'user_email': snapshot.user.email,
+                                'date': DateTime.now().toString(),
+                                'payment_method': Utils.enumToString(PaymentType.onSite)
+                              });
                           StoreProvider.of<AppState>(context).dispatch(ChoosePaymentMethod(Utils.enumToString(PaymentType.onSite)));
                           Navigator.of(context).pop();
                         },
