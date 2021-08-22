@@ -1,6 +1,7 @@
 import 'package:Buytime/UI/user/service/UI_U_service_reserve.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/notification/notification_state.dart';
+import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/reducer/notification_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_detail_reducer.dart';
@@ -12,12 +13,15 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
+import '../UI_U_order_details.dart';
+
 class UserNotificationListItem extends StatefulWidget {
 
   NotificationState notificationState;
   ServiceState serviceState;
+  OrderState orderState;
   bool tourist;
-  UserNotificationListItem(this.notificationState, this.serviceState, this.tourist);
+  UserNotificationListItem(this.notificationState, this.serviceState, this.tourist, this.orderState);
 
   @override
   _UserNotificationListItemState createState() => _UserNotificationListItemState();
@@ -83,6 +87,7 @@ class _UserNotificationListItemState extends State<UserNotificationListItem> {
                   widget.notificationState.opened = true;
                   StoreProvider.of<AppState>(context).dispatch(UpdateNotification(widget.notificationState));
                   StoreProvider.of<AppState>(context).dispatch(SetOrderDetailAndNavigatePop(widget.notificationState.data.state.orderId, widget.notificationState.data.state.serviceId));
+                  //Navigator.push(context, MaterialPageRoute(builder: (context) => OrderDetails(orderState: widget.orderState, tourist: widget.tourist, serviceState: widget.serviceState,)));
                   // Navigator.push(context, MaterialPageRoute(builder: (context) => RUI_U_OrderDetail()));
                 }
               },
