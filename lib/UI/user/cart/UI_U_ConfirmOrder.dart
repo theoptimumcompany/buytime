@@ -905,6 +905,13 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                           activeColor: BuytimeTheme.ManagerPrimary,
                           value: carbonCompensation,
                           onChanged: (value) {
+                            FirebaseAnalytics().logEvent(
+                                name: 'green_confirm_order',
+                                parameters: {
+                                  'user_email': snapshot.user.email,
+                                  'date': DateTime.now().toString(),
+                                  'service_name': snapshot.serviceState.name.isNotEmpty ? snapshot.serviceState.name : 'no name found',
+                                });
                             setState(() {
                               carbonCompensation = value;
                               if (widget.reserve != null && widget.reserve) {
