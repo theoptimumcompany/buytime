@@ -967,6 +967,7 @@ class _TouristSessionRegisterState extends State<TouristSessionRegister> with Si
                               child: Material(
                                 color: Colors.transparent,
                                 child: InkWell(
+                                  key: Key('tourist_login'),
                                   onTap: () {
                                     Navigator.pushReplacement(
                                       context,

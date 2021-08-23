@@ -821,6 +821,7 @@ class _TouristSessionState extends State<TouristSession> with SingleTickerProvid
                                                 ///SizeConfig.safeBlockHorizontal * 14
                                                 //width: 2,
                                                 child: TextFormField(
+                                                  key: Key('email_key'),
                                                   //autofillHints: [AutofillHints.username],
                                                   controller: _emailController,
                                                   textAlign: TextAlign.start,
@@ -902,6 +903,7 @@ class _TouristSessionState extends State<TouristSession> with SingleTickerProvid
                                             ///SizeConfig.safeBlockHorizontal * 14
                                             //width: 328,
                                             child: TextFormField(
+                                              key: Key('password_key'),
                                               controller: _passwordController,
                                               textAlign: TextAlign.start,
                                               obscureText: passwordVisible,
@@ -1074,6 +1076,7 @@ class _TouristSessionState extends State<TouristSession> with SingleTickerProvid
                                           crossAxisAlignment: CrossAxisAlignment.center,
                                           children: [
                                             FloatingActionButton(
+                                              key: Key('login_key'),
                                               onPressed: () async {
                                                 if (_formKey.currentState.validate() && !_isRequestFlying) {
                                                   _signInWithEmailAndPassword();

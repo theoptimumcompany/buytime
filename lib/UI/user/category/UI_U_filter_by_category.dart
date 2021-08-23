@@ -1,6 +1,7 @@
 import 'package:Buytime/UI/user/cart/UI_U_cart.dart';
 import 'package:Buytime/UI/user/search/UI_U_filter_general.dart';
 import 'package:Buytime/UI/user/service/UI_U_service_reserve.dart';
+import 'package:Buytime/UI/user/turist/RUI_U_service_explorer.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/business/snippet/business_snippet_state.dart';
 import 'package:Buytime/reblox/model/category/category_list_state.dart';
@@ -25,6 +26,7 @@ import 'package:Buytime/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:provider/provider.dart';
 
 class FilterByCategory extends StatefulWidget {
   static String route = '/filterByCategory';
@@ -322,7 +324,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                 if (element.parent != null && widget.categoryListIds != null && widget.categoryListIds.contains(element.parent.id)) {
                   if (widget.tourist) {
                     debugPrint('UI_U_filter_by_category => SUB CATEGORY NAME: ${element.name}');
-                    store.state.serviceList.serviceListState.forEach((service) {
+                    Provider.of<Explorer>(context, listen: false).serviceList.forEach((service) {
                       //debugPrint('CATAGORY ID: ${cLS.id} - CATEGORY LIST: ${service.categoryId}');
                       if (service.categoryId.contains(element.id) || searchCategoryAndServiceOnSnippetList(service.serviceId, element.id)) {
                         createSubCategoryList(element);
@@ -353,7 +355,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                     }else{
                       if (element.level == 0) {
                         //debugPrint('UI_U_booking_page => LEVEL 0 & SHOWCASE CATEGORY: ${element.name}');
-                        store.state.serviceList.serviceListState.forEach((service) {
+                        Provider.of<Explorer>(context, listen: false).serviceList.forEach((service) {
                           //debugPrint('CATAGORY ID: ${cLS.id} - CATEGORY LIST: ${service.categoryId}');
                           if (service.categoryId.contains(element.id) || searchCategoryAndServiceOnSnippetList(service.serviceId, element.id)) {
                             createCategoryList(element);
@@ -385,7 +387,8 @@ class _FilterByCategoryState extends State<FilterByCategory> {
         if (_searchController.text.isEmpty) {
           tmpServiceList.clear();
           serviceList.clear();
-          s.addAll(snapshot.serviceList.serviceListState);
+          //s.addAll(snapshot.serviceList.serviceListState);
+          s.addAll(Provider.of<Explorer>(context, listen: false).serviceList);
           debugPrint('SERVICE LENGTH: ${s.length}');
           s.forEach((element) {
             if (element.categoryId != null) {
@@ -734,7 +737,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                                 onTap: () {
                                                   debugPrint('done');
                                                   FocusScope.of(context).unfocus();
-                                                  search(snapshot.serviceList.serviceListState);
+                                                  search(Provider.of<Explorer>(context, listen: false).serviceList);
                                                 },
                                                 child: Icon(
                                                   // Based on passwordVisible state choose the icon
@@ -747,7 +750,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                             onEditingComplete: () {
                                               debugPrint('done');
                                               FocusScope.of(context).unfocus();
-                                              search(snapshot.serviceList.serviceListState);
+                                              search(Provider.of<Explorer>(context, listen: false).serviceList);
                                             },
                                           ),
                                         ),
@@ -764,7 +767,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                           onPressed: () {
                                             setState(() {
                                               _searchController.clear();
-                                              search(snapshot.serviceList.serviceListState);
+                                              search(Provider.of<Explorer>(context, listen: false).serviceList);
                                               //first = false;
                                             });
                                           },

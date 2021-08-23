@@ -567,6 +567,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                 Padding(
                                   padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
                                   child: IconButton(
+                                    key: Key('action_button_discover'),
                                     icon: Icon(
                                       FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty ?
                                       Icons.home : Icons.login,
@@ -630,6 +631,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                               child: Align(
                                                 alignment: Alignment.center,
                                                 child: IconButton(
+                                                  key: Key('cart_key'),
                                                   icon: Icon(
                                                     BuytimeIcons.shopping_cart,
                                                     color: BuytimeTheme.TextWhite,
