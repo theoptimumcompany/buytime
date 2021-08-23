@@ -14,8 +14,8 @@ import 'W_promo_discount.dart';
 class BookingListServiceListItem extends StatefulWidget {
   ServiceState serviceState;
   bool tourist;
-
-  BookingListServiceListItem(this.serviceState, this.tourist);
+  int index;
+  BookingListServiceListItem(this.serviceState, this.tourist, this.index);
 
   @override
   _BookingListServiceListItemState createState() => _BookingListServiceListItemState();
@@ -31,6 +31,7 @@ class _BookingListServiceListItemState extends State<BookingListServiceListItem>
         child: Material(
             color: Colors.transparent,
             child: InkWell(
+              key: Key('top_service_${widget.index}'),
               borderRadius: BorderRadius.all(Radius.circular(10)),
               onTap: () {
                 Navigator.push(

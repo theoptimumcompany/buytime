@@ -1025,7 +1025,8 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                               children: [CircularProgressIndicator()],
                             ),
                           )
-                              : Expanded(
+                              : dates.isNotEmpty ?
+                          Expanded(
                               flex: 5,
                               child: Padding(
                                 padding: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 4),
@@ -1723,7 +1724,25 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                   ),
                                 ]),
                               )
-                          ),
+                          ) : ///No List
+                          Expanded(child: Column(
+                            children: [
+                              Container(
+                                height: SizeConfig.safeBlockVertical * 8,
+                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
+                                child: Center(
+                                    child: Container(
+                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 4),
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        AppLocalizations.of(context).warningNoSlotReservable,
+                                        style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextGrey, fontWeight: FontWeight.w500, fontSize: 16),
+                                      ),
+                                    )),
+                              )
+                            ],
+                          )),
 
                           ///Confirm button
                           noActivity

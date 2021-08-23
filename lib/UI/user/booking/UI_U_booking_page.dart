@@ -793,9 +793,84 @@ class _BookingPageState extends State<BookingPage> {
                                                     userOrderList.clear();
                                                     orderList.clear();
                                                     if (orderSnapshot.hasError || orderSnapshot.connectionState == ConnectionState.waiting) {
-                                                      return Row(
-                                                        mainAxisAlignment: MainAxisAlignment.center,
-                                                        children: [CircularProgressIndicator()],
+                                                      return Container(
+                                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
+                                                        child: Column(
+                                                          mainAxisAlignment: MainAxisAlignment.start,
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                          children: [
+                                                            Row(
+                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                              children: [
+                                                                ///My bookings
+                                                                Container(
+                                                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 1),
+                                                                  child: Text(
+                                                                    AppLocalizations.of(context).myReservation,
+                                                                    style: TextStyle(
+                                                                      //letterSpacing: SizeConfig.safeBlockVertical * .4,
+                                                                        fontFamily: BuytimeTheme.FontFamily,
+                                                                        color: BuytimeTheme.TextBlack,
+                                                                        fontWeight: FontWeight.w400,
+                                                                        fontSize: 18
+
+                                                                      ///SizeConfig.safeBlockHorizontal * 4
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                ///View All
+                                                                Container(
+                                                                    margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 2.5),
+                                                                    alignment: Alignment.center,
+                                                                    child: Material(
+                                                                      color: Colors.transparent,
+                                                                      child: InkWell(
+                                                                          onTap: () {
+                                                                            //Navigator.push(context, MaterialPageRoute(builder: (context) => RAllBookings(fromConfirm: false, tourist: false,)),);
+                                                                            //Navigator.push(context, MaterialPageRoute(builder: (context) => AllBookings(orderStateList: orderList, tourist: true,)),);
+                                                                          },
+                                                                          borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                                                          child: Container(
+                                                                            padding: EdgeInsets.all(5.0),
+                                                                            child: Text(
+                                                                              AppLocalizations.of(context).viewAll,
+                                                                              style: TextStyle(
+                                                                                  letterSpacing: SizeConfig.safeBlockHorizontal * .2,
+                                                                                  fontFamily: BuytimeTheme.FontFamily,
+                                                                                  color: BuytimeTheme.BackgroundCerulean,
+                                                                                  fontWeight: FontWeight.w400,
+                                                                                  fontSize: 16
+
+                                                                                ///SizeConfig.safeBlockHorizontal * 4
+                                                                              ),
+                                                                            ),
+                                                                          )),
+                                                                    ))
+                                                              ],
+                                                            ),
+                                                            ///List
+                                                            Container(
+                                                              height: 120,
+                                                              width: double.infinity,
+                                                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
+                                                              child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
+                                                                SliverList(
+                                                                  delegate: SliverChildBuilderDelegate(
+                                                                        (context, index) {
+                                                                      return Container(
+                                                                        width: 151,
+                                                                        height: 100,
+                                                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1, right: SizeConfig.safeBlockHorizontal * 1),
+                                                                        child: Utils.imageShimmer(151, 100),
+                                                                      );
+                                                                    },
+                                                                    childCount: 5,
+                                                                  ),
+                                                                ),
+                                                              ]),
+                                                            ),
+                                                          ],
+                                                        ),
                                                       );
                                                     }
                                                     DateTime currentTime = DateTime.now();
@@ -1046,7 +1121,7 @@ class _BookingPageState extends State<BookingPage> {
                                                               },
                                                               child: Column(
                                                                 children: [
-                                                                  BookingListServiceListItem(service, false),
+                                                                  BookingListServiceListItem(service, false, index),
                                                                   Container(
                                                                     margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 30),
                                                                     height: SizeConfig.safeBlockVertical * .2,

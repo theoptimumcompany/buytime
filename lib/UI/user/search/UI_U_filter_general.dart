@@ -535,7 +535,7 @@ class _FilterGeneralState extends State<FilterGeneral> {
                                               },
                                               child: Column(
                                                 children: [
-                                                  BookingListServiceListItem(service, false),
+                                                  BookingListServiceListItem(service, false, index),
                                                   Container(
                                                     margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 30),
                                                     height: SizeConfig.safeBlockVertical * .2,

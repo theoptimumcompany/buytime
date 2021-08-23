@@ -720,6 +720,7 @@ class _TouristSessionState extends State<TouristSession> with SingleTickerProvid
               //resizeToAvoidBottomInset: false,
               appBar: AppBar(
                 leading: IconButton(
+                  key: Key('tourist_login_back'),
                   icon: Icon(
                     Icons.keyboard_arrow_left,
                     color: BuytimeTheme.UserPrimary,

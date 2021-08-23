@@ -2056,7 +2056,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                           ServiceState service = serviceList.elementAt(index);
                                                           return Column(
                                                             children: [
-                                                              BookingListServiceListItem(service, true),
+                                                              BookingListServiceListItem(service, true, index),
                                                               Container(
                                                                 margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 30),
                                                                 height: SizeConfig.safeBlockVertical * .2,

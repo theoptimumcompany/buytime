@@ -122,7 +122,7 @@ void main() {
       expect(find.text('The email address is already in use by another account.'), findsOneWidget);
     });
 
-    ///Login User => Discover => Service add to cart => Payment process without ending
+    ///Discover => Service add to cart => Tourist Login User =>  Payment process without ending
     testWidgets('Login User', (tester) async {
       await loadApp(tester);
       /*await tester.pumpAndSettle(const Duration(seconds: 2));
@@ -141,9 +141,9 @@ void main() {
       await tester.pumpAndSettle(const Duration(seconds: 2));
       await tester.tap(find.text('Drink').first);
       await tester.pumpAndSettle(const Duration(seconds: 2));
-
-      if(!find.text('Appetizer').toString().contains('zero widgets with')){
-        await tester.drag(find.text('Appetizer').first, const Offset(-700, 0));
+      debugPrint('KEY VALUE: ${find.text('Test').toString()}');
+      if(!find.text('Test Spritz Acquistabile').toString().contains('zero widgets with')){
+        await tester.drag(find.text('Test Spritz Acquistabile').last, const Offset(-700, 0));
         await tester.pumpAndSettle(const Duration(seconds: 2));
 
         await tester.tap(find.byKey(ValueKey('cart_key')));
@@ -152,13 +152,22 @@ void main() {
         await tester.tap(find.byKey(ValueKey('cart_buy_key')));
         await tester.pumpAndSettle(const Duration(seconds: 2));
 
+        await tester.tap(find.byKey(ValueKey('tourist_login')));
+        await tester.pumpAndSettle(const Duration(seconds: 2));
+
+        await touristLogin(tester, 'test_automatico@buytime.network', 'Test2021');
+        await tester.pumpAndSettle(const Duration(seconds: 2));
+
         await tester.tap(find.byKey(ValueKey('back_cart_from_confirm_order_key')));
+        await tester.pumpAndSettle(const Duration(seconds: 1));
+
+        await tester.tap(find.byKey(ValueKey('tourist_login_back')));
         await tester.pumpAndSettle(const Duration(seconds: 1));
 
         await tester.tap(find.byKey(ValueKey('back_from_cart_key')));
         await tester.pumpAndSettle(const Duration(seconds: 1));
 
-        await tester.tap(find.text('Appetizer').first);
+        await tester.tap(find.text('Test Spritz Acquistabile').last);
         await tester.pumpAndSettle(const Duration(seconds: 2));
 
         await tester.tap(find.byKey(ValueKey('service_details_add_to_cart_key')).first);
@@ -199,11 +208,105 @@ void main() {
       }
     });
 
-    ///Login User => Discover => Service reserve => Payment process without ending
+    ///Discover => Login User => Discover => Service add to cart => Payment process without ending
+    testWidgets('Login User', (tester) async {
+      await loadApp(tester);
+      /*await tester.pumpAndSettle(const Duration(seconds: 2));
+      debugPrint('KEY VALUE: ${find.byKey(ValueKey('action_button_discover')).toString()}');
+      await tester.tap(find.byKey(ValueKey('action_button_discover')));
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+      //await tester.tap(find.byKey(ValueKey('login')));
+      ///Home => registration
+      await login(tester, 'test_automatico@buytime.network', 'Test2021');
+      await tester.pumpAndSettle(const Duration(seconds: 2));*/
+
+
+
+      /* await tester.enterText(find.byKey(ValueKey('search_field_key')), 'Drink');
+      await tester.pumpAndSettle(const Duration(seconds: 2));*/
+
+      debugPrint('KEY VALUE: ${find.byKey(ValueKey('action_button_discover')).toString()}');
+      await tester.tap(find.byKey(ValueKey('action_button_discover')));
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+
+      ///Home => registration
+      await login(tester, 'test_automatico@buytime.network', 'Test2021');
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+
+      await tester.tap(find.byKey(ValueKey('discover_key')));
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+      await tester.tap(find.text('Drink').first);
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+
+      if(!find.text('Test Spritz Acquistabile').toString().contains('zero widgets with')){
+        await tester.drag(find.text('Test Spritz Acquistabile').first, const Offset(-700, 0));
+        await tester.pumpAndSettle(const Duration(seconds: 2));
+
+        await tester.tap(find.byKey(ValueKey('cart_key')));
+        await tester.pumpAndSettle(const Duration(seconds: 2));
+
+        await tester.tap(find.byKey(ValueKey('cart_buy_key')));
+        await tester.pumpAndSettle(const Duration(seconds: 2));
+
+        await tester.tap(find.byKey(ValueKey('back_cart_from_confirm_order_key')));
+        await tester.pumpAndSettle(const Duration(seconds: 1));
+
+        await tester.tap(find.byKey(ValueKey('back_from_cart_key')));
+        await tester.pumpAndSettle(const Duration(seconds: 1));
+
+        await tester.tap(find.text('Test Spritz Acquistabile').first);
+        await tester.pumpAndSettle(const Duration(seconds: 2));
+
+        await tester.tap(find.byKey(ValueKey('service_details_add_to_cart_key')).first);
+        await tester.pumpAndSettle(const Duration(seconds: 2));
+
+        await tester.tap(find.byKey(ValueKey('cart_key')));
+        await tester.pumpAndSettle(const Duration(seconds: 2));
+
+        await tester.tap(find.byKey(ValueKey('cart_buy_key')));
+        await tester.pumpAndSettle(const Duration(seconds: 2));
+
+        await tester.tap(find.byKey(ValueKey('back_cart_from_confirm_order_key')));
+        await tester.pumpAndSettle(const Duration(seconds: 1));
+
+        await tester.tap(find.byKey(ValueKey('back_from_cart_key')));
+        await tester.pumpAndSettle(const Duration(seconds: 1));
+
+        await tester.tap(find.byKey(ValueKey('service_details_buy_key')).first);
+        await tester.pumpAndSettle(const Duration(seconds: 2));
+
+        await tester.tap(find.byKey(ValueKey('cart_buy_key')));
+        await tester.pumpAndSettle(const Duration(seconds: 2));
+
+        await tester.tap(find.byKey(ValueKey('back_cart_from_confirm_order_key')));
+        await tester.pumpAndSettle(const Duration(seconds: 1));
+
+        await tester.tap(find.byKey(ValueKey('add_one_item_key')));
+        await tester.pumpAndSettle(const Duration(seconds: 2));
+
+        await tester.tap(find.byKey(ValueKey('remove_one_item_key')));
+        await tester.pumpAndSettle(const Duration(seconds: 2));
+
+        /*await tester.drag(find.text('Appetizer').first, const Offset(-700, 0));
+        await tester.pumpAndSettle(const Duration(seconds: 2));*/
+
+        // await tester.tap(find.text('Appetizer'));
+        // await tester.pumpAndSettle(const Duration(seconds: 2));
+      }
+    });
+
+    ///Discover => Login User => Discover => Service reserve => Payment process without ending
     testWidgets('Login User', (tester) async {
       await loadApp(tester);
       await tester.pumpAndSettle(const Duration(seconds: 2));
       //await tester.tap(find.byKey(ValueKey('login')));
+
+      debugPrint('KEY VALUE: ${find.byKey(ValueKey('action_button_discover')).toString()}');
+      await tester.tap(find.byKey(ValueKey('action_button_discover')));
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+
       ///Home => registration
       await login(tester, 'test_automatico@buytime.network', 'Test2021');
       await tester.pumpAndSettle(const Duration(seconds: 2));
@@ -211,7 +314,10 @@ void main() {
       /* await tester.enterText(find.byKey(ValueKey('search_field_key')), 'Drink');
       await tester.pumpAndSettle(const Duration(seconds: 2));*/
 
-      await tester.tap(find.text('Diving'));
+      await tester.tap(find.byKey(ValueKey('discover_key')));
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+
+      await tester.tap(find.text('Diving').first);
       await tester.pumpAndSettle(const Duration(seconds: 2));
 
       if(!find.text('Discovery Scuba Diving').toString().contains('zero widgets with')){
@@ -264,7 +370,7 @@ void main() {
       }
     });
 
-    ///Registration User => Landing => log out
+    /*///Registration User => Landing => log out
     testWidgets('Registration User', (tester) async {
       await loadApp(tester);
 
@@ -275,18 +381,23 @@ void main() {
       ///Log out
       await tester.tap(find.byKey(ValueKey('log_out_key')));
       await tester.pumpAndSettle(const Duration(seconds: 1));
-    });
+    });*/
 
     ///Login User => Landing => Search
     testWidgets('Login User', (tester) async {
       await loadApp(tester);
       await tester.pumpAndSettle(const Duration(seconds: 2));
       //await tester.tap(find.byKey(ValueKey('login')));
+
+      debugPrint('KEY VALUE: ${find.byKey(ValueKey('action_button_discover')).toString()}');
+      await tester.tap(find.byKey(ValueKey('action_button_discover')));
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+
       ///Home => registration
       await login(tester, 'test_user@buytime.network', 'test2020');
       await tester.pumpAndSettle(const Duration(seconds: 2));
 
-      await tester.enterText(find.byKey(ValueKey('guest_search_field_key')), 'Mass');
+      await tester.enterText(find.byKey(ValueKey('guest_search_field_key')), 'Test');
       await tester.pumpAndSettle(const Duration(seconds: 1));
 
       await tester.tap(find.byKey(ValueKey('guest_search_button_key')));
@@ -314,13 +425,21 @@ void main() {
     ///Login User => Landing => Service Reserve
     testWidgets('Login User', (tester) async {
       await loadApp(tester);
-      await tester.pumpAndSettle(const Duration(seconds: 2));
+
       //await tester.tap(find.byKey(ValueKey('login')));
-      ///Home => registration
-      //await login(tester, 'test_user@buytime.network', 'test2020');
+      debugPrint('KEY VALUE: ${find.byKey(ValueKey('action_button_discover')).toString()}');
+      await tester.tap(find.byKey(ValueKey('action_button_discover')));
       await tester.pumpAndSettle(const Duration(seconds: 2));
 
-      await tester.drag(find.text('Shiatsu Massage').first, const Offset(-700, 0));
+      ///Home => registration
+      await login(tester, 'test_user@buytime.network', 'test2020');
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+
+      ///Scroll down
+      await tester.flingFrom(Offset(0, 400), Offset(0, -500), 2000);
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+
+      await tester.drag(find.byKey(ValueKey('top_service_2')).first, const Offset(-700, 0));
       await tester.pumpAndSettle(const Duration(seconds: 2));
 
       await tester.tap(find.byKey(ValueKey('service_slot_0_0_key')));
@@ -341,7 +460,7 @@ void main() {
       await tester.tap(find.byKey(ValueKey('back_from_service_reserve_key')));
       await tester.pumpAndSettle(const Duration(seconds: 1));
 
-      await tester.tap(find.text('Shiatsu Massage').first);
+      await tester.tap(find.byKey(ValueKey('top_service_2')).first);
       await tester.pumpAndSettle(const Duration(seconds: 2));
 
       await tester.tap(find.byKey(ValueKey('service_reserve_buy_key')));
@@ -363,10 +482,14 @@ void main() {
       await tester.pumpAndSettle(const Duration(seconds: 2));*/
     });
 
+
     ///Login User => Self Check in => log out
     testWidgets('Registration User', (tester) async {
       await loadApp(tester);
-      await tester.pumpAndSettle(const Duration(seconds: 3));
+      debugPrint('KEY VALUE: ${find.byKey(ValueKey('action_button_discover')).toString()}');
+      await tester.tap(find.byKey(ValueKey('action_button_discover')));
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+
       //await tester.tap(find.byKey(ValueKey('login')));
       ///Home => login
       await login(tester, 'test_self@buytime.network', 'Test2021');
@@ -419,7 +542,9 @@ void main() {
 
     testWidgets('Add External Service', (tester) async {
       await loadApp(tester);
-
+      debugPrint('KEY VALUE: ${find.byKey(ValueKey('action_button_discover')).toString()}');
+      await tester.tap(find.byKey(ValueKey('action_button_discover')));
+      await tester.pumpAndSettle(const Duration(seconds: 2));
       //await tester.tap(find.byKey(ValueKey('login')));
       ///Home => Login
       await login(tester, 'test_salesman@buytime.network', 'test2020');
@@ -538,6 +663,16 @@ Future<void> login(WidgetTester tester, String email, String password) async {
   //await tester.tap(find.text('Log In'.toUpperCase()));
   await tester.pumpAndSettle(const Duration(seconds: 1));
 
+  await tester.enterText(find.byKey(ValueKey('email_key')), email);
+  await tester.pumpAndSettle(const Duration(seconds: 1));
+  await tester.enterText(find.byKey(ValueKey('password_key')), password);
+  await tester.pumpAndSettle(const Duration(seconds: 2));
+
+  await tester.tap(find.byKey(ValueKey('login_key')));
+  await tester.pumpAndSettle(const Duration(seconds: 2));
+}
+
+Future<void> touristLogin(WidgetTester tester, String email, String password) async {
   await tester.enterText(find.byKey(ValueKey('email_key')), email);
   await tester.pumpAndSettle(const Duration(seconds: 1));
   await tester.enterText(find.byKey(ValueKey('password_key')), password);
