@@ -830,7 +830,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                               controller: _searchController,
                                               textAlign: TextAlign.start,
                                               textInputAction: TextInputAction.search,
-                                              //textCapitalization: TextCapitalization.words,
+                                              //textCapitalization: TextCapitalization.sentences,
                                               decoration: InputDecoration(
                                                 enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
                                                 focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(10.0))),

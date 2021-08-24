@@ -313,6 +313,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                       tmpService.description = Utils.saveField(myLocale.languageCode, descriptionController.text, snapshot.serviceState.description);
                                       tmpService.serviceAddress = addressController.text;
                                       tmpService.serviceBusinessAddress = _serviceBusinessAddress;
+                                      tmpService.price = _servicePrice;
                                       if(conditionController.text.isNotEmpty)
                                         tmpService.condition =  Utils.saveField(myLocale.languageCode, conditionController.text, snapshot.serviceState.condition);
                                       if(_serviceVAT == 0)

@@ -423,6 +423,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                     tmpService.serviceBusinessAddress = _serviceBusinessAddress;
                                                     tmpService.serviceCoordinates = _serviceCoordinates;
                                                     tmpService.serviceBusinessCoordinates = _serviceBusinessCoordinates;
+                                                    tmpService.price = _servicePrice;
                                                     if(conditionController.text.isNotEmpty)
                                                       tmpService.condition =  Utils.saveField(myLocale.languageCode, conditionController.text, snapshot.serviceState.condition);
                                                     if (_serviceVAT == 0)
