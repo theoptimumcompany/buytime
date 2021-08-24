@@ -34,6 +34,8 @@ import '../../../environment_abstract.dart';
 import '../../../reblox/model/app_state.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import 'UI_U_home.dart';
+
 class Login extends StatefulWidget {
   static String route = '/login';
 
@@ -707,6 +709,7 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
                     color: BuytimeTheme.SymbolBlack,
                   ),
                   onPressed: () {
+                    controller.play();
                     if (overlayEntry != null && isMenuOpen) {
                       overlayEntry.remove();
                       isMenuOpen = !isMenuOpen;
