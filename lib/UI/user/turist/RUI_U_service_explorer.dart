@@ -830,6 +830,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                               controller: _searchController,
                                               textAlign: TextAlign.start,
                                               textInputAction: TextInputAction.search,
+                                              //textCapitalization: TextCapitalization.words,
                                               decoration: InputDecoration(
                                                 enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
                                                 focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
@@ -921,7 +922,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                       builder: (context, AsyncSnapshot<QuerySnapshot> orderSnapshot) {
                                         userOrderList.clear();
                                         orderList.clear();
-                                        if (orderSnapshot.hasError || orderSnapshot.connectionState == ConnectionState.waiting) {
+                                        if (orderSnapshot.hasError || orderSnapshot.connectionState == ConnectionState.waiting || noActivity) {
                                           return Container(
                                             margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
                                             child: Column(
@@ -1087,18 +1088,21 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                         ServiceState service = ServiceState().toEmpty();
                                                         StoreProvider.of<AppState>(context).state.notificationListState.notificationListState.forEach((element) {
                                                           if(element.notificationId != null && element.notificationId.isNotEmpty && order.orderId.isNotEmpty && order.orderId == element.data.state.orderId){
+                                                            debugPrint('HEREE');
                                                             snapshot.serviceList.serviceListState.forEach((s) {
                                                               if(element.data.state.serviceId == s.serviceId)
                                                                 service = s;
                                                             });
                                                           }
                                                         });
+
                                                         order.itemList.forEach((element) {
                                                           snapshot.serviceList.serviceListState.forEach((s) {
                                                             if(element.id == s.serviceId)
                                                               service = s;
                                                           });
                                                         });
+
                                                         return Container(
                                                           width: 151,
                                                           height: 100,

@@ -25,11 +25,10 @@ class Home extends StatefulWidget {
   @override
   createState() => _HomeState();
 }
-
+VideoPlayerController controller;
 class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   ///Controllers
   AnimationController _animationController;
-  VideoPlayerController _controller;
   VideoPlayerOptions videoPlayerOptions = VideoPlayerOptions(mixWithOthers: true);
 
   ///Animations
@@ -94,12 +93,12 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     Random random = new Random();
     randomNumber = random.nextInt(backgroundVideoList.length); // from 0 upto 99 included
     // Pointing the video controller to our local asset.
-    _controller = VideoPlayerController.asset("assets/video/${backgroundVideoList[randomNumber]}", videoPlayerOptions: videoPlayerOptions)
+    controller = VideoPlayerController.asset("assets/video/${backgroundVideoList[randomNumber]}", videoPlayerOptions: videoPlayerOptions)
       ..initialize().then((_) {
         // Once the video has been loaded we play the video and set looping to true.
-        _controller.play();
-        _controller.setLooping(true);
-        _controller.setVolume(0.0);
+        controller.play();
+        controller.setLooping(true);
+        controller.setVolume(0.0);
         // Ensure the first frame is shown after the video is initialized.
         setState(() {});
       });
@@ -173,8 +172,10 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   @override
   void dispose() {
     _animationController.dispose();
-    _controller.dispose();
+
     super.dispose();
+    controller.dispose();
+    debugPrint('home dispose');
   }
 
   @override
@@ -182,7 +183,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     // the media containing information on width and height
     var media = MediaQuery.of(context).size;
     _animationController.forward();
-    _controller.play();
 
     SizeConfig().init(context);
     //ScreenUtil.init(context);
@@ -203,17 +203,17 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                     Positioned.fill(
                       child: Align(
                           alignment: Alignment.center,
-                          child: _controller.value.isInitialized
+                          child: controller.value.isInitialized
                               ? SizedBox.expand(
                                   child: FittedBox(
                                     // If your background video doesn't look right, try changing the BoxFit property.
                                     // BoxFit.fill created the look I was going for.
                                     fit: BoxFit.cover,
                                     child: SizedBox(
-                                      width: _controller.value.size?.width ?? 0,
-                                      height: _controller.value.size?.height ?? 0,
+                                      width: controller.value.size?.width ?? 0,
+                                      height: controller.value.size?.height ?? 0,
                                       child: VideoPlayer(
-                                        _controller,
+                                        controller,
                                       ),
                                     ),
                                   ),
@@ -498,7 +498,9 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                               focusElevation: 0,
                               highlightElevation: 0,
                               onPressed: () {
-                                _controller.pause();
+                                setState(() {
+                                  controller.pause();
+                                });
                                 //Navigator.push(context, MaterialPageRoute(builder: (context) => Registration()),);
                                 Navigator.of(context).pushNamed(Registration.route);
                               },
@@ -551,7 +553,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                   );
                                 },*/
                               onPressed: () {
-                                _controller.pause();
+                                controller.pause();
                                 //Navigator.push(context, MaterialPageRoute(builder: (context) => Login()),;
                                 Navigator.of(context).pushNamed(Login.route);
                               },
@@ -586,6 +588,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                 child: InkWell(
                                   key: Key('free_access_key'),
                                     onTap: () {
+                                      controller.pause();
                                       Navigator.of(context).pushNamed(RServiceExplorer.route);
                                     },
                                     borderRadius: BorderRadius.all(Radius.circular(5.0)),

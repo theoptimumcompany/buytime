@@ -28,6 +28,7 @@ import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'dart:convert';
 import 'dart:math';
 import 'package:crypto/crypto.dart';
+import 'package:Buytime/UI/user/login/UI_U_home.dart';
 
 /// Generates a cryptographically secure random nonce, to be included in a
 /// credential request.
@@ -381,6 +382,7 @@ class RegistrationState extends State<Registration> {
               color: BuytimeTheme.SymbolBlack,
             ),
             onPressed: () {
+              controller.play();
               Navigator.of(context).pop();
             },
           ),
