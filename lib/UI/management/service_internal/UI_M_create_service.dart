@@ -405,6 +405,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                               //width: SizeConfig.safeBlockHorizontal * 60,
                                               // decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
                                               child: TextFormField(
+                                                  textCapitalization: TextCapitalization.sentences,
                                                   controller: nameController,
                                                   validator: (value) => value.isEmpty ? AppLocalizations.of(context).serviceNameBlank : null,
                                                   onChanged: (value) {
@@ -469,6 +470,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                             //width: SizeConfig.safeBlockHorizontal * 60,
                                             // decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
                                               child: TextFormField(
+                                                  textCapitalization: TextCapitalization.sentences,
                                                   keyboardType: TextInputType.multiline,
                                                   maxLines: null,
                                                   controller: descriptionController,
@@ -538,6 +540,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                             //width: SizeConfig.safeBlockHorizontal * 60,
                                             // decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
                                               child: TextFormField(
+                                                  textCapitalization: TextCapitalization.sentences,
                                                   controller: conditionController,
                                                   //validator: (value) => value.isEmpty ? AppLocalizations.of(context).serviceNameBlank : null,
                                                   onChanged: (value) {
@@ -607,6 +610,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                             child: Padding(
                                               padding: EdgeInsets.only(top: 0.0, bottom: 0.0, left: 0.0, right: 0.0),
                                               child: TextFormField(
+                                                textCapitalization: TextCapitalization.sentences,
                                                 //enabled: canEditService,
                                                 controller: priceController,
                                                 keyboardType: TextInputType.numberWithOptions(signed: true, decimal: true),
@@ -664,6 +668,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                             child: Padding(
                                               padding: EdgeInsets.only(top: 0.0, bottom: 0.0, left: 3.0, right: 42.0),
                                               child: TextFormField(
+                                                textCapitalization: TextCapitalization.sentences,
                                                 //maxLength: 2,
                                                 //enabled: canEditService,
                                                 controller: vatController,
@@ -736,6 +741,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                               margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0),
                                               //decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
                                               child: TextFormField(
+                                                textCapitalization: TextCapitalization.sentences,
                                                 enabled: false,
                                                 keyboardType: TextInputType.multiline,
                                                 maxLines: null,
@@ -860,6 +866,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                                         height: 45,
                                                         width: media.width * 0.55,
                                                         child: TextFormField(
+                                                          textCapitalization: TextCapitalization.sentences,
                                                           controller: _tagServiceController,
                                                           textAlign: TextAlign.start,
                                                           decoration: InputDecoration(

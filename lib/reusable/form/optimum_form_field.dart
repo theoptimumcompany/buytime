@@ -110,6 +110,7 @@ class OptimumFormFieldState extends State<OptimumFormField> {
               key: widget.globalFieldKey,
               autovalidate: _autoValidate,
               child: TextFormField(
+                textCapitalization: TextCapitalization.sentences,
                 focusNode: focusNode,
                 controller: widget.controller,
                 //initialValue: widget.initialFieldValue,

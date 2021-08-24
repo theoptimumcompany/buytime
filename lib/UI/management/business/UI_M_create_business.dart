@@ -453,6 +453,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                               //enabled: false,
                                                               //focusNode: focusNode,
                                                               //initialValue: widget.initialFieldValue,
+                                                              textCapitalization: TextCapitalization.sentences,
                                                               controller: _salesmanNameController,
                                                               onChanged: (value) {
                                                                 StoreProvider.of<AppState>(context).dispatch(SetBusinessSalesmanName(value));
@@ -486,6 +487,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                           child: Form(
                                                             key: _formKeySalesmanPhonenumberFieldEdit,
                                                             child: TextFormField(
+                                                              textCapitalization: TextCapitalization.sentences,
                                                               //maxLength: 10,
                                                               //enabled: false,
                                                               //focusNode: focusNode,
@@ -527,6 +529,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                           child: Form(
                                                             key: _formKeyConciergePhonenumberFieldEdit,
                                                             child: TextFormField(
+                                                              textCapitalization: TextCapitalization.sentences,
                                                               //maxLength: 10,
                                                               //enabled: false,
                                                               //focusNode: focusNode,
@@ -697,6 +700,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                                     margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0),
                                                                     //decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
                                                                     child: TextFormField(
+                                                                        textCapitalization: TextCapitalization.sentences,
                                                                       enabled: false,
                                                                       readOnly: true,
                                                                       keyboardType: TextInputType.multiline,
@@ -770,6 +774,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                             child: Form(
                                                               key: _formKeyCoordinateFieldEdit,
                                                               child: TextFormField(
+                                                                textCapitalization: TextCapitalization.sentences,
                                                                 enabled: false,
                                                                 //focusNode: focusNode,
                                                                 //initialValue: widget.initialFieldValue,
@@ -977,6 +982,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                                     height: SizeConfig.safeBlockHorizontal * 10,
                                                                     width: SizeConfig.safeBlockHorizontal * 30,
                                                                     child: TextFormField(
+                                                                      textCapitalization: TextCapitalization.sentences,
                                                                       controller: _tagController,
                                                                       textAlign: TextAlign.start,
                                                                       decoration: InputDecoration(
@@ -1120,6 +1126,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                                     height: SizeConfig.safeBlockHorizontal * 10,
                                                                     width: SizeConfig.safeBlockHorizontal * 60,
                                                                     child: TextFormField(
+                                                                      textCapitalization: TextCapitalization.sentences,
                                                                       controller: _areaController,
                                                                       textAlign: TextAlign.start,
                                                                       decoration: InputDecoration(
