@@ -549,6 +549,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                           //width: SizeConfig.safeBlockHorizontal * 60,
                                                           // decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
                                                           child: TextFormField(
+                                                              textCapitalization: TextCapitalization.sentences,
                                                               enabled: canEditService,
                                                               controller: nameController,
                                                               validator: (value) => value.isEmpty ? AppLocalizations.of(context).serviceNameBlank : null,
@@ -618,6 +619,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                           //width: SizeConfig.safeBlockHorizontal * 60,
                                                           // decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
                                                           child: TextFormField(
+                                                                  textCapitalization: TextCapitalization.sentences,
                                                               enabled: canEditService,
                                                               keyboardType: TextInputType.multiline,
                                                               maxLines: null,
@@ -690,6 +692,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                         //width: SizeConfig.safeBlockHorizontal * 60,
                                                         // decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
                                                           child: TextFormField(
+                                                                  textCapitalization: TextCapitalization.sentences,
                                                               enabled: canEditService,
                                                               controller: conditionController,
                                                               //validator: (value) => value.isEmpty ? AppLocalizations.of(context).serviceNameBlank : null,
@@ -765,6 +768,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                               child: Padding(
                                                                 padding: EdgeInsets.only(top: 0.0, bottom: 0.0, left: 0.0, right: 0.0),
                                                                 child: TextFormField(
+                                                                  textCapitalization: TextCapitalization.sentences,
                                                                   enabled: canEditService,
                                                                   controller: priceController,
                                                                   keyboardType: TextInputType.numberWithOptions(signed: true, decimal: true),
@@ -828,6 +832,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                               child: Padding(
                                                                 padding: EdgeInsets.only(top: 0.0, bottom: 0.0, left: 3.0, right: 42.0),
                                                                 child: TextFormField(
+                                                                    textCapitalization: TextCapitalization.sentences,
                                                                   //maxLength: 2,
                                                                   enabled: canEditService,
                                                                   controller: vatController,
@@ -901,6 +906,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                           margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0),
                                                           //decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
                                                           child: TextFormField(
+                                                              textCapitalization: TextCapitalization.sentences,
                                                             enabled: false,
                                                             readOnly: true,
                                                             keyboardType: TextInputType.multiline,
@@ -1036,6 +1042,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                                     height: 45,
                                                                     width: media.width * 0.55,
                                                                     child: TextFormField(
+                                                                        textCapitalization: TextCapitalization.sentences,
                                                                       enabled: canEditService,
                                                                       controller: _tagServiceController,
                                                                       textAlign: TextAlign.start,
