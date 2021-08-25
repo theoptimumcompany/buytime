@@ -47,7 +47,7 @@ class _BookingListServiceListItemState extends State<BookingListServiceListItem>
                 height: 100,
 
                 ///SizeConfig.safeBlockVertical * 15
-                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 2.5, top: 1, bottom: 1),
+                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 0, top: 1, bottom: 1),
                 child: Row(
                   children: [
                     ///Service Image
@@ -84,7 +84,7 @@ class _BookingListServiceListItemState extends State<BookingListServiceListItem>
                     ///Service Name & Description
                     Container(
                       //width: SizeConfig.safeBlockHorizontal * 60,
-                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1),
+                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 0, top: SizeConfig.safeBlockVertical * 1),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -93,7 +93,7 @@ class _BookingListServiceListItemState extends State<BookingListServiceListItem>
                           FittedBox(
                             fit: BoxFit.scaleDown,
                             child: Container(
-                              width: SizeConfig.safeBlockHorizontal * 55,
+                              width: SizeConfig.safeBlockHorizontal * 60,
                               child: Text(
                                 widget.serviceState.name != null ? Utils.retriveField(Localizations.localeOf(context).languageCode, widget.serviceState.name) : '',
                                 overflow: TextOverflow.ellipsis,
@@ -107,23 +107,20 @@ class _BookingListServiceListItemState extends State<BookingListServiceListItem>
                           ),
 
                           ///Description
-                          FittedBox(
-                            fit: BoxFit.fitHeight,
-                            child: Container(
-                              width: SizeConfig.safeBlockHorizontal * 55,
-                              ///SizeConfig.safeBlockHorizontal * 50
-                              height: 40,
+                          Container(
+                            //color: Colors.black,
+                            width: SizeConfig.safeBlockHorizontal * 60,
+                            ///SizeConfig.safeBlockHorizontal * 50
+                            height: 40,
+                            ///SizeConfig.safeBlockVertical * 10
+                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
+                            child: Text(
+                              widget.serviceState.description != null ? Utils.retriveField(Localizations.localeOf(context).languageCode, widget.serviceState.description) : '',
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,
+                              style: TextStyle(letterSpacing: 0.25, fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextGrey, fontWeight: FontWeight.w400, fontSize: 14
 
-                              ///SizeConfig.safeBlockVertical * 10
-                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
-                              child: Text(
-                                widget.serviceState.description != null ? Utils.retriveField(Localizations.localeOf(context).languageCode, widget.serviceState.description) : '',
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 2,
-                                style: TextStyle(letterSpacing: 0.25, fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextGrey, fontWeight: FontWeight.w400, fontSize: 14
-
-                                    ///SizeConfig.safeBlockHorizontal * 4
-                                    ),
+                                ///SizeConfig.safeBlockHorizontal * 4
                               ),
                             ),
                           ),

@@ -363,7 +363,7 @@ class _UI_M_BusinessListDrawerState extends State<UI_M_BusinessListDrawer> {
                                     leading: Icon(Icons.call, color: BuytimeTheme.TextMedium, size: 24),
                                     onTap: () async{
                                       String url = StoreProvider.of<AppState>(context).state.business.phoneSalesman.isNotEmpty ?
-                                      StoreProvider.of<AppState>(context).state.business.phoneSalesman : BuytimeConfig.FlaviosNumber.trim();
+                                      StoreProvider.of<AppState>(context).state.business.phoneSalesman : BuytimeConfig.ArunasNumber.trim();
                                       //String url = BuytimeConfig.FlaviosNumber.trim();
                                       debugPrint('Restaurant phonenumber: ' + url);
                                       if (await canLaunch('tel:$url')) {
@@ -396,7 +396,7 @@ class _UI_M_BusinessListDrawerState extends State<UI_M_BusinessListDrawer> {
                                     onTap: () async{
                                       /*String url = StoreProvider.of<AppState>(context).state.business.phoneConcierge.isNotEmpty ?
                             StoreProvider.of<AppState>(context).state.business.phoneConcierge : BuytimeConfig.FlaviosNumber.trim();*/
-                                      String url = BuytimeConfig.FlaviosNumber.trim();
+                                      String url = BuytimeConfig.ArunasNumber.trim();
                                       debugPrint('Restaurant phonenumber: ' + url);
                                       if (await canLaunch('tel:$url')) {
                                         await launch('tel:$url');

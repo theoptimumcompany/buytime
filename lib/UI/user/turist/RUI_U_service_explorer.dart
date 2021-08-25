@@ -728,7 +728,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                         color: Colors.transparent,
                                         child: InkWell(
                                             onTap: () async {
-                                              String url = BuytimeConfig.FlaviosNumber.trim();
+                                              String url = BuytimeConfig.ArunasNumber.trim();
                                               debugPrint('Restaurant phonenumber: ' + url);
                                               if (await canLaunch('tel:$url')) {
                                                 await launch('tel:$url');

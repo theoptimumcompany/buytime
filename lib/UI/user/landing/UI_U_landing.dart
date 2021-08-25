@@ -728,7 +728,7 @@ class LandingState extends State<Landing> {
                                           color: Colors.transparent,
                                           child: InkWell(
                                               onTap: () async {
-                                                String url = BuytimeConfig.FlaviosNumber.trim();
+                                                String url = BuytimeConfig.ArunasNumber.trim();
                                                 debugPrint('Restaurant phonenumber: ' + url);
                                                 if (await canLaunch('tel:$url')) {
                                                   await launch('tel:$url');

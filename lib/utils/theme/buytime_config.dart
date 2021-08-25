@@ -1,3 +1,3 @@
 class BuytimeConfig{
-  static const String FlaviosNumber = '+447411204508';
+  static const String ArunasNumber = '+34625515792';
 }

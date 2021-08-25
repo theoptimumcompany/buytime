@@ -1387,7 +1387,7 @@ class _BookingPageState extends State<BookingPage> {
                                                               borderRadius: BorderRadius.all(Radius.circular(10)),
                                                               onTap: () async {
                                                                 String url =
-                                                                    StoreProvider.of<AppState>(context).state.business.phoneConcierge.isNotEmpty ? StoreProvider.of<AppState>(context).state.business.phoneConcierge : BuytimeConfig.FlaviosNumber.trim();
+                                                                    StoreProvider.of<AppState>(context).state.business.phoneConcierge.isNotEmpty ? StoreProvider.of<AppState>(context).state.business.phoneConcierge : BuytimeConfig.ArunasNumber.trim();
                                                                 debugPrint('Restaurant phonenumber: ' + url);
                                                                 if (await canLaunch('tel:$url')) {
                                                                   await launch('tel:$url');
