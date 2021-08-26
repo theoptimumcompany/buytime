@@ -1,5 +1,8 @@
 import 'dart:io';
 import 'package:Buytime/UI/user/landing/UI_U_landing.dart';
+import 'package:Buytime/UI/user/login/UI_U_login.dart';
+import 'package:Buytime/UI/user/turist/RUI_U_service_explorer.dart';
+import 'package:Buytime/UI/user/turist/UI_U_service_explorer.dart';
 import 'package:Buytime/reblox/model/autoComplete/auto_complete_state.dart';
 import 'package:Buytime/reblox/model/snippet/device.dart';
 import 'package:Buytime/reblox/model/snippet/token.dart';
@@ -47,6 +50,8 @@ String sha256ofString(String input) {
 
 class Registration extends StatefulWidget {
   static String route = '/registration';
+  bool fromDiscover;
+  Registration(this.fromDiscover);
   @override
   State<StatefulWidget> createState() => RegistrationState();
 }
@@ -241,7 +246,7 @@ class RegistrationState extends State<Registration> {
           isLoggedIn = true;
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => Landing()),
+            MaterialPageRoute(builder: (context) => RServiceExplorer()),
           );
         });
       } else {}
@@ -256,7 +261,7 @@ class RegistrationState extends State<Registration> {
           isLoggedIn = true;
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => Landing()),
+            MaterialPageRoute(builder: (context) => RServiceExplorer()),
           );
         });
       } else {
@@ -685,6 +690,43 @@ class RegistrationState extends State<Registration> {
                         ),
                         Platform.isIOS ?
                         BrandedButton("assets/img/apple_logo.png", AppLocalizations.of(context).logInWithApple, initiateAppleSignIn) : Container(),
+                        widget.fromDiscover ?
+                        Container(
+                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
+                            //margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 0.5),
+                            alignment: Alignment.center,
+                            child: Material(
+                              color: Colors.transparent,
+                              child: InkWell(
+                                key: Key('tourist_login'),
+                                onTap: () {
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => Login(widget.fromDiscover)),
+                                  );
+                                },
+                                borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                child: Container(
+                                  //width: 328,
+                                  width: 80,
+                                  height: 28,
+                                  padding: EdgeInsets.all(5.0),
+                                  child: FittedBox(
+                                    child: Text(
+                                      AppLocalizations.of(context).logIn,
+                                      style: TextStyle(
+                                        fontFamily: BuytimeTheme.FontFamily,
+                                        color: BuytimeTheme.TextWhite,
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 16,
+
+                                        ///SizeConfig.safeBlockHorizontal * 3
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            )) : Container(),
                         //BrandedButton("assets/img/facebook_logo.png", AppLocalizations.of(context).signFacebook, initiateFacebookSignIn),
                       ]),
                     ),
@@ -821,7 +863,7 @@ class RegistrationState extends State<Registration> {
         _success = true;
         _userEmail = user.email;
         //Navigator.push(context, MaterialPageRoute(builder: (context) => Landing()));
-        Navigator.of(context).pushNamed(Landing.route);
+        Navigator.of(context).pushNamed(ServiceExplorer.route);
       });
     } else {
       Navigator.of(context).pop();

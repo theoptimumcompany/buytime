@@ -16,6 +16,7 @@ import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/model/role/role.dart';
+import 'package:Buytime/reblox/reducer/app_reducer.dart';
 import 'package:Buytime/reblox/reducer/booking_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/booking_reducer.dart';
 import 'package:Buytime/reblox/reducer/business_list_reducer.dart';
@@ -67,16 +68,16 @@ import 'package:video_player/video_player.dart';
 
 import '../../../environment_abstract.dart';
 
-class Landing extends StatefulWidget {
+class LandingLegacy extends StatefulWidget {
   static String route = '/landing';
 
   @override
-  State<StatefulWidget> createState() => LandingState();
+  State<StatefulWidget> createState() => LandingLegacyState();
 }
 
 bool switchToClient = false;
 
-class LandingState extends State<Landing> {
+class LandingLegacyState extends State<LandingLegacy> {
   List<LandingCardWidget> cards = new List();
 
   bool onBookingCode = false;
@@ -828,26 +829,8 @@ class LandingState extends State<Landing> {
                                                 //Resetto il carrello
                                                 //cartCounter = 0;
                                                 //Svuotare lo Store sul Logout
-                                                StoreProvider.of<AppState>(context).dispatch(SetServiceToEmpty());
-                                                StoreProvider.of<AppState>(context).dispatch(SetBookingToEmpty(''));
-                                                StoreProvider.of<AppState>(context).dispatch(SetBookingListToEmpty());
-                                                StoreProvider.of<AppState>(context).dispatch(SetBusinessListToEmpty());
-                                                StoreProvider.of<AppState>(context).dispatch(SetCategoryListToEmpty());
-                                                StoreProvider.of<AppState>(context).dispatch(SetCategoryToEmpty());
-                                                StoreProvider.of<AppState>(context).dispatch(SetBusinessToEmpty());
-                                                StoreProvider.of<AppState>(context).dispatch(SetOrderListToEmpty());
-                                                StoreProvider.of<AppState>(context).dispatch(SetOrderToEmpty(''));
-                                                StoreProvider.of<AppState>(context).dispatch(SetPipelineListToEmpty());
-                                                StoreProvider.of<AppState>(context).dispatch(SetPipelineToEmpty());
-                                                StoreProvider.of<AppState>(context).dispatch(SetServiceListToEmpty());
-                                                StoreProvider.of<AppState>(context).dispatch(SetServiceSlotToEmpty());
-                                                StoreProvider.of<AppState>(context).dispatch(SetStripeToEmpty());
-                                                StoreProvider.of<AppState>(context).dispatch(SetUserStateToEmpty());
-                                                StoreProvider.of<AppState>(context).dispatch(SetOrderReservableToEmpty(''));
-                                                StoreProvider.of<AppState>(context).dispatch(SetCategoryInviteToEmpty());
-                                                StoreProvider.of<AppState>(context).dispatch(SetExternalBusinessListToEmpty());
-                                                StoreProvider.of<AppState>(context).dispatch(SetOrderDetailToEmpty(''));
-                                                StoreProvider.of<AppState>(context).dispatch(SetOrderReservableListToEmpty());
+                                                StoreProvider.of<AppState>(context).dispatch(SetAppStateToEmpty());
+
                                                 //Torno al Login
                                                 drawerSelection = DrawerSelection.BusinessList;
 

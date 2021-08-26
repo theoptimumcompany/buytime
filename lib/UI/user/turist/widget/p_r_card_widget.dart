@@ -6,6 +6,7 @@ import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/utils/utils.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -90,17 +91,21 @@ class _PRCardWidgetState extends State<PRCardWidget> {
             ),
               Container(
                 width: 180,
+                height: 40,
                 alignment: Alignment.topLeft,
                 margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 1, left: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1),
-                child: FittedBox(
-                  fit: BoxFit.scaleDown,
-                  child: Text(
-                    Utils.retriveField(Localizations.localeOf(context).languageCode, widget.serviceState.name),
-                    style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: widget.isBlack ?  BuytimeTheme.TextBlack : BuytimeTheme.TextWhite, fontWeight: FontWeight.w400, fontSize: 14
-                      ///SizeConfig.safeBlockHorizontal * 4
-                    ),
-                  ),
-                ),
+                child: Row(
+                  children: [
+                    Flexible(child: Text(
+                      Utils.retriveField(Localizations.localeOf(context).languageCode, widget.serviceState.name),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                      style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: widget.isBlack ?  BuytimeTheme.TextBlack : BuytimeTheme.TextWhite, fontWeight: FontWeight.w400, fontSize: 14
+                        ///SizeConfig.safeBlockHorizontal * 4
+                      ),
+                    ),)
+                  ],
+                )
               )
             ],
           ),

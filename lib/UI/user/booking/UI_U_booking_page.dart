@@ -402,7 +402,7 @@ class _BookingPageState extends State<BookingPage> {
                                   Future.delayed(Duration.zero, () {
                                     //Navigator.of(context).pop();
                                     //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Landing()));
-                                    Navigator.of(context).pushReplacementNamed(Landing.route);
+                                    Navigator.of(context).pushReplacementNamed(AppRoutes.serviceExplorer);
                                   });
 
                                   //StoreProvider.of<AppState>(context).dispatch(NavigatePopAction());

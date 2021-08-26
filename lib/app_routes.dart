@@ -29,11 +29,11 @@ MaterialPageRoute<dynamic> appRoutes(RouteSettings settings) {
     case AppRoutes.home:
       return MainRoute(Home(), settings: settings);
     case AppRoutes.registration:
-      return SlideInEnterRoute(Registration(), settings: settings);
+      return SlideInEnterRoute(Registration(false), settings: settings);
     case AppRoutes.login:
-      return SlideInEnterRoute(Login(), settings: settings);
-    case AppRoutes.landing:
-      return FabRoute(Landing(), settings: settings);
+      return SlideInEnterRoute(Login(false), settings: settings);
+    /*case AppRoutes.landing:
+      return FabRoute(Landing(), settings: settings);*/
     case AppRoutes.bookingDetails:
       return FabRoute(BookingDetails(), settings: settings);
     case AppRoutes.bookingSelfCreation:

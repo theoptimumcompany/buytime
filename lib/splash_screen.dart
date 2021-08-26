@@ -41,6 +41,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 // import 'package:stripe_payment/stripe_payment.dart';
 import 'package:package_info/package_info.dart';
+import 'UI/management/business/RUI_M_business_list.dart';
 import 'UI/user/booking/RUI_U_notifications.dart';
 import 'UI/user/turist/RUI_U_service_explorer.dart';
 
@@ -446,20 +447,20 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
           print("Device ID : " + deviceId + 'USER ROLE: ${StoreProvider.of<AppState>(context).state.user.getRole()}');
           //StoreProvider.of<AppState>(context).dispatch(new UserBookingRequest(user.email));
           if(StoreProvider.of<AppState>(context).state.user.getRole() != Role.user)
-            Navigator.push(context, MaterialPageRoute(builder: (context) => Landing()));
+            Navigator.push(context, MaterialPageRoute(builder: (context) => RBusinessList()));
           else
-            Navigator.push(context, MaterialPageRoute(builder: (context) => RServiceExplorer()));
+           Navigator.push(context, MaterialPageRoute(builder: (context) => RServiceExplorer()));
         });
 
       } else {
         //Navigator.push(context, MaterialPageRoute(builder: (context) => Home()),);
-        //Navigator.of(context).pushNamed(Home.route);
-        Navigator.push(context, MaterialPageRoute(builder: (context) => RServiceExplorer()));
+        Navigator.of(context).pushNamed(Home.route);
+        //Navigator.push(context, MaterialPageRoute(builder: (context) => RServiceExplorer()));
       }
     } else {
       //Navigator.push(context, MaterialPageRoute(builder: (context) => Home()),);
-      //Navigator.of(context).pushNamed(Home.route);
-      Navigator.push(context, MaterialPageRoute(builder: (context) => RServiceExplorer()));
+      Navigator.of(context).pushNamed(Home.route);
+      //Navigator.push(context, MaterialPageRoute(builder: (context) => RServiceExplorer()));
     }
   }
 

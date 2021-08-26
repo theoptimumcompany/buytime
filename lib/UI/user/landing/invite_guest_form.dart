@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:Buytime/UI/user/booking/UI_U_confirm_booking.dart';
 import 'package:Buytime/UI/user/landing/UI_U_landing.dart';
+import 'package:Buytime/UI/user/turist/RUI_U_service_explorer.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reblox/reducer/booking_reducer.dart';
@@ -152,7 +153,7 @@ class _InviteGuestFormState extends State<InviteGuestForm> {
                             if(widget.fromLanding)
                               Navigator.of(context).pop();
                             else
-                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Landing()));
+                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => RServiceExplorer()));
                           },
                         ),
                       ),

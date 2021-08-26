@@ -1,22 +1,46 @@
 
 import 'dart:io';
 
+import 'package:Buytime/UI/management/activity/RUI_M_activity_management.dart';
 import 'package:Buytime/UI/management/business/RUI_M_business_list.dart';
 import 'package:Buytime/UI/user/booking/RUI_U_notifications.dart';
 import 'package:Buytime/UI/user/booking/RUI_notification_bell.dart';
 import 'package:Buytime/UI/user/booking/UI_U_all_bookings.dart';
 import 'package:Buytime/UI/user/booking/UI_U_booking_self_creation.dart';
+import 'package:Buytime/UI/user/booking/UI_U_my_bookings.dart';
 import 'package:Buytime/UI/user/booking/UI_U_notifications.dart';
 import 'package:Buytime/UI/user/landing/UI_U_landing.dart';
 import 'package:Buytime/UI/user/landing/invite_guest_form.dart';
 import 'package:Buytime/UI/user/login/UI_U_home.dart';
+import 'package:Buytime/UI/user/login/UI_U_registration.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reblox/model/role/role.dart';
+import 'package:Buytime/reblox/reducer/app_reducer.dart';
 import 'package:Buytime/reblox/reducer/booking_list_reducer.dart';
+import 'package:Buytime/reblox/reducer/booking_reducer.dart';
+import 'package:Buytime/reblox/reducer/business_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/business_reducer.dart';
+import 'package:Buytime/reblox/reducer/category_invite_reducer.dart';
+import 'package:Buytime/reblox/reducer/category_reducer.dart';
+import 'package:Buytime/reblox/reducer/external_business_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_detail_reducer.dart';
+import 'package:Buytime/reblox/reducer/order_list_reducer.dart';
+import 'package:Buytime/reblox/reducer/order_reservable_list_reducer.dart';
+import 'package:Buytime/reblox/reducer/order_reservable_reducer.dart';
+import 'package:Buytime/reblox/reducer/pipeline_list_reducer.dart';
+import 'package:Buytime/reblox/reducer/pipeline_reducer.dart';
+import 'package:Buytime/reblox/reducer/promotion/promotion_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/service_list_reducer.dart';
+import 'package:Buytime/reblox/reducer/service/service_reducer.dart';
+import 'package:Buytime/reblox/reducer/service/service_slot_time_reducer.dart';
+import 'package:Buytime/reblox/reducer/stripe_payment_reducer.dart';
+import 'package:Buytime/reblox/reducer/user_reducer.dart';
+import 'package:Buytime/reusable/custom_bottom_button_widget.dart';
+import 'package:Buytime/reusable/landing_card_widget.dart';
+import 'package:Buytime/reusable/material_design_icons.dart';
+import 'package:Buytime/reusable/menu/UI_M_business_list_drawer.dart';
 import 'package:Buytime/utils/theme/buytime_config.dart';
+import 'package:animations/animations.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
@@ -53,6 +77,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:location/location.dart' as loc;
 import 'package:palette_generator/palette_generator.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class RServiceExplorer extends StatefulWidget {
@@ -76,7 +101,7 @@ class RServiceExplorer extends StatefulWidget {
 
 class _RServiceExplorerState extends State<RServiceExplorer> {
   TextEditingController _searchController = TextEditingController();
-
+  List<LandingCardWidget> cards = [];
   //List<ServiceState> serviceState = [];
   List<ServiceState> popularList = [];
   List<ServiceState> recommendedList = [];
@@ -87,11 +112,308 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
   String sortBy = '';
   OrderState order = OrderState().toEmpty();
 
+  ///Storage
+  final storage = new FlutterSecureStorage();
+  String selfBookingCode = '';
+  String bookingCode = '';
+  String categoryCode = '';
+
+  String orderId = '';
+  String userId = '';
+
+  bool onBookingCode = false;
+  bool rippleLoading = false;
+  bool secondRippleLoading = false;
+  bool requestingBookings = false;
 
   @override
   void initState() {
     super.initState();
     _searchController.text = widget.searched;
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      debugPrint('UI_U_Landing => initState()');
+      ///Download Promotions
+      StoreProvider.of<AppState>(context).dispatch(PromotionListRequest());
+    });
+    initDynamicLinks();
+  }
+
+  void initDynamicLinks() async {
+    print("Dentro initial dynamic");
+    Uri deepLink;
+
+    FirebaseDynamicLinks.instance.onLink(onSuccess: (PendingDynamicLinkData dynamicLink) async {
+      deepLink = null;
+      deepLink = dynamicLink?.link;
+      debugPrint('UI_U_landing: DEEPLINK onLink: $deepLink');
+      if (deepLink != null) {
+        String bookingCodeRead = await storage.containsKey(key: 'bookingCodeRead') ? await storage.read(key: 'bookingCodeRead') ?? '' : '';
+        String categoryInviteRead = await storage.containsKey(key: 'categoryInviteRead') ? await storage.read(key: 'categoryInviteRead') ?? '' : '';
+        String orderIdRead = await storage.containsKey(key: 'orderIdRead') ? await storage.read(key: 'orderIdRead') ?? '' : '';
+        String onSiteUserIdRead = await storage.containsKey(key: 'onSiteUserIdRead') ? await storage.read(key: 'onSiteUserIdRead') ?? '' : '';
+        String onSiteOrderIdRead = await storage.containsKey(key: 'onSiteOrderIdRead') ? await storage.read(key: 'onSiteOrderIdRead') ?? '' : '';
+        debugPrint('UI_U_landing: after reading secure storage');
+        debugPrint('UI_U_landing: bookingCodeRead: ${bookingCodeRead}');
+
+        if (deepLink.queryParameters.containsKey('booking') && bookingCodeRead != 'true') {
+          String id = deepLink.queryParameters['booking'];
+          debugPrint('UI_U_landing: booking onLink: $id');
+          await storage.write(key: 'bookingCode', value: id);
+          await storage.write(key: 'bookingCodeRead', value: 'true');
+          setState(() {
+            onBookingCode = true;
+          });
+          //StoreProvider.of<AppState>(context).dispatch(BookingRequestResponse(BookingState(booking_code: id)));
+          //Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => InviteGuestForm(id: id, fromLanding: false,)), (Route<dynamic> route) => false);
+          if (FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty) {
+            debugPrint('UI_U_landing: USER Is LOGGED in onLink');
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => InviteGuestForm(
+                  id: id,
+                  fromLanding: true,
+                )));
+          } else
+            debugPrint('UI_U_landing: USER NOT LOGGED in onLink');
+        } else if (deepLink.queryParameters.containsKey('categoryInvite') && categoryInviteRead != 'true') {
+          String categoryInvite = deepLink.queryParameters['categoryInvite'];
+          debugPrint('v: $categoryInvite');
+          await storage.write(key: 'categoryInvite', value: categoryInvite);
+          await storage.write(key: 'categoryInviteRead', value: 'true');
+
+          //StoreProvider.of<AppState>(context).dispatch(BusinessRequestAndNavigate(businessId));
+          if (FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty) {
+            debugPrint('UI_U_landing: USER Is LOGGED in onLink');
+            StoreProvider.of<AppState>(context).dispatch(UserBookingListRequest(StoreProvider.of<AppState>(context).state.user.email, false));
+            Navigator.push(context, MaterialPageRoute(builder: (context) => RBusinessList()));
+          } else
+            debugPrint('UI_U_landing: USER NOT LOGGED in onLink');
+        } else if (deepLink.queryParameters.containsKey('userId') && deepLink.queryParameters.containsKey('orderId') && onSiteUserIdRead != 'true' && onSiteOrderIdRead != 'true') {
+          debugPrint('ON SITE PAYMENT ON LINK');
+          String orderId = deepLink.queryParameters['orderId'];
+          String userId = deepLink.queryParameters['userId'];
+          debugPrint('UI_U_landing: userId onLink: $userId - orderId onLink: $orderId');
+          await storage.write(key: 'onSiteUserId', value: userId);
+          await storage.write(key: 'onSiteOrderId', value: orderId);
+          await storage.write(key: 'onSiteUserIdRead', value: 'true');
+          await storage.write(key: 'onSiteOrderIdRead', value: 'true');
+          setState(() {
+            onBookingCode = true;
+          });
+          //StoreProvider.of<AppState>(context).dispatch(BookingRequestResponse(BookingState(booking_code: id)));
+          //Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => InviteGuestForm(id: id, fromLanding: false,)), (Route<dynamic> route) => false);
+          if (FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty) {
+            debugPrint('UI_U_landing: USER Is LOGGED in onLink');
+            //Navigator.of(context).push(MaterialPageRoute(builder: (context) => InviteGuestForm(id: id, fromLanding: true,)));
+            if (StoreProvider.of<AppState>(context).state.user.getRole() != Role.user) {
+              StoreProvider.of<AppState>(context).dispatch(OrderRequest(orderId));
+              await Future.delayed(Duration(milliseconds: 3000));
+              StoreProvider.of<AppState>(context).state.order.progress = 'paid';
+              StoreProvider.of<AppState>(context).dispatch(UpdateOrderByManager(StoreProvider.of<AppState>(context).state.order, OrderStatus.paid));
+            } else {
+              debugPrint('USER NO PERMISSION in LINK');
+            }
+
+            await storage.write(key: 'onSiteUserIdRead', value: 'false');
+            await storage.write(key: 'onSiteOrderIdRead', value: 'false');
+          } else
+            debugPrint('UI_U_landing: USER NOT LOGGED in onLink');
+        } else if (deepLink.queryParameters.containsKey('orderId') && orderIdRead != 'true') {
+          String orderId = deepLink.queryParameters['orderId'];
+          debugPrint('UI_U_landing: orderId from dynamic link: $orderId');
+          await storage.write(key: 'orderId', value: orderId);
+          await storage.write(key: 'orderIdRead', value: 'true');
+          //StoreProvider.of<AppState>(context).dispatch(BusinessRequestAndNavigate(businessId));
+          if (FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty) {
+            debugPrint('UI_U_landing: USER Is LOGGED in onLink');
+            StoreProvider.of<AppState>(context).dispatch(SetOrderDetailAndNavigatePopOrderId(orderId));
+            Navigator.push(context, MaterialPageRoute(builder: (context) => RBusinessList()));
+          } else
+            debugPrint('UI_U_landing: USER NOT LOGGED in onLink');
+        } else if (deepLink.queryParameters.containsKey('selfBookingCode') && deepLink.queryParameters['selfBookingCode'].length > 5) {
+          String tmSselfBookingCode = deepLink.queryParameters['selfBookingCode'];
+          debugPrint('UI_U_landing: selfBookingCode from dynamic link: $tmSselfBookingCode');
+          selfBookingCode = tmSselfBookingCode;
+          await storage.write(key: 'selfBookingCode', value: tmSselfBookingCode);
+
+          if (FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty) {
+            debugPrint('UI_U_landing: USER Is LOGGED in onLink');
+            StoreProvider.of<AppState>(context).dispatch(BusinessRequest(tmSselfBookingCode));
+            await storage.write(key: 'selfBookingCode', value: '');
+            await Future.delayed(Duration(milliseconds: 1000));
+            Navigator.push(context, MaterialPageRoute(builder: (context) => BookingSelfCreation()));
+          } else {
+            debugPrint('UI_U_landing: USER NOT LOGGED in onLink');
+          }
+        }
+      }
+    }, onError: (OnLinkErrorException e) async {
+      print('onLinkError');
+      print(e.message);
+    });
+
+    await Future.delayed(Duration(seconds: 2)); // TODO: vi spezzo le gambine. AHAHAHAH Riccaa attentoooo.
+
+    ///Serve un delay che altrimenti getInitialLink torna NULL
+    final PendingDynamicLinkData data = await FirebaseDynamicLinks.instance.getInitialLink();
+    deepLink = null;
+    deepLink = data?.link;
+    debugPrint('UI_U_landing: DEEPLINK getInitialLink: $deepLink');
+    if (deepLink != null) {
+      String bookingCodeRead = await storage.read(key: 'bookingCodeRead') ?? '';
+      String categoryInviteRead = await storage.read(key: 'categoryInviteRead') ?? '';
+      String orderIdRead = await storage.read(key: 'orderIdRead') ?? '';
+      String onSiteUserIdRead = await storage.containsKey(key: 'onSiteUserIdRead') ? await storage.read(key: 'onSiteUserIdRead') ?? '' : '';
+      String onSiteOrderIdRead = await storage.containsKey(key: 'onSiteOrderIdRead') ? await storage.read(key: 'onSiteOrderIdRead') ?? '' : '';
+
+      if (deepLink.queryParameters.containsKey('booking') && bookingCodeRead != 'true') {
+        String id = deepLink.queryParameters['booking'];
+        debugPrint('UI_U_landing: booking getInitialLink: $id');
+        await storage.write(key: 'bookingCode', value: id);
+        await storage.write(key: 'bookingCodeRead', value: 'true');
+        setState(() {
+          onBookingCode = true;
+        });
+        if (FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty) {
+          debugPrint('UI_U_landing: USER IS LOGGED in getInitialLink');
+          Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => InviteGuestForm(id: id, fromLanding: false)), ModalRoute.withName('/landing'));
+        } else
+          debugPrint('UI_U_landing: USER NOT LOGGED in getInitialLink');
+      } else if (deepLink.queryParameters.containsKey('selfBookingCode') && deepLink.queryParameters['selfBookingCode'].length > 5) {
+        String id = deepLink.queryParameters['selfBookingCode'];
+        debugPrint('UI_U_landing: selfBookingCode getInitialLink: $id');
+        await storage.write(key: 'selfBookingCode', value: id);
+
+        if (FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty) {
+          debugPrint('UI_U_landing: USER IS LOGGED in getInitialLink');
+          StoreProvider.of<AppState>(context).dispatch(BusinessRequest(id));
+          await Future.delayed(Duration(milliseconds: 1000));
+          Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => BookingSelfCreation()), ModalRoute.withName('/bookingSelfCreation'));
+        } else
+          debugPrint('UI_U_landing: USER NOT LOGGED in getInitialLink');
+      } else if (deepLink.queryParameters.containsKey('categoryInvite') && categoryInviteRead != 'true') {
+        String categoryInvite = deepLink.queryParameters['categoryInvite'];
+        debugPrint('UI_U_landing: categoryInvite: $categoryInvite');
+        await storage.write(key: 'categoryInvite', value: categoryInvite);
+        await storage.write(key: 'categoryInviteRead', value: 'true');
+        //Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => InviteGuestForm(id: id, fromLanding: false)), (Route<dynamic> route) => false);
+        if (FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty) {
+          debugPrint('UI_U_landing: USER Is LOGGED in onLink');
+          StoreProvider.of<AppState>(context).dispatch(UserBookingListRequest(StoreProvider.of<AppState>(context).state.user.email, false));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => RBusinessList()));
+        } else if (deepLink.queryParameters.containsKey('userId') && deepLink.queryParameters.containsKey('orderId') && onSiteUserIdRead != 'true' && onSiteOrderIdRead != 'true') {
+          String orderId = deepLink.queryParameters['orderId'];
+          String userId = deepLink.queryParameters['userId'];
+          debugPrint('UI_U_landing: userId onLink: $userId - orderId onLink: $orderId');
+          await storage.write(key: 'onSiteUserId', value: userId);
+          await storage.write(key: 'onSiteOrderId', value: orderId);
+          await storage.write(key: 'onSiteUserIdRead', value: 'true');
+          await storage.write(key: 'onSiteOrderIdRead', value: 'true');
+          setState(() {
+            onBookingCode = true;
+          });
+          //StoreProvider.of<AppState>(context).dispatch(BookingRequestResponse(BookingState(booking_code: id)));
+          //Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => InviteGuestForm(id: id, fromLanding: false,)), (Route<dynamic> route) => false);
+          if (FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty) {
+            debugPrint('UI_U_landing: USER Is LOGGED in onLink');
+            //Navigator.of(context).push(MaterialPageRoute(builder: (context) => InviteGuestForm(id: id, fromLanding: true,)));
+            if (StoreProvider.of<AppState>(context).state.user.getRole() != Role.user) {
+              StoreProvider.of<AppState>(context).dispatch(OrderRequest(orderId));
+              await Future.delayed(Duration(milliseconds: 3000));
+              StoreProvider.of<AppState>(context).state.order.progress = 'paid';
+              StoreProvider.of<AppState>(context).dispatch(UpdateOrderByManager(StoreProvider.of<AppState>(context).state.order, OrderStatus.paid));
+            } else {
+              debugPrint('USER NO PERMISSION in LINK');
+            }
+
+            await storage.write(key: 'onSiteUserIdRead', value: 'false');
+            await storage.write(key: 'onSiteOrderIdRead', value: 'false');
+          } else
+            debugPrint('UI_U_landing: USER NOT LOGGED in onLink');
+        } else if (deepLink.queryParameters.containsKey('orderId') && orderIdRead != 'true') {
+          String orderId = deepLink.queryParameters['orderId'];
+          debugPrint('UI_U_landing: orderId from dynamic link: $orderId');
+          await storage.write(key: 'orderId', value: orderId);
+          await storage.write(key: 'orderIdRead', value: 'true');
+          //StoreProvider.of<AppState>(context).dispatch(BusinessRequestAndNavigate(businessId));
+          if (FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty) {
+            debugPrint('UI_U_landing: USER Is LOGGED in onLink');
+            StoreProvider.of<AppState>(context).dispatch(SetOrderDetailAndNavigatePopOrderId(orderId));
+            Navigator.push(context, MaterialPageRoute(builder: (context) => RBusinessList()));
+          } else
+            debugPrint('UI_U_landing: USER NOT LOGGED in onLink');
+        } else
+          debugPrint('UI_U_landing: USER NOT LOGGED in onLink');
+      } else if (deepLink.queryParameters.containsKey('selfBookingCode') && deepLink.queryParameters['selfBookingCode'].length > 5) {
+        String tmSselfBookingCode = deepLink.queryParameters['selfBookingCode'];
+        debugPrint('UI_U_landing: selfBookingCode from dynamic link: $tmSselfBookingCode');
+        selfBookingCode = tmSselfBookingCode;
+        await storage.write(key: 'selfBookingCode', value: tmSselfBookingCode);
+
+        if (FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty) {
+          debugPrint('UI_U_landing: USER Is LOGGED in onLink');
+          StoreProvider.of<AppState>(context).dispatch(BusinessRequest(tmSselfBookingCode));
+          await storage.write(key: 'selfBookingCode', value: '');
+          await Future.delayed(Duration(milliseconds: 1000));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => BookingSelfCreation()));
+        } else {
+          debugPrint('UI_U_landing: USER NOT LOGGED in onLink');
+        }
+      }
+    }
+  }
+
+  bookingCodeFound() async {
+    bookingCode = await storage.read(key: 'bookingCode') ?? '';
+    debugPrint('UI_U_landing: DEEP LINK EMPTY | BOOKING CODE: $bookingCode');
+    await storage.delete(key: 'bookingCode');
+
+    if (bookingCode.isNotEmpty)
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => InviteGuestForm(
+            id: bookingCode,
+            fromLanding: true,
+          )));
+  }
+  selfCheckInFound() async {
+    selfBookingCode = await storage.read(key: 'selfBookingCode') ?? '';
+    debugPrint('UI_U_landing: DEEP LINK EMPTY | selfBookingCode : $selfBookingCode');
+    await storage.delete(key: 'selfBookingCode');
+
+    if (selfBookingCode.isNotEmpty) {
+      StoreProvider.of<AppState>(context).dispatch(BusinessRequest(selfBookingCode));
+      await Future.delayed(Duration(milliseconds: 1000));
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) => BookingSelfCreation()));
+    }
+  }
+  categoryInviteFound() async {
+    categoryCode = await storage.read(key: 'categoryInvite') ?? '';
+    debugPrint('UI_U_landing: DEEP LINK EMPTY | CATEGORY INVITE: $categoryCode');
+    // await storage.delete(key: 'categoryInvite');
+    if (categoryCode.isNotEmpty) {
+      StoreProvider.of<AppState>(context).dispatch(UserBookingListRequest(StoreProvider.of<AppState>(context).state.user.email, false));
+      Navigator.push(context, MaterialPageRoute(builder: (context) => RBusinessList()));
+    }
+  }
+  onSitePaymentFound() async {
+    userId = await storage.read(key: 'onSiteUserId') ?? '';
+    orderId = await storage.read(key: 'onSiteOrderId') ?? '';
+    debugPrint('UI_U_landing: DEEP LINK EMPTY | userId: $userId | orderId: $orderId');
+    await storage.delete(key: 'onSiteUserId');
+    await storage.delete(key: 'onSiteOrderId');
+
+    if (userId.isNotEmpty && orderId.isNotEmpty) {
+      if (StoreProvider.of<AppState>(context).state.user.getRole() != Role.user) {
+        StoreProvider.of<AppState>(context).dispatch(OrderRequest(orderId));
+        await Future.delayed(Duration(milliseconds: 3000));
+        StoreProvider.of<AppState>(context).state.order.progress = 'paid';
+        StoreProvider.of<AppState>(context).dispatch(UpdateOrderByManager(StoreProvider.of<AppState>(context).state.order, OrderStatus.paid));
+      } else {
+        debugPrint('USER NO PERMISSION');
+      }
+
+      await storage.write(key: 'onSiteUserIdRead', value: 'false');
+      await storage.write(key: 'onSiteOrderIdRead', value: 'false');
+    }
   }
 
   /*void undoDeletion(index, item) {
@@ -423,6 +745,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context).size;
     SizeConfig().init(context);
+    var isManagerOrAbove = false;
     DateTime currentTime = DateTime.now();
     currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0).toUtc();
     final Stream<QuerySnapshot> _orderStream =  FirebaseFirestore.instance
@@ -447,6 +770,11 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
     return StoreConnector<AppState, AppState>(
       converter: (store) => store.state,
       onInit: (store) async {
+        store.dispatch(UserBookingListRequest(store.state.user.email, false));
+        bookingCodeFound();
+        selfCheckInFound();
+        categoryInviteFound();
+        onSitePaymentFound();
         store.state.categoryList.categoryListState.clear();
         store.state.serviceList.serviceListState.clear();
         startRequest = true;
@@ -465,7 +793,10 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
         }
       },
       builder: (context, snapshot) {
+        cards.clear();
+        cards.add(LandingCardWidget(AppLocalizations.of(context).enterBookingCode, AppLocalizations.of(context).ifYouHaveABooking, 'assets/img/key.jpg', null));
         businessList = snapshot.businessList.businessListState;
+        isManagerOrAbove = snapshot.user != null && (snapshot.user.getRole() != Role.user) ? true : false;
 
         if (_searchController.text.isEmpty && !first) {
           categoryList.clear();
@@ -498,7 +829,8 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
               //popularList.addAll(snapshot.serviceList.serviceListState);
               //recommendedList.addAll(snapshot.serviceList.serviceListState);
               if (snapshot.categoryList.categoryListState.isNotEmpty && categoryList.isEmpty) {
-                categoryList.shuffle();
+                //categoryList.shuffle();
+                categoryList.sort((a,b) => b.name.compareTo(a.name));
               }
               first = true;
             }
@@ -513,7 +845,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
         debugPrint('UI_U_service_explorer => SERVICE LIST: ${popularList.length}');
         order = snapshot.order.itemList != null ? (snapshot.order.itemList.length > 0 ? snapshot.order : OrderState().toEmpty()) : OrderState().toEmpty();
         debugPrint('UI_U_BookingPage => Order List LENGTH: ${snapshot.orderList.orderListState.length}');
-
+        categoryList.sort((a,b) => a.name.compareTo(b.name));
         return GestureDetector(
           onTap: () {
             FocusScopeNode currentFocus = FocusScope.of(context);
@@ -555,7 +887,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                     alignment: Alignment.center,
                     child: Scaffold(
                       appBar: BuytimeAppbar(
-                        background: BuytimeTheme.BackgroundCerulean,
+                        background: BuytimeTheme.BackgroundCerulean ,
                         width: media.width,
                         children: [
                           ///Back Button
@@ -564,13 +896,15 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Padding(
+                                FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty ?
+                                SizedBox(
+                                  width: 50.0,
+                                ) : Padding(
                                   padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
                                   child: IconButton(
                                     key: Key('action_button_discover'),
                                     icon: Icon(
-                                      FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty ?
-                                      Icons.home : Icons.login,
+                                      Icons.person_outline,
                                       color: Colors.white,
                                       size: 25.0,
                                     ),
@@ -583,10 +917,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                             'date': DateTime.now().toString(),
                                           });
                                       //widget.fromConfirm != null ? Navigator.of(context).pop() : Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Landing()),);
-                                      if(FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty)
-                                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Landing()),);
-                                      else
-                                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()),);
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => Registration(true)),);
                                       /*Future.delayed(Duration.zero, () {
 
                                       Future.delayed(Duration.zero, () {
@@ -594,7 +925,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                       });*/
                                     },
                                   ),
-                                ),
+                                )  ,
                               ],
                             ),
                           ),
@@ -718,98 +1049,6 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  ///contact us
-                                  Container(
-                                      color: Colors.white,
-                                      height: 64,
-                                      margin: EdgeInsets.only(top: 10),
-                                      // width:SizeConfig.safeBlockVertical * 50 ,
-                                      child: Material(
-                                        color: Colors.transparent,
-                                        child: InkWell(
-                                            onTap: () async {
-                                              String url = BuytimeConfig.ArunasNumber.trim();
-                                              debugPrint('Restaurant phonenumber: ' + url);
-                                              if (await canLaunch('tel:$url')) {
-                                                await launch('tel:$url');
-                                              } else {
-                                                throw 'Could not launch $url';
-                                              }
-                                            },
-                                            child: Container(
-                                              //width: 375,
-                                              height: 64,
-                                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
-                                              child: Column(
-                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                children: [
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.start,
-                                                    children: [
-                                                      Expanded(
-                                                        flex: 8,
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                          children: [
-                                                            Container(
-                                                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1.5),
-                                                              child: Text(
-                                                                AppLocalizations.of(context).contactUs,
-                                                                style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w400, fontSize: 16),
-                                                              ),
-                                                            ),
-                                                            Text(
-                                                              AppLocalizations.of(context).haveAnyQuestion,
-                                                              style: TextStyle(
-                                                                  fontFamily: BuytimeTheme.FontFamily,
-                                                                  color: BuytimeTheme.TextBlack,
-                                                                  fontWeight: FontWeight.w400,
-                                                                  fontSize: 14
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      Expanded(
-                                                          flex: 1,
-                                                          child: Container(
-                                                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1.5),
-                                                            child: Icon(
-                                                              Icons.call,
-                                                              color: BuytimeTheme.SymbolGrey,
-                                                            ),
-                                                          )),
-                                                      Expanded(
-                                                          flex: 1,
-                                                          child: GestureDetector(
-                                                            onTap: (){
-                                                              openwhatsapp();
-                                                            },
-                                                            child: Container(
-                                                              margin: EdgeInsets.only(top: 10),
-                                                              height: 20,
-                                                              width: 20,
-                                                              decoration: BoxDecoration(
-                                                                image: DecorationImage(
-                                                                    image: AssetImage('assets/img/whatsapp.png'),
-                                                                    fit: BoxFit.contain
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ))
-                                                    ],
-                                                  ),
-                                                  Container(
-                                                    width: double.infinity,
-                                                    //margin: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 1),
-                                                    height: SizeConfig.safeBlockVertical * .2,
-                                                    color: BuytimeTheme.DividerGrey,
-                                                  )
-                                                ],
-                                              ),
-                                            )
-                                        ),)),
                                   ///Search
                                   Container(
                                     margin: EdgeInsets.only(
@@ -914,7 +1153,18 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                       ],
                                     ),
                                   ),
-
+                                  ///My bookings if user
+                                  FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty && _searchController.text.isEmpty?
+                                  Container(
+                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5,right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1),
+                                    child: _OpenContainerWrapper(
+                                      index: 0,
+                                      closedBuilder: (BuildContext _, VoidCallback openContainer) {
+                                        cards[0].callback = openContainer;
+                                        return cards[0];
+                                      },
+                                    ),
+                                  ) : Container(),
                                   ///My bookings & View all
                                   _searchController.text.isEmpty && snapshot.user.getRole() == Role.user && auth.FirebaseAuth.instance.currentUser != null
                                       ? StreamBuilder<QuerySnapshot>(
@@ -1143,7 +1393,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                   ///Discover
                                                   Flexible(
                                                     child: Container(
-                                                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 5),
+                                                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 5),
                                                       padding: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 2),
                                                       height: 155,
                                                       width: double.infinity,
@@ -1412,9 +1662,9 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                             ///Discover
                                             childrens.add(Flexible(
                                               child: Container(
-                                                margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 5),
-                                                padding: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 2),
-                                                height: 155,
+                                                margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 5, bottom: SizeConfig.safeBlockVertical * 2),
+                                                //padding: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 2),
+                                                height: 150,
                                                 width: double.infinity,
                                                 color: BuytimeTheme.BackgroundWhite,
                                                 child: Column(
@@ -1423,7 +1673,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                   children: [
                                                     ///Discover
                                                     Container(
-                                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 0, top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1),
+                                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 0, top: 5, bottom: 5),
                                                       child: Text(
                                                         AppLocalizations.of(context).discover,
                                                         style: TextStyle(
@@ -1432,7 +1682,6 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                             color: BuytimeTheme.TextBlack,
                                                             fontWeight: FontWeight.w700,
                                                             fontSize: 32
-
                                                           ///SizeConfig.safeBlockHorizontal * 4
                                                         ),
                                                       ),
@@ -1448,9 +1697,10 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                               CategoryState category = categoryList.elementAt(index);
                                                               debugPrint('UI_U_service_explorer => ${category.name}: ${categoryListIds[category.name]}');
                                                               return Container(
-                                                                width: 80,
-                                                                margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0, right: SizeConfig.safeBlockHorizontal * 1),
-                                                                child: DiscoverCardWidget(80, 80, category, true, categoryListIds[category.name], index),
+                                                                width: 100,
+                                                                height: 100,
+                                                                margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0, right: 5),
+                                                                child: DiscoverCardWidget(100, 100, category, true, categoryListIds[category.name], index),
                                                               );
                                                             },
                                                             childCount: categoryList.length,
@@ -1468,8 +1718,8 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                               CategoryState category = CategoryState().toEmpty();
                                                               debugPrint('UI_U_service_explorer => ${category.name}: ${categoryListIds[category.name]}');
                                                               return  Container(
-                                                                margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0, right: SizeConfig.safeBlockHorizontal * 1),
-                                                                child: Utils.imageShimmer(80, 80),
+                                                                margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0, right: 5),
+                                                                child: Utils.imageShimmer(100, 100),
                                                               );
                                                             },
                                                             childCount: 10,
@@ -1502,8 +1752,8 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                             childrens.add(Flexible(
                                               child: Container(
                                                 margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0),
-                                                padding: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 2),
-                                                height: popularList.isNotEmpty || noActivity ? 310 : 200,
+                                                //padding: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 1),
+                                                height: popularList.isNotEmpty || noActivity ? 320 : 200,
                                                 color: Color(0xff1E3C4F),
                                                 child: Column(
                                                   mainAxisAlignment: MainAxisAlignment.start,
@@ -1544,7 +1794,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                     popularList.isNotEmpty ?
                                                     ///List
                                                     Container(
-                                                      height: 220,
+                                                      height: 240,
                                                       width: double.infinity,
                                                       margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 0),
                                                       child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
@@ -1650,8 +1900,8 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                             childrens.add(Flexible(
                                               child: Container(
                                                 margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0),
-                                                padding: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 2),
-                                                height: recommendedList.isNotEmpty || noActivity ? 310 : 200,
+                                                //padding: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 2),
+                                                height: recommendedList.isNotEmpty || noActivity ? 320 : 200,
                                                 color: BuytimeTheme.BackgroundWhite,
                                                 child: Column(
                                                   mainAxisAlignment: MainAxisAlignment.start,
@@ -1695,7 +1945,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
 
                                                     ///List
                                                     Container(
-                                                      height: 220,
+                                                      height: 240,
                                                       width: double.infinity,
                                                       margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 0),
                                                       child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
@@ -1845,11 +2095,12 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                     });*/
                                                   });
                                               }});
-                                              childrens.add(Flexible(
+                                              if(tmpServiceList.length >= 4)
+                                                childrens.add(Flexible(
                                                 child: Container(
                                                   margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0),
-                                                  padding: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 2),
-                                                  height: tmpServiceList.isNotEmpty || noActivity ? 310 : 200,
+                                                  //padding: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 2),
+                                                  height: tmpServiceList.isNotEmpty || noActivity ? 320 : 200,
                                                   color: BuytimeTheme.BackgroundWhite,
                                                   child: Column(
                                                     mainAxisAlignment: MainAxisAlignment.start,
@@ -1890,7 +2141,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                       tmpServiceList.isNotEmpty ?
                                                       ///List
                                                       Container(
-                                                        height: 220,
+                                                        height: 240,
                                                         width: double.infinity,
                                                         margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 0),
                                                         child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
@@ -2001,6 +2252,182 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                   ));*/
                                               i++;
                                             });
+                                            ///Go to business management IF manager role or above.
+                                            if(isManagerOrAbove)
+                                              childrens.add(Container(
+                                                color: Colors.white,
+                                                height: 64,
+                                                child: Material(
+                                                  color: Colors.transparent,
+                                                  child: InkWell(
+                                                    onTap: () async {
+                                                      /*StoreProvider.of<AppState>(context).dispatch(SetBusinessListToEmpty());
+                                      StoreProvider.of<AppState>(context).dispatch(SetOrderListToEmpty());*/
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(builder: (context) => drawerSelection == DrawerSelection.BusinessList ? RBusinessList() : RActivityManagement()),
+                                                      );
+                                                    },
+                                                    child: CustomBottomButtonWidget(
+                                                        Container(
+                                                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5),
+                                                          child: Text(
+                                                            AppLocalizations.of(context).goToBusiness,
+                                                            style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w400, fontSize: 16),
+                                                          ),
+                                                        ),
+                                                        '',
+                                                        Container(
+                                                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5),
+                                                          child: Icon(
+                                                            Icons.business_center,
+                                                            color: BuytimeTheme.SymbolGrey,
+                                                          ),
+                                                        )),
+                                                  ),
+                                                ),
+                                              ));
+                                            ///contact us
+                                            childrens.add(
+                                              Container(
+                                                  color: Colors.white,
+                                                  height: 64,
+                                                  margin: EdgeInsets.only(top: 10),
+                                                  // width:SizeConfig.safeBlockVertical * 50 ,
+                                                  child: Material(
+                                                    color: Colors.transparent,
+                                                    child: InkWell(
+                                                        onTap: () async {
+                                                          String url = BuytimeConfig.ArunasNumber.trim();
+                                                          debugPrint('Restaurant phonenumber: ' + url);
+                                                          if (await canLaunch('tel:$url')) {
+                                                            await launch('tel:$url');
+                                                          } else {
+                                                            throw 'Could not launch $url';
+                                                          }
+                                                        },
+                                                        child: Container(
+                                                          //width: 375,
+                                                          height: 64,
+                                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
+                                                          child: Column(
+                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                            children: [
+                                                              Row(
+                                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                                children: [
+                                                                  Expanded(
+                                                                    flex: 8,
+                                                                    child: Column(
+                                                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                                      children: [
+                                                                        Container(
+                                                                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1.5),
+                                                                          child: Text(
+                                                                            AppLocalizations.of(context).contactUs,
+                                                                            style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w400, fontSize: 16),
+                                                                          ),
+                                                                        ),
+                                                                        Text(
+                                                                          AppLocalizations.of(context).haveAnyQuestion,
+                                                                          style: TextStyle(
+                                                                              fontFamily: BuytimeTheme.FontFamily,
+                                                                              color: BuytimeTheme.TextBlack,
+                                                                              fontWeight: FontWeight.w400,
+                                                                              fontSize: 14
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                  Expanded(
+                                                                      flex: 1,
+                                                                      child: Container(
+                                                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1.5),
+                                                                        child: Icon(
+                                                                          Icons.call,
+                                                                          color: BuytimeTheme.SymbolGrey,
+                                                                        ),
+                                                                      )),
+                                                                  Expanded(
+                                                                      flex: 1,
+                                                                      child: GestureDetector(
+                                                                        onTap: (){
+                                                                          openwhatsapp();
+                                                                        },
+                                                                        child: Container(
+                                                                          margin: EdgeInsets.only(top: 10),
+                                                                          height: 24,
+                                                                          width: 24,
+                                                                          decoration: BoxDecoration(
+                                                                            image: DecorationImage(
+                                                                                image: AssetImage('assets/img/whatsapp.png'),
+                                                                                fit: BoxFit.contain
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                      ))
+                                                                ],
+                                                              ),
+                                                              Container(
+                                                                width: double.infinity,
+                                                                //margin: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 1),
+                                                                height: SizeConfig.safeBlockVertical * .2,
+                                                                color: BuytimeTheme.DividerGrey,
+                                                              )
+                                                            ],
+                                                          ),
+                                                        )
+                                                    ),)));
+                                            ///Log out
+                                            childrens.add(
+                                              Container(
+                                                color: Colors.white,
+                                                height: 64,
+                                                //padding: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 1),
+                                                child: Material(
+                                                  color: Colors.transparent,
+                                                  child: InkWell(
+                                                      key: Key('log_out_key'),
+                                                      onTap: () async {
+                                                        SharedPreferences prefs = await SharedPreferences.getInstance();
+                                                        await storage.write(key: 'bookingCode', value: '');
+                                                        FirebaseAuth.instance.signOut().then((_) {
+                                                          googleSignIn.signOut();
+                                                          //Resetto il carrello
+                                                          //cartCounter = 0;
+                                                          //Svuotare lo Store sul Logout
+                                                          StoreProvider.of<AppState>(context).dispatch(SetAppStateToEmpty());
+
+                                                          //Torno al Login
+                                                          drawerSelection = DrawerSelection.BusinessList;
+
+                                                          //Navigator.of(context).pushNamedAndRemoveUntil(Home.route, (Route<dynamic> route) => false);
+                                                          //Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Home()), (Route<dynamic> route) => false);
+                                                          //Navigator.replace(context, (Route<dynamic> route) => Landing.route)
+
+                                                          Navigator.of(context).pushReplacementNamed(Home.route);
+                                                        });
+                                                      },
+                                                      child: CustomBottomButtonWidget(
+                                                          Container(
+                                                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5),
+                                                            child: Text(
+                                                              AppLocalizations.of(context).logOut,
+                                                              style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w400, fontSize: 16),
+                                                            ),
+                                                          ),
+                                                          '',
+                                                          Container(
+                                                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5),
+                                                            child: Icon(
+                                                              MaterialDesignIcons.exit_to_app,
+                                                              color: BuytimeTheme.SymbolGrey,
+                                                            ),
+                                                          ))),
+                                                ),
+                                              ));
 
                                             return Column(
                                               mainAxisAlignment: MainAxisAlignment.start,
@@ -2166,4 +2593,46 @@ class Explorer with ChangeNotifier{
 
 }
 
+class _OpenContainerWrapper extends StatelessWidget {
+  const _OpenContainerWrapper({this.closedBuilder, this.transitionType, this.onClosed, this.index});
+
+  final OpenContainerBuilder closedBuilder;
+  final ContainerTransitionType transitionType;
+  final ClosedCallback<bool> onClosed;
+  final int index;
+
+  @override
+  Widget build(BuildContext context) {
+    return OpenContainer<bool>(
+      key: index == 0
+          ? StoreProvider.of<AppState>(context).state.bookingList.bookingListState.isEmpty
+          ? Key('invite_key')
+          : Key('my_bookings_key')
+          : Key('discover_key'),
+      transitionType: ContainerTransitionType.fadeThrough,
+      openBuilder: (BuildContext context, VoidCallback _) {
+        if (index == 0) {
+          if (StoreProvider.of<AppState>(context).state.bookingList.bookingListState.isEmpty)
+            return InviteGuestForm(
+              id: '',
+              fromLanding: true,
+            );
+          else
+            return MyBookings(
+              fromLanding: true,
+            );
+        } else {
+          return RServiceExplorer();
+        }
+      },
+      onClosed: onClosed,
+      closedShape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(10)),
+      ),
+      tappable: false,
+      closedBuilder: closedBuilder,
+      transitionDuration: Duration(milliseconds: 800),
+    );
+  }
+}
 

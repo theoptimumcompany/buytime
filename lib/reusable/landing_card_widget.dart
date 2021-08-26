@@ -22,8 +22,8 @@ class _LandingCardWidgetState extends State<LandingCardWidget> {
 
 
     return Container(
-      height: 168, ///SizeConfig.safeBlockVertical * 25
-      width: 188, ///SizeConfig.safeBlockHorizontal * 50
+      height: 100, ///SizeConfig.safeBlockVertical * 25
+      width: SizeConfig.safeBlockVertical * 80, ///SizeConfig.safeBlockHorizontal * 50
       //margin: EdgeInsets.all(SizeConfig.safeBlockVertical * 2),
       decoration: BoxDecoration(
         color: Colors.black,
@@ -70,7 +70,7 @@ class _LandingCardWidgetState extends State<LandingCardWidget> {
                         fontFamily: BuytimeTheme.FontFamily,
                         color: BuytimeTheme.TextWhite,
                         fontWeight: FontWeight.bold,
-                        fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
+                        fontSize: 16 ///SizeConfig.safeBlockHorizontal * 4
                     ),
                   ),
                 ),
@@ -84,7 +84,7 @@ class _LandingCardWidgetState extends State<LandingCardWidget> {
                       style: TextStyle(
                           fontFamily: BuytimeTheme.FontFamily,
                           color:  BuytimeTheme.TextWhite,
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w500,
                           fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
                       ),
                     ),

@@ -5,6 +5,7 @@ import 'package:Buytime/UI/management/business/RUI_M_business_list.dart';
 import 'package:Buytime/UI/management/business/UI_M_business_list.dart';
 import 'package:Buytime/UI/user/landing/UI_U_landing.dart';
 import 'package:Buytime/UI/user/login/UI_U_forgot_password.dart';
+import 'package:Buytime/UI/user/turist/RUI_U_service_explorer.dart';
 import 'package:Buytime/reblox/model/autoComplete/auto_complete_state.dart';
 import 'package:Buytime/reblox/model/role/role.dart';
 import 'package:Buytime/reblox/model/snippet/device.dart';
@@ -35,10 +36,12 @@ import '../../../reblox/model/app_state.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'UI_U_home.dart';
+import 'UI_U_registration.dart';
 
 class Login extends StatefulWidget {
   static String route = '/login';
-
+  bool fromDiscover;
+  Login(this.fromDiscover);
   @override
   State<StatefulWidget> createState() => LoginState();
 }
@@ -172,7 +175,7 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
           isLoggedIn = true;
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => Landing()),
+            MaterialPageRoute(builder: (context) => RServiceExplorer()),
           );
         });
       } else {
@@ -256,7 +259,7 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
           isLoggedIn = true;
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => Landing()),
+            MaterialPageRoute(builder: (context) => RServiceExplorer()),
           );
         });
       } else {
@@ -1097,6 +1100,43 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
                                 ),
                                 Platform.isIOS ?
                                 BrandedButton("assets/img/apple_logo.png", AppLocalizations.of(context).logInWithApple, initiateAppleSignIn) : Container(),
+                                widget.fromDiscover ?
+                                Container(
+                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
+                                    //margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 0.5),
+                                    alignment: Alignment.center,
+                                    child: Material(
+                                      color: Colors.transparent,
+                                      child: InkWell(
+                                        key: Key('tourist_registration'),
+                                        onTap: () {
+                                          Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(builder: (context) => Registration(widget.fromDiscover)),
+                                          );
+                                        },
+                                        borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                        child: Container(
+                                          //width: 328,
+                                          width: 80,
+                                          height: 28,
+                                          padding: EdgeInsets.all(5.0),
+                                          child: FittedBox(
+                                            child: Text(
+                                              AppLocalizations.of(context).register,
+                                              style: TextStyle(
+                                                fontFamily: BuytimeTheme.FontFamily,
+                                                color: BuytimeTheme.TextWhite,
+                                                fontWeight: FontWeight.w400,
+                                                fontSize: 16,
+
+                                                ///SizeConfig.safeBlockHorizontal * 3
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    )) : Container(),
                                 //BrandedButton("assets/img/facebook_logo.png", AppLocalizations.of(context).signFacebook, initiateFacebookSignIn),
                               ]),
                             ),
@@ -1233,13 +1273,15 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
       StoreProvider.of<AppState>(context).dispatch(new UpdateUserToken(token));
       setState(() {
         _success = true;
+        Future.delayed(Duration(seconds: 1), (){
+          if (StoreProvider.of<AppState>(context).state.user.getRole() != Role.user)
+            Navigator.push(context, MaterialPageRoute(builder: (context) => RBusinessList()));
+          else
+            Navigator.of(context).pushNamedAndRemoveUntil(AppRoutes.serviceExplorer, (Route<dynamic> route) => false);
+          //Navigator.of(context).pushNamedAndRemoveUntil(AppRoutes.myBookings, ModalRoute.withName(AppRoutes.landing));
+          //StoreProvider.of<AppState>(context).dispatch(new UserBookingRequest(user.email));
+        });
 
-        if (StoreProvider.of<AppState>(context).state.user.getRole() != Role.user)
-          Navigator.push(context, MaterialPageRoute(builder: (context) => RBusinessList()));
-        else
-          Navigator.of(context).pushNamedAndRemoveUntil(AppRoutes.landing, (Route<dynamic> route) => false);
-        //Navigator.of(context).pushNamedAndRemoveUntil(AppRoutes.myBookings, ModalRoute.withName(AppRoutes.landing));
-        //StoreProvider.of<AppState>(context).dispatch(new UserBookingRequest(user.email));
       });
     } else {
       Navigator.of(context).pop();

@@ -4,7 +4,9 @@ import 'package:Buytime/UI/management/business/UI_M_business_list.dart';
 import 'package:Buytime/UI/management/notification/RUI_M_notification_center.dart';
 import 'package:Buytime/UI/management/slot/UI_M_slot_management.dart';
 import 'package:Buytime/UI/user/landing/UI_U_landing.dart';
+import 'package:Buytime/UI/user/turist/RUI_U_service_explorer.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
+import 'package:Buytime/reblox/reducer/app_reducer.dart';
 import 'package:Buytime/reblox/reducer/booking_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/booking_reducer.dart';
 import 'package:Buytime/reblox/reducer/business_list_reducer.dart';
@@ -426,7 +428,7 @@ class _UI_M_BusinessListDrawerState extends State<UI_M_BusinessListDrawer> {
                           StoreProvider.of<AppState>(context)
                               .dispatch(SetOrderListToEmpty());*/
                                       switchToClient = true;
-                                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Landing()));
+                                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => RServiceExplorer()));
                                     },
                                     title: Text(AppLocalizations.of(context).clientMode,
                                         style: TextStyle(
@@ -465,26 +467,8 @@ class _UI_M_BusinessListDrawerState extends State<UI_M_BusinessListDrawer> {
                                       //Resetto il carrello
                                       //cartCounter = 0;
                                       //Svuotare lo Store sul Logout
-                                      StoreProvider.of<AppState>(context).dispatch(SetServiceToEmpty());
-                                      StoreProvider.of<AppState>(context).dispatch(SetBookingToEmpty(''));
-                                      StoreProvider.of<AppState>(context).dispatch(SetBookingListToEmpty());
-                                      StoreProvider.of<AppState>(context).dispatch(SetBusinessListToEmpty());
-                                      StoreProvider.of<AppState>(context).dispatch(SetCategoryListToEmpty());
-                                      StoreProvider.of<AppState>(context).dispatch(SetCategoryToEmpty());
-                                      StoreProvider.of<AppState>(context).dispatch(SetBusinessToEmpty());
-                                      StoreProvider.of<AppState>(context).dispatch(SetOrderListToEmpty());
-                                      StoreProvider.of<AppState>(context).dispatch(SetOrderToEmpty(''));
-                                      StoreProvider.of<AppState>(context).dispatch(SetPipelineListToEmpty());
-                                      StoreProvider.of<AppState>(context).dispatch(SetPipelineToEmpty());
-                                      StoreProvider.of<AppState>(context).dispatch(SetServiceListToEmpty());
-                                      StoreProvider.of<AppState>(context).dispatch(SetServiceSlotToEmpty());
-                                      StoreProvider.of<AppState>(context).dispatch(SetStripeToEmpty());
-                                      StoreProvider.of<AppState>(context).dispatch(SetUserStateToEmpty());
-                                      StoreProvider.of<AppState>(context).dispatch(SetOrderReservableToEmpty(''));
-                                      StoreProvider.of<AppState>(context).dispatch(SetCategoryInviteToEmpty());
-                                      StoreProvider.of<AppState>(context).dispatch(SetExternalBusinessListToEmpty());
-                                      StoreProvider.of<AppState>(context).dispatch(SetOrderDetailToEmpty(''));
-                                      StoreProvider.of<AppState>(context).dispatch(SetOrderReservableListToEmpty());
+                                      StoreProvider.of<AppState>(context).dispatch(SetAppStateToEmpty());
+
                                       //Torno al Login
                                       drawerSelection = DrawerSelection.BusinessList;
                                       //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Home()),);

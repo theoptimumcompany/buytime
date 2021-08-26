@@ -80,15 +80,15 @@ class _DiscoverCardWidgetState extends State<DiscoverCardWidget> {
             child: Container(
               width: widget.width,
               height: widget.heigth,
-              alignment: Alignment.bottomLeft,
+              alignment: Alignment.center,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(5)),
                   color: Colors.black.withOpacity(.4)
               ),
               child: Container(
-                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2, right: SizeConfig.safeBlockHorizontal * 1, bottom: SizeConfig.safeBlockVertical * 1),
+                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2, right: SizeConfig.safeBlockHorizontal * 1),
                 child: Text(
-                  widget.categoryState.name,
+                  widget.categoryState.name.toUpperCase(),
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                       fontFamily: BuytimeTheme.FontFamily,

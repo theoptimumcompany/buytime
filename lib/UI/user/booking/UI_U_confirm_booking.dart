@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:Buytime/UI/user/booking/UI_U_booking_page.dart';
 import 'package:Buytime/UI/user/landing/UI_U_landing.dart';
+import 'package:Buytime/UI/user/turist/RUI_U_service_explorer.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/reducer/booking_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/booking_reducer.dart';
@@ -295,7 +296,7 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
                                       onPressed: () async {
                                         await storage.write(key: 'bookingCodeRead', value: 'false');
                                         await storage.delete(key: 'bookingCode');
-                                        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => Landing()), (Route<dynamic> route) => false);
+                                        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => RServiceExplorer()), (Route<dynamic> route) => false);
                                         //Navigator.of(context).pushNamedAndRemoveUntil(Landing.route, (Route<dynamic> route) => false);
                                       },
                                       textColor: BuytimeTheme.ButtonMalibu,

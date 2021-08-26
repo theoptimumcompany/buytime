@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:Buytime/UI/user/booking/UI_U_booking_page.dart';
 import 'package:Buytime/UI/user/landing/UI_U_landing.dart';
 import 'package:Buytime/UI/user/landing/invite_guest_form.dart';
+import 'package:Buytime/UI/user/turist/RUI_U_service_explorer.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reblox/reducer/booking_reducer.dart';
@@ -152,7 +153,7 @@ class _RMyBookingsState extends State<RMyBookings> {
                               //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_Business()),);
                               //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Landing()));
                               if(widget.fromLanding == null)
-                                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Landing()));
+                                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => RServiceExplorer()));
                               else
                                 Navigator.of(context).pop();
                             },
