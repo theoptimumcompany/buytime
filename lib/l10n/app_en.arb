@@ -603,5 +603,7 @@
   "condition": "Condition (Optional)",
   "discoverStart": "Discover the",
   "discoverEnd": "services around you",
+  "yourDetails": "Your details",
+  "phoneNumber": "Telephone number",
   "promo": "Promo"
 }

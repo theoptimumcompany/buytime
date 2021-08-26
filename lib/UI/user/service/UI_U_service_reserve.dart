@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:Buytime/UI/management/service_internal/class/service_slot_classes.dart';
 import 'package:Buytime/UI/user/cart/UI_U_cart.dart';
 import 'package:Buytime/UI/user/cart/UI_U_cart_reservable.dart';
+import 'package:Buytime/UI/user/cart/UI_U_personal_info_park.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
@@ -1827,72 +1828,42 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                           ),
                                         ),
                                       )),
-                                  /*Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      GestureDetector(
-                                        onTap: () {
-                                          // trigger payment information page
-                                          Navigator.pushReplacement(
+                                  Container(
+                                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5, bottom: SizeConfig.safeBlockVertical * 4),
+                                      width: 158,
+
+                                      ///media.width * .4
+                                      height: 44,
+                                      child: MaterialButton(
+                                        key: Key('service_reserve_key'),
+                                        elevation: 0,
+                                        hoverElevation: 0,
+                                        focusElevation: 0,
+                                        highlightElevation: 0,
+                                        onPressed: () async{
+                                          await Navigator.push(
                                             context,
-                                            MaterialPageRoute(builder: (context) => UI_U_StripePayment()),
+                                            MaterialPageRoute(builder: (context) => PersonalInfoPark()),
                                           );
                                         },
-                                        child: Padding(
-                                          padding: EdgeInsets.only(top: (media.height * 0.05)),
-                                          child: Container(
-                                            width: media.width * 0.55,
-                                            decoration: BoxDecoration(color: Color.fromRGBO(1, 175, 81, 1.0), borderRadius: BorderRadius.all(Radius.circular(5.0))),
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(8.0),
-                                              child: Row(
-                                                mainAxisAlignment: MainAxisAlignment.center,
-                                                children: [Icon(Icons.credit_card, color: Colors.white), SizedBox(width: 10.0), Text(AppLocalizations.of(context).orderAndPay, style: TextStyle(color: Colors.white))],
-                                              ),
-                                            ),
+                                        textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
+                                        color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
+                                        padding: EdgeInsets.all(media.width * 0.03),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: new BorderRadius.circular(5),
+                                        ),
+                                        child: Text(
+                                          AppLocalizations.of(context).test,
+                                          style: TextStyle(
+                                            letterSpacing: 1.25,
+                                            fontSize: 14,
+                                            fontFamily: BuytimeTheme.FontFamily,
+                                            fontWeight: FontWeight.w500,
+                                            color: BuytimeTheme.TextWhite,
                                           ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                  // Row(
-                                  //   mainAxisAlignment: MainAxisAlignment.center,
-                                  //   children: [
-                                  //     GestureDetector(
-                                  //       onTap: () {
-                                  //         // trigger payment information page
-                                  //         print("Dispatch Order create!");
-                                  //         StoreProvider.of<AppState>(context).dispatch(CreateOrder(OrderState(
-                                  //             itemList: snapshot.order.itemList,
-                                  //             date: snapshot.order.date,
-                                  //             progress: "paid",
-                                  //             position: snapshot.order.position,
-                                  //             total: snapshot.order.total,
-                                  //             business: snapshot.order.business,
-                                  //             user: snapshot.order.user,
-                                  //             businessId: snapshot.business.id_firestore)));
-                                  //         StoreProvider.of<AppState>(context).dispatch(OrderListRequest());
-                                  //       },
-                                  //       child: Padding(
-                                  //         padding: EdgeInsets.only(top: (media.height * 0.05)),
-                                  //         child: Container(
-                                  //           width: media.width * 0.55,
-                                  //           decoration: BoxDecoration(color: Color.fromRGBO(1, 175, 81, 1.0), borderRadius: BorderRadius.all(Radius.circular(5.0))),
-                                  //           child: Padding(
-                                  //             padding: const EdgeInsets.all(8.0),
-                                  //             child: Row(
-                                  //               mainAxisAlignment: MainAxisAlignment.center,
-                                  //               children: [Icon(Icons.credit_card, color: Colors.white), SizedBox(width: 10.0), Text("Test Order Create", style: TextStyle(color: Colors.white))],
-                                  //             ),
-                                  //           ),
-                                  //         ),
-                                  //       ),
-                                  //     ),
-                                  //   ],
-                                  // ),
-                                  SizedBox(
-                                    height: media.height * 0.05,
-                                  )*/
+                                      )),
+
                                 ],
                               ),
                             ),
