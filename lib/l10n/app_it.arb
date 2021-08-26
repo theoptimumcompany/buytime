@@ -602,5 +602,7 @@
   "condition": "Condition (Optional)",
   "promo": "Promo",
   "discoverStart": "Discover the",
+  "yourDetails": "Le tue informazioni",
+  "phoneNumber": "Numero di telefono",
   "discoverEnd": "services around you"
 }

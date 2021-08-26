@@ -602,5 +602,6 @@
   "condition": "Condition (Optional)",
   "promo": "Promo",
   "discoverStart": "Discover the",
+  "yourDetails": "Your details",
   "discoverEnd": "services around you"
 }
