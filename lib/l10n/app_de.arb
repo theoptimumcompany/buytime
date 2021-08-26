@@ -604,5 +604,6 @@
   "discoverEnd": "services around you",
   "yourDetails": "Your details",
   "phoneNumber": "Telephone number",
+  "ifYouHaveABooking": "If you have a booking code, click here",
   "promo": "Promo"
 }
