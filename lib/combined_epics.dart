@@ -69,6 +69,7 @@ CategoryTreeAddService(),
 CategoryTreeDeleteService(), */
   StripePaymentAddPaymentMethod(),
   StripeCardListRequestService(),
+  ConfirmInfoparkBookingService(),
   StripeCardListRequestAndNavigateService(),
   StripeDetachPaymentMethodRequest(),
   SetOrderDetailAndNavigateRoomService(),

@@ -217,6 +217,23 @@ class StripeCardListRequestService implements EpicClass<AppState> {
   }
 }
 
+class ConfirmInfoparkBookingService implements EpicClass<AppState> {
+  StatisticsState statisticsState;
+
+  @override
+  Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
+    return actions.whereType<ConfirmInfoparkBooking>().asyncMap((event) async {
+    // NOTE: probabilmente non chiameró la epic e lasceró tutta la logica nel file infopark TO DELETE
+
+
+    }).expand((element) {
+      var actionArray = [];
+      actionArray.add(UpdateStatistics(statisticsState));
+      return actionArray;
+    });
+  }
+}
+
 class StripeCardListRequestAndNavigateService implements EpicClass<AppState> {
   StatisticsState statisticsState;
   List<StripeState> stripeStateList;

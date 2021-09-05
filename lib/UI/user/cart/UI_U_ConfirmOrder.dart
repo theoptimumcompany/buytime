@@ -1,21 +1,16 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:Buytime/UI/user/booking/RUI_U_order_detail.dart';
-import 'package:Buytime/UI/user/cart/tab/T_room.dart';
-import 'package:Buytime/UI/user/cart/tab/T_room_disabled.dart';
 import 'package:Buytime/UI/user/cart/widget/W_credit_card_simple.dart';
-import 'package:Buytime/UI/user/cart/widget/W_loading_button.dart';
-import 'package:Buytime/main.dart';
 import 'package:Buytime/reblox/enum/order_time_intervals.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:Buytime/reblox/model/card/card_list_state.dart';
 import 'package:Buytime/reblox/model/order/order_detail_state.dart';
 import 'package:Buytime/reblox/model/order/order_entry.dart';
-import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/model/stripe/stripe_card_response.dart';
-import 'package:Buytime/reblox/navigation/navigation_reducer.dart';
-import 'package:Buytime/reblox/reducer/business_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_detail_reducer.dart';
+import 'package:Buytime/reblox/reducer/promotion/promotion_list_reducer.dart';
+import 'package:Buytime/reblox/reducer/promotion/promotion_reducer.dart';
 import 'package:Buytime/reblox/reducer/stripe_payment_reducer.dart';
 import 'package:Buytime/reusable/W_green_choice.dart';
 import 'package:Buytime/services/order/util.dart';
@@ -39,13 +34,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-
-// import 'package:stripe_payment/stripe_payment.dart' as StripeRecommended;
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:flutter_stripe/flutter_stripe.dart' as StripeOfficial;
 
 import 'package:http/http.dart' as http;
-import 'package:redux_epics/redux_epics.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../environment_abstract.dart';
@@ -265,58 +257,6 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                   ],
                                 ),
                               ),
-
-                              /// TEST API infopark WIP
-                              // MaterialButton(
-                              //   textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
-                              //   color: widget.tourist != null && widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
-                              //   disabledColor: BuytimeTheme.SymbolLightGrey,
-                              //   //padding: EdgeInsets.all(media.width * 0.03),
-                              //   shape: RoundedRectangleBorder(
-                              //     borderRadius: new BorderRadius.circular(5),
-                              //   ),
-                              //   child: Container(
-                              //     alignment: Alignment.center,
-                              //     width: SizeConfig.blockSizeHorizontal * 57,
-                              //     height: 44,
-                              //     child: Text(
-                              //       AppLocalizations.of(context).test,
-                              //       textAlign: TextAlign.center,
-                              //       style: TextStyle(
-                              //         letterSpacing: 1.25,
-                              //         fontSize: 14,
-                              //         fontFamily: BuytimeTheme.FontFamily,
-                              //         fontWeight: FontWeight.w500,
-                              //         color: BuytimeTheme.TextWhite,
-                              //       ),
-                              //     ),
-                              //   ),
-                              //   onPressed: () async {
-                              //
-                              //     // TODO mostrare form infopark
-                              //
-                              //
-                              //     // TODO inoltrare richiesta post con i campi necessari per verificare la disponibilitá
-                              //     // TODO se disponibile procedere con la richiesta del pagamento e la conferma
-                                    //     String infoparkStripeTestKey = "pk_test_D913jo5bMZtK6kAANKTpsulW00omqUEEHd";
-                                    //     // TODO richiedere carta di credito
-                                    //     // TODO crea metodo di pagamento con la loro chiave pubblica
-                                    //
-                                    //
-                                    //     // TODO conferma il client secret ricevuto
-                                    //
-                                    //     // TODO esito negativo: visualizza l'errore
-                                    //     // TODO esito positivo: crea l'ordine buytime associato
-                                    //     // TODO inserire l'ordine nello store
-                                    //     // TODO redirect al dettaglio dell'ordine
-                                    // TODO se non disponibile mostrare messaggio di non disponibilitá
-                              //
-                              //
-                              //
-                              //   },
-                              // ),
-
-
                               snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.applePay)
                                   ? ApplePayButton(
                                       width: SizeConfig.blockSizeHorizontal * 65,
@@ -367,6 +307,22 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                           } else if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.onSite)) {
                                             confirmationOnSite(context, snapshot);
                                           }
+                                          /// TODO check limits of promotion
+                                          if (snapshot.promotionState.limit > 0) {
+                                            int amountOfItems = 0;
+                                            if (widget.reserve != null && widget.reserve) {
+                                              amountOfItems = snapshot.orderReservable.itemList.length;
+                                            } else {
+                                              amountOfItems = snapshot.order.itemList.length;
+                                            }
+                                            if ((snapshot.promotionState.limit - amountOfItems) <= 0) {
+                                              /// delete all promotions
+                                              StoreProvider.of<AppState>(context).dispatch(SetPromotionListToEmpty());
+                                              StoreProvider.of<AppState>(context).dispatch(SetPromotionToEmpty());
+                                            } else {
+                                              StoreProvider.of<AppState>(context).dispatch(DecreasePromotionLimit(amountOfItems));
+                                            }
+                                          }
                                         },
                                       ),
                                     )
@@ -408,55 +364,6 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
         (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.onSite) && !snapshot.serviceState.paymentMethodOnSite)) {
       StoreProvider.of<AppState>(context).dispatch(ResetPaymentMethod());
     }
-  }
-
-  Widget buildTabsBeforeConfirmation(String bookingCode, CardListState cardListState) {
-    if (_controller.index == 0) {
-      debugPrint('buildTabsBeforeConfirmation ' + cardListState.cardList?.length.toString() + ' ' + cardWidgetList?.length.toString());
-      if (cardWidgetList != null && cardWidgetList.length > 0) {
-        return cardWidgetList[0];
-      }
-      return Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: CardField(
-              onCardChanged: (card) {
-                setState(() {
-                  _card = card;
-                });
-              },
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
-            child: Text(
-              AppLocalizations.of(context).virtualAndPrepaidNotSupported,
-              softWrap: true,
-              overflow: TextOverflow.clip,
-              style: TextStyle(
-                  // letterSpacing: 1.25,
-                  fontStyle: FontStyle.italic,
-                  fontFamily: BuytimeTheme.FontFamily,
-                  color: BuytimeTheme.TextGrey,
-                  fontWeight: FontWeight.w400,
-                  fontSize: 14),
-            ),
-          ),
-          (cardListState.cardList != null && cardListState.cardList.length > 0) ? Container() : LoadingButton(onPressed: _requestSaveCard, text: AppLocalizations.of(context).saveYourCard),
-        ],
-      );
-      // } else if (_controller.index == 1) {
-      //   return Container(
-      //     child: buildMobilePay(),
-      //   );
-    } else if (_controller.index == 1) {
-      if (disableRoomPayment) {
-        return RoomDisabled();
-      }
-      return Room(tourist: widget.tourist, bookingCode: bookingCode);
-    }
-    return Container();
   }
 
   List<pay.PaymentItem> buildGoogleItems() {
@@ -584,75 +491,6 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
         : Container();
   }
 
-  Align buildConfirmButton(BuildContext context, AppState snapshot, Size media) {
-    return Align(
-      alignment: Alignment.bottomCenter,
-      child: Container(
-        //height: double.infinity,
-        //color: Colors.black87,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ///Confirm button
-            Container(
-                margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5, bottom: SizeConfig.safeBlockVertical * 4),
-                width: 158,
-
-                ///media.width * .4
-                height: 44,
-                child: MaterialButton(
-                  elevation: 0,
-                  hoverElevation: 0,
-                  focusElevation: 0,
-                  highlightElevation: 0,
-                  onPressed: _selectedIndex == 0 && snapshot.cardListState.cardList != null && snapshot.cardListState.cardList.length > 0
-                      ? () {
-                          ///L'avevo messo apposto, non so come ma era ritornata comera prima,
-                          ///se non va bene messo cosi ditemelo, comera messo prima il bottono non rimaneva bloccavta
-                          ///finche non selezionavi la carta
-                          debugPrint("UI_U_ConfirmOrder  confirmation CREDIT CARD");
-                          confirmationCard(context, snapshot, snapshot.cardListState.cardList[0].stripeState.stripeCard.last4, snapshot.cardListState.cardList[0].stripeState.stripeCard.brand,
-                              snapshot.cardListState.cardList[0].stripeState.stripeCard.country, snapshot.cardListState.cardList[0].stripeState.stripeCard.paymentMethodId);
-                          // } : _selectedIndex == 1 ? () async {
-                          //   // confirmationNative();
-                          //   debugPrint("UI_U_ConfirmOrder confirmation NATIVE");
-                          // confirmationNative(context, snapshot);
-                        }
-                      : _selectedIndex == 1 && !disableRoomPayment
-                          ? () {
-                              debugPrint("UI_U_ConfirmOrder confirmation ROOM");
-                              confirmationRoom(context, snapshot);
-                            }
-                          : null,
-                  textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
-                  color: widget.tourist != null && widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
-                  disabledColor: BuytimeTheme.SymbolLightGrey,
-                  //padding: EdgeInsets.all(media.width * 0.03),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: new BorderRadius.circular(5),
-                  ),
-                  child: Container(
-                    alignment: Alignment.center,
-                    height: 44,
-                    child: Text(
-                      !(widget.reserve != null && widget.reserve) ? AppLocalizations.of(context).confirmUpper : '${AppLocalizations.of(context).completeBooking.toUpperCase()}',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        letterSpacing: 1.25,
-                        fontSize: 14,
-                        fontFamily: BuytimeTheme.FontFamily,
-                        fontWeight: FontWeight.w500,
-                        color: BuytimeTheme.TextWhite,
-                      ),
-                    ),
-                  ),
-                )),
-          ],
-        ),
-      ),
-    );
-  }
 
   ///Tab bar
   TabBar buildTabBar(BuildContext context) {

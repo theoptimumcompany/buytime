@@ -4,11 +4,15 @@ import 'package:Buytime/reblox/model/order/order_entry.dart';
 import 'package:Buytime/reblox/model/order/selected_entry.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/model/user/snippet/user_snippet_state.dart';
+import 'package:Buytime/reblox/reducer/promotion/promotion_reducer.dart';
 import 'package:Buytime/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
+
+import '../app_state.dart';
 
 part 'order_reservable_state.g.dart';
 
@@ -49,6 +53,7 @@ class OrderReservableState {
   String cancellationReason;
   bool carbonCompensation = false;
   double totalPromoDiscount = 0.0;
+  String promotionId;
 
   OrderReservableState({
     @required this.itemList,
@@ -81,6 +86,7 @@ class OrderReservableState {
     this.cancellationReason,
     this.carbonCompensation,
     this.totalPromoDiscount,
+    this.promotionId,
   });
 
 
@@ -116,6 +122,7 @@ class OrderReservableState {
     this.cancellationReason = state.cancellationReason;
     this.carbonCompensation = state.carbonCompensation;
     this.totalPromoDiscount = state.totalPromoDiscount;
+    this.promotionId = state.promotionId;
   }
 
   OrderReservableState copyWith({
@@ -149,6 +156,7 @@ class OrderReservableState {
     String cancellationReason,
     bool carbonCompensation,
     bool totalPromoDiscount,
+    String promotionId,
   }) {
     return OrderReservableState(
       itemList: itemList ?? this.itemList,
@@ -181,6 +189,7 @@ class OrderReservableState {
       cancellationReason: cancellationReason ?? this.cancellationReason,
       carbonCompensation: carbonCompensation ?? this.carbonCompensation,
       totalPromoDiscount: totalPromoDiscount ?? this.totalPromoDiscount,
+      promotionId: promotionId ?? this.promotionId,
     );
   }
 
@@ -216,6 +225,7 @@ class OrderReservableState {
       cancellationReason: 'Overbooking',
       carbonCompensation: false,
       totalPromoDiscount: 0.0,
+      promotionId: '',
     );
   }
 
@@ -274,7 +284,7 @@ class OrderReservableState {
       vat: itemToAdd.vat != null && itemToAdd.vat != 0 ? itemToAdd.vat : 22
     ));
 
-    this.totalPromoDiscount += Utils.calculatePromoDiscount(price, context);
+    this.totalPromoDiscount += Utils.calculatePromoDiscount(price, context, itemToAdd.businessId);
     this.total += price;
     this.total -= (totalPromoDiscount / itemList.length);
   }
@@ -293,8 +303,8 @@ class OrderReservableState {
   // }
 
   void removeReserveItem(OrderEntry entry, BuildContext context) {
-
-    this.totalPromoDiscount -= (Utils.calculatePromoDiscount(entry.price, context));
+    StoreProvider.of<AppState>(context).dispatch(IncreasePromotionLimit(1));
+    this.totalPromoDiscount -= (Utils.calculatePromoDiscount(entry.price, context, entry.id_business));
     this.total -= entry.price;
     if(this.itemList.length!= 0)
       this.total += (totalPromoDiscount / this.itemList.length);

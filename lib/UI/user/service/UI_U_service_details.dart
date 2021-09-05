@@ -341,7 +341,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                                         mainAxisAlignment: MainAxisAlignment.end,
                                                         children: [
                                                           ///Promo Discount label
-                                                          Utils.checkPromoDiscount('general_1', context).promotionId != 'empty'
+                                                          Utils.checkPromoDiscount('general_1', context, snapshot.serviceState.businessId).promotionId != 'empty'
                                                               ? Container(
                                                                   margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
                                                                   child: Padding(

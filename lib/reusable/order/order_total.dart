@@ -36,8 +36,8 @@ class OrderTotal extends StatelessWidget {
     calculateEcoTax();
     double vat = 0.0;
     orderState.itemList.forEach((element) {
-      if (element.vat != null && element.price != null && Utils.checkPromoDiscount('general_1', context).discount != null) {
-        vat += (element.price - Utils.checkPromoDiscount('general_1', context).discount) * (element.vat / 100);
+      if (element.vat != null && element.price != null && Utils.checkPromoDiscount('general_1', context, element.id_business).discount != null) {
+        vat += (element.price - Utils.checkPromoDiscount('general_1', context, element.id_business).discount) * (element.vat / 100);
       }
     });
     return Container(
@@ -54,7 +54,7 @@ class OrderTotal extends StatelessWidget {
               //crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 ///Promo Text
-                Utils.checkPromoDiscount('general_1', context).promotionId != 'empty'
+                Utils.checkPromoDiscount('general_1', context, orderState.itemList[0].id_business).promotionId != 'empty'
                     ? Expanded(
                         flex: 1,
                         child: Container(
@@ -68,7 +68,7 @@ class OrderTotal extends StatelessWidget {
                     : Container(),
 
                 ///Promo Value
-                Utils.checkPromoDiscount('general_1', context).promotionId != 'empty'
+                Utils.checkPromoDiscount('general_1', context, orderState.itemList[0].id_business).promotionId != 'empty'
                     ? Expanded(
                     flex: 1,
                     child: Container(

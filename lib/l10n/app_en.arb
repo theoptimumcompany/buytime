@@ -606,5 +606,6 @@
   "yourDetails": "Your details",
   "phoneNumber": "Telephone number",
   "ifYouHaveABooking": "If you have a booking code, click here",
+  "checkAvailability": "Check Availability",
   "promo": "Promo"
 }

@@ -3,6 +3,8 @@ import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:Buytime/reblox/model/app_state.dart';
 
 class W_PromoDiscount extends StatefulWidget {
   bool onlyIcon;
@@ -14,6 +16,13 @@ class W_PromoDiscount extends StatefulWidget {
 class _W_PromoDiscountState extends State<W_PromoDiscount> {
   @override
   Widget build(BuildContext context) {
+    String promotionText = "-" + StoreProvider.of<AppState>(context).state.promotionState.discount.toString();
+    if (StoreProvider.of<AppState>(context).state.promotionState.discountType == "percentageAmount") {
+      promotionText += "%";
+    } else if (StoreProvider.of<AppState>(context).state.promotionState.discountType == "fixedAmount") {
+      promotionText += "€";
+    }
+
     return Container(
         height: 20,
         //width: 130,
@@ -28,7 +37,11 @@ class _W_PromoDiscountState extends State<W_PromoDiscount> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Icon(MaterialDesignIcons.local_activity,size: 14,color: BuytimeTheme.SymbolWhite),
+              // Icon(MaterialDesignIcons.local_activity,size: 14,color: BuytimeTheme.SymbolWhite),
+              Text(
+                promotionText,
+                style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextWhite, fontWeight: FontWeight.w500, fontSize: 13),
+              ),
               !widget.onlyIcon ?
               Container(
                 margin: EdgeInsets.only(left: 5),

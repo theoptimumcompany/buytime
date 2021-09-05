@@ -84,9 +84,9 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
           snapshot.itemList[index].number = itemCount;
           double serviceTotal =  snapshot.total;
           serviceTotal = serviceTotal - snapshot.itemList[index].price;
-          snapshot.totalPromoDiscount -= Utils.calculatePromoDiscount(snapshot.itemList[index].price, context);
+          snapshot.totalPromoDiscount -= Utils.calculatePromoDiscount(snapshot.itemList[index].price, context, snapshot.itemList[index].id_business);
           snapshot.total = serviceTotal;
-          snapshot.total += Utils.calculatePromoDiscount(snapshot.itemList[index].price, context);
+          snapshot.total += Utils.calculatePromoDiscount(snapshot.itemList[index].price, context, snapshot.itemList[index].id_business);
           debugPrint('UI_U_Cart => AFTER| ${snapshot.itemList[index].name} ITEM COUNT: ${snapshot.itemList[index].number}');
           debugPrint('UI_U_Cart => AFTER| TOTAL: ${snapshot.total}');
           /*snapshot.removeItem(snapshot.itemList[index]);
@@ -108,9 +108,9 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
           snapshot.itemList[index].number = itemCount;
           double serviceTotal =  snapshot.total;
           serviceTotal = serviceTotal - snapshot.itemList[index].price;
-          snapshot.totalPromoDiscount -= Utils.calculatePromoDiscount(snapshot.itemList[index].price, context);
+          snapshot.totalPromoDiscount -= Utils.calculatePromoDiscount(snapshot.itemList[index].price, context, snapshot.itemList[index].id_business);
           snapshot.total = serviceTotal;
-          snapshot.total += Utils.calculatePromoDiscount(snapshot.itemList[index].price, context);
+          snapshot.total += Utils.calculatePromoDiscount(snapshot.itemList[index].price, context, snapshot.itemList[index].id_business);
           debugPrint('UI_U_Cart => AFTER| ${snapshot.itemList[index].name} ITEM COUNT: ${snapshot.itemList[index].number}');
           debugPrint('UI_U_Cart => AFTER| TOTAL: ${snapshot.total}');
           /*snapshot.removeItem(snapshot.itemList[index]);
@@ -137,9 +137,9 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
       snapshot.itemList[index].number = itemCount;
       double serviceTotal =  snapshot.total;
       serviceTotal = serviceTotal + snapshot.itemList[index].price;
-      snapshot.totalPromoDiscount += Utils.calculatePromoDiscount(snapshot.itemList[index].price, context);
+      snapshot.totalPromoDiscount += Utils.calculatePromoDiscount(snapshot.itemList[index].price, context, snapshot.itemList[index].id_business);
       snapshot.total = serviceTotal;
-      snapshot.total -= Utils.calculatePromoDiscount(snapshot.itemList[index].price, context);
+      snapshot.total -= Utils.calculatePromoDiscount(snapshot.itemList[index].price, context, snapshot.itemList[index].id_business);
       debugPrint('UI_U_Cart => AFTER| ${snapshot.itemList[index].name} ITEM COUNT: ${snapshot.itemList[index].number}');
       debugPrint('UI_U_Cart => AFTER| TOTAL: ${snapshot.total}');
       StoreProvider.of<AppState>(context).dispatch(UpdateOrder(snapshot));

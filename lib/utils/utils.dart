@@ -12,6 +12,7 @@ import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/model/promotion/promotion_list_state.dart';
 import 'package:Buytime/reblox/model/promotion/promotion_state.dart';
+import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/reducer/promotion/promotion_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/service_reducer.dart';
 import 'package:Buytime/utils/size_config.dart';
@@ -38,42 +39,75 @@ class Utils {
   static String imageSizing1000 = "_1000x1000";
 
   ///Calculate Promo Discount
-  static double calculatePromoDiscount(double fullPrice, context) {
+  static double calculatePromoDiscount(double fullPrice, context, String businessId) {
     double promoPrice = 0.0;
-
     debugPrint('START CALCULATE PROMO');
-
-    if (StoreProvider.of<AppState>(context).state.promotionState != null) {
-      PromotionState promotionState = StoreProvider.of<AppState>(context).state.promotionState;
-      debugPrint('PROMO ' + promotionState.promotionId);
-      switch (promotionState.discountType) {
-        case 'fixedAmount':
-          if ((fullPrice - (promotionState.discount).toDouble()) >= 3.0) {
-            promoPrice = (promotionState.discount).toDouble();
-          } else {
-             if (fullPrice - (promotionState.discount).toDouble() >= 0) { // 4 5 6 7
-               promoPrice = fullPrice - 3;
-             } else { // 1
-               promoPrice = 0.0;
-             }
-          }
-          break;
-        case 'percentageAmount':
-          promoPrice = ((fullPrice * promotionState.discount)/100);
-          break;
-        default:
-          promoPrice = 0.0;
+    if(StoreProvider.of<AppState>(context).state.promotionState.limit > 0) {
+      if(
+      StoreProvider.of<AppState>(context).state.promotionState != null &&
+          StoreProvider.of<AppState>(context).state.promotionState.businessIdList != null &&
+          StoreProvider.of<AppState>(context).state.promotionState.businessIdList.isNotEmpty &&
+          StoreProvider.of<AppState>(context).state.promotionState.businessIdList.contains(businessId)) {
+        promoPrice = applyPromotion(context, fullPrice, promoPrice);
+      } else if (
+      StoreProvider.of<AppState>(context).state.promotionState != null &&
+          (StoreProvider.of<AppState>(context).state.promotionState.businessIdList == null ||
+              StoreProvider.of<AppState>(context).state.promotionState.businessIdList.isEmpty)
+      ) {
+        promoPrice = applyPromotion(context, fullPrice, promoPrice);
       }
     }
     debugPrint('PROMO ' + promoPrice.toString());
     return promoPrice;
   }
 
+  static double applyPromotion(context, double fullPrice, double promoPrice) {
+    PromotionState promotionState = StoreProvider.of<AppState>(context).state.promotionState;
+    debugPrint('PROMO ' + promotionState.promotionId);
+    StoreProvider.of<AppState>(context).dispatch(DecreasePromotionLimit(1));
+    switch (promotionState.discountType) {
+      case 'fixedAmount':
+        if ((fullPrice - (promotionState.discount).toDouble()) >= 3.0) {
+          promoPrice = (promotionState.discount).toDouble();
+        } else {
+           if (fullPrice - (promotionState.discount).toDouble() >= 0) { // 4 5 6 7
+             promoPrice = fullPrice - 3;
+           } else { // 1
+             promoPrice = 0.0;
+           }
+        }
+        break;
+      case 'percentageAmount':
+        promoPrice = ((fullPrice * promotionState.discount)/100);
+        break;
+      default:
+        promoPrice = 0.0;
+    }
+    return promoPrice;
+  }
+
   ///Check Promo Discount
-  static PromotionState checkPromoDiscount(String promoName, context) {
+  static PromotionState checkPromoDiscount(String promoName, context, String businessId) {
     debugPrint('START CHECK PROMO');
 
-    if (StoreProvider.of<AppState>(context).state.promotionListState.promotionListState.isNotEmpty && StoreProvider.of<AppState>(context).state.promotionListState != null) {
+    if(
+        StoreProvider.of<AppState>(context).state.promotionListState.promotionListState.isNotEmpty &&
+        StoreProvider.of<AppState>(context).state.promotionState != null &&
+        StoreProvider.of<AppState>(context).state.promotionState.businessIdList != null &&
+        StoreProvider.of<AppState>(context).state.promotionState.businessIdList.isNotEmpty &&
+        StoreProvider.of<AppState>(context).state.promotionState.businessIdList.contains(businessId)) {
+      List<PromotionState> promotionListState = StoreProvider.of<AppState>(context).state.promotionListState.promotionListState;
+      for (var a = 0; a < promotionListState.length; a++) {
+        if (promotionListState[a].promotionId == promoName) {
+          debugPrint('PROMO NAME ' + promotionListState[a].promotionId);
+          return promotionListState[a];
+        }
+      }
+    } else if (
+    StoreProvider.of<AppState>(context).state.promotionState != null &&
+        (StoreProvider.of<AppState>(context).state.promotionState.businessIdList == null ||
+            StoreProvider.of<AppState>(context).state.promotionState.businessIdList.isEmpty)
+    ) {
       List<PromotionState> promotionListState = StoreProvider.of<AppState>(context).state.promotionListState.promotionListState;
       for (var a = 0; a < promotionListState.length; a++) {
         if (promotionListState[a].promotionId == promoName) {

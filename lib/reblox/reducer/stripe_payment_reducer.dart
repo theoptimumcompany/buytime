@@ -30,6 +30,10 @@ class CheckedStripeCustomer {
   bool get stripeCustomerCreated => _stripeCustomerCreated;
 }
 
+class ConfirmInfoparkBooking {
+  ConfirmInfoparkBooking();
+}
+
 class AddStripePaymentMethod
 {
   StripeOfficial.Card _stripeCard;

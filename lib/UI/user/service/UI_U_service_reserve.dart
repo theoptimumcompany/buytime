@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:Buytime/UI/management/service_internal/class/service_slot_classes.dart';
 import 'package:Buytime/UI/user/cart/UI_U_cart.dart';
 import 'package:Buytime/UI/user/cart/UI_U_cart_reservable.dart';
-import 'package:Buytime/UI/user/cart/UI_U_personal_info_park.dart';
+import 'package:Buytime/UI/user/cart/infopark/UI_U_personal_info_park.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
@@ -1828,41 +1828,41 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                           ),
                                         ),
                                       )),
-                                  Container(
-                                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5, bottom: SizeConfig.safeBlockVertical * 4),
-                                      width: 158,
-
-                                      ///media.width * .4
-                                      height: 44,
-                                      child: MaterialButton(
-                                        key: Key('service_reserve_key'),
-                                        elevation: 0,
-                                        hoverElevation: 0,
-                                        focusElevation: 0,
-                                        highlightElevation: 0,
-                                        onPressed: () async{
-                                          await Navigator.push(
-                                            context,
-                                            MaterialPageRoute(builder: (context) => PersonalInfoPark()),
-                                          );
-                                        },
-                                        textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
-                                        color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
-                                        padding: EdgeInsets.all(media.width * 0.03),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: new BorderRadius.circular(5),
-                                        ),
-                                        child: Text(
-                                          AppLocalizations.of(context).test,
-                                          style: TextStyle(
-                                            letterSpacing: 1.25,
-                                            fontSize: 14,
-                                            fontFamily: BuytimeTheme.FontFamily,
-                                            fontWeight: FontWeight.w500,
-                                            color: BuytimeTheme.TextWhite,
-                                          ),
-                                        ),
-                                      )),
+                                  // Container(
+                                  //     margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5, bottom: SizeConfig.safeBlockVertical * 4),
+                                  //     width: 158,
+                                  //
+                                  //     ///media.width * .4
+                                  //     height: 44,
+                                  //     child: MaterialButton(
+                                  //       key: Key('service_reserve_key'),
+                                  //       elevation: 0,
+                                  //       hoverElevation: 0,
+                                  //       focusElevation: 0,
+                                  //       highlightElevation: 0,
+                                  //       onPressed: () async{
+                                  //         await Navigator.push(
+                                  //           context,
+                                  //           MaterialPageRoute(builder: (context) => PersonalInfoPark()),
+                                  //         );
+                                  //       },
+                                  //       textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
+                                  //       color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
+                                  //       padding: EdgeInsets.all(media.width * 0.03),
+                                  //       shape: RoundedRectangleBorder(
+                                  //         borderRadius: new BorderRadius.circular(5),
+                                  //       ),
+                                  //       child: Text(
+                                  //         AppLocalizations.of(context).test,
+                                  //         style: TextStyle(
+                                  //           letterSpacing: 1.25,
+                                  //           fontSize: 14,
+                                  //           fontFamily: BuytimeTheme.FontFamily,
+                                  //           fontWeight: FontWeight.w500,
+                                  //           color: BuytimeTheme.TextWhite,
+                                  //         ),
+                                  //       ),
+                                  //     )),
 
                                 ],
                               ),

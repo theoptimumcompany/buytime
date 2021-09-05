@@ -4,13 +4,17 @@ import 'package:Buytime/reblox/model/order/order_reservable_state.dart';
 import 'package:Buytime/reblox/model/order/selected_entry.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/model/user/snippet/user_snippet_state.dart';
+import 'package:Buytime/reblox/reducer/promotion/promotion_reducer.dart';
 // import 'package:stripe_payment/stripe_payment.dart' as StripeRecommended;
 import 'package:Buytime/utils/utils.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+
+import '../app_state.dart';
 part 'order_state.g.dart';
 
 enum OrderStatus {
@@ -68,6 +72,7 @@ class OrderState {
   String cancellationReason;
   bool carbonCompensation = false;
   double totalPromoDiscount = 0.0;
+  String promotionId;
 
   OrderState({
     @required this.itemList,
@@ -98,6 +103,7 @@ class OrderState {
     this.cancellationReason,
     this.carbonCompensation,
     this.totalPromoDiscount,
+    this.promotionId,
   });
 
 
@@ -131,6 +137,7 @@ class OrderState {
     this.cancellationReason = state.cancellationReason;
     this.carbonCompensation = state.carbonCompensation;
     this.totalPromoDiscount = state.totalPromoDiscount;
+    this.promotionId = state.promotionId;
   }
 
   OrderState.fromReservableState(OrderReservableState state) {
@@ -162,6 +169,7 @@ class OrderState {
     this.cancellationReason = state.cancellationReason;
     this.carbonCompensation = state.carbonCompensation;
     this.totalPromoDiscount = state.totalPromoDiscount;
+    this.promotionId = state.promotionId;
   }
 
   OrderState copyWith({
@@ -194,6 +202,7 @@ class OrderState {
     String cancellationReason,
     bool carbonCompensation,
     double totalPromoDiscount,
+    String promotionId,
   }) {
     return OrderState(
       itemList: itemList ?? this.itemList,
@@ -224,6 +233,7 @@ class OrderState {
       cancellationReason: cancellationReason ?? this.cancellationReason,
       carbonCompensation: carbonCompensation ?? this.carbonCompensation,
       totalPromoDiscount: totalPromoDiscount ?? this.totalPromoDiscount,
+      promotionId: promotionId ?? this.promotionId,
     );
   }
 
@@ -257,6 +267,7 @@ class OrderState {
       cancellationReason: 'Overbooking',
       carbonCompensation: false,
       totalPromoDiscount: 0.0,
+      promotionId: '',
     );
   }
 
@@ -284,8 +295,8 @@ class OrderState {
         ));
       }
       this.total += itemToAdd.price;
-      this.totalPromoDiscount += Utils.calculatePromoDiscount(itemToAdd.price, context);
-      this.total -= Utils.calculatePromoDiscount(itemToAdd.price, context);
+      this.totalPromoDiscount += Utils.calculatePromoDiscount(itemToAdd.price, context, itemToAdd.businessId);
+      this.total -= Utils.calculatePromoDiscount(itemToAdd.price, context, itemToAdd.businessId);
   }
 
   addingFromAnotherBusiness(String businessId) {
@@ -321,7 +332,7 @@ class OrderState {
       switchAutoConfirm: itemToAdd.switchAutoConfirm
     ));
     this.total += price;
-    this.totalPromoDiscount += Utils.calculatePromoDiscount(price, context);
+    this.totalPromoDiscount += Utils.calculatePromoDiscount(price, context, itemToAdd.businessId);
   }
 
   void removeItem(OrderEntry entry, BuildContext context) {
@@ -330,7 +341,7 @@ class OrderState {
       //debugPrint('order_state => DATES: ${element.date} - ${entry.date}');
       if (!deleted && element.id == entry.id) {
         this.total -= (entry.price * element.number);
-        this.totalPromoDiscount -= (Utils.calculatePromoDiscount(entry.price, context) * element.number);
+        this.totalPromoDiscount -= (Utils.calculatePromoDiscount(entry.price, context, entry.id_business) * element.number);
         element.number = 0;
         deleted = true;
       }
@@ -339,7 +350,8 @@ class OrderState {
 
   void removeReserveItem(OrderEntry entry, BuildContext context) {
     this.total -= (entry.price);
-    this.totalPromoDiscount -= (Utils.calculatePromoDiscount(entry.price, context));
+    StoreProvider.of<AppState>(context).dispatch(IncreasePromotionLimit(1));
+    this.totalPromoDiscount -= (Utils.calculatePromoDiscount(entry.price, context, entry.id_business));
   }
 
   bool isOrderAutoConfirmable() {

@@ -15,6 +15,18 @@ class SetPromotion {
 
   PromotionState get promotionState => _promotionState;
 }
+class DecreasePromotionLimit {
+  int _amountOfItems;
+  DecreasePromotionLimit(this._amountOfItems);
+  int get amountOfItems => _amountOfItems;
+}
+
+class IncreasePromotionLimit {
+  int _amountOfItems;
+  IncreasePromotionLimit(this._amountOfItems);
+  int get amountOfItems => _amountOfItems;
+}
+
 
 class SetPromotionToEmpty {
   SetPromotionToEmpty();
@@ -44,6 +56,14 @@ PromotionState promotionReducer(PromotionState state, action) {
     promotionState = action.promotionState.copyWith();
     return promotionState;
   }
-
+  if (action is DecreasePromotionLimit) {
+    promotionState.limit -= action.amountOfItems;
+    return promotionState;
+  }
+  if (action is IncreasePromotionLimit) {
+    promotionState.limit += action.amountOfItems;
+    return promotionState;
+  }
   return state;
 }
+

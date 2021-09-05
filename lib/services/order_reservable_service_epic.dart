@@ -812,6 +812,10 @@ class CreateOrderReservableOnSiteAndPayService implements EpicClass<AppState> {
           /// there are really low chances that the rest of the id is also colliding.
           String timeBasedId = Uuid().v1();
           orderReservableState.orderId = timeBasedId;
+          debugPrint("order_reservable_service_epic RULE TEST" + store.state.user.uid + " " + orderReservableState.user.id.toString() + " " +  orderReservableState.userId + " " + orderReservableState.progress);
+          orderReservableState.user.id = store.state.user.uid;
+          orderReservableState.userId = store.state.user.uid;
+
           var addedOrder = await FirebaseFirestore.instance.collection("order").doc(timeBasedId).set(orderReservableState.toJson());
           /// add the payment method to the order sub collection on firebase
           String bookingId = '';

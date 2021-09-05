@@ -604,6 +604,7 @@
   "discoverStart": "Discover the",
   "yourDetails": "Le tue informazioni",
   "phoneNumber": "Numero di telefono",
-  "ifYouHaveABooking": "If you have a booking code, click here",
+  "ifYouHaveABooking": "Se hai un codice prenotazione, clicca qui",
+  "checkAvailability": "Controlla disponibilità",
   "discoverEnd": "services around you"
 }

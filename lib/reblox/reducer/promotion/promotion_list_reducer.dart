@@ -31,6 +31,7 @@ PromotionListState promotionListReducer(PromotionListState state, action) {
     promotionListState = PromotionListState().toEmpty();
     return promotionListState;
   }
+
   if (action is SetPromotionList) {
     promotionListState = PromotionListState(promotionListState: action.promotionListState).copyWith();
     return promotionListState;

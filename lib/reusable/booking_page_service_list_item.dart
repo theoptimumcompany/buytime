@@ -127,8 +127,10 @@ class _BookingListServiceListItemState extends State<BookingListServiceListItem>
 
                           Flexible(
                             child: Container(
+                              width: SizeConfig.safeBlockHorizontal * 55,
                               margin: EdgeInsets.only(bottom: 5),
                               child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
                                   ///ECO label
                                   widget.serviceState.tag.contains('ECO')
@@ -138,7 +140,7 @@ class _BookingListServiceListItemState extends State<BookingListServiceListItem>
                                   )
                                       : Container(),
                                   ///Promo Discount label
-                                  Utils.checkPromoDiscount('general_1', context).promotionId != 'empty'
+                                  Utils.checkPromoDiscount('general_1', context, widget.serviceState.businessId).promotionId != 'empty'
                                       ? Container(
                                     margin: EdgeInsets.only(left: 5),
                                         child: FittedBox(
