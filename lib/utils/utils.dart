@@ -65,13 +65,18 @@ class Utils {
 
   static double applyPromotion(context, double fullPrice, double promoPrice, int addRemove) {
     PromotionState promotionState = StoreProvider.of<AppState>(context).state.promotionState;
-    debugPrint('PROMO ' + promotionState.promotionId);
+    debugPrint('PROMO ' + promotionState.promotionId + ' - TIME USED: ${promotionState.timesUsed}');
     if (addRemove == 1) {
       debugPrint('PROMO IncreasePromotionCounter');
-      StoreProvider.of<AppState>(context).dispatch(IncreasePromotionCounter(1));
+      //StoreProvider.of<AppState>(context).dispatch(IncreasePromotionCounter(1));
+      StoreProvider.of<AppState>(context).state.promotionState.timesUsed += 1;
     } else if (addRemove == 2) {
       debugPrint('PROMO DecreasePromotionCounter');
-      StoreProvider.of<AppState>(context).dispatch(DecreasePromotionCounter(1));
+      //StoreProvider.of<AppState>(context).dispatch(DecreasePromotionCounter(1));
+      StoreProvider.of<AppState>(context).state.promotionState.timesUsed -= 1;
+      if (StoreProvider.of<AppState>(context).state.promotionState.timesUsed < 0) {
+        StoreProvider.of<AppState>(context).state.promotionState.timesUsed = 0;
+      }
     }
     switch (promotionState.discountType) {
       case 'fixedAmount':

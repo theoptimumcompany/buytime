@@ -296,6 +296,7 @@ class OrderState {
       }
       this.total += itemToAdd.price;
       this.totalPromoDiscount += Utils.calculatePromoDiscount(itemToAdd.price, context, itemToAdd.businessId, 1);
+    //StoreProvider.of<AppState>(context).dispatch(IncreasePromotionCounter(1));
       this.total -= Utils.calculatePromoDiscount(itemToAdd.price, context, itemToAdd.businessId, 0);
   }
 
@@ -333,6 +334,7 @@ class OrderState {
     ));
     this.total += price;
     this.totalPromoDiscount += Utils.calculatePromoDiscount(price, context, itemToAdd.businessId, 1);
+    //StoreProvider.of<AppState>(context).dispatch(IncreasePromotionCounter(1));
   }
 
   void removeItem(OrderEntry entry, BuildContext context) {

@@ -22,7 +22,9 @@ class PromotionListRequestService implements EpicClass<AppState> {
 
       for(int i = 0; i <  promotionListQuery.docs.length; i++){
         PromotionState promotionState = PromotionState.fromJson(promotionListQuery.docs[i].data());
-
+        debugPrint('PROMOTION STATE TIMESUSED BEFORE: ${promotionState.timesUsed}');
+        promotionState.timesUsed = 0;
+        debugPrint('PROMOTION STATE TIMESUSED AFTER: ${promotionState.timesUsed}');
         if (store.state.user.uid != null && store.state.user.uid.isNotEmpty) {
           var promotionCounterCollection= await FirebaseFirestore.instance.collection('user').doc(store.state.user.uid).collection('promotionUsage').limit(1).get();
           if (promotionCounterCollection.docs.length > 0) {
@@ -30,7 +32,8 @@ class PromotionListRequestService implements EpicClass<AppState> {
             if (promotionCounterRef.exists) {
               var promotionCounterData = promotionCounterRef.data();
               if (promotionCounterData['CxrTzUICSR30XvCBJDpQ'] != null) {
-                promotionState.limit -= promotionCounterData['CxrTzUICSR30XvCBJDpQ'];
+                //promotionState.limit -= promotionCounterData['CxrTzUICSR30XvCBJDpQ'];
+                promotionState.timesUsed += promotionCounterData['CxrTzUICSR30XvCBJDpQ'];
               }
             }
           }

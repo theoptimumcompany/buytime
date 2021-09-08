@@ -6,6 +6,7 @@ import 'package:Buytime/reblox/model/snippet/generic.dart';
 import 'package:Buytime/reblox/model/order/order_entry.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
+import 'package:Buytime/reblox/reducer/promotion/promotion_reducer.dart';
 import 'package:Buytime/utils/globals.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
@@ -138,6 +139,7 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
       double serviceTotal =  snapshot.total;
       serviceTotal = serviceTotal + snapshot.itemList[index].price;
       snapshot.totalPromoDiscount += Utils.calculatePromoDiscount(snapshot.itemList[index].price, context, snapshot.itemList[index].id_business, 1);
+      //StoreProvider.of<AppState>(context).dispatch(IncreasePromotionCounter(1));
       snapshot.total = serviceTotal;
       snapshot.total -= Utils.calculatePromoDiscount(snapshot.itemList[index].price, context, snapshot.itemList[index].id_business, 0);
       debugPrint('UI_U_Cart => AFTER| ${snapshot.itemList[index].name} ITEM COUNT: ${snapshot.itemList[index].number}');

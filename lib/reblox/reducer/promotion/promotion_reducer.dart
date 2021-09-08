@@ -74,7 +74,7 @@ PromotionState promotionReducer(PromotionState state, action) {
       promotionState.timesUsed = promotionState.limit;
     }
     print("promotion_reducer: increase " + promotionState.timesUsed.toString());
-    return promotionState.copyWith();
+    return promotionState;
   }
   return state;
 }

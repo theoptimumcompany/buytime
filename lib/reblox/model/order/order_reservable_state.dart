@@ -285,6 +285,7 @@ class OrderReservableState {
     ));
 
     this.totalPromoDiscount += Utils.calculatePromoDiscount(price, context, itemToAdd.businessId, 1);
+    //StoreProvider.of<AppState>(context).dispatch(IncreasePromotionCounter(1));
     this.total += price;
     this.total -= (totalPromoDiscount / itemList.length);
   }
