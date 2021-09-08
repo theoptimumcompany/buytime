@@ -830,7 +830,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
               //recommendedList.addAll(snapshot.serviceList.serviceListState);
               if (snapshot.categoryList.categoryListState.isNotEmpty && categoryList.isEmpty) {
                 //categoryList.shuffle();
-                categoryList.sort((a,b) => b.name.compareTo(a.name));
+                //categoryList.sort((a,b) => b.name.compareTo(a.name));
               }
               first = true;
             }

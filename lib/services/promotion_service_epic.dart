@@ -16,27 +16,31 @@ class PromotionListRequestService implements EpicClass<AppState> {
       promotionStateList.clear();
       var promotionListQuery = await FirebaseFirestore.instance.collection('promotion').get();
 
-      promotionListQuery.docs.forEach((element) async {
-        PromotionState promotionState = PromotionState.fromJson(element.data());
+      /*promotionListQuery.docs.forEach((element) async {
 
-        // if (store.state.user.uid != null && store.state.user.uid.isNotEmpty) {
-        //   var promotionCounterCollection= await FirebaseFirestore.instance.collection('user').doc(store.state.user.uid).collection('promotionUsage').limit(1).get();
-        //   if (promotionCounterCollection.docs.length > 0) {
-        //     var promotionCounterRef= await FirebaseFirestore.instance.collection('user').doc(store.state.user.uid).collection('promotionUsage').doc('general_1').get();
-        //     if (promotionCounterRef.exists) {
-        //       var promotionCounterData = promotionCounterRef.data();
-        //       if (promotionCounterData['CxrTzUICSR30XvCBJDpQ'] != null) {
-        //         // promotionState.limit -= promotionCounterData['CxrTzUICSR30XvCBJDpQ'];
-        //       }
-        //     }
-        //   }
-        // }
+      });*/
+
+      for(int i = 0; i <  promotionListQuery.docs.length; i++){
+        PromotionState promotionState = PromotionState.fromJson(promotionListQuery.docs[i].data());
+
+        if (store.state.user.uid != null && store.state.user.uid.isNotEmpty) {
+          var promotionCounterCollection= await FirebaseFirestore.instance.collection('user').doc(store.state.user.uid).collection('promotionUsage').limit(1).get();
+          if (promotionCounterCollection.docs.length > 0) {
+            var promotionCounterRef= await FirebaseFirestore.instance.collection('user').doc(store.state.user.uid).collection('promotionUsage').doc('general_1').get();
+            if (promotionCounterRef.exists) {
+              var promotionCounterData = promotionCounterRef.data();
+              if (promotionCounterData['CxrTzUICSR30XvCBJDpQ'] != null) {
+                promotionState.limit -= promotionCounterData['CxrTzUICSR30XvCBJDpQ'];
+              }
+            }
+          }
+        }
 
 
         if (promotionState.limit > 0) {
           promotionStateList.add(promotionState);
         }
-      });
+      }
 
       if (promotionStateList.isEmpty) promotionStateList.add(PromotionState());
     }).expand((element) => [
