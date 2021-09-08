@@ -415,30 +415,34 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
           debugPrint('RUI_U_service_explorer :  USER NOT LOGGED in onLink');
         }
       }else if (deepLink.queryParameters.containsKey('discoverLeSireneName') && deepLink.queryParameters.containsKey('discoverLeSireneId') && discoverLeSireneNameRead != 'true' && discoverLeSireneIdRead != 'true') {
-        debugPrint('ON SITE PAYMENT ON LINK');
-        String discoverLeSireneName  = deepLink.queryParameters['discoverLeSireneName'];
-        String discoverLeSireneId = deepLink.queryParameters['discoverLeSireneId'];
-        debugPrint('RUI_U_service_explorer :  discoverLeSireneName  onLink: $discoverLeSireneName  - orderId onLink: $discoverLeSireneId');
+        debugPrint('ON SEARCH ON LINK');
+        setState(() {
+          discoverLeSireneName  = deepLink.queryParameters['discoverLeSireneName'];
+          discoverLeSireneId = deepLink.queryParameters['discoverLeSireneId'];
+        });
+        debugPrint('RUI_U_service_explorer :  discoverLeSireneName  onLink: $discoverLeSireneName  - discoverLeSireneId onLink: $discoverLeSireneId');
         await storage.write(key: 'discoverLeSireneName ', value: discoverLeSireneName );
         await storage.write(key: 'discoverLeSireneId', value: discoverLeSireneId);
         await storage.write(key: 'discoverLeSireneNameRead', value: 'true');
         await storage.write(key: 'discoverLeSireneIdRead', value: 'true');
-        setState(() {
-          onBookingCode = true;
-        });
+        /*setState(() {
+            onBookingCode = true;
+          });*/
         //StoreProvider.of<AppState>(context).dispatch(BookingRequestResponse(BookingState(booking_code: id)));
         //Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => InviteGuestForm(id: id, fromLanding: false,)), (Route<dynamic> route) => false);
         if (FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty) {
           debugPrint('RUI_U_service_explorer :  USER Is LOGGED in onLink');
           //Navigator.of(context).push(MaterialPageRoute(builder: (context) => InviteGuestForm(id: id, fromLanding: true,)));
-          if (StoreProvider.of<AppState>(context).state.user.getRole() != Role.user) {
-            //StoreProvider.of<AppState>(context).dispatch(OrderRequest(orderId));
-            //await Future.delayed(Duration(milliseconds: 3000));
-            // StoreProvider.of<AppState>(context).state.order.progress = 'paid';
-            //StoreProvider.of<AppState>(context).dispatch(UpdateOrderByManager(StoreProvider.of<AppState>(context).state.order, OrderStatus.paid));
-          } else {
-            debugPrint('USER NO PERMISSION in LINK');
-          }
+          debugPrint('SHOULD SEARCH : ${discoverLeSireneName}');
+          /*if(Provider.of<Explorer>(context, listen: false).serviceList.isNotEmpty){
+              debugPrint('SEARCH - SERVICE LENGTH: ${Provider.of<Explorer>(context, listen: false).serviceList.length}');
+
+              FocusScope.of(context).unfocus();
+              searchedList.clear();
+              searchCategory(StoreProvider.of<AppState>(context).state.categoryList.categoryListState);
+              searchPopular(Provider.of<Explorer>(context, listen: false).serviceList);
+              searchRecommended(Provider.of<Explorer>(context, listen: false).serviceList);
+            }*/
 
           await storage.write(key: 'discoverLeSireneNameRead', value: 'false');
           await storage.write(key: 'discoverLeSireneIdRead', value: 'false');
