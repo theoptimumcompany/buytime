@@ -284,7 +284,7 @@ class OrderReservableState {
       vat: itemToAdd.vat != null && itemToAdd.vat != 0 ? itemToAdd.vat : 22
     ));
 
-    this.totalPromoDiscount += Utils.calculatePromoDiscount(price, context, itemToAdd.businessId);
+    this.totalPromoDiscount += Utils.calculatePromoDiscount(price, context, itemToAdd.businessId, 1);
     this.total += price;
     this.total -= (totalPromoDiscount / itemList.length);
   }
@@ -303,8 +303,8 @@ class OrderReservableState {
   // }
 
   void removeReserveItem(OrderEntry entry, BuildContext context) {
-    StoreProvider.of<AppState>(context).dispatch(IncreasePromotionLimit(1));
-    this.totalPromoDiscount -= (Utils.calculatePromoDiscount(entry.price, context, entry.id_business));
+    StoreProvider.of<AppState>(context).dispatch(DecreasePromotionCounter(1));
+    this.totalPromoDiscount -= (Utils.calculatePromoDiscount(entry.price, context, entry.id_business, 2));
     this.total -= entry.price;
     if(this.itemList.length!= 0)
       this.total += (totalPromoDiscount / this.itemList.length);

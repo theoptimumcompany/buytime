@@ -46,6 +46,7 @@ OrderState _$OrderStateFromJson(Map<String, dynamic> json) {
     cancellationReason: json['cancellationReason'] as String,
     carbonCompensation: json['carbonCompensation'] as bool,
     totalPromoDiscount: (json['totalPromoDiscount'] as num)?.toDouble(),
+    promotionId: json['promotionId'] as String,
   );
 }
 
@@ -77,4 +78,5 @@ Map<String, dynamic> _$OrderStateToJson(OrderState instance) =>
       'cancellationReason': instance.cancellationReason,
       'carbonCompensation': instance.carbonCompensation,
       'totalPromoDiscount': instance.totalPromoDiscount,
+      'promotionId': instance.promotionId,
     };

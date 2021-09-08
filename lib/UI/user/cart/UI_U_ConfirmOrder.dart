@@ -307,21 +307,10 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                           } else if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.onSite)) {
                                             confirmationOnSite(context, snapshot);
                                           }
-                                          /// TODO check limits of promotion
-                                          if (snapshot.promotionState.limit > 0) {
-                                            int amountOfItems = 0;
-                                            if (widget.reserve != null && widget.reserve) {
-                                              amountOfItems = snapshot.orderReservable.itemList.length;
-                                            } else {
-                                              amountOfItems = snapshot.order.itemList.length;
-                                            }
-                                            if ((snapshot.promotionState.limit - amountOfItems) <= 0) {
-                                              /// delete all promotions
+                                          if (snapshot.promotionState.timesUsed >= snapshot.promotionState.limit) {
+                                              /// delete all promotions locally
                                               StoreProvider.of<AppState>(context).dispatch(SetPromotionListToEmpty());
                                               StoreProvider.of<AppState>(context).dispatch(SetPromotionToEmpty());
-                                            } else {
-                                              StoreProvider.of<AppState>(context).dispatch(DecreasePromotionLimit(amountOfItems));
-                                            }
                                           }
                                         },
                                       ),

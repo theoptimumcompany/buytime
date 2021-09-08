@@ -295,8 +295,8 @@ class OrderState {
         ));
       }
       this.total += itemToAdd.price;
-      this.totalPromoDiscount += Utils.calculatePromoDiscount(itemToAdd.price, context, itemToAdd.businessId);
-      this.total -= Utils.calculatePromoDiscount(itemToAdd.price, context, itemToAdd.businessId);
+      this.totalPromoDiscount += Utils.calculatePromoDiscount(itemToAdd.price, context, itemToAdd.businessId, 1);
+      this.total -= Utils.calculatePromoDiscount(itemToAdd.price, context, itemToAdd.businessId, 0);
   }
 
   addingFromAnotherBusiness(String businessId) {
@@ -332,7 +332,7 @@ class OrderState {
       switchAutoConfirm: itemToAdd.switchAutoConfirm
     ));
     this.total += price;
-    this.totalPromoDiscount += Utils.calculatePromoDiscount(price, context, itemToAdd.businessId);
+    this.totalPromoDiscount += Utils.calculatePromoDiscount(price, context, itemToAdd.businessId, 1);
   }
 
   void removeItem(OrderEntry entry, BuildContext context) {
@@ -341,7 +341,7 @@ class OrderState {
       //debugPrint('order_state => DATES: ${element.date} - ${entry.date}');
       if (!deleted && element.id == entry.id) {
         this.total -= (entry.price * element.number);
-        this.totalPromoDiscount -= (Utils.calculatePromoDiscount(entry.price, context, entry.id_business) * element.number);
+        this.totalPromoDiscount -= (Utils.calculatePromoDiscount(entry.price, context, entry.id_business, 2) * element.number);
         element.number = 0;
         deleted = true;
       }
@@ -350,8 +350,7 @@ class OrderState {
 
   void removeReserveItem(OrderEntry entry, BuildContext context) {
     this.total -= (entry.price);
-    StoreProvider.of<AppState>(context).dispatch(IncreasePromotionLimit(1));
-    this.totalPromoDiscount -= (Utils.calculatePromoDiscount(entry.price, context, entry.id_business));
+    this.totalPromoDiscount -= (Utils.calculatePromoDiscount(entry.price, context, entry.id_business, 2));
   }
 
   bool isOrderAutoConfirmable() {

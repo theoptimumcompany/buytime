@@ -39,32 +39,40 @@ class Utils {
   static String imageSizing1000 = "_1000x1000";
 
   ///Calculate Promo Discount
-  static double calculatePromoDiscount(double fullPrice, context, String businessId) {
+  static double calculatePromoDiscount(double fullPrice, context, String businessId, int addRemove) {
     double promoPrice = 0.0;
-    debugPrint('START CALCULATE PROMO');
-    if(StoreProvider.of<AppState>(context).state.promotionState.limit > 0) {
+    debugPrint(addRemove.toString() + ' START CALCULATE PROMO timesUsed: ' + StoreProvider.of<AppState>(context).state.promotionState.timesUsed.toString() + " limit: " + StoreProvider.of<AppState>(context).state.promotionState.limit.toString());
+    if(StoreProvider.of<AppState>(context).state.promotionState.timesUsed < StoreProvider.of<AppState>(context).state.promotionState.limit) {
       if(
       StoreProvider.of<AppState>(context).state.promotionState != null &&
           StoreProvider.of<AppState>(context).state.promotionState.businessIdList != null &&
           StoreProvider.of<AppState>(context).state.promotionState.businessIdList.isNotEmpty &&
           StoreProvider.of<AppState>(context).state.promotionState.businessIdList.contains(businessId)) {
-        promoPrice = applyPromotion(context, fullPrice, promoPrice);
+        /// la promo é applicata a specifici business
+        promoPrice = applyPromotion(context, fullPrice, promoPrice, addRemove);
       } else if (
       StoreProvider.of<AppState>(context).state.promotionState != null &&
           (StoreProvider.of<AppState>(context).state.promotionState.businessIdList == null ||
               StoreProvider.of<AppState>(context).state.promotionState.businessIdList.isEmpty)
       ) {
-        promoPrice = applyPromotion(context, fullPrice, promoPrice);
+        /// la promo é applicata a tutti i servizi
+        promoPrice = applyPromotion(context, fullPrice, promoPrice, addRemove);
       }
     }
     debugPrint('PROMO ' + promoPrice.toString());
     return promoPrice;
   }
 
-  static double applyPromotion(context, double fullPrice, double promoPrice) {
+  static double applyPromotion(context, double fullPrice, double promoPrice, int addRemove) {
     PromotionState promotionState = StoreProvider.of<AppState>(context).state.promotionState;
     debugPrint('PROMO ' + promotionState.promotionId);
-    StoreProvider.of<AppState>(context).dispatch(DecreasePromotionLimit(1));
+    if (addRemove == 1) {
+      debugPrint('PROMO IncreasePromotionCounter');
+      StoreProvider.of<AppState>(context).dispatch(IncreasePromotionCounter(1));
+    } else if (addRemove == 2) {
+      debugPrint('PROMO DecreasePromotionCounter');
+      StoreProvider.of<AppState>(context).dispatch(DecreasePromotionCounter(1));
+    }
     switch (promotionState.discountType) {
       case 'fixedAmount':
         if ((fullPrice - (promotionState.discount).toDouble()) >= 3.0) {
@@ -86,7 +94,7 @@ class Utils {
     return promoPrice;
   }
 
-  ///Check Promo Discount
+  ///Check Promo Discount (gestisce principalmente le label rosse)
   static PromotionState checkPromoDiscount(String promoName, context, String businessId) {
     debugPrint('START CHECK PROMO');
 
