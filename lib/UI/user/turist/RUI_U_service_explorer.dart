@@ -703,6 +703,79 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
     });
   }
 
+
+  void searchByQR(List<CategoryState> cList, List<ServiceState> list){
+
+    List<CategoryState> categoryState = cList;
+    categoryList.clear();
+    if (_searchController.text.isNotEmpty) {
+      categoryState.forEach((element) {
+        if (element.name.toLowerCase().contains(_searchController.text.toLowerCase())) {
+          StoreProvider.of<AppState>(context).state.serviceList.serviceListState.forEach((service) {
+            if (service.categoryId.contains(element.id)) {
+              createCategoryList(element);
+            }
+          });
+        }
+        if (element.customTag != null && element.customTag.isNotEmpty && element.customTag.toLowerCase().contains(_searchController.text.toLowerCase())) {
+          StoreProvider.of<AppState>(context).state.serviceList.serviceListState.forEach((service) {
+            if (service.categoryId.contains(element.id)) {
+              createCategoryList(element);
+            }
+          });
+        }
+
+        businessList.forEach((business) {
+          if (business.name.toLowerCase().contains(_searchController.text.toLowerCase())) {
+            if (business.id_firestore == element.businessId && element.businessId == discoverLeSireneId) {
+              StoreProvider.of<AppState>(context).state.serviceList.serviceListState.forEach((service) {
+                if (service.categoryId.contains(element.id)) {
+                  createCategoryList(element);
+                }
+
+              });
+            }
+          }
+        });
+      });
+    }
+    //popularList.shuffle();
+    searchedList.add(categoryList);
+
+    setState(() {
+      List<ServiceState> serviceState = list;
+      List<ServiceState> tmp = [];
+      //popularList.clear();
+      if (_searchController.text.isNotEmpty) {
+        serviceState.forEach((element) {
+          if (element.name.toLowerCase().contains(_searchController.text.toLowerCase())) {
+            tmp.add(element);
+          }
+          if (element.tag != null && element.tag.isNotEmpty) {
+            element.tag.forEach((tag) {
+              if (tag.toLowerCase().contains(_searchController.text.toLowerCase())) {
+                if (!tmp.contains(element)) {
+                  tmp.add(element);
+                }
+              }
+            });
+          }
+          businessList.forEach((business) {
+            if (business.name.toLowerCase().contains(_searchController.text.toLowerCase())) {
+              if (business.id_firestore == element.businessId && element.businessId == discoverLeSireneId) {
+                if (!tmp.contains(element)) {
+                  tmp.add(element);
+                }
+              }
+            }
+          });
+        });
+      }
+      tmp.shuffle();
+      searchedList.add(tmp);
+    });
+  }
+
   bool startRequest = false;
   bool noActivity = false;
 
@@ -1243,6 +1316,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                             onPressed: () {
                                               setState(() {
                                                 _searchController.clear();
+                                                discoverLeSireneName = '';
                                                 first = false;
                                               });
                                             },
@@ -1757,6 +1831,18 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                             //popularList.shuffle();
                                             //recommendedList.shuffle();
 
+                                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                                              if(Provider.of<Explorer>(context, listen: false).serviceList.isNotEmpty && discoverLeSireneName.isNotEmpty){
+                                                _searchController.text = discoverLeSireneName;
+                                                FocusScope.of(context).unfocus();
+                                                searchedList.clear();
+                                                ///TODO make a new search system for the dynamic link
+                                                searchByQR(snapshot.categoryList.categoryListState, Provider.of<Explorer>(context, listen: false).serviceList);
+                                                /*searchCategory(snapshot.categoryList.categoryListState);
+                                                searchPopular(Provider.of<Explorer>(context, listen: false).serviceList);
+                                                searchRecommended(Provider.of<Explorer>(context, listen: false).serviceList);*/
+                                              }
+                                            });
 
                                             List<Widget> childrens = [];
 
