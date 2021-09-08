@@ -142,29 +142,37 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
   }
 
   void initDynamicLinks() async {
-    print("Dentro initial dynamic");
+    print("RUI_U_service_explorer : initDynamicLinks start");
     Uri deepLink;
 
     FirebaseDynamicLinks.instance.onLink(onSuccess: (PendingDynamicLinkData dynamicLink) async {
       deepLink = null;
       deepLink = dynamicLink?.link;
-      debugPrint('UI_U_landing: DEEPLINK onLink: $deepLink');
+      debugPrint('RUI_U_service_explorer :  DEEPLINK onLink: $deepLink');
       if (deepLink != null) {
+        ///Dynamic Link Booking Code
         String bookingCodeRead = await storage.containsKey(key: 'bookingCodeRead') ? await storage.read(key: 'bookingCodeRead') ?? '' : '';
+
+        ///Dynamic Link Invite
         String categoryInviteRead = await storage.containsKey(key: 'categoryInviteRead') ? await storage.read(key: 'categoryInviteRead') ?? '' : '';
+
+        ///Dynamic Link Order
         String orderIdRead = await storage.containsKey(key: 'orderIdRead') ? await storage.read(key: 'orderIdRead') ?? '' : '';
+
+        ///Dynamic Link Loco Payment
         String onSiteUserIdRead = await storage.containsKey(key: 'onSiteUserIdRead') ? await storage.read(key: 'onSiteUserIdRead') ?? '' : '';
         String onSiteOrderIdRead = await storage.containsKey(key: 'onSiteOrderIdRead') ? await storage.read(key: 'onSiteOrderIdRead') ?? '' : '';
         String discoverLeSireneNameRead = await storage.containsKey(key: 'discoverLeSireneNameRead') ? await storage.read(key: 'discoverLeSireneNameRead') ?? '' : '';
         String discoverLeSireneIdRead = await storage.containsKey(key: 'discoverLeSireneIdRead') ? await storage.read(key: 'discoverLeSireneIdRead') ?? '' : '';
-        debugPrint('UI_U_landing: after reading secure storage');
-        debugPrint('UI_U_landing: bookingCodeRead: ${bookingCodeRead}');
-        debugPrint('UI_U_landing: discoverLeSireneNameRead: ${discoverLeSireneNameRead}');
-        debugPrint('UI_U_landing: discoverLeSireneIdRead: ${discoverLeSireneIdRead}');
+
+        // debugPrint('RUI_U_service_explorer :  after reading secure storage');
+        // debugPrint('RUI_U_service_explorer :  bookingCodeRead: ${bookingCodeRead}');
+        debugPrint('RUI_U_service_explorer :  discoverLeSireneNameRead: ${discoverLeSireneNameRead}');
+        debugPrint('RUI_U_service_explorer :  discoverLeSireneIdRead: ${discoverLeSireneIdRead}');
 
         if (deepLink.queryParameters.containsKey('booking') && bookingCodeRead != 'true') {
           String id = deepLink.queryParameters['booking'];
-          debugPrint('UI_U_landing: booking onLink: $id');
+          debugPrint('RUI_U_service_explorer :  booking onLink: $id');
           await storage.write(key: 'bookingCode', value: id);
           await storage.write(key: 'bookingCodeRead', value: 'true');
           setState(() {
@@ -173,14 +181,14 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
           //StoreProvider.of<AppState>(context).dispatch(BookingRequestResponse(BookingState(booking_code: id)));
           //Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => InviteGuestForm(id: id, fromLanding: false,)), (Route<dynamic> route) => false);
           if (FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty) {
-            debugPrint('UI_U_landing: USER Is LOGGED in onLink');
+            debugPrint('RUI_U_service_explorer :  USER Is LOGGED in onLink');
             Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => InviteGuestForm(
                   id: id,
                   fromLanding: true,
                 )));
           } else
-            debugPrint('UI_U_landing: USER NOT LOGGED in onLink');
+            debugPrint('RUI_U_service_explorer :  USER NOT LOGGED in onLink');
         }
         else if (deepLink.queryParameters.containsKey('categoryInvite') && categoryInviteRead != 'true') {
           String categoryInvite = deepLink.queryParameters['categoryInvite'];
@@ -190,17 +198,17 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
 
           //StoreProvider.of<AppState>(context).dispatch(BusinessRequestAndNavigate(businessId));
           if (FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty) {
-            debugPrint('UI_U_landing: USER Is LOGGED in onLink');
+            debugPrint('RUI_U_service_explorer :  USER Is LOGGED in onLink');
             StoreProvider.of<AppState>(context).dispatch(UserBookingListRequest(StoreProvider.of<AppState>(context).state.user.email, false));
             Navigator.push(context, MaterialPageRoute(builder: (context) => RBusinessList()));
           } else
-            debugPrint('UI_U_landing: USER NOT LOGGED in onLink');
+            debugPrint('RUI_U_service_explorer :  USER NOT LOGGED in onLink');
         }
         else if (deepLink.queryParameters.containsKey('userId') && deepLink.queryParameters.containsKey('orderId') && onSiteUserIdRead != 'true' && onSiteOrderIdRead != 'true') {
           debugPrint('ON SITE PAYMENT ON LINK');
           String orderId = deepLink.queryParameters['orderId'];
           String userId = deepLink.queryParameters['userId'];
-          debugPrint('UI_U_landing: userId onLink: $userId - orderId onLink: $orderId');
+          debugPrint('RUI_U_service_explorer :  userId onLink: $userId - orderId onLink: $orderId');
           await storage.write(key: 'onSiteUserId', value: userId);
           await storage.write(key: 'onSiteOrderId', value: orderId);
           await storage.write(key: 'onSiteUserIdRead', value: 'true');
@@ -211,7 +219,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
           //StoreProvider.of<AppState>(context).dispatch(BookingRequestResponse(BookingState(booking_code: id)));
           //Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => InviteGuestForm(id: id, fromLanding: false,)), (Route<dynamic> route) => false);
           if (FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty) {
-            debugPrint('UI_U_landing: USER Is LOGGED in onLink');
+            debugPrint('RUI_U_service_explorer :  USER Is LOGGED in onLink');
             //Navigator.of(context).push(MaterialPageRoute(builder: (context) => InviteGuestForm(id: id, fromLanding: true,)));
             if (StoreProvider.of<AppState>(context).state.user.getRole() != Role.user) {
               StoreProvider.of<AppState>(context).dispatch(OrderRequest(orderId));
@@ -225,35 +233,35 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
             await storage.write(key: 'onSiteUserIdRead', value: 'false');
             await storage.write(key: 'onSiteOrderIdRead', value: 'false');
           } else
-            debugPrint('UI_U_landing: USER NOT LOGGED in onLink');
+            debugPrint('RUI_U_service_explorer :  USER NOT LOGGED in onLink');
         }
         else if (deepLink.queryParameters.containsKey('orderId') && orderIdRead != 'true') {
           String orderId = deepLink.queryParameters['orderId'];
-          debugPrint('UI_U_landing: orderId from dynamic link: $orderId');
+          debugPrint('RUI_U_service_explorer :  orderId from dynamic link: $orderId');
           await storage.write(key: 'orderId', value: orderId);
           await storage.write(key: 'orderIdRead', value: 'true');
           //StoreProvider.of<AppState>(context).dispatch(BusinessRequestAndNavigate(businessId));
           if (FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty) {
-            debugPrint('UI_U_landing: USER Is LOGGED in onLink');
+            debugPrint('RUI_U_service_explorer :  USER Is LOGGED in onLink');
             StoreProvider.of<AppState>(context).dispatch(SetOrderDetailAndNavigatePopOrderId(orderId));
             Navigator.push(context, MaterialPageRoute(builder: (context) => RBusinessList()));
           } else
-            debugPrint('UI_U_landing: USER NOT LOGGED in onLink');
+            debugPrint('RUI_U_service_explorer :  USER NOT LOGGED in onLink');
         }
         else if (deepLink.queryParameters.containsKey('selfBookingCode') && deepLink.queryParameters['selfBookingCode'].length > 5) {
           String tmSselfBookingCode = deepLink.queryParameters['selfBookingCode'];
-          debugPrint('UI_U_landing: selfBookingCode from dynamic link: $tmSselfBookingCode');
+          debugPrint('RUI_U_service_explorer :  selfBookingCode from dynamic link: $tmSselfBookingCode');
           selfBookingCode = tmSselfBookingCode;
           await storage.write(key: 'selfBookingCode', value: tmSselfBookingCode);
 
           if (FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty) {
-            debugPrint('UI_U_landing: USER Is LOGGED in onLink');
+            debugPrint('RUI_U_service_explorer :  USER Is LOGGED in onLink');
             StoreProvider.of<AppState>(context).dispatch(BusinessRequest(tmSselfBookingCode));
             await storage.write(key: 'selfBookingCode', value: '');
             await Future.delayed(Duration(milliseconds: 1000));
             Navigator.push(context, MaterialPageRoute(builder: (context) => BookingSelfCreation()));
           } else {
-            debugPrint('UI_U_landing: USER NOT LOGGED in onLink');
+            debugPrint('RUI_U_service_explorer :  USER NOT LOGGED in onLink');
           }
         }
         else if (deepLink.queryParameters.containsKey('discoverLeSireneName') && deepLink.queryParameters.containsKey('discoverLeSireneId') && discoverLeSireneNameRead != 'true' && discoverLeSireneIdRead != 'true') {
@@ -262,7 +270,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
             discoverLeSireneName  = deepLink.queryParameters['discoverLeSireneName'];
             discoverLeSireneId = deepLink.queryParameters['discoverLeSireneId'];
           });
-          debugPrint('UI_U_landing: discoverLeSireneName  onLink: $discoverLeSireneName  - discoverLeSireneId onLink: $discoverLeSireneId');
+          debugPrint('RUI_U_service_explorer :  discoverLeSireneName  onLink: $discoverLeSireneName  - discoverLeSireneId onLink: $discoverLeSireneId');
           await storage.write(key: 'discoverLeSireneName ', value: discoverLeSireneName );
           await storage.write(key: 'discoverLeSireneId', value: discoverLeSireneId);
           await storage.write(key: 'discoverLeSireneNameRead', value: 'true');
@@ -273,7 +281,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
           //StoreProvider.of<AppState>(context).dispatch(BookingRequestResponse(BookingState(booking_code: id)));
           //Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => InviteGuestForm(id: id, fromLanding: false,)), (Route<dynamic> route) => false);
           if (FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty) {
-            debugPrint('UI_U_landing: USER Is LOGGED in onLink');
+            debugPrint('RUI_U_service_explorer :  USER Is LOGGED in onLink');
             //Navigator.of(context).push(MaterialPageRoute(builder: (context) => InviteGuestForm(id: id, fromLanding: true,)));
             debugPrint('SHOULD SEARCH : ${discoverLeSireneName}');
             /*if(Provider.of<Explorer>(context, listen: false).serviceList.isNotEmpty){
@@ -289,7 +297,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
             await storage.write(key: 'discoverLeSireneNameRead', value: 'false');
             await storage.write(key: 'discoverLeSireneIdRead', value: 'false');
           } else
-            debugPrint('UI_U_landing: USER NOT LOGGED in onLink');
+            debugPrint('RUI_U_service_explorer :  USER NOT LOGGED in onLink');
         }
       }
     }, onError: (OnLinkErrorException e) async {
@@ -303,7 +311,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
     final PendingDynamicLinkData data = await FirebaseDynamicLinks.instance.getInitialLink();
     deepLink = null;
     deepLink = data?.link;
-    debugPrint('UI_U_landing: DEEPLINK getInitialLink: $deepLink');
+    debugPrint('RUI_U_service_explorer :  DEEPLINK getInitialLink: $deepLink');
     if (deepLink != null) {
       String bookingCodeRead = await storage.read(key: 'bookingCodeRead') ?? '';
       String categoryInviteRead = await storage.read(key: 'categoryInviteRead') ?? '';
@@ -315,43 +323,43 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
 
       if (deepLink.queryParameters.containsKey('booking') && bookingCodeRead != 'true') {
         String id = deepLink.queryParameters['booking'];
-        debugPrint('UI_U_landing: booking getInitialLink: $id');
+        debugPrint('RUI_U_service_explorer :  booking getInitialLink: $id');
         await storage.write(key: 'bookingCode', value: id);
         await storage.write(key: 'bookingCodeRead', value: 'true');
         setState(() {
           onBookingCode = true;
         });
         if (FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty) {
-          debugPrint('UI_U_landing: USER IS LOGGED in getInitialLink');
+          debugPrint('RUI_U_service_explorer :  USER IS LOGGED in getInitialLink');
           Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => InviteGuestForm(id: id, fromLanding: false)), ModalRoute.withName('/landing'));
         } else
-          debugPrint('UI_U_landing: USER NOT LOGGED in getInitialLink');
+          debugPrint('RUI_U_service_explorer :  USER NOT LOGGED in getInitialLink');
       } else if (deepLink.queryParameters.containsKey('selfBookingCode') && deepLink.queryParameters['selfBookingCode'].length > 5) {
         String id = deepLink.queryParameters['selfBookingCode'];
-        debugPrint('UI_U_landing: selfBookingCode getInitialLink: $id');
+        debugPrint('RUI_U_service_explorer :  selfBookingCode getInitialLink: $id');
         await storage.write(key: 'selfBookingCode', value: id);
 
         if (FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty) {
-          debugPrint('UI_U_landing: USER IS LOGGED in getInitialLink');
+          debugPrint('RUI_U_service_explorer :  USER IS LOGGED in getInitialLink');
           StoreProvider.of<AppState>(context).dispatch(BusinessRequest(id));
           await Future.delayed(Duration(milliseconds: 1000));
           Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => BookingSelfCreation()), ModalRoute.withName('/bookingSelfCreation'));
         } else
-          debugPrint('UI_U_landing: USER NOT LOGGED in getInitialLink');
+          debugPrint('RUI_U_service_explorer :  USER NOT LOGGED in getInitialLink');
       } else if (deepLink.queryParameters.containsKey('categoryInvite') && categoryInviteRead != 'true') {
         String categoryInvite = deepLink.queryParameters['categoryInvite'];
-        debugPrint('UI_U_landing: categoryInvite: $categoryInvite');
+        debugPrint('RUI_U_service_explorer :  categoryInvite: $categoryInvite');
         await storage.write(key: 'categoryInvite', value: categoryInvite);
         await storage.write(key: 'categoryInviteRead', value: 'true');
         //Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => InviteGuestForm(id: id, fromLanding: false)), (Route<dynamic> route) => false);
         if (FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty) {
-          debugPrint('UI_U_landing: USER Is LOGGED in onLink');
+          debugPrint('RUI_U_service_explorer :  USER Is LOGGED in onLink');
           StoreProvider.of<AppState>(context).dispatch(UserBookingListRequest(StoreProvider.of<AppState>(context).state.user.email, false));
           Navigator.push(context, MaterialPageRoute(builder: (context) => RBusinessList()));
         } else if (deepLink.queryParameters.containsKey('userId') && deepLink.queryParameters.containsKey('orderId') && onSiteUserIdRead != 'true' && onSiteOrderIdRead != 'true') {
           String orderId = deepLink.queryParameters['orderId'];
           String userId = deepLink.queryParameters['userId'];
-          debugPrint('UI_U_landing: userId onLink: $userId - orderId onLink: $orderId');
+          debugPrint('RUI_U_service_explorer :  userId onLink: $userId - orderId onLink: $orderId');
           await storage.write(key: 'onSiteUserId', value: userId);
           await storage.write(key: 'onSiteOrderId', value: orderId);
           await storage.write(key: 'onSiteUserIdRead', value: 'true');
@@ -362,7 +370,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
           //StoreProvider.of<AppState>(context).dispatch(BookingRequestResponse(BookingState(booking_code: id)));
           //Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => InviteGuestForm(id: id, fromLanding: false,)), (Route<dynamic> route) => false);
           if (FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty) {
-            debugPrint('UI_U_landing: USER Is LOGGED in onLink');
+            debugPrint('RUI_U_service_explorer :  USER Is LOGGED in onLink');
             //Navigator.of(context).push(MaterialPageRoute(builder: (context) => InviteGuestForm(id: id, fromLanding: true,)));
             if (StoreProvider.of<AppState>(context).state.user.getRole() != Role.user) {
               StoreProvider.of<AppState>(context).dispatch(OrderRequest(orderId));
@@ -376,41 +384,41 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
             await storage.write(key: 'onSiteUserIdRead', value: 'false');
             await storage.write(key: 'onSiteOrderIdRead', value: 'false');
           } else
-            debugPrint('UI_U_landing: USER NOT LOGGED in onLink');
+            debugPrint('RUI_U_service_explorer :  USER NOT LOGGED in onLink');
         } else if (deepLink.queryParameters.containsKey('orderId') && orderIdRead != 'true') {
           String orderId = deepLink.queryParameters['orderId'];
-          debugPrint('UI_U_landing: orderId from dynamic link: $orderId');
+          debugPrint('RUI_U_service_explorer :  orderId from dynamic link: $orderId');
           await storage.write(key: 'orderId', value: orderId);
           await storage.write(key: 'orderIdRead', value: 'true');
           //StoreProvider.of<AppState>(context).dispatch(BusinessRequestAndNavigate(businessId));
           if (FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty) {
-            debugPrint('UI_U_landing: USER Is LOGGED in onLink');
+            debugPrint('RUI_U_service_explorer :  USER Is LOGGED in onLink');
             StoreProvider.of<AppState>(context).dispatch(SetOrderDetailAndNavigatePopOrderId(orderId));
             Navigator.push(context, MaterialPageRoute(builder: (context) => RBusinessList()));
           } else
-            debugPrint('UI_U_landing: USER NOT LOGGED in onLink');
+            debugPrint('RUI_U_service_explorer :  USER NOT LOGGED in onLink');
         } else
-          debugPrint('UI_U_landing: USER NOT LOGGED in onLink');
+          debugPrint('RUI_U_service_explorer :  USER NOT LOGGED in onLink');
       } else if (deepLink.queryParameters.containsKey('selfBookingCode') && deepLink.queryParameters['selfBookingCode'].length > 5) {
         String tmSselfBookingCode = deepLink.queryParameters['selfBookingCode'];
-        debugPrint('UI_U_landing: selfBookingCode from dynamic link: $tmSselfBookingCode');
+        debugPrint('RUI_U_service_explorer :  selfBookingCode from dynamic link: $tmSselfBookingCode');
         selfBookingCode = tmSselfBookingCode;
         await storage.write(key: 'selfBookingCode', value: tmSselfBookingCode);
 
         if (FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty) {
-          debugPrint('UI_U_landing: USER Is LOGGED in onLink');
+          debugPrint('RUI_U_service_explorer :  USER Is LOGGED in onLink');
           StoreProvider.of<AppState>(context).dispatch(BusinessRequest(tmSselfBookingCode));
           await storage.write(key: 'selfBookingCode', value: '');
           await Future.delayed(Duration(milliseconds: 1000));
           Navigator.push(context, MaterialPageRoute(builder: (context) => BookingSelfCreation()));
         } else {
-          debugPrint('UI_U_landing: USER NOT LOGGED in onLink');
+          debugPrint('RUI_U_service_explorer :  USER NOT LOGGED in onLink');
         }
       }else if (deepLink.queryParameters.containsKey('discoverLeSireneName') && deepLink.queryParameters.containsKey('discoverLeSireneId') && discoverLeSireneNameRead != 'true' && discoverLeSireneIdRead != 'true') {
         debugPrint('ON SITE PAYMENT ON LINK');
         String discoverLeSireneName  = deepLink.queryParameters['discoverLeSireneName'];
         String discoverLeSireneId = deepLink.queryParameters['discoverLeSireneId'];
-        debugPrint('UI_U_landing: discoverLeSireneName  onLink: $discoverLeSireneName  - orderId onLink: $discoverLeSireneId');
+        debugPrint('RUI_U_service_explorer :  discoverLeSireneName  onLink: $discoverLeSireneName  - orderId onLink: $discoverLeSireneId');
         await storage.write(key: 'discoverLeSireneName ', value: discoverLeSireneName );
         await storage.write(key: 'discoverLeSireneId', value: discoverLeSireneId);
         await storage.write(key: 'discoverLeSireneNameRead', value: 'true');
@@ -421,7 +429,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
         //StoreProvider.of<AppState>(context).dispatch(BookingRequestResponse(BookingState(booking_code: id)));
         //Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => InviteGuestForm(id: id, fromLanding: false,)), (Route<dynamic> route) => false);
         if (FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty) {
-          debugPrint('UI_U_landing: USER Is LOGGED in onLink');
+          debugPrint('RUI_U_service_explorer :  USER Is LOGGED in onLink');
           //Navigator.of(context).push(MaterialPageRoute(builder: (context) => InviteGuestForm(id: id, fromLanding: true,)));
           if (StoreProvider.of<AppState>(context).state.user.getRole() != Role.user) {
             //StoreProvider.of<AppState>(context).dispatch(OrderRequest(orderId));
@@ -435,14 +443,14 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
           await storage.write(key: 'discoverLeSireneNameRead', value: 'false');
           await storage.write(key: 'discoverLeSireneIdRead', value: 'false');
         } else
-          debugPrint('UI_U_landing: USER NOT LOGGED in onLink');
+          debugPrint('RUI_U_service_explorer :  USER NOT LOGGED in onLink');
       }
     }
   }
 
   bookingCodeFound() async {
     bookingCode = await storage.read(key: 'bookingCode') ?? '';
-    debugPrint('UI_U_landing: DEEP LINK EMPTY | BOOKING CODE: $bookingCode');
+    debugPrint('RUI_U_service_explorer :  DEEP LINK EMPTY | BOOKING CODE: $bookingCode');
     await storage.delete(key: 'bookingCode');
 
     if (bookingCode.isNotEmpty)
@@ -454,7 +462,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
   }
   selfCheckInFound() async {
     selfBookingCode = await storage.read(key: 'selfBookingCode') ?? '';
-    debugPrint('UI_U_landing: DEEP LINK EMPTY | selfBookingCode : $selfBookingCode');
+    debugPrint('RUI_U_service_explorer :  DEEP LINK EMPTY | selfBookingCode : $selfBookingCode');
     await storage.delete(key: 'selfBookingCode');
 
     if (selfBookingCode.isNotEmpty) {
@@ -465,7 +473,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
   }
   categoryInviteFound() async {
     categoryCode = await storage.read(key: 'categoryInvite') ?? '';
-    debugPrint('UI_U_landing: DEEP LINK EMPTY | CATEGORY INVITE: $categoryCode');
+    debugPrint('RUI_U_service_explorer :  DEEP LINK EMPTY | CATEGORY INVITE: $categoryCode');
     // await storage.delete(key: 'categoryInvite');
     if (categoryCode.isNotEmpty) {
       StoreProvider.of<AppState>(context).dispatch(UserBookingListRequest(StoreProvider.of<AppState>(context).state.user.email, false));
@@ -475,7 +483,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
   onSitePaymentFound() async {
     userId = await storage.read(key: 'onSiteUserId') ?? '';
     orderId = await storage.read(key: 'onSiteOrderId') ?? '';
-    debugPrint('UI_U_landing: DEEP LINK EMPTY | userId: $userId | orderId: $orderId');
+    debugPrint('RUI_U_service_explorer :  DEEP LINK EMPTY | userId: $userId | orderId: $orderId');
     await storage.delete(key: 'onSiteUserId');
     await storage.delete(key: 'onSiteOrderId');
 
@@ -497,7 +505,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
   searchLeSirene() async {
     discoverLeSireneName = await storage.read(key: 'discoverLeSireneName') ?? '';
     discoverLeSireneId = await storage.read(key: 'discoverLeSireneId') ?? '';
-    debugPrint('UI_U_landing: DEEP LINK EMPTY | discoverLeSireneName : $discoverLeSireneName | discoverLeSireneId: $discoverLeSireneId');
+    debugPrint('RUI_U_service_explorer :  DEEP LINK EMPTY | discoverLeSireneName : $discoverLeSireneName | discoverLeSireneId: $discoverLeSireneId');
     await storage.delete(key: 'discoverLeSireneName');
     await storage.delete(key: 'discoverLeSireneId');
 
