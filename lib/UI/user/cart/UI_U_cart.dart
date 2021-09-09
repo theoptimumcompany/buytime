@@ -414,7 +414,7 @@ class CartState extends State<Cart> {
                                                               StoreProvider.of<AppState>(context).dispatch(UpdateOrder(orderState));
                                                             });
                                                           },
-                                                          style: Theme.of(context).textTheme.title,
+                                                          style: Theme.of(context).textTheme.headline1,
                                                         ),
                                                       ),
                                                     ))
