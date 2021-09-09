@@ -517,7 +517,6 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
     await storage.delete(key: 'discoverLeSireneId');
 
     if (discoverLeSireneName.isNotEmpty && discoverLeSireneId.isNotEmpty) {
-
       await storage.write(key: 'discoverLeSireneNameRead', value: 'false');
       await storage.write(key: 'discoverLeSireneIdRead', value: 'false');
     }
@@ -564,14 +563,14 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
       categoryList.clear();
       if (_searchController.text.isNotEmpty) {
         categoryState.forEach((element) {
-          if (element.name.toLowerCase().contains(_searchController.text.toLowerCase())) {
+          if (element.name.toLowerCase().contains(_searchController.text.toLowerCase().trim())) {
             StoreProvider.of<AppState>(context).state.serviceList.serviceListState.forEach((service) {
               if (service.categoryId.contains(element.id)) {
                 createCategoryList(element);
               }
             });
           }
-          if (element.customTag != null && element.customTag.isNotEmpty && element.customTag.toLowerCase().contains(_searchController.text.toLowerCase())) {
+          if (element.customTag != null && element.customTag.isNotEmpty && element.customTag.toLowerCase().contains(_searchController.text.toLowerCase().trim())) {
             StoreProvider.of<AppState>(context).state.serviceList.serviceListState.forEach((service) {
               if (service.categoryId.contains(element.id)) {
                 createCategoryList(element);
@@ -580,7 +579,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
           }
 
           businessList.forEach((business) {
-            if (business.name.toLowerCase().contains(_searchController.text.toLowerCase())) {
+            if (business.name.toLowerCase().contains(_searchController.text.toLowerCase().trim())) {
               if (business.id_firestore == element.businessId) {
                 StoreProvider.of<AppState>(context).state.serviceList.serviceListState.forEach((service) {
                   if (service.categoryId.contains(element.id)) {
@@ -633,12 +632,12 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
       //popularList.clear();
       if (_searchController.text.isNotEmpty) {
         serviceState.forEach((element) {
-          if (element.name.toLowerCase().contains(_searchController.text.toLowerCase())) {
+          if (element.name.toLowerCase().contains(_searchController.text.toLowerCase().trim())) {
             tmp.add(element);
           }
           if (element.tag != null && element.tag.isNotEmpty) {
             element.tag.forEach((tag) {
-              if (tag.toLowerCase().contains(_searchController.text.toLowerCase())) {
+              if (tag.toLowerCase().contains(_searchController.text.toLowerCase().trim())) {
                 if (!tmp.contains(element)) {
                   tmp.add(element);
                 }
@@ -646,7 +645,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
             });
           }
           businessList.forEach((business) {
-            if (business.name.toLowerCase().contains(_searchController.text.toLowerCase())) {
+            if (business.name.toLowerCase().contains(_searchController.text.toLowerCase().trim())) {
               if (business.id_firestore == element.businessId) {
                 if (!tmp.contains(element)) {
                   tmp.add(element);
@@ -669,12 +668,12 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
       List<ServiceState> tmpList = [];
       if (_searchController.text.isNotEmpty) {
         serviceState.forEach((element) {
-          if (element.name.toLowerCase().contains(_searchController.text.toLowerCase())) {
+          if (element.name.toLowerCase().contains(_searchController.text.toLowerCase().trim())) {
             tmpList.add(element);
           }
           if (element.tag != null && element.tag.isNotEmpty) {
             element.tag.forEach((tag) {
-              if (tag.toLowerCase().contains(_searchController.text.toLowerCase())) {
+              if (tag.toLowerCase().contains(_searchController.text.toLowerCase().trim())) {
                 if (!tmpList.contains(element)) {
                   tmpList.add(element);
                 }
@@ -682,7 +681,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
             });
           }
           businessList.forEach((business) {
-            if (business.name.toLowerCase().contains(_searchController.text.toLowerCase())) {
+            if (business.name.toLowerCase().contains(_searchController.text.toLowerCase().trim())) {
               if (business.id_firestore == element.businessId) {
                 if (!tmpList.contains(element)) {
                   tmpList.add(element);
@@ -720,14 +719,14 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
     categoryList.clear();
     if (_searchController.text.isNotEmpty) {
       categoryState.forEach((element) {
-        if (element.name.toLowerCase().contains(_searchController.text.toLowerCase())) {
+        if (element.name.toLowerCase().contains(_searchController.text.toLowerCase().trim())) {
           StoreProvider.of<AppState>(context).state.serviceList.serviceListState.forEach((service) {
             if (service.categoryId.contains(element.id)) {
               createCategoryList(element);
             }
           });
         }
-        if (element.customTag != null && element.customTag.isNotEmpty && element.customTag.toLowerCase().contains(_searchController.text.toLowerCase())) {
+        if (element.customTag != null && element.customTag.isNotEmpty && element.customTag.toLowerCase().contains(_searchController.text.toLowerCase().trim())) {
           StoreProvider.of<AppState>(context).state.serviceList.serviceListState.forEach((service) {
             if (service.categoryId.contains(element.id)) {
               createCategoryList(element);
@@ -736,7 +735,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
         }
 
         businessList.forEach((business) {
-          if (business.name.toLowerCase().contains(_searchController.text.toLowerCase())) {
+          if (business.name.toLowerCase().contains(_searchController.text.toLowerCase().trim())) {
             if (business.id_firestore == element.businessId && element.businessId == discoverLeSireneId) {
               StoreProvider.of<AppState>(context).state.serviceList.serviceListState.forEach((service) {
                 if (service.categoryId.contains(element.id)) {
@@ -758,12 +757,12 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
       //popularList.clear();
       if (_searchController.text.isNotEmpty) {
         serviceState.forEach((element) {
-          if (element.name.toLowerCase().contains(_searchController.text.toLowerCase())) {
+          if (element.name.toLowerCase().contains(_searchController.text.toLowerCase().trim())) {
             tmp.add(element);
           }
           if (element.tag != null && element.tag.isNotEmpty) {
             element.tag.forEach((tag) {
-              if (tag.toLowerCase().contains(_searchController.text.toLowerCase())) {
+              if (tag.toLowerCase().contains(_searchController.text.toLowerCase().trim())) {
                 if (!tmp.contains(element)) {
                   tmp.add(element);
                 }
@@ -771,7 +770,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
             });
           }
           businessList.forEach((business) {
-            if (business.name.toLowerCase().contains(_searchController.text.toLowerCase())) {
+            if (business.name.toLowerCase().contains(_searchController.text.toLowerCase().trim())) {
               if (business.id_firestore == element.businessId && element.businessId == discoverLeSireneId) {
                 if (!tmp.contains(element)) {
                   tmp.add(element);
@@ -1027,7 +1026,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
         debugPrint('UI_U_service_explorer => SERVICE LIST: ${popularList.length}');
         order = snapshot.order.itemList != null ? (snapshot.order.itemList.length > 0 ? snapshot.order : OrderState().toEmpty()) : OrderState().toEmpty();
         debugPrint('UI_U_BookingPage => Order List LENGTH: ${snapshot.orderList.orderListState.length}');
-        categoryList.sort((a,b) => a.name.compareTo(b.name));
+        //categoryList.sort((a,b) => a.name.compareTo(b.name));
         return GestureDetector(
           onTap: () {
             FocusScopeNode currentFocus = FocusScope.of(context);
@@ -1576,8 +1575,8 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                   ///Discover
                                                   Flexible(
                                                     child: Container(
-                                                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 5),
-                                                      padding: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 2),
+                                                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 5, bottom: SizeConfig.safeBlockVertical * 2),
+                                                      //padding: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 2),
                                                       height: 150,
                                                       width: double.infinity,
                                                       color: BuytimeTheme.BackgroundWhite,
@@ -1917,6 +1916,8 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                               CategoryState category = CategoryState().toEmpty();
                                                               debugPrint('UI_U_service_explorer => ${category.name}: ${categoryListIds[category.name]}');
                                                               return  Container(
+                                                                width: 100,
+                                                                height: 100,
                                                                 margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0, right: 5),
                                                                 child: Utils.imageShimmer(100, 100),
                                                               );
