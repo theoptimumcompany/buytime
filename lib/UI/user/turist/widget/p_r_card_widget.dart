@@ -2,6 +2,7 @@ import 'package:Buytime/UI/user/category/UI_U_filter_by_category.dart';
 import 'package:Buytime/UI/user/service/UI_U_service_details.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
+import 'package:Buytime/reusable/W_promo_discount.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/utils/utils.dart';
@@ -85,6 +86,16 @@ class _PRCardWidgetState extends State<PRCardWidget> {
                       borderRadius: BorderRadius.all(Radius.circular(5)),
                       //color: Colors.black.withOpacity(.2)
                     ),
+                    child: ///Promo Discount label
+                    Utils.checkPromoDiscount('general_1', context, widget.serviceState.businessId).promotionId != 'empty'
+                        ? Container(
+                      alignment: Alignment.bottomLeft,
+                      margin: EdgeInsets.only(left: 5, bottom: 5),
+                      child: FittedBox(
+                        fit: BoxFit.contain,
+                        child: W_PromoDiscount(true),
+                      ),
+                    ): Container(),
                   ),
                 ),
               ),

@@ -294,10 +294,12 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
               searchRecommended(Provider.of<Explorer>(context, listen: false).serviceList);
             }*/
 
-            await storage.write(key: 'discoverLeSireneNameRead', value: 'false');
-            await storage.write(key: 'discoverLeSireneIdRead', value: 'false');
+
           } else
             debugPrint('RUI_U_service_explorer :  USER NOT LOGGED in onLink');
+
+          await storage.write(key: 'discoverLeSireneNameRead', value: 'false');
+          await storage.write(key: 'discoverLeSireneIdRead', value: 'false');
         }
       }
     }, onError: (OnLinkErrorException e) async {
@@ -444,10 +446,11 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
               searchRecommended(Provider.of<Explorer>(context, listen: false).serviceList);
             }*/
 
-          await storage.write(key: 'discoverLeSireneNameRead', value: 'false');
-          await storage.write(key: 'discoverLeSireneIdRead', value: 'false');
         } else
           debugPrint('RUI_U_service_explorer :  USER NOT LOGGED in onLink');
+
+        await storage.write(key: 'discoverLeSireneNameRead', value: 'false');
+        await storage.write(key: 'discoverLeSireneIdRead', value: 'false');
       }
     }
   }
@@ -513,12 +516,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
     await storage.delete(key: 'discoverLeSireneName');
     await storage.delete(key: 'discoverLeSireneId');
 
-    if (userId.isNotEmpty && orderId.isNotEmpty) {
-      if (StoreProvider.of<AppState>(context).state.user.getRole() != Role.user) {
-        debugPrint('SHOULD SEARCH');
-      } else {
-        debugPrint('USER NO PERMISSION');
-      }
+    if (discoverLeSireneName.isNotEmpty && discoverLeSireneId.isNotEmpty) {
 
       await storage.write(key: 'discoverLeSireneNameRead', value: 'false');
       await storage.write(key: 'discoverLeSireneIdRead', value: 'false');
@@ -1580,7 +1578,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                     child: Container(
                                                       margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 5),
                                                       padding: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 2),
-                                                      height: 155,
+                                                      height: 150,
                                                       width: double.infinity,
                                                       color: BuytimeTheme.BackgroundWhite,
                                                       child: Column(
@@ -1589,7 +1587,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                         children: [
                                                           ///Discover
                                                           Container(
-                                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 0, top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1),
+                                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 0, top: 5, bottom: 5),
                                                             child: Text(
                                                               AppLocalizations.of(context).discover,
                                                               style: TextStyle(
@@ -1613,8 +1611,10 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                                     CategoryState category = CategoryState().toEmpty();
                                                                     //debugPrint('UI_U_service_explorer => ${category.name}: ${categoryListIds[category.name]}');
                                                                     return  Container(
-                                                                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0, right: SizeConfig.safeBlockHorizontal * 1),
-                                                                      child: Utils.imageShimmer(80, 80),
+                                                                      width: 100,
+                                                                      height: 100,
+                                                                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0, right: 5),
+                                                                      child: Utils.imageShimmer(100, 100),
                                                                     );
                                                                   },
                                                                   childCount: 10,
