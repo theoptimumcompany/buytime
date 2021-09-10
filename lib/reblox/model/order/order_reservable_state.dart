@@ -256,13 +256,6 @@ class OrderReservableState {
   }
 
   addReserveItem(ServiceState itemToAdd, String idOwner, String time, String minutes, DateTime date, dynamic price, String slotId,  BuildContext context) {
-    /*bool added = false;
-    itemList.forEach((element) {
-      if (!added && element.id == itemToAdd.serviceId) {
-        element.number++;
-        added = true;
-      }
-    });*/
     DateTime tmpDate = date;
     tmpDate = DateTime(date.year, date.month, date.day, int.parse(time.split(':').first), int.parse(time.split(':').last));
     itemList.add(OrderEntry(
@@ -283,32 +276,18 @@ class OrderReservableState {
         switchAutoConfirm: itemToAdd.switchAutoConfirm,
       vat: itemToAdd.vat != null && itemToAdd.vat != 0 ? itemToAdd.vat : 22
     ));
-
-    this.totalPromoDiscount += Utils.calculatePromoDiscount(price, context, itemToAdd.businessId, 1);
-    //StoreProvider.of<AppState>(context).dispatch(IncreasePromotionCounter(1));
+    double itemDiscount = Utils.calculatePromoDiscount(price, context, itemToAdd.businessId, 1);
+    this.totalPromoDiscount += itemDiscount;
     this.total += price;
-    this.total -= (totalPromoDiscount / itemList.length);
+    this.total -= itemDiscount;
   }
 
-  // void removeItem(OrderEntry entry, BuildContext context) {
-  //   bool deleted = false;
-  //   itemList.forEach((element) {
-  //     //debugPrint('order_state => DATES: ${element.date} - ${entry.date}');
-  //     if (!deleted && element.id == entry.id) {
-  //       this.totalPromoDiscount -= (Utils.calculatePromoDiscount(entry.price, context));
-  //       this.total -= ((entry.price + this.totalPromoDiscount ) * element.number);
-  //       element.number = 0;
-  //       deleted = true;
-  //     }
-  //   });
-  // }
-
   void removeReserveItem(OrderEntry entry, BuildContext context) {
-    StoreProvider.of<AppState>(context).dispatch(DecreasePromotionCounter(1));
-    this.totalPromoDiscount -= (Utils.calculatePromoDiscount(entry.price, context, entry.id_business, 2));
+    double itemDiscount = (Utils.calculatePromoDiscount(entry.price, context, entry.id_business, 2));
+    this.totalPromoDiscount -= itemDiscount;
     this.total -= entry.price;
     if(this.itemList.length!= 0)
-      this.total += (totalPromoDiscount / this.itemList.length);
+      this.total += itemDiscount;
     else
       this.total = 0;
   }

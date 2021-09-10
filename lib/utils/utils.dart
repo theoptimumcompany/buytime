@@ -41,38 +41,31 @@ class Utils {
   ///Calculate Promo Discount
   static double calculatePromoDiscount(double fullPrice, context, String businessId, int addRemove) {
     double promoPrice = 0.0;
-    debugPrint(addRemove.toString() + ' START CALCULATE PROMO timesUsed: ' + StoreProvider.of<AppState>(context).state.promotionState.timesUsed.toString() + " limit: " + StoreProvider.of<AppState>(context).state.promotionState.limit.toString());
+    bool promoForSpecificBusiness = StoreProvider.of<AppState>(context).state.promotionState != null &&
+                                    StoreProvider.of<AppState>(context).state.promotionState.businessIdList != null &&
+                                    StoreProvider.of<AppState>(context).state.promotionState.businessIdList.isNotEmpty &&
+                                    StoreProvider.of<AppState>(context).state.promotionState.businessIdList.contains(businessId);
+    bool promoForAllServices = StoreProvider.of<AppState>(context).state.promotionState != null &&
+                              (StoreProvider.of<AppState>(context).state.promotionState.businessIdList == null ||
+                               StoreProvider.of<AppState>(context).state.promotionState.businessIdList.isEmpty);
     if(StoreProvider.of<AppState>(context).state.promotionState.timesUsed < StoreProvider.of<AppState>(context).state.promotionState.limit) {
-      if(
-      StoreProvider.of<AppState>(context).state.promotionState != null &&
-          StoreProvider.of<AppState>(context).state.promotionState.businessIdList != null &&
-          StoreProvider.of<AppState>(context).state.promotionState.businessIdList.isNotEmpty &&
-          StoreProvider.of<AppState>(context).state.promotionState.businessIdList.contains(businessId)) {
-        /// la promo é applicata a specifici business
-        promoPrice = applyPromotion(context, fullPrice, promoPrice, addRemove);
-      } else if (
-      StoreProvider.of<AppState>(context).state.promotionState != null &&
-          (StoreProvider.of<AppState>(context).state.promotionState.businessIdList == null ||
-              StoreProvider.of<AppState>(context).state.promotionState.businessIdList.isEmpty)
-      ) {
-        /// la promo é applicata a tutti i servizi
+      if(promoForSpecificBusiness || promoForAllServices) {
         promoPrice = applyPromotion(context, fullPrice, promoPrice, addRemove);
       }
+    } else if (addRemove == 2 && (promoForAllServices || promoForSpecificBusiness)) {
+      StoreProvider.of<AppState>(context).state.promotionState.timesUsed -= 1;
+      if (StoreProvider.of<AppState>(context).state.promotionState.timesUsed < 0) {
+        StoreProvider.of<AppState>(context).state.promotionState.timesUsed = 0;
+      }
     }
-    debugPrint('PROMO ' + promoPrice.toString());
     return promoPrice;
   }
 
   static double applyPromotion(context, double fullPrice, double promoPrice, int addRemove) {
     PromotionState promotionState = StoreProvider.of<AppState>(context).state.promotionState;
-    debugPrint('PROMO ' + promotionState.promotionId + ' - TIME USED: ${promotionState.timesUsed}');
     if (addRemove == 1) {
-      debugPrint('PROMO IncreasePromotionCounter');
-      //StoreProvider.of<AppState>(context).dispatch(IncreasePromotionCounter(1));
       StoreProvider.of<AppState>(context).state.promotionState.timesUsed += 1;
-    } else if (addRemove == 2) {
-      debugPrint('PROMO DecreasePromotionCounter');
-      //StoreProvider.of<AppState>(context).dispatch(DecreasePromotionCounter(1));
+    } if (addRemove == 2 ) {
       StoreProvider.of<AppState>(context).state.promotionState.timesUsed -= 1;
       if (StoreProvider.of<AppState>(context).state.promotionState.timesUsed < 0) {
         StoreProvider.of<AppState>(context).state.promotionState.timesUsed = 0;
@@ -101,8 +94,6 @@ class Utils {
 
   ///Check Promo Discount (gestisce principalmente le label rosse)
   static PromotionState checkPromoDiscount(String promoName, context, String businessId) {
-    debugPrint('START CHECK PROMO');
-
     if(
         StoreProvider.of<AppState>(context).state.promotionListState.promotionListState.isNotEmpty &&
         StoreProvider.of<AppState>(context).state.promotionState != null &&
