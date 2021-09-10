@@ -1211,7 +1211,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                             order.totalPromoDiscount > 0 ?
                             Container(
                               margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * .5),
-                              child: Row(
+                              child: order.totalPromoDiscount > 0 ? Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
@@ -1222,13 +1222,13 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                                     ),
                                   ),
                                   Text(
-                                    '- ${AppLocalizations.of(context).euroSpace} ${(order.totalPromoDiscount.toStringAsFixed(2))}',
+                                    '-${(order.totalPromoDiscount.toStringAsFixed(2))}${AppLocalizations.of(context).euroSpace}',
                                     style: TextStyle(letterSpacing: 0.15, fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w500, fontSize: 14
                                       ///SizeConfig.safeBlockHorizontal * 4
                                     ),
                                   )
                                 ],
-                              ),
+                              ): Container(),
                             ) : Container(),
                             ///Price value
                             orderDetails.itemList.first.time == null

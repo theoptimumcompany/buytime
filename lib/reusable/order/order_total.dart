@@ -49,7 +49,7 @@ class OrderTotal extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.only(bottom: 10.0),
-            child: Row(
+            child: orderState.totalPromoDiscount > 0 ? Row(
               mainAxisAlignment: MainAxisAlignment.center,
               //crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -75,7 +75,7 @@ class OrderTotal extends StatelessWidget {
                       alignment: Alignment.center,
                       //margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 20),
                       child: Text(
-                        '- ${AppLocalizations.of(context).euroSpace} ${orderState.totalPromoDiscount.toStringAsFixed(2)}',
+                        '-${orderState.totalPromoDiscount.toStringAsFixed(2)}${AppLocalizations.of(context).euroSpace}',
                         style: TextStyle(
                             fontFamily: BuytimeTheme.FontFamily,
                             fontWeight: FontWeight.w500,
@@ -106,7 +106,7 @@ class OrderTotal extends StatelessWidget {
                   ),
                 ),
               ],
-            ),
+            ) : Container,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -138,7 +138,7 @@ class OrderTotal extends StatelessWidget {
                     alignment: Alignment.center,
                     //margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 20),
                     child: Text(
-                      !orderState.carbonCompensation ? '${AppLocalizations.of(context).euroSpace} ${orderState.total.toStringAsFixed(2)}' : '${AppLocalizations.of(context).euroSpace} ${totalECO.toStringAsFixed(2)}',
+                      !orderState.carbonCompensation ? '${orderState.total.toStringAsFixed(2)}${AppLocalizations.of(context).euroSpace}' : '${totalECO.toStringAsFixed(2)}${AppLocalizations.of(context).euroSpace}',
                       style: TextStyle(
                           fontFamily: BuytimeTheme.FontFamily,
                           fontWeight: FontWeight.w600,
@@ -156,7 +156,7 @@ class OrderTotal extends StatelessWidget {
                   alignment: Alignment.centerRight,
                   //margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 8),
                   child: Text(
-                    AppLocalizations.of(context).vat + ' € ' + vat.toStringAsFixed(2),
+                     AppLocalizations.of(context).vat + ' ' + vat.toStringAsFixed(2)+'€',
                     /*AppLocalizations.of(context).vat + (orderState.total != null ?
                       (orderState.total *
                           (StoreProvider.of<AppState>(context).state.serviceState.vat != null && StoreProvider.of<AppState>(context).state.serviceState.vat != 0 ?

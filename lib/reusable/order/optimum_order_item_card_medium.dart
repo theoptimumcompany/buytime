@@ -265,16 +265,32 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
                           children: [
                             Container(
                               //margin: EdgeInsets.only(right: SizeConfig.safeBlockVertical * 3),
-                              child: Text(
-                                price(),
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                    letterSpacing: 0.25,
-                                    fontFamily: BuytimeTheme.FontFamily,
-                                    fontWeight: FontWeight.w400,
-                                    color: BuytimeTheme.TextBlack,
-                                    fontSize: 16 /// mediaSize.height * 0.024
-                                ),
+                              child: Row(
+                                children: [
+                                  getPromoDiscountForItem() > 0.0 ? Text(
+                                    getPromoDiscountForItem().toString() + AppLocalizations.of(context).euroSpace,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                        letterSpacing: 0.25,
+                                        fontFamily: BuytimeTheme.FontFamily,
+                                        fontWeight: FontWeight.w400,
+                                        color: BuytimeTheme.TextBlack,
+                                        decoration: TextDecoration.lineThrough,
+                                        fontSize: 16 /// mediaSize.height * 0.024
+                                    ),
+                                  ) : Container(),
+                                  Text(
+                                    " " + price(),
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                        letterSpacing: 0.25,
+                                        fontFamily: BuytimeTheme.FontFamily,
+                                        fontWeight: FontWeight.w400,
+                                        color: BuytimeTheme.TextBlack,
+                                        fontSize: 16 /// mediaSize.height * 0.024
+                                    ),
+                                  ),
+                                ],
                               ),
                             )
                           ],
@@ -461,9 +477,13 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
 
   String price() {
     if (orderEntry.number == 1) {
-      return '${AppLocalizations.of(context).currency} ' + orderEntry.price.toStringAsFixed(2);
+      return orderEntry.price.toStringAsFixed(2) + AppLocalizations.of(context).currency;
     }
     //return "€ " + orderEntry.price.toStringAsFixed(2) + " x " +  orderEntry.number.toString() + " = € " + (orderEntry.price * orderEntry.number).toStringAsFixed(2);
-    return '${AppLocalizations.of(context).currency} ' + (orderEntry.price * orderEntry.number).toStringAsFixed(2);
+    return (orderEntry.price * orderEntry.number).toStringAsFixed(2)  + AppLocalizations.of(context).currency;
+  }
+
+  getPromoDiscountForItem() {
+    return 1.0;
   }
 }
