@@ -36,8 +36,10 @@ class OrderTotal extends StatelessWidget {
     calculateEcoTax();
     double vat = 0.0;
     orderState.itemList.forEach((element) {
-      if (element.vat != null && element.price != null && Utils.checkPromoDiscount('general_1', context, element.id_business).discount != null) {
-        vat += (element.price - Utils.checkPromoDiscount('general_1', context, element.id_business).discount) * (element.vat / 100);
+      if (element.vat != null && element.price != null) {
+        debugPrint("order_total vat:" + element.vat.toString() + " number of items: " + element.number.toString() + " promo: " + orderState.totalPromoDiscount.toString() + " price: " + element.price.toString());
+        double itemDiscount = orderState.totalPromoDiscount / element.number;
+        vat += (element.price - itemDiscount) * element.number * (element.vat / 100);
       }
     });
     return Container(
