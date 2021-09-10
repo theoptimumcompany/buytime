@@ -85,7 +85,7 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
           snapshot.itemList[index].number = itemCount;
           double serviceTotal =  snapshot.total;
           serviceTotal = serviceTotal - snapshot.itemList[index].price;
-          double itemDiscount = Utils.calculatePromoDiscount(snapshot.itemList[index].price, context, snapshot.itemList[index].id_business, 2);
+          double itemDiscount = Utils.calculatePromoDiscount(snapshot.itemList[index].price, context, snapshot.itemList[index].id_business, 2, snapshot.totalNumberOfItems());
           snapshot.totalPromoDiscount -= itemDiscount;
           snapshot.total = serviceTotal;
           snapshot.total += itemDiscount;
@@ -106,7 +106,7 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
           snapshot.itemList[index].number = itemCount;
           double serviceTotal =  snapshot.total;
           serviceTotal = serviceTotal - snapshot.itemList[index].price;
-          double itemDiscount = Utils.calculatePromoDiscount(snapshot.itemList[index].price, context, snapshot.itemList[index].id_business, 2);
+          double itemDiscount = Utils.calculatePromoDiscount(snapshot.itemList[index].price, context, snapshot.itemList[index].id_business, 2, snapshot.totalNumberOfItems());
           snapshot.totalPromoDiscount -= itemDiscount;
           snapshot.total = serviceTotal;
           snapshot.total += itemDiscount;
@@ -136,7 +136,7 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
       snapshot.itemList[index].number = itemCount;
       double serviceTotal =  snapshot.total;
       serviceTotal = serviceTotal + snapshot.itemList[index].price;
-      double itemDiscount = Utils.calculatePromoDiscount(snapshot.itemList[index].price, context, snapshot.itemList[index].id_business, 1);
+      double itemDiscount = Utils.calculatePromoDiscount(snapshot.itemList[index].price, context, snapshot.itemList[index].id_business, 1, snapshot.totalNumberOfItems());
       snapshot.totalPromoDiscount += itemDiscount;
       //StoreProvider.of<AppState>(context).dispatch(IncreasePromotionCounter(1));
       snapshot.total = serviceTotal;

@@ -276,14 +276,14 @@ class OrderReservableState {
         switchAutoConfirm: itemToAdd.switchAutoConfirm,
       vat: itemToAdd.vat != null && itemToAdd.vat != 0 ? itemToAdd.vat : 22
     ));
-    double itemDiscount = Utils.calculatePromoDiscount(price, context, itemToAdd.businessId, 1);
+    double itemDiscount = Utils.calculatePromoDiscount(price, context, itemToAdd.businessId, 1, totalNumberOfItems());
     this.totalPromoDiscount += itemDiscount;
     this.total += price;
     this.total -= itemDiscount;
   }
 
   void removeReserveItem(OrderEntry entry, BuildContext context) {
-    double itemDiscount = (Utils.calculatePromoDiscount(entry.price, context, entry.id_business, 2));
+    double itemDiscount = (Utils.calculatePromoDiscount(entry.price, context, entry.id_business, 2, totalNumberOfItems()));
     this.totalPromoDiscount -= itemDiscount;
     this.total -= entry.price;
     if(this.itemList.length!= 0)
@@ -299,6 +299,16 @@ class OrderReservableState {
       }
     }
     return true;
+  }
+
+  int totalNumberOfItems () {
+    int totalNumberOfItems = 0;
+    if (this.itemList != null && this.itemList.isNotEmpty) {
+      for (int i = 0; i < this.itemList.length; i++) {
+        totalNumberOfItems += this.itemList[i].number;
+      }
+    }
+    return totalNumberOfItems;
   }
 
   factory OrderReservableState.fromJson(Map<String, dynamic> json) => _$OrderReservableStateFromJson(json);

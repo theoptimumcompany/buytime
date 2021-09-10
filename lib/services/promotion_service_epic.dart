@@ -38,8 +38,6 @@ class PromotionListRequestService implements EpicClass<AppState> {
             }
           }
         }
-
-
         if (promotionState.limit > 0) {
           promotionStateList.add(promotionState);
         }

@@ -39,7 +39,7 @@ class Utils {
   static String imageSizing1000 = "_1000x1000";
 
   ///Calculate Promo Discount
-  static double calculatePromoDiscount(double fullPrice, context, String businessId, int addRemove) {
+  static double calculatePromoDiscount(double fullPrice, context, String businessId, int addRemove, int itemNumber) {
     double promoPrice = 0.0;
     bool promoForSpecificBusiness = StoreProvider.of<AppState>(context).state.promotionState != null &&
                                     StoreProvider.of<AppState>(context).state.promotionState.businessIdList != null &&
@@ -48,29 +48,29 @@ class Utils {
     bool promoForAllServices = StoreProvider.of<AppState>(context).state.promotionState != null &&
                               (StoreProvider.of<AppState>(context).state.promotionState.businessIdList == null ||
                                StoreProvider.of<AppState>(context).state.promotionState.businessIdList.isEmpty);
-    if(StoreProvider.of<AppState>(context).state.promotionState.timesUsed < StoreProvider.of<AppState>(context).state.promotionState.limit) {
-      if(promoForSpecificBusiness || promoForAllServices) {
+    if(itemNumber < StoreProvider.of<AppState>(context).state.promotionState.limit) {
+      if (addRemove == 2 ) {
+        StoreProvider.of<AppState>(context).state.promotionState.timesUsed -= 1;
         promoPrice = applyPromotion(context, fullPrice, promoPrice, addRemove);
       }
-    } else if (addRemove == 2 && (promoForAllServices || promoForSpecificBusiness)) {
-      StoreProvider.of<AppState>(context).state.promotionState.timesUsed -= 1;
-      if (StoreProvider.of<AppState>(context).state.promotionState.timesUsed < 0) {
-        StoreProvider.of<AppState>(context).state.promotionState.timesUsed = 0;
+    }
+    if(StoreProvider.of<AppState>(context).state.promotionState.timesUsed < StoreProvider.of<AppState>(context).state.promotionState.limit) {
+      if(promoForSpecificBusiness || promoForAllServices) {
+        if (addRemove == 1) {
+          StoreProvider.of<AppState>(context).state.promotionState.timesUsed += 1;
+          promoPrice = applyPromotion(context, fullPrice, promoPrice, addRemove);
+        }
       }
     }
+    if (StoreProvider.of<AppState>(context).state.promotionState.timesUsed < 0) {
+      StoreProvider.of<AppState>(context).state.promotionState.timesUsed = 0;
+    }
+    debugPrint('calculatePromoDiscount timesUsed: ' + StoreProvider.of<AppState>(context).state.promotionState.timesUsed.toString() + ' itemNumber ' + itemNumber.toString());
     return promoPrice;
   }
 
   static double applyPromotion(context, double fullPrice, double promoPrice, int addRemove) {
     PromotionState promotionState = StoreProvider.of<AppState>(context).state.promotionState;
-    if (addRemove == 1) {
-      StoreProvider.of<AppState>(context).state.promotionState.timesUsed += 1;
-    } if (addRemove == 2 ) {
-      StoreProvider.of<AppState>(context).state.promotionState.timesUsed -= 1;
-      if (StoreProvider.of<AppState>(context).state.promotionState.timesUsed < 0) {
-        StoreProvider.of<AppState>(context).state.promotionState.timesUsed = 0;
-      }
-    }
     switch (promotionState.discountType) {
       case 'fixedAmount':
         if ((fullPrice - (promotionState.discount).toDouble()) >= 3.0) {
@@ -103,7 +103,6 @@ class Utils {
       List<PromotionState> promotionListState = StoreProvider.of<AppState>(context).state.promotionListState.promotionListState;
       for (var a = 0; a < promotionListState.length; a++) {
         if (promotionListState[a].promotionId == promoName) {
-          debugPrint('PROMO NAME ' + promotionListState[a].promotionId);
           return promotionListState[a];
         }
       }
@@ -115,7 +114,6 @@ class Utils {
       List<PromotionState> promotionListState = StoreProvider.of<AppState>(context).state.promotionListState.promotionListState;
       for (var a = 0; a < promotionListState.length; a++) {
         if (promotionListState[a].promotionId == promoName) {
-          debugPrint('PROMO NAME ' + promotionListState[a].promotionId);
           return promotionListState[a];
         }
       }

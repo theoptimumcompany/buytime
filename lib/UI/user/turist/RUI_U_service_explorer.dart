@@ -1893,7 +1893,6 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                                 (context, index) {
                                                               //MenuItemModel menuItem = menuItems.elementAt(index);
                                                               CategoryState category = categoryList.elementAt(index);
-                                                              debugPrint('UI_U_service_explorer => ${category.name}: ${categoryListIds[category.name]}');
                                                               return Container(
                                                                 width: 100,
                                                                 height: 100,
@@ -1914,7 +1913,6 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                                 (context, index) {
                                                               //MenuItemModel menuItem = menuItems.elementAt(index);
                                                               CategoryState category = CategoryState().toEmpty();
-                                                              debugPrint('UI_U_service_explorer => ${category.name}: ${categoryListIds[category.name]}');
                                                               return  Container(
                                                                 width: 100,
                                                                 height: 100,
@@ -2664,7 +2662,6 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                             //MenuItemModel menuItem = menuItems.elementAt(index);
 
                                                             CategoryState category = categoryList.elementAt(index);
-                                                            debugPrint('UI_U_service_explorer => ${categoryListIds[category.name]}');
                                                             return Container(
                                                               width: 80,
                                                               margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0, right: SizeConfig.safeBlockHorizontal * 1),
