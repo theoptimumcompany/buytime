@@ -1,13 +1,8 @@
-import 'package:Buytime/UI/user/service/UI_U_service_list.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
-import 'package:Buytime/reblox/model/promotion/promotion_state.dart';
-import 'package:Buytime/reblox/model/snippet/generic.dart';
 import 'package:Buytime/reblox/model/order/order_entry.dart';
-import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
-import 'package:Buytime/reblox/reducer/promotion/promotion_reducer.dart';
-import 'package:Buytime/utils/globals.dart';
+import 'package:Buytime/utils/utils.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/utils/utils.dart';
@@ -263,12 +258,40 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
                         ///Price
                         Column(
                           children: [
-                            Container(
-                              //margin: EdgeInsets.only(right: SizeConfig.safeBlockVertical * 3),
+                            getPromoDiscountForItem(orderEntry.id_business, orderEntry.price, orderEntry.number) > 0.0 ? Container(
                               child: Row(
                                 children: [
-                                  getPromoDiscountForItem() > 0.0 ? Text(
-                                    getPromoDiscountForItem().toString() + AppLocalizations.of(context).euroSpace,
+                                   Text(
+                                    price(),
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                        letterSpacing: 0.25,
+                                        fontFamily: BuytimeTheme.FontFamily,
+                                        fontWeight: FontWeight.w400,
+                                        color: BuytimeTheme.TextBlack,
+                                        decoration: TextDecoration.lineThrough,
+                                        fontSize: 16 /// mediaSize.height * 0.024
+                                    ),
+                                  ) ,
+                                  Text(
+                                    " " + (orderEntry.price * orderEntry.number - getPromoDiscountForItem(orderEntry.id_business, orderEntry.price, orderEntry.number)).toStringAsFixed(2) + AppLocalizations.of(context).euroSpace,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                        letterSpacing: 0.25,
+                                        fontFamily: BuytimeTheme.FontFamily,
+                                        fontWeight: FontWeight.w400,
+                                        color: BuytimeTheme.TextBlack,
+                                        fontSize: 16 /// mediaSize.height * 0.024
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ):
+                            Container(
+                              child: Row(
+                                children: [
+                                  getPromoDiscountForItem(orderEntry.id_business, orderEntry.price, orderEntry.number) > 0.0 ? Text(
+                                    getPromoDiscountForItem(orderEntry.id_business, orderEntry.price, orderEntry.number).toString() + AppLocalizations.of(context).euroSpace,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
                                         letterSpacing: 0.25,
@@ -483,7 +506,18 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
     return (orderEntry.price * orderEntry.number).toStringAsFixed(2)  + AppLocalizations.of(context).currency;
   }
 
-  getPromoDiscountForItem() {
-    return 1.0;
+  getPromoDiscountForItem(String businessId, double fullPrice, itemNumber) {
+    bool promoForSpecificBusiness = StoreProvider.of<AppState>(context).state.promotionState != null &&
+        StoreProvider.of<AppState>(context).state.promotionState.businessIdList != null &&
+        StoreProvider.of<AppState>(context).state.promotionState.businessIdList.isNotEmpty &&
+        StoreProvider.of<AppState>(context).state.promotionState.businessIdList.contains(businessId);
+    bool promoForAllServices = StoreProvider.of<AppState>(context).state.promotionState != null &&
+        (StoreProvider.of<AppState>(context).state.promotionState.businessIdList == null ||
+            StoreProvider.of<AppState>(context).state.promotionState.businessIdList.isEmpty);
+    if (promoForAllServices || promoForSpecificBusiness) {
+      return itemNumber * Utils.applyPromotion(context, fullPrice, 0.0, 0);
+    }
+    return 0;
+
   }
 }
