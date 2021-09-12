@@ -104,7 +104,7 @@ class _PRCardWidgetState extends State<PRCardWidget> {
                 width: 180,
                 height: 40,
                 alignment: Alignment.topLeft,
-                margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 1, left: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1),
+                margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 1, left: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 0.5),
                 child: Row(
                   children: [
                     Flexible(child: Text(
