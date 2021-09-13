@@ -289,6 +289,7 @@ class _BookingPageState extends State<BookingPage> {
         //debugPrint('UI_U_BookingPage: business logo => ${businessState.logo}');
         //debugPrint('UI_U_BookingPage: service list lenght => ${serviceList.length}');
 
+
         if (snapshot.categoryList.categoryListState.isNotEmpty && startRequest && rippleLoading) {
           rippleLoading = false;
           startRequest = false;
@@ -303,6 +304,9 @@ class _BookingPageState extends State<BookingPage> {
           //grid(store.state.categoryList.categoryListState);
           categoryListState = snapshot.categoryList;
           serviceListState = snapshot.serviceList;
+          debugPrint('UI_U_booking_page =>  SERVICE STATE LENGTH: ${serviceListState.serviceListState.length}');
+          if(serviceListState.serviceListState.first.serviceId == null)
+            serviceListState.serviceListState.removeLast();
           /*categoryListState.categoryListState.forEach((element) {
 
           });*/
@@ -331,6 +335,7 @@ class _BookingPageState extends State<BookingPage> {
           });
           bookingState = snapshot.booking != null ? snapshot.booking : BookingState().toEmpty();
           businessState = snapshot.business != null ? snapshot.business : BusinessState().toEmpty();
+
           serviceList = serviceListState.serviceListState.length >= 5 ? serviceListState.serviceListState.sublist(0, 5) : serviceListState.serviceListState;
 
           String startMonth = DateFormat('MM').format(bookingState.start_date);

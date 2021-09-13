@@ -607,5 +607,6 @@
   "phoneNumber": "Telephone number",
   "ifYouHaveABooking": "If you have a booking code, click here",
   "checkAvailability": "Check Availability",
-  "promo": "Promo"
+  "promo": "Promo",
+  "noServiceSlot": "No Service slot found"
 }

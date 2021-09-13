@@ -133,7 +133,7 @@ class _BookingListServiceListItemState extends State<BookingListServiceListItem>
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
                                   ///ECO label
-                                  widget.serviceState.tag.contains('ECO')
+                                  widget.serviceState.tag != null && widget.serviceState.tag.contains('ECO')
                                       ? FittedBox(
                                     fit: BoxFit.contain,
                                     child: W_GreenChoice(true),

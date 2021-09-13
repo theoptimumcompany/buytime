@@ -946,47 +946,49 @@ class _RServiceSlotManagementState extends State<RServiceSlotManagement> {
                 );
               }
               slotSnippetListState = SlotListSnippetState.fromJson(serviceSnapshot.data.docs.first.data());
-              slotSnippetListState.slotListSnippet.first.id = serviceSnapshot.data.docs.first.id;
-              debugPrint("slotSnippetListState: ${slotSnippetListState.slotListSnippet.length}");
-              squareSlotList.clear();
-              for(int i = 0; i < slotSnippetListState.slotListSnippet.length; i++){
-                squareSlotList.addAll(slotSnippetListState.slotListSnippet[i].slot);
-                slotSnippetListState.slotListSnippet[i].slot.forEach((element) {
-                  serviceSlotList.add(widget.serviceState.serviceSlot[i]);
-                });
-              }
-              /*slotSnippetListState.slotListSnippet.forEach((element) {
+              if(slotSnippetListState.slotListSnippet.isNotEmpty){
+                slotSnippetListState.slotListSnippet.first.id = serviceSnapshot.data.docs.first.id;
+                debugPrint("slotSnippetListState: ${slotSnippetListState.slotListSnippet.length}");
+                squareSlotList.clear();
+                for(int i = 0; i < slotSnippetListState.slotListSnippet.length; i++){
+                  squareSlotList.addAll(slotSnippetListState.slotListSnippet[i].slot);
+                  slotSnippetListState.slotListSnippet[i].slot.forEach((element) {
+                    serviceSlotList.add(widget.serviceState.serviceSlot[i]);
+                  });
+                }
+                /*slotSnippetListState.slotListSnippet.forEach((element) {
                 squareSlotList.addAll(element.slot);
               });*/
-              debugPrint("HOW MANY LIST OD SLOTS: ${slotSnippetListState.slotListSnippet.length}");
-              //squareSlotList = slotSnippetListState.slotListSnippet.first.slot;
-              allMap.clear();
-              slotMap.clear();
-              for(int i = 0; i < squareSlotList.length; i++){
-                DateTime tmp = DateFormat('dd/MM/yyyy').parse(squareSlotList[i].date);
-                DateTime tmp2 = DateFormat('dd/MM/yyyy').parse(squareSlotList[i].date);
-                DateTime currentDate = DateTime.now();
-                currentDate = DateTime(start.year, start.month, start.day, 0,0,0,0,0);
-                DateTime slotTime = DateFormat('dd/MM/yyyy').parse(squareSlotList[i].date);
-                int hour = int.parse(squareSlotList[i].on.split(':').first);
-                int minute = int.parse(squareSlotList[i].on.split(':').last);
-                slotTime = DateTime(slotTime.year, slotTime.month, slotTime.day, hour,minute,0,0,0);
-                Map<DateTime, List<SquareSlotState>> tmpMap = Map();
-                Map<DateTime, List<ServiceSlot>> tmpSlotMap = Map();
-                tmp = DateTime(tmp.year, tmp.month, 1, 0,0,0,0,0);
-                tmp2 = DateTime(tmp2.year, tmp2.month, tmp2.day, 0,0,0,0,0);
-                if(tmp2.isAfter(currentDate) || tmp2.isAtSameMomentAs(currentDate)){
-                  if(slotTime.isAfter(DateTime.now()) || slotTime.isAtSameMomentAs(DateTime.now())){
-                    allMap.putIfAbsent(tmp, () => tmpMap);
-                    slotMap.putIfAbsent(tmp, () => tmpSlotMap);
-                    debugPrint('RUI_M_activity_management: VALUE LENGTH: ${squareSlotList[i].free}');
-                    if(allMap.containsKey(tmp)){
-                      allMap[tmp].putIfAbsent(tmp2, () => []);
-                      slotMap[tmp].putIfAbsent(tmp2, () => []);
-                      //debugPrint('RUI_M_activity_management: KEY: $key');
-                      if(allMap[tmp].containsKey(tmp2))
-                        allMap[tmp][tmp2].add(squareSlotList[i]);
+                debugPrint("HOW MANY LIST OD SLOTS: ${slotSnippetListState.slotListSnippet.length}");
+                //squareSlotList = slotSnippetListState.slotListSnippet.first.slot;
+                allMap.clear();
+                slotMap.clear();
+                for(int i = 0; i < squareSlotList.length; i++){
+                  DateTime tmp = DateFormat('dd/MM/yyyy').parse(squareSlotList[i].date);
+                  DateTime tmp2 = DateFormat('dd/MM/yyyy').parse(squareSlotList[i].date);
+                  DateTime currentDate = DateTime.now();
+                  currentDate = DateTime(start.year, start.month, start.day, 0,0,0,0,0);
+                  DateTime slotTime = DateFormat('dd/MM/yyyy').parse(squareSlotList[i].date);
+                  int hour = int.parse(squareSlotList[i].on.split(':').first);
+                  int minute = int.parse(squareSlotList[i].on.split(':').last);
+                  slotTime = DateTime(slotTime.year, slotTime.month, slotTime.day, hour,minute,0,0,0);
+                  Map<DateTime, List<SquareSlotState>> tmpMap = Map();
+                  Map<DateTime, List<ServiceSlot>> tmpSlotMap = Map();
+                  tmp = DateTime(tmp.year, tmp.month, 1, 0,0,0,0,0);
+                  tmp2 = DateTime(tmp2.year, tmp2.month, tmp2.day, 0,0,0,0,0);
+                  if(tmp2.isAfter(currentDate) || tmp2.isAtSameMomentAs(currentDate)){
+                    if(slotTime.isAfter(DateTime.now()) || slotTime.isAtSameMomentAs(DateTime.now())){
+                      allMap.putIfAbsent(tmp, () => tmpMap);
+                      slotMap.putIfAbsent(tmp, () => tmpSlotMap);
+                      debugPrint('RUI_M_activity_management: VALUE LENGTH: ${squareSlotList[i].free}');
+                      if(allMap.containsKey(tmp)){
+                        allMap[tmp].putIfAbsent(tmp2, () => []);
+                        slotMap[tmp].putIfAbsent(tmp2, () => []);
+                        //debugPrint('RUI_M_activity_management: KEY: $key');
+                        if(allMap[tmp].containsKey(tmp2))
+                          allMap[tmp][tmp2].add(squareSlotList[i]);
                         slotMap[tmp][tmp2].add(serviceSlotList[i]);
+                      }
                     }
                   }
                 }
@@ -1020,11 +1022,28 @@ class _RServiceSlotManagementState extends State<RServiceSlotManagement> {
                 }
               });*/
 
-
-              return CustomScrollView(
-                  shrinkWrap: true, slivers: [MultiSliver(
-                children: orderHistory(allMap),
-              )]);
+              debugPrint('ALL MAP SIZE: ${allMap.length}');
+              if(allMap.isNotEmpty){
+                return CustomScrollView(
+                    shrinkWrap: true, slivers: [MultiSliver(
+                  children: orderHistory(allMap),
+                )]);
+              }else{
+                return Container(
+                  height: SizeConfig.safeBlockVertical * 8,
+                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 3),
+                  decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
+                  child: Center(
+                      child: Container(
+                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 4),
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          AppLocalizations.of(context).noServiceSlot,
+                          style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextWhite, fontWeight: FontWeight.w500, fontSize: 16),
+                        ),
+                      )),
+                );
+              }
             },
           ),
         ),

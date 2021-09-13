@@ -606,5 +606,6 @@
   "phoneNumber": "Phone number",
   "ifYouHaveABooking": "If you have a booking code, click here",
   "checkAvailability": "Check Availability",
-  "discoverEnd": "services around you"
+  "discoverEnd": "services around you",
+  "noServiceSlot": "No Service slot found"
 }

@@ -109,10 +109,11 @@ class _SlotManagementState extends State<SlotManagement> {
       onInit: (store) {
         store.state.serviceList.serviceListState.clear();
         List<String> businessIds = [];
+        debugPrint('BUSINESS LIST LENGTH: ${store.state.businessList.businessListState.length}');
         store.state.businessList.businessListState.forEach((element) {
           businessIds.add(element.id_firestore);
         });
-
+        debugPrint('BUSINESS IDS LIST LENGTH: ${businessIds.length}');
         store.dispatch(ServiceListRequestByBusinessIds(businessIds));
         noActivity = true;
         startRequest = true;
