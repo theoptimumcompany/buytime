@@ -51,7 +51,7 @@ class OrderTotal extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.only(bottom: 10.0),
-            child: orderState.totalPromoDiscount > 0 ? Row(
+            child: orderState.totalPromoDiscount != null && orderState.totalPromoDiscount > 0 ? Row(
               mainAxisAlignment: MainAxisAlignment.center,
               //crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -108,7 +108,7 @@ class OrderTotal extends StatelessWidget {
                   ),
                 ),
               ],
-            ) : Container,
+            ) : Container(),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,

@@ -90,20 +90,22 @@ class _BookingListServiceListItemState extends State<BookingListServiceListItem>
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           ///Service Name
-                          FittedBox(
-                            fit: BoxFit.scaleDown,
-                            child: Container(
-                              width: SizeConfig.safeBlockHorizontal * 60,
-                              child: Text(
-                                widget.serviceState.name != null ? Utils.retriveField(Localizations.localeOf(context).languageCode, widget.serviceState.name) : '',
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 1,
-                                style: TextStyle(letterSpacing: 0.15, fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w400, fontSize: 16
+                          Container(
+                            width: SizeConfig.safeBlockHorizontal * 60,
+                            //height: 40,
+                            child: Row(
+                              children: [Flexible(
+                                child: Text(
+                                  widget.serviceState.name != null ? Utils.retriveField(Localizations.localeOf(context).languageCode, widget.serviceState.name) : '',
+                                  //overflow: TextOverflow.ellipsis,
+                                  maxLines: 2,
+                                  style: TextStyle(letterSpacing: 0.15, fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w400, fontSize: 16
 
                                     /// SizeConfig.safeBlockHorizontal * 4
-                                    ),
-                              ),
-                            ),
+                                  ),
+                                ),
+                              )],
+                            )
                           ),
 
                           ///Description
@@ -111,9 +113,9 @@ class _BookingListServiceListItemState extends State<BookingListServiceListItem>
                             //color: Colors.black,
                             width: SizeConfig.safeBlockHorizontal * 60,
                             ///SizeConfig.safeBlockHorizontal * 50
-                            height: 40,
+                            //height: 40,
                             ///SizeConfig.safeBlockVertical * 10
-                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
+                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * .5),
                             child: Text(
                               widget.serviceState.description != null ? Utils.retriveField(Localizations.localeOf(context).languageCode, widget.serviceState.description) : '',
                               overflow: TextOverflow.ellipsis,
