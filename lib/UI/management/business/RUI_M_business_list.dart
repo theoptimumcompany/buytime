@@ -305,7 +305,7 @@ class RBusinessListState extends State<RBusinessList> {
                       businessListState.add(businesState);
                     });
                     businessListState.sort((a,b) => a.name.compareTo(b.name));
-                    StoreProvider.of<AppState>(context).state.businessList.businessListState.clear();
+                    //StoreProvider.of<AppState>(context).state.businessList.businessListState.clear();
                     StoreProvider.of<AppState>(context).dispatch(BusinessListReturned(businessListState));
 
 

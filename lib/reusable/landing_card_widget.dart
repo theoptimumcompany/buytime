@@ -10,7 +10,8 @@ class LandingCardWidget extends StatefulWidget {
   String bottomString;
   String imagePath;
   VoidCallback callback;
-  LandingCardWidget(this.topString, this.bottomString, this.imagePath, this.callback);
+  bool network;
+  LandingCardWidget(this.topString, this.bottomString, this.imagePath, this.callback, this.network);
 
   @override
   _LandingCardWidgetState createState() => _LandingCardWidgetState();
@@ -26,10 +27,10 @@ class _LandingCardWidgetState extends State<LandingCardWidget> {
       width: SizeConfig.safeBlockVertical * 80, ///SizeConfig.safeBlockHorizontal * 50
       //margin: EdgeInsets.all(SizeConfig.safeBlockVertical * 2),
       decoration: BoxDecoration(
-        color: Colors.black,
+        color: Colors.white,
           borderRadius: BorderRadius.all(Radius.circular(5)),
           image: DecorationImage(
-            image: AssetImage(widget.imagePath),
+            image: widget.network ? NetworkImage(widget.imagePath) : AssetImage(widget.imagePath),
             fit: BoxFit.cover,
           )
       ),

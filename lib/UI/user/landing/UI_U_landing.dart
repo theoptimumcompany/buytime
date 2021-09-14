@@ -412,8 +412,8 @@ class LandingLegacyState extends State<LandingLegacy> {
           //debugPrint('UI_U_Landing => Booking code: ${store.state.booking.booking_code}');
           debugPrint('UI_U_Landing => onInit()');
           debugPrint('UI_U_Landing => store on init()');
-          cards.add(LandingCardWidget(/*AppLocalizations.of(context).enterBookingCode*/ '', AppLocalizations.of(context).startYourJourney, 'assets/img/booking_code.png', null));
-          cards.add(LandingCardWidget(/*AppLocalizations.of(context).aboutBuytime*/ '', AppLocalizations.of(context).discoverOurNetwork, 'assets/img/beach_girl.png', null));
+          cards.add(LandingCardWidget(/*AppLocalizations.of(context).enterBookingCode*/ '', AppLocalizations.of(context).startYourJourney, 'assets/img/booking_code.png', null, false));
+          cards.add(LandingCardWidget(/*AppLocalizations.of(context).aboutBuytime*/ '', AppLocalizations.of(context).discoverOurNetwork, 'assets/img/beach_girl.png', null, false));
         },
         builder: (context, snapshot) {
           bookingList.clear();

@@ -74,6 +74,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:intl/intl.dart';
 import 'package:location/location.dart' as loc;
 import 'package:palette_generator/palette_generator.dart';
 import 'package:provider/provider.dart';
@@ -975,7 +976,47 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
       },
       builder: (context, snapshot) {
         cards.clear();
-        cards.add(LandingCardWidget(AppLocalizations.of(context).enterBookingCode, AppLocalizations.of(context).ifYouHaveABooking, 'assets/img/key.jpg', null));
+        if(snapshot.bookingList.bookingListState != null && snapshot.bookingList.bookingListState.isNotEmpty && snapshot.bookingList.bookingListState.first.booking_id != null ){
+          cards.clear();
+          String startMonth = DateFormat('MM').format(snapshot.bookingList.bookingListState.first.start_date);
+          String endMonth = DateFormat('MM').format(snapshot.bookingList.bookingListState.first.end_date);
+          bool sameMonth = false;
+          if (startMonth == endMonth)
+            sameMonth = true;
+          else
+            sameMonth = false;
+
+          DateTime currentTime = DateTime.now();
+          currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0);
+
+          DateTime endTime = DateTime.now();
+          DateTime startTime = DateTime.now();
+          //DateTime startTime = DateTime.now();
+          String bookingStatus = '';
+          //debugPrint('booing_card_widget => CURRENT TIME: $currentTime | START DATE: ${widget.bookingState.start_date}');
+          endTime = new DateTime(snapshot.bookingList.bookingListState.first.end_date.year, snapshot.bookingList.bookingListState.first.end_date.month, snapshot.bookingList.bookingListState.first.end_date.day, 0, 0, 0, 0, 0);
+          startTime = new DateTime(snapshot.bookingList.bookingListState.first.start_date.year, snapshot.bookingList.bookingListState.first.start_date.month, snapshot.bookingList.bookingListState.first.start_date.day, 0, 0, 0, 0, 0);
+          if(endTime.isBefore(currentTime)){
+            bookingStatus = 'Closed';
+          }else if(startTime.isAtSameMomentAs(currentTime))
+            bookingStatus = 'Active';
+          else if(startTime.isAfter(currentTime))
+            bookingStatus = 'Upcoming';
+          else
+            bookingStatus = 'Active';
+
+          if(snapshot.bookingList.bookingListState.first.status == 'closed')
+            cards.add(LandingCardWidget(AppLocalizations.of(context).enterBookingCode, AppLocalizations.of(context).ifYouHaveABooking, 'assets/img/key.jpg', null, false));
+          else
+            cards.add(LandingCardWidget(snapshot.bookingList.bookingListState.first.business_name, sameMonth
+                ? '$bookingStatus | ${DateFormat('dd', Localizations.localeOf(context).languageCode).format(snapshot.bookingList.bookingListState.first.start_date)} - ${DateFormat('dd MMMM', Localizations.localeOf(context).languageCode).format(snapshot.bookingList.bookingListState.first.end_date)}'
+                : '$bookingStatus | ${DateFormat('dd MMM', Localizations.localeOf(context).languageCode).format(snapshot.bookingList.bookingListState.first.start_date)} - ${DateFormat('dd MMM', Localizations.localeOf(context).languageCode).format(snapshot.bookingList.bookingListState.first.end_date)}',
+                'assets/img/key.jpg', null, false));
+        }
+
+        if(snapshot.user.getRole() != Role.user)
+          cards.add(LandingCardWidget(AppLocalizations.of(context).enterBookingCode, AppLocalizations.of(context).ifYouHaveABooking, 'assets/img/key.jpg', null, false));
+
         businessList = snapshot.businessList.businessListState;
         isManagerOrAbove = snapshot.user != null && (snapshot.user.getRole() != Role.user) ? true : false;
 
@@ -1016,6 +1057,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
               first = true;
             }
             if (categoryList.isNotEmpty && categoryList.first.name == null) categoryList.removeLast();
+
             noActivity = false;
             //categoryList.shuffle();
             //popularList.shuffle();
@@ -1336,7 +1378,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                     ),
                                   ),
                                   ///My bookings if user
-                                  FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty && _searchController.text.isEmpty?
+                                  FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty && _searchController.text.isEmpty && cards.isNotEmpty?
                                   Container(
                                     margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5,right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1),
                                     child: _OpenContainerWrapper(
@@ -1346,7 +1388,9 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                         return cards[0];
                                       },
                                     ),
-                                  ) : Container(),
+                                  ) : Container(
+                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5,right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1),
+                                      child: Utils.imageShimmer(SizeConfig.safeBlockVertical * 80, 100)),
                                   ///My bookings & View all
                                   _searchController.text.isEmpty && snapshot.user.getRole() == Role.user && auth.FirebaseAuth.instance.currentUser != null
                                       ? StreamBuilder<QuerySnapshot>(
