@@ -120,7 +120,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
           });
         } else {
           price = widget.serviceState.price != null
-              ? '${AppLocalizations.of(context).currencySpace} ' + widget.serviceState.price.toString() + AppLocalizations.of(context).slashOneUnit
+              ? '${AppLocalizations.of(context).currencySpace} ' + widget.serviceState.price.toStringAsFixed(2) /*+ AppLocalizations.of(context).slashOneUnit*/
               : AppLocalizations.of(context).currencyNoPrice + AppLocalizations.of(context).hour;
         }
 
@@ -340,30 +340,6 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                                         crossAxisAlignment: CrossAxisAlignment.start,
                                                         mainAxisAlignment: MainAxisAlignment.end,
                                                         children: [
-                                                          ///Promo Discount label
-                                                          Utils.checkPromoDiscount('general_1', context, snapshot.serviceState.businessId).promotionId != 'empty'
-                                                              ? Container(
-                                                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
-                                                                  child: Padding(
-                                                                    padding: const EdgeInsets.symmetric(vertical: 5.0,horizontal: 0.0),
-                                                                    child: FittedBox(
-                                                                      fit: BoxFit.fitHeight,
-                                                                      child: W_PromoDiscount(false),
-                                                                    ),
-                                                                  ),
-                                                                )
-                                                              : Container(),
-                                                          ///ECO label
-                                                          widget.serviceState.tag.contains('ECO')
-                                                              ? Container(
-                                                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
-                                                                  child: FittedBox(
-                                                                    fit: BoxFit.fitHeight,
-                                                                    child: W_GreenChoice(false),
-                                                                  ),
-                                                                )
-                                                              : Container(),
-
                                                           ///Service Name Text
                                                           Container(
                                                             margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 0.5),
@@ -388,16 +364,43 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                 ),*/
 
                                                           ///Amount
-                                                          Container(
-                                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1),
-                                                            child: Text(
-                                                              price,
-                                                              style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextWhite, fontWeight: FontWeight.w400, fontSize: 14
+                                                          Row(
+                                                            children: [
+                                                              Container(
+                                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1),
+                                                                child: Text(
+                                                                  price,
+                                                                  style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextWhite, fontWeight: FontWeight.w400, fontSize: 14
 
-                                                                  ///SizeConfig.safeBlockHorizontal * 4
+                                                                    ///SizeConfig.safeBlockHorizontal * 4
                                                                   ),
-                                                            ),
-                                                          ),
+                                                                ),
+                                                              ),
+                                                              ///Promo Discount label
+                                                              Utils.checkPromoDiscount('general_1', context, snapshot.serviceState.businessId).promotionId != 'empty'
+                                                                  ? Container(
+                                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5),
+                                                                child: Padding(
+                                                                  padding: const EdgeInsets.symmetric(vertical: 5.0,horizontal: 0.0),
+                                                                  child: FittedBox(
+                                                                    fit: BoxFit.fitHeight,
+                                                                    child: W_PromoDiscount(true),
+                                                                  ),
+                                                                ),
+                                                              )
+                                                                  : Container(),
+                                                              ///ECO label
+                                                              widget.serviceState.tag.contains('ECO')
+                                                                  ? Container(
+                                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5),
+                                                                child: FittedBox(
+                                                                  fit: BoxFit.fitHeight,
+                                                                  child: W_GreenChoice(false),
+                                                                ),
+                                                              )
+                                                                  : Container(),
+                                                            ],
+                                                          )
                                                         ],
                                                       ),
                                                     ),

@@ -63,6 +63,43 @@ class _BookingListServiceListItemState extends State<BookingListServiceListItem>
                           image: imageProvider,
                           fit: BoxFit.cover,
                         )),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Flexible(
+                              child: Container(
+                                width: 91,
+                                margin: EdgeInsets.only(bottom: 5),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    ///Promo Discount label
+                                    Utils.checkPromoDiscount('general_1', context, widget.serviceState.businessId).promotionId != 'empty'
+                                        ? Container(
+                                      margin: EdgeInsets.only(left: 5),
+                                      child: FittedBox(
+                                        fit: BoxFit.contain,
+                                        child: W_PromoDiscount(true),
+                                      ),
+                                    ): Container(),
+                                    ///ECO label
+                                    widget.serviceState.tag != null && widget.serviceState.tag.contains('ECO')
+                                        ? Container(
+                                      margin: EdgeInsets.only(left: 5),
+                                      child: FittedBox(
+                                        fit: BoxFit.contain,
+                                        child: W_GreenChoice(true),
+                                      ),
+                                    )
+                                        : Container(),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                       placeholder: (context, url) => Utils.imageShimmer(91, 91),
                       errorWidget: (context, url, error) => Icon(Icons.error),
@@ -126,34 +163,6 @@ class _BookingListServiceListItemState extends State<BookingListServiceListItem>
                               ),
                             ),
                           ),
-
-                          Flexible(
-                            child: Container(
-                              width: SizeConfig.safeBlockHorizontal * 55,
-                              margin: EdgeInsets.only(bottom: 5),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  ///ECO label
-                                  widget.serviceState.tag != null && widget.serviceState.tag.contains('ECO')
-                                      ? FittedBox(
-                                    fit: BoxFit.contain,
-                                    child: W_GreenChoice(true),
-                                  )
-                                      : Container(),
-                                  ///Promo Discount label
-                                  Utils.checkPromoDiscount('general_1', context, widget.serviceState.businessId).promotionId != 'empty'
-                                      ? Container(
-                                    margin: EdgeInsets.only(left: 5),
-                                        child: FittedBox(
-                                    fit: BoxFit.contain,
-                                    child: W_PromoDiscount(true),
-                                  ),
-                                      ): Container(),
-                                ],
-                              ),
-                            ),
-                          )
 
                         ],
                       ),
