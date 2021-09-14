@@ -278,52 +278,52 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
                             builder: (context, snapshot) {
                               return Column(
                           children: [
-                            getPromoDiscountForItem(orderEntry.id_business, orderEntry.price, orderEntry.numberDiscounted) > 0.0 ?
-                            Container(
-                              child: Row(
-                                children: [
-                                   Text(
-                                    price(),
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                        letterSpacing: 0.25,
-                                        fontFamily: BuytimeTheme.FontFamily,
-                                        fontWeight: FontWeight.w400,
-                                        color: BuytimeTheme.TextBlack,
-                                        decoration: TextDecoration.lineThrough,
-                                        fontSize: 16 /// mediaSize.height * 0.024
-                                    ),
-                                  ) ,
-                                  Text(
-                                    " " + realCost(snapshot) + AppLocalizations.of(context).euroSpace,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                        letterSpacing: 0.25,
-                                        fontFamily: BuytimeTheme.FontFamily,
-                                        fontWeight: FontWeight.w400,
-                                        color: BuytimeTheme.TextBlack,
-                                        fontSize: 16 /// mediaSize.height * 0.024
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ):
+                            // getPromoDiscountForItem(orderEntry.id_business, orderEntry.price, orderEntry.numberDiscounted) > 0.0 ?
+                            // Container(
+                            //   child: Row(
+                            //     children: [
+                            //        Text(
+                            //         price(),
+                            //         overflow: TextOverflow.ellipsis,
+                            //         style: TextStyle(
+                            //             letterSpacing: 0.25,
+                            //             fontFamily: BuytimeTheme.FontFamily,
+                            //             fontWeight: FontWeight.w400,
+                            //             color: BuytimeTheme.TextBlack,
+                            //             decoration: TextDecoration.lineThrough,
+                            //             fontSize: 16 /// mediaSize.height * 0.024
+                            //         ),
+                            //       ) ,
+                            //       Text(
+                            //         " " + realCost(snapshot) + AppLocalizations.of(context).euroSpace,
+                            //         overflow: TextOverflow.ellipsis,
+                            //         style: TextStyle(
+                            //             letterSpacing: 0.25,
+                            //             fontFamily: BuytimeTheme.FontFamily,
+                            //             fontWeight: FontWeight.w400,
+                            //             color: BuytimeTheme.TextBlack,
+                            //             fontSize: 16 /// mediaSize.height * 0.024
+                            //         ),
+                            //       ),
+                            //     ],
+                            //   ),
+                            // ):
                             Container(
                                   child: Row(
                                     children: [
-                                      getPromoDiscountForItem(orderEntry.id_business, orderEntry.price, orderEntry.numberDiscounted) > 0.0 ?
-                                      Text(
-                                        price(),
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                            letterSpacing: 0.25,
-                                            fontFamily: BuytimeTheme.FontFamily,
-                                            fontWeight: FontWeight.w400,
-                                            color: BuytimeTheme.TextBlack,
-                                            decoration: TextDecoration.lineThrough,
-                                            fontSize: 16 /// mediaSize.height * 0.024
-                                        ),
-                                      ) : Container(),
+                                      // getPromoDiscountForItem(orderEntry.id_business, orderEntry.price, orderEntry.numberDiscounted) > 0.0 ?
+                                      // Text(
+                                      //   price(),
+                                      //   overflow: TextOverflow.ellipsis,
+                                      //   style: TextStyle(
+                                      //       letterSpacing: 0.25,
+                                      //       fontFamily: BuytimeTheme.FontFamily,
+                                      //       fontWeight: FontWeight.w400,
+                                      //       color: BuytimeTheme.TextBlack,
+                                      //       decoration: TextDecoration.lineThrough,
+                                      //       fontSize: 16 /// mediaSize.height * 0.024
+                                      //   ),
+                                      // ) : Container(),
                                       Text(
                                         price(),
                                         overflow: TextOverflow.ellipsis,
