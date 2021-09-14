@@ -7,6 +7,8 @@ part 'order_entry.g.dart';
 @JsonSerializable(explicitToJson: true)
 class OrderEntry {
   int number;
+  @JsonKey(ignore: true)
+  int numberDiscounted;
   String name;
   String description;
   double price;
@@ -31,6 +33,7 @@ class OrderEntry {
 
   OrderEntry({
     this.number = 0,
+    this.numberDiscounted = 0,
     this.name,
     this.description,
     this.price,

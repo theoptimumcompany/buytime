@@ -273,15 +273,21 @@ class OrderState {
 
   addItem(ServiceState itemToAdd, String idOwner, BuildContext context) {
     bool added = false;
+    double itemDiscount = Utils.calculatePromoDiscount(itemToAdd.price, context, itemToAdd.businessId, 1, totalNumberOfItems());
       itemList.forEach((element) {
         if (!added && element.id == itemToAdd.serviceId) {
           element.number++;
+          if (itemDiscount != 0.0){
+            // element.numberDiscounted++;
+            debugPrint("order_state numberDiscounted: " +  element.numberDiscounted.toString());
+          }
           added = true;
         }
       });
       if (!added) {
         itemList.add(OrderEntry(
             number: 1,
+            numberDiscounted: itemDiscount != 0.0 ? 1 : 0,
             name: itemToAdd.name,
             description: itemToAdd.description,
             price: itemToAdd.price,
@@ -295,7 +301,7 @@ class OrderState {
         ));
       }
       this.total += itemToAdd.price;
-      double itemDiscount = Utils.calculatePromoDiscount(itemToAdd.price, context, itemToAdd.businessId, 1, totalNumberOfItems());
+
       this.totalPromoDiscount += itemDiscount;
       this.total -= itemDiscount;
   }
@@ -317,6 +323,12 @@ class OrderState {
         double itemDiscount = Utils.calculatePromoDiscount(entry.price, context, entry.id_business, 2, totalNumberOfItems());
         this.totalPromoDiscount -= itemDiscount;
         this.total += itemDiscount;
+        // if (itemDiscount != 0.0){
+        //   element.numberDiscounted--;
+        //   if (element.numberDiscounted < 0) {
+        //     element.numberDiscounted = 0;
+        //   }
+        // }
         element.number = 0;
         deleted = true;
       }

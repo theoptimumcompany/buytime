@@ -81,6 +81,12 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
           double serviceTotal =  snapshot.total;
           serviceTotal = serviceTotal - snapshot.itemList[index].price;
           double itemDiscount = Utils.calculatePromoDiscount(snapshot.itemList[index].price, context, snapshot.itemList[index].id_business, 2, snapshot.totalNumberOfItems());
+          if (itemDiscount > 0.0) {
+            snapshot.itemList[index].numberDiscounted--;
+            if (snapshot.itemList[index].numberDiscounted < 0) {
+              snapshot.itemList[index].numberDiscounted = 0;
+            }
+          }
           snapshot.totalPromoDiscount -= itemDiscount;
           snapshot.total = serviceTotal;
           snapshot.total += itemDiscount;
@@ -102,6 +108,12 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
           double serviceTotal =  snapshot.total;
           serviceTotal = serviceTotal - snapshot.itemList[index].price;
           double itemDiscount = Utils.calculatePromoDiscount(snapshot.itemList[index].price, context, snapshot.itemList[index].id_business, 2, snapshot.totalNumberOfItems());
+          if (itemDiscount > 0.0) {
+            snapshot.itemList[index].numberDiscounted--;
+            if (snapshot.itemList[index].numberDiscounted < 0) {
+              snapshot.itemList[index].numberDiscounted = 0;
+            }
+          }
           snapshot.totalPromoDiscount -= itemDiscount;
           snapshot.total = serviceTotal;
           snapshot.total += itemDiscount;
@@ -132,6 +144,9 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
       double serviceTotal =  snapshot.total;
       serviceTotal = serviceTotal + snapshot.itemList[index].price;
       double itemDiscount = Utils.calculatePromoDiscount(snapshot.itemList[index].price, context, snapshot.itemList[index].id_business, 1, snapshot.totalNumberOfItems());
+      if (itemDiscount > 0.0) {
+        snapshot.itemList[index].numberDiscounted++;
+      }
       snapshot.totalPromoDiscount += itemDiscount;
       //StoreProvider.of<AppState>(context).dispatch(IncreasePromotionCounter(1));
       snapshot.total = serviceTotal;
@@ -256,9 +271,15 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
                           ),
                         ),
                         ///Price
-                        Column(
+                        StoreConnector<AppState, AppState>(
+                            converter: (store) => store.state,
+                            onInit: (store) {
+                            },
+                            builder: (context, snapshot) {
+                              return Column(
                           children: [
-                            getPromoDiscountForItem(orderEntry.id_business, orderEntry.price, orderEntry.number) > 0.0 ? Container(
+                            getPromoDiscountForItem(orderEntry.id_business, orderEntry.price, orderEntry.numberDiscounted) > 0.0 ?
+                            Container(
                               child: Row(
                                 children: [
                                    Text(
@@ -274,7 +295,7 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
                                     ),
                                   ) ,
                                   Text(
-                                    " " + (orderEntry.price * orderEntry.number - getPromoDiscountForItem(orderEntry.id_business, orderEntry.price, orderEntry.number)).toStringAsFixed(2) + AppLocalizations.of(context).euroSpace,
+                                    " " + realCost(snapshot) + AppLocalizations.of(context).euroSpace,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
                                         letterSpacing: 0.25,
@@ -288,36 +309,39 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
                               ),
                             ):
                             Container(
-                              child: Row(
-                                children: [
-                                  getPromoDiscountForItem(orderEntry.id_business, orderEntry.price, orderEntry.number) > 0.0 ? Text(
-                                    getPromoDiscountForItem(orderEntry.id_business, orderEntry.price, orderEntry.number).toString() + AppLocalizations.of(context).euroSpace,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                        letterSpacing: 0.25,
-                                        fontFamily: BuytimeTheme.FontFamily,
-                                        fontWeight: FontWeight.w400,
-                                        color: BuytimeTheme.TextBlack,
-                                        decoration: TextDecoration.lineThrough,
-                                        fontSize: 16 /// mediaSize.height * 0.024
-                                    ),
-                                  ) : Container(),
-                                  Text(
-                                    " " + price(),
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                        letterSpacing: 0.25,
-                                        fontFamily: BuytimeTheme.FontFamily,
-                                        fontWeight: FontWeight.w400,
-                                        color: BuytimeTheme.TextBlack,
-                                        fontSize: 16 /// mediaSize.height * 0.024
-                                    ),
+                                  child: Row(
+                                    children: [
+                                      getPromoDiscountForItem(orderEntry.id_business, orderEntry.price, orderEntry.numberDiscounted) > 0.0 ?
+                                      Text(
+                                        price(),
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                            letterSpacing: 0.25,
+                                            fontFamily: BuytimeTheme.FontFamily,
+                                            fontWeight: FontWeight.w400,
+                                            color: BuytimeTheme.TextBlack,
+                                            decoration: TextDecoration.lineThrough,
+                                            fontSize: 16 /// mediaSize.height * 0.024
+                                        ),
+                                      ) : Container(),
+                                      Text(
+                                        price(),
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                            letterSpacing: 0.25,
+                                            fontFamily: BuytimeTheme.FontFamily,
+                                            fontWeight: FontWeight.w400,
+                                            color: BuytimeTheme.TextBlack,
+                                            fontSize: 16 /// mediaSize.height * 0.024
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ],
-                              ),
-                            )
+                                )
                           ],
-                        )
+                        );
+                                }
+                            )
                       ],
                     ),
                   ],
@@ -498,15 +522,21 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
     );
   }
 
+  String realCost(AppState snapshot) {
+    double discountToShow = 0.0;
+    discountToShow = ((orderEntry.price * orderEntry.number) - getPromoDiscountForItem(orderEntry.id_business, orderEntry.price, orderEntry.numberDiscounted));
+    return discountToShow.toStringAsFixed(2);
+
+  }
+
   String price() {
     if (orderEntry.number == 1) {
       return orderEntry.price.toStringAsFixed(2) + AppLocalizations.of(context).currency;
     }
-    //return "€ " + orderEntry.price.toStringAsFixed(2) + " x " +  orderEntry.number.toString() + " = € " + (orderEntry.price * orderEntry.number).toStringAsFixed(2);
     return (orderEntry.price * orderEntry.number).toStringAsFixed(2)  + AppLocalizations.of(context).currency;
   }
 
-  getPromoDiscountForItem(String businessId, double fullPrice, itemNumber) {
+  getPromoDiscountForItem(String businessId, double fullPrice, itemNumberDiscount) {
     bool promoForSpecificBusiness = StoreProvider.of<AppState>(context).state.promotionState != null &&
         StoreProvider.of<AppState>(context).state.promotionState.businessIdList != null &&
         StoreProvider.of<AppState>(context).state.promotionState.businessIdList.isNotEmpty &&
@@ -515,9 +545,17 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
         (StoreProvider.of<AppState>(context).state.promotionState.businessIdList == null ||
             StoreProvider.of<AppState>(context).state.promotionState.businessIdList.isEmpty);
     if (promoForAllServices || promoForSpecificBusiness) {
-      return itemNumber * Utils.applyPromotion(context, fullPrice, 0.0, 0);
+      debugPrint("optimum_order_item_card_medium itemNumberDiscount: " +  itemNumberDiscount.toString());
+      return itemNumberDiscount  * Utils.applyPromotion(context, fullPrice, 0.0, 0);
     }
     return 0;
+  }
 
+  int itemListTotalItems() {
+    int totalItems = 0;
+    for(int i = 0; i < StoreProvider.of<AppState>(context).state.order.itemList.length; i++) {
+      totalItems += StoreProvider.of<AppState>(context).state.order.itemList[i].number;
+    }
+    return totalItems;
   }
 }
