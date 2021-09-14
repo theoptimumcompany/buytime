@@ -976,7 +976,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
       },
       builder: (context, snapshot) {
         cards.clear();
-        if(snapshot.bookingList.bookingListState != null && snapshot.bookingList.bookingListState.isNotEmpty && snapshot.bookingList.bookingListState.first.booking_id != null ){
+        /*if(snapshot.bookingList.bookingListState != null && snapshot.bookingList.bookingListState.isNotEmpty && snapshot.bookingList.bookingListState.first.booking_id != null ){
           cards.clear();
           String startMonth = DateFormat('MM').format(snapshot.bookingList.bookingListState.first.start_date);
           String endMonth = DateFormat('MM').format(snapshot.bookingList.bookingListState.first.end_date);
@@ -1014,7 +1014,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                 'assets/img/key.jpg', null, false));
         }
 
-        if(snapshot.user.getRole() != Role.user)
+        if(snapshot.user.getRole() != Role.user)*/
           cards.add(LandingCardWidget(AppLocalizations.of(context).enterBookingCode, AppLocalizations.of(context).ifYouHaveABooking, 'assets/img/key.jpg', null, false));
 
         businessList = snapshot.businessList.businessListState;
