@@ -1015,7 +1015,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
         }
 
         if(snapshot.user.getRole() != Role.user)*/
-          cards.add(LandingCardWidget(AppLocalizations.of(context).enterBookingCode, AppLocalizations.of(context).ifYouHaveABooking, 'assets/img/key.jpg', null, false));
+        cards.add(LandingCardWidget(AppLocalizations.of(context).enterBookingCode, AppLocalizations.of(context).ifYouHaveABooking, 'assets/img/key.jpg', null, false));
 
         businessList = snapshot.businessList.businessListState;
         isManagerOrAbove = snapshot.user != null && (snapshot.user.getRole() != Role.user) ? true : false;
@@ -1378,7 +1378,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                     ),
                                   ),
                                   ///My bookings if user
-                                  FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty && _searchController.text.isEmpty && cards.isNotEmpty?
+                                  FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty && _searchController.text.isEmpty /*&& cards.isNotEmpty*/?
                                   Container(
                                     margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5,right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1),
                                     child: _OpenContainerWrapper(
@@ -1388,9 +1388,10 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                         return cards[0];
                                       },
                                     ),
-                                  ) : Container(
+                                  ) : Container()
+                                  /*Container(
                                       margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5,right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1),
-                                      child: Utils.imageShimmer(SizeConfig.safeBlockVertical * 80, 100)),
+                                      child: Utils.imageShimmer(SizeConfig.safeBlockVertical * 80, 100))*/,
                                   ///My bookings & View all
                                   _searchController.text.isEmpty && snapshot.user.getRole() == Role.user && auth.FirebaseAuth.instance.currentUser != null
                                       ? StreamBuilder<QuerySnapshot>(
