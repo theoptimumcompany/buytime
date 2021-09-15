@@ -123,7 +123,7 @@ class _DashboardListItemState extends State<DashboardListItem> {
                           children: [
                             Container(
                               child: Text(
-                                '${AppLocalizations.of(context).createdAt} ${DateFormat('HH:mm', Localizations.localeOf(context).languageCode).format(widget.orderState.creationDate)}',
+                                '${AppLocalizations.of(context).createdAt} ${DateFormat('HH:mm', Localizations.localeOf(context).languageCode).format(widget.orderState.creationDate.add(Duration(hours: 2)))}',
                                 style: TextStyle(fontFamily: BuytimeTheme.FontFamily, fontSize: 12, letterSpacing: 0.25, fontWeight: FontWeight.w400, color: BuytimeTheme.TextMedium),
                               ),
                             )

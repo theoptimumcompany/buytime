@@ -120,6 +120,7 @@ class _RActivityManagementItemDetailsState extends State<RActivityManagementItem
     var media = MediaQuery.of(context).size;
 
     final Stream<DocumentSnapshot> _orderStream =  FirebaseFirestore.instance.collection('order').doc(widget.orderId).snapshots(includeMetadataChanges: true);
+    debugPrint('ORDER ID: ${widget.orderId}');
     ///Init sizeConfig
     SizeConfig().init(context);
     return StreamBuilder<DocumentSnapshot>(
@@ -267,14 +268,16 @@ class _RActivityManagementItemDetailsState extends State<RActivityManagementItem
                           padding: const EdgeInsets.only(top: 10),
                           child: Column(
                             children: [
-                              orderState.itemList.first == null ?
+                              orderState.itemList != null && orderState.itemList.length > 1 ?
+                              ///Title
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Container(
-                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1),
+                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 2),
                                     child: Text(
-                                      '${orderState.business.name}',
+                                      //'${orderState.business.name}',
+                                      '${AppLocalizations.of(context).multipleOrders} - ${orderState.itemList.length} ${AppLocalizations.of(context).items}',
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
                                           fontFamily: BuytimeTheme.FontFamily,
@@ -306,6 +309,34 @@ class _RActivityManagementItemDetailsState extends State<RActivityManagementItem
                                   )
                                 ],
                               ),
+                              orderState.itemList.length == 1 ?
+                              ///Description
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Flexible(
+                                    child: Container(
+                                      width: double.infinity,
+                                      alignment: Alignment.center,
+                                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 2.5),
+                                      child: Text(
+                                        Utils.retriveField(Localizations.localeOf(context).languageCode, orderState.itemList.first.description),
+                                        //'${orderState.itemList.first.description}',
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 2,
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            fontFamily: BuytimeTheme.FontFamily,
+                                            fontWeight: FontWeight.w500,
+                                            color: BuytimeTheme.TextBlack,
+                                            fontSize: 16 /// mediaSize.height * 0.024
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ) :
+                              Container(),
                               ///Order status
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -346,7 +377,8 @@ class _RActivityManagementItemDetailsState extends State<RActivityManagementItem
                                   )
                                 ],
                               ),
-                              orderState.itemList.first == null ?
+                              /*orderState.itemList != null && orderState.itemList.length > 1 ?
+                              ///Item count
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
@@ -365,31 +397,85 @@ class _RActivityManagementItemDetailsState extends State<RActivityManagementItem
                                   )
                                 ],
                               ) :
-                              ///Sub text
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Flexible(
-                                    child: Container(
-                                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * .5, bottom: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 2.5),
-                                      child: Text(
-                                        Utils.retriveField(Localizations.localeOf(context).languageCode, orderState.itemList.first.description),
-                                        //'${orderState.itemList.first.description}',
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 2,
-                                        style: TextStyle(
-                                            fontFamily: BuytimeTheme.FontFamily,
-                                            fontWeight: FontWeight.w500,
-                                            color: BuytimeTheme.TextBlack,
-                                            fontSize: 16 /// mediaSize.height * 0.024
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
+                              Container(),*/
                               ///Order List
-                              orderState.itemList.first == null ?
+                              orderState.itemList != null && orderState.itemList.length > 1 ?
+                              Flexible(
+                                flex: 1,
+                                child: CustomScrollView(shrinkWrap: true, slivers: [
+                                  SliverList(
+                                    delegate: SliverChildBuilderDelegate(
+                                          (context, index) {
+                                        //MenuItemModel menuItem = menuItems.elementAt(index);
+                                        debugPrint('UI_M_activity_management_item_details => LIST| ${orderState.itemList[index].name} ITEM COUNT: ${orderState.itemList[index].number}');
+                                        var item = (index != orderState.itemList.length ? orderState.itemList[index] : null);
+                                        //int itemCount = orderState.itemList[index].number;
+                                        return  Dismissible(
+                                          // Each Dismissible must contain a Key. Keys allow Flutter to
+                                          // uniquely identify widgets.
+                                          key: UniqueKey(),
+                                          // Provide a function that tells the app
+                                          // what to do after an item has been swiped away.
+                                          direction: DismissDirection.endToStart,
+                                          onDismissed: (direction) {
+                                            // Remove the item from the data source.
+                                            setState(() {
+                                              orderState.itemList.removeAt(index);
+                                            });
+                                            if (direction == DismissDirection.endToStart) {
+                                              orderState.selected == null || orderState.selected.isEmpty ?
+                                              deleteItem(orderState, item, index) :
+                                              deleteReserveItem(orderState, item, index);
+                                              debugPrint('UI_U_SearchPage => DX to DELETE');
+                                              // Show a snackbar. This snackbar could also contain "Undo" actions.
+                                              Scaffold.of(context).showSnackBar(SnackBar(
+                                                  content: Text(Utils.retriveField(Localizations.localeOf(context).languageCode, item.name) + AppLocalizations.of(context).spaceRemoved),
+                                                  action: SnackBarAction(
+                                                      label: AppLocalizations.of(context).undo,
+                                                      onPressed: () {
+                                                        //To undo deletion
+                                                        undoDeletion(index, item, orderState);
+                                                      })));
+                                            } else {
+                                              orderState.itemList.insert(index, item);
+                                            }
+                                          },
+                                          child: OptimumOrderItemCardMedium(
+                                            key: ObjectKey(item),
+                                            orderEntry: orderState.itemList[index],
+                                            mediaSize: media,
+                                            orderState: orderState,
+                                            index: index,
+                                            show: true,
+                                          ),
+                                          background: Container(
+                                            color: BuytimeTheme.BackgroundWhite,
+                                            //margin: EdgeInsets.symmetric(horizontal: 15),
+                                            alignment: Alignment.centerRight,
+                                          ),
+                                          secondaryBackground: Container(
+                                            color: BuytimeTheme.AccentRed,
+                                            //margin: EdgeInsets.symmetric(horizontal: 15),
+                                            alignment: Alignment.centerRight,
+                                            child: Container(
+                                              margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 2.5),
+                                              child: Icon(
+                                                BuytimeIcons.remove,
+                                                size: 24,
+
+                                                ///SizeConfig.safeBlockHorizontal * 7
+                                                color: BuytimeTheme.SymbolWhite,
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      childCount: orderState.itemList.length,
+                                    ),
+                                  ),
+                                ]),
+                              ) :
+                              orderState.itemList.length == 1 ?
                               Flexible(
                                 flex: 1,
                                 child: CustomScrollView(shrinkWrap: true, slivers: [
@@ -556,7 +642,9 @@ class _RActivityManagementItemDetailsState extends State<RActivityManagementItem
                                 ),
                               ),
                               ///Total Order
-                              orderState.itemList.first == null ?
+                              orderState.itemList != null && orderState.itemList.length > 1 ?
+                              OrderTotal(/*totalECO: 0*/ media: media, orderState: orderState) :
+                              orderState.itemList.length == 1 ?
                               OrderTotal(/*totalECO: 0*/ media: media, orderState: orderState) :
                               Container(
                                 width: media.width,

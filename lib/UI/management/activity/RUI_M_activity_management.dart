@@ -860,6 +860,10 @@ class _RActivityManagementState extends State<RActivityManagement> {
                   }
                 });
 
+                pendingList = pendingList.reversed.toList();
+                acceptedList = acceptedList.reversed.toList();
+                canceledList = canceledList.reversed.toList();
+
 
                 pendingList.forEach((pending) {
                   //debugPrint('CHECK PENDING');
