@@ -50,6 +50,7 @@ class OrderReservableState {
   PaymentMethod paymentMethod;
   String location;
   String openUntil;
+  String tableNumber;
   String cancellationReason;
   bool carbonCompensation = false;
   double totalPromoDiscount = 0.0;
@@ -83,6 +84,7 @@ class OrderReservableState {
     this.paymentMethod,
     this.location,
     this.openUntil,
+    this.tableNumber,
     this.cancellationReason,
     this.carbonCompensation,
     this.totalPromoDiscount,
@@ -119,6 +121,7 @@ class OrderReservableState {
     this.paymentMethod = state.paymentMethod;
     this.location = state.location;
     this.openUntil = state.openUntil;
+    this.tableNumber = state.tableNumber;
     this.cancellationReason = state.cancellationReason;
     this.carbonCompensation = state.carbonCompensation;
     this.totalPromoDiscount = state.totalPromoDiscount;
@@ -153,6 +156,7 @@ class OrderReservableState {
     PaymentMethod paymentMethodRequest,
     String location,
     String openUntil,
+    String tableNumber,
     String cancellationReason,
     bool carbonCompensation,
     bool totalPromoDiscount,
@@ -186,6 +190,7 @@ class OrderReservableState {
       paymentMethod: paymentMethod ?? this.paymentMethod,
       location: location ?? this.location,
       openUntil: openUntil ?? this.openUntil,
+      tableNumber: tableNumber ?? this.tableNumber,
       cancellationReason: cancellationReason ?? this.cancellationReason,
       carbonCompensation: carbonCompensation ?? this.carbonCompensation,
       totalPromoDiscount: totalPromoDiscount ?? this.totalPromoDiscount,
@@ -197,7 +202,7 @@ class OrderReservableState {
     return OrderReservableState(
       position: "",
       date: DateTime.now(),
-        creationDate: DateTime.now(),
+      creationDate: DateTime.now(),
       itemList: [],
       total: 0.0,
       tip: 0.0,
@@ -210,18 +215,19 @@ class OrderReservableState {
       businessId: "",
       businessIdForGiveback: "",
       userId: "",
-        orderId: "",
+      orderId: "",
       business: OrderBusinessSnippetState().toEmpty(),
       user: UserSnippet().toEmpty(),
       selected: [],
-        cartCounter: 0,
+      cartCounter: 0,
       serviceId: '',
-        cardType: '',
-        cardLast4Digit: '',
-        confirmOrderWait: false,
-        paymentMethod: null,
-        location: '',
-        openUntil: '--:--',
+      cardType: '',
+      cardLast4Digit: '',
+      confirmOrderWait: false,
+      paymentMethod: null,
+      location: '',
+      openUntil: '--:--',
+      tableNumber: '',
       cancellationReason: 'Overbooking',
       carbonCompensation: false,
       totalPromoDiscount: 0.0,

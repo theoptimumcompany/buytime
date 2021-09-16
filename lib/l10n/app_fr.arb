@@ -607,5 +607,7 @@
   "ifYouHaveABooking": "If you have a booking code, click here",
   "checkAvailability": "Check Availability",
   "discoverEnd": "services around you",
+  "tableNumber": "table number",
+  "insertTableNumber": "Enter table number",
   "noServiceSlot": "No Service slot found"
 }

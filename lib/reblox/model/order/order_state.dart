@@ -69,6 +69,8 @@ class OrderState {
   PaymentMethod paymentMethod;
   String location;
   String openUntil;
+  @JsonKey(defaultValue: "")
+  String tableNumber;
   String cancellationReason;
   bool carbonCompensation = false;
   double totalPromoDiscount = 0.0;
@@ -100,6 +102,7 @@ class OrderState {
     this.paymentMethod,
     this.location,
     this.openUntil,
+    this.tableNumber,
     this.cancellationReason,
     this.carbonCompensation,
     this.totalPromoDiscount,
@@ -134,6 +137,7 @@ class OrderState {
     this.paymentMethod = state.paymentMethod;
     this.location = state.location;
     this.openUntil = state.openUntil;
+    this.tableNumber = state.tableNumber;
     this.cancellationReason = state.cancellationReason;
     this.carbonCompensation = state.carbonCompensation;
     this.totalPromoDiscount = state.totalPromoDiscount;
@@ -166,6 +170,7 @@ class OrderState {
     this.paymentMethod = state.paymentMethod;
     this.location = state.location;
     this.openUntil = state.openUntil;
+    this.tableNumber = state.tableNumber;
     this.cancellationReason = state.cancellationReason;
     this.carbonCompensation = state.carbonCompensation;
     this.totalPromoDiscount = state.totalPromoDiscount;
@@ -199,6 +204,7 @@ class OrderState {
     PaymentMethod paymentMethod,
     String location,
     String openUntil,
+    String tableNumber,
     String cancellationReason,
     bool carbonCompensation,
     double totalPromoDiscount,
@@ -230,6 +236,7 @@ class OrderState {
       paymentMethod: paymentMethod ?? this.paymentMethod,
       location: location ?? this.location,
       openUntil: openUntil ?? this.openUntil,
+      tableNumber: tableNumber ?? this.tableNumber,
       cancellationReason: cancellationReason ?? this.cancellationReason,
       carbonCompensation: carbonCompensation ?? this.carbonCompensation,
       totalPromoDiscount: totalPromoDiscount ?? this.totalPromoDiscount,
@@ -264,6 +271,7 @@ class OrderState {
       paymentMethod: null,
       location: '',
       openUntil: '--:--',
+      tableNumber: '',
       cancellationReason: 'Overbooking',
       carbonCompensation: false,
       totalPromoDiscount: 0.0,

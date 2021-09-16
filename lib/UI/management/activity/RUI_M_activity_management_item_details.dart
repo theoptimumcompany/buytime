@@ -1,32 +1,17 @@
 import 'package:Buytime/UI/management/activity/widget/W_cancel_popup.dart';
-import 'package:Buytime/UI/management/activity/widget/W_dashboard_card.dart';
-import 'package:Buytime/UI/management/activity/widget/W_dashboard_list_item.dart';
-import 'package:Buytime/UI/management/business/UI_M_edit_business.dart';
 import 'package:Buytime/reblox/model/order/order_entry.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
-import 'package:Buytime/reblox/reducer/booking_list_reducer.dart';
-import 'package:Buytime/reblox/reducer/order_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
-import 'package:Buytime/UI/management/category/UI_M_manage_category.dart';
-import 'package:Buytime/UI/management/service_internal/UI_M_service_list.dart';
-import 'package:Buytime/UI/model/manager_model.dart';
-import 'package:Buytime/UI/model/service_model.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
-import 'package:Buytime/reblox/model/category/category_state.dart';
-import 'package:Buytime/reblox/reducer/category_list_reducer.dart';
-import 'package:Buytime/reblox/reducer/category_tree_reducer.dart';
 import 'package:Buytime/reusable/buytime_icons.dart';
-import 'package:Buytime/reusable/menu/UI_M_business_list_drawer.dart';
 import 'package:Buytime/reusable/order/optimum_order_item_card_medium.dart';
 import 'package:Buytime/reusable/order/order_total.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/utils/utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-//import 'package:add_2_calendar/add_2_calendar.dart';
-//import 'package:device_calendar/device_calendar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -377,27 +362,47 @@ class _RActivityManagementItemDetailsState extends State<RActivityManagementItem
                                   )
                                 ],
                               ),
-                              /*orderState.itemList != null && orderState.itemList.length > 1 ?
-                              ///Item count
-                              Row(
+                              /// Order table
+                              orderState.tableNumber != '' ? Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Container(
-                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1),
-                                    child: Text(
-                                      orderState.itemList.length > 1 ? '${orderState.itemList.length} ${AppLocalizations.of(context).items}' : '${orderState.itemList.length} ${AppLocalizations.of(context).item}',
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                          fontFamily: BuytimeTheme.FontFamily,
-                                          fontWeight: FontWeight.w600,
-                                          color: BuytimeTheme.TextBlack,
-                                          fontSize: 18 /// mediaSize.height * 0.024
+                                  Flexible(
+                                    child: Container(
+                                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * .5, bottom: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 2.5),
+                                      child: Text(
+                                        '${AppLocalizations.of(context).tableNumber}',
+                                        //'${orderState.itemList.first.description}',
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 2,
+                                        style: TextStyle(
+                                            fontFamily: BuytimeTheme.FontFamily,
+                                            fontWeight: FontWeight.w500,
+                                            color: BuytimeTheme.TextBlack,
+                                            fontSize: 16 /// mediaSize.height * 0.024
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Flexible(
+                                    child: Container(
+                                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * .5, bottom: SizeConfig.safeBlockVertical * 1, right: SizeConfig.safeBlockHorizontal * 2.5),
+                                      child: Text(
+                                        ' ${orderState.tableNumber}',
+                                        //'${orderState.itemList.first.description}',
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 2,
+                                        style: TextStyle(
+                                            fontFamily: BuytimeTheme.FontFamily,
+                                            fontWeight: FontWeight.w600,
+                                            color: BuytimeTheme.TextBlack,
+                                            fontSize: 16 /// mediaSize.height * 0.024
+                                        ),
                                       ),
                                     ),
                                   )
                                 ],
-                              ) :
-                              Container(),*/
+                              ) : Container(),
+
                               ///Order List
                               orderState.itemList != null && orderState.itemList.length > 1 ?
                               Flexible(
@@ -718,6 +723,7 @@ class _RActivityManagementItemDetailsState extends State<RActivityManagementItem
                         ),
                       ),
                     ),
+
                     ///Accept & Cancel
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,

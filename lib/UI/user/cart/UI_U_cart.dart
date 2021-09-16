@@ -1,6 +1,8 @@
 import 'package:Buytime/UI/user/cart/UI_U_ConfirmOrder.dart';
 import 'package:Buytime/UI/user/login/tourist_session/UI_U_tourist_session.dart';
 import 'package:Buytime/UI/user/login/tourist_session/UI_U_tourist_session_register.dart';
+import 'package:Buytime/reblox/model/business/business_list_state.dart';
+import 'package:Buytime/reblox/model/business/snippet/business_type.dart';
 import 'package:Buytime/reblox/model/order/order_entry.dart';
 import 'package:Buytime/reblox/model/order/order_reservable_state.dart';
 import 'package:Buytime/reblox/model/role/role.dart';
@@ -419,6 +421,44 @@ class CartState extends State<Cart> {
                                                       ),
                                                     ))
                                                 : Container(),
+
+                                            ///tableNumber TExt
+                                            businessIsBar(context)
+                                                ? Container(
+                                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
+                                                    child: Text(
+                                                      AppLocalizations.of(context).insertTableNumber,
+                                                      textAlign: TextAlign.start,
+                                                      style: TextStyle(fontFamily: BuytimeTheme.FontFamily, fontWeight: FontWeight.w600, fontSize: 14),
+                                                    ),
+                                                  )
+                                                : Container(),
+                                            ///Location
+                                            businessIsBar(context)
+                                                ? Container(
+                                                    width: 335.0,
+                                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
+                                                    child: TextFormField(
+                                                      textAlign: TextAlign.start,
+                                                      keyboardType: TextInputType.number,
+                                                      onChanged: (value) {
+                                                        snapshot.tableNumber = value;
+                                                      },
+                                                      decoration: InputDecoration(
+                                                        enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                                        focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                                        errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                                        labelText: AppLocalizations.of(context).tableNumber,
+                                                        labelStyle: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: Color(0xff666666), fontWeight: FontWeight.w400, fontSize: 16),
+                                                      ),
+                                                      style: TextStyle(
+                                                        fontFamily: BuytimeTheme.FontFamily,
+                                                        color: Color(0xff666666),
+                                                        fontWeight: FontWeight.w800,
+                                                      ),
+                                                    ),
+                                            )
+                                                : Container(),
                                           ],
                                         );
                                       }),
@@ -558,5 +598,25 @@ class CartState extends State<Cart> {
                     ),
                   ));
             }));
+  }
+
+  bool businessIsBar(BuildContext context) {
+    bool result = false;
+    debugPrint("UI_U_cart businessIsBar ");
+    if (StoreProvider.of<AppState>(context).state.business != null && StoreProvider.of<AppState>(context).state.business.business_type == "Bar") {
+      result =  true;
+    }
+    if (StoreProvider.of<AppState>(context).state.businessList != null && StoreProvider.of<AppState>(context).state.order.itemList != null) {
+      BusinessListState businessListState = StoreProvider.of<AppState>(context).state.businessList;
+      businessListState.businessListState.forEach((business) {
+        if (
+            business.id_firestore == StoreProvider.of<AppState>(context).state.order.itemList.first.id_business &&
+            business.business_type == "Bar"
+        ) {
+          result = true;
+        }
+      });
+    }
+    return result;
   }
 }
