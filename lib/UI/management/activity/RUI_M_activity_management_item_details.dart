@@ -362,6 +362,47 @@ class _RActivityManagementItemDetailsState extends State<RActivityManagementItem
                                   )
                                 ],
                               ),
+                              /// Order location
+                              orderState.location != '' ? Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Flexible(
+                                    child: Container(
+                                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * .5, bottom: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 2.5),
+                                      child: Text(
+                                        '${AppLocalizations.of(context).location}',
+                                        //'${orderState.itemList.first.description}',
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 2,
+                                        style: TextStyle(
+                                            fontFamily: BuytimeTheme.FontFamily,
+                                            fontWeight: FontWeight.w500,
+                                            color: BuytimeTheme.TextBlack,
+                                            fontSize: 16 /// mediaSize.height * 0.024
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Flexible(
+                                    child: Container(
+                                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * .5, bottom: SizeConfig.safeBlockVertical * 1, right: SizeConfig.safeBlockHorizontal * 2.5),
+                                      child: Text(
+                                        ' ${orderState.location}',
+                                        //'${orderState.itemList.first.description}',
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 2,
+                                        style: TextStyle(
+                                            fontFamily: BuytimeTheme.FontFamily,
+                                            fontWeight: FontWeight.w600,
+                                            color: BuytimeTheme.TextBlack,
+                                            fontSize: 16 /// mediaSize.height * 0.024
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ) : Container(),
+
                               /// Order table
                               orderState.tableNumber != '' ? Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
