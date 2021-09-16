@@ -89,34 +89,41 @@ class Utils {
       default:
         promoPrice = 0.0;
     }
-    return promoPrice;
+    return double.parse(promoPrice.toStringAsFixed(2));
   }
 
   ///Check Promo Discount (gestisce principalmente le label rosse)
   static PromotionState checkPromoDiscount(String promoName, context, String businessId) {
     if(
-        StoreProvider.of<AppState>(context).state.promotionListState.promotionListState.isNotEmpty &&
+        StoreProvider.of<AppState>(context).state.promotionState != null &&
+        (StoreProvider.of<AppState>(context).state.promotionState.timesUsed < StoreProvider.of<AppState>(context).state.promotionState.limit) &&
+        StoreProvider.of<AppState>(context).state.promotionState.businessIdList != null &&
+        StoreProvider.of<AppState>(context).state.promotionState.businessIdList.isNotEmpty &&
+        StoreProvider.of<AppState>(context).state.promotionState.businessIdList.contains(businessId)) {
+      return StoreProvider.of<AppState>(context).state.promotionState;
+    } else if (
+      StoreProvider.of<AppState>(context).state.promotionState != null &&
+      (StoreProvider.of<AppState>(context).state.promotionState.timesUsed < StoreProvider.of<AppState>(context).state.promotionState.limit) &&
+      (StoreProvider.of<AppState>(context).state.promotionState.businessIdList == null || StoreProvider.of<AppState>(context).state.promotionState.businessIdList.isEmpty)
+    ) {
+      return StoreProvider.of<AppState>(context).state.promotionState;
+    }
+    return PromotionState(promotionId: 'empty');
+  }
+
+  ///Check Promo Discount (gestisce principalmente le label rosse)
+  static PromotionState checkPromoDiscountTotal(String promoName, context, String businessId) {
+    if(
         StoreProvider.of<AppState>(context).state.promotionState != null &&
         StoreProvider.of<AppState>(context).state.promotionState.businessIdList != null &&
         StoreProvider.of<AppState>(context).state.promotionState.businessIdList.isNotEmpty &&
         StoreProvider.of<AppState>(context).state.promotionState.businessIdList.contains(businessId)) {
-      List<PromotionState> promotionListState = StoreProvider.of<AppState>(context).state.promotionListState.promotionListState;
-      for (var a = 0; a < promotionListState.length; a++) {
-        if (promotionListState[a].promotionId == promoName) {
-          return promotionListState[a];
-        }
-      }
+      return StoreProvider.of<AppState>(context).state.promotionState;
     } else if (
-    StoreProvider.of<AppState>(context).state.promotionState != null &&
-        (StoreProvider.of<AppState>(context).state.promotionState.businessIdList == null ||
-            StoreProvider.of<AppState>(context).state.promotionState.businessIdList.isEmpty)
+      StoreProvider.of<AppState>(context).state.promotionState != null &&
+      (StoreProvider.of<AppState>(context).state.promotionState.businessIdList == null || StoreProvider.of<AppState>(context).state.promotionState.businessIdList.isEmpty)
     ) {
-      List<PromotionState> promotionListState = StoreProvider.of<AppState>(context).state.promotionListState.promotionListState;
-      for (var a = 0; a < promotionListState.length; a++) {
-        if (promotionListState[a].promotionId == promoName) {
-          return promotionListState[a];
-        }
-      }
+      return StoreProvider.of<AppState>(context).state.promotionState;
     }
     return PromotionState(promotionId: 'empty');
   }

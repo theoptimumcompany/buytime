@@ -102,7 +102,7 @@ class PromotionState {
 
   int timesUsed2(int timesUsed) {
     debugPrint("timesUsed updated " + this.timesUsed.toString() + " - " + timesUsed.toString());
-    return timesUsed ?? this.timesUsed != null ? this.timesUsed : 0;
+    return this.timesUsed != null ? this.timesUsed : 0;
   }
 
   factory PromotionState.fromJson(Map<String, dynamic> json) => _$PromotionStateFromJson(json);

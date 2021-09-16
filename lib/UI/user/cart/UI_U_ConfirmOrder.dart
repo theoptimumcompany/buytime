@@ -295,6 +295,10 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                                 'date': DateTime.now().toString(),
                                                 'payment_method': snapshot.stripe.chosenPaymentMethod
                                               });
+
+                                          snapshot.order.total = double.parse(snapshot.order.total.toStringAsFixed(2));
+                                          snapshot.order.totalPromoDiscount = double.parse(snapshot.order.totalPromoDiscount.toStringAsFixed(2));
+
                                           if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.card)) {
                                             String selectedCardPaymentMethodId = snapshot.cardListState.cardList[0].stripeState.stripeCard.paymentMethodId;
                                             confirmationCard(context, snapshot, snapshot.stripe.stripeCard.last4, snapshot.stripe.stripeCard.brand, snapshot.stripe.stripeCard.country, selectedCardPaymentMethodId);
@@ -307,11 +311,11 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                           } else if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.onSite)) {
                                             confirmationOnSite(context, snapshot);
                                           }
-                                          if (snapshot.promotionState.timesUsed >= snapshot.promotionState.limit) {
-                                              /// delete all promotions locally
-                                              StoreProvider.of<AppState>(context).dispatch(SetPromotionListToEmpty());
-                                              StoreProvider.of<AppState>(context).dispatch(SetPromotionToEmpty());
-                                          }
+                                          // if (snapshot.promotionState.timesUsed >= snapshot.promotionState.limit) {
+                                          //     /// delete all promotions locally
+                                          //     StoreProvider.of<AppState>(context).dispatch(SetPromotionListToEmpty());
+                                          //     StoreProvider.of<AppState>(context).dispatch(SetPromotionToEmpty());
+                                          // }
                                         },
                                       ),
                                     )

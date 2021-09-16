@@ -1565,7 +1565,6 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                         ServiceState service = ServiceState().toEmpty();
                                                         StoreProvider.of<AppState>(context).state.notificationListState.notificationListState.forEach((element) {
                                                           if(element.notificationId != null && element.notificationId.isNotEmpty && order.orderId.isNotEmpty && order.orderId == element.data.state.orderId){
-                                                            debugPrint('HEREE');
                                                             snapshot.serviceList.serviceListState.forEach((s) {
                                                               if(element.data.state.serviceId == s.serviceId)
                                                                 service = s;

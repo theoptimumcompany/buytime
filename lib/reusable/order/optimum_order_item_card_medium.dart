@@ -87,7 +87,7 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
               snapshot.itemList[index].numberDiscounted = 0;
             }
           }
-          snapshot.totalPromoDiscount -= itemDiscount;
+          snapshot.totalPromoDiscount -= double.parse(itemDiscount.toStringAsFixed(2));
           snapshot.total = serviceTotal;
           snapshot.total += itemDiscount;
           debugPrint('UI_U_Cart => AFTER| ${snapshot.itemList[index].name} ITEM COUNT: ${snapshot.itemList[index].number}');
@@ -114,7 +114,7 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
               snapshot.itemList[index].numberDiscounted = 0;
             }
           }
-          snapshot.totalPromoDiscount -= itemDiscount;
+          snapshot.totalPromoDiscount -= double.parse(itemDiscount.toStringAsFixed(2));
           snapshot.total = serviceTotal;
           snapshot.total += itemDiscount;
           debugPrint('UI_U_Cart => AFTER| ${snapshot.itemList[index].name} ITEM COUNT: ${snapshot.itemList[index].number}');
@@ -147,7 +147,7 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
       if (itemDiscount > 0.0) {
         snapshot.itemList[index].numberDiscounted++;
       }
-      snapshot.totalPromoDiscount += itemDiscount;
+      snapshot.totalPromoDiscount += double.parse(itemDiscount.toStringAsFixed(2));
       //StoreProvider.of<AppState>(context).dispatch(IncreasePromotionCounter(1));
       snapshot.total = serviceTotal;
       snapshot.total -= itemDiscount;

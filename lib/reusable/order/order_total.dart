@@ -56,7 +56,7 @@ class OrderTotal extends StatelessWidget {
               //crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 ///Promo Text
-                Utils.checkPromoDiscount('general_1', context, orderState.itemList[0].id_business).promotionId != 'empty'
+                Utils.checkPromoDiscountTotal('general_1', context, orderState.itemList[0].id_business).promotionId != 'empty'
                     ? Expanded(
                         flex: 1,
                         child: Container(
@@ -70,7 +70,7 @@ class OrderTotal extends StatelessWidget {
                     : Container(),
 
                 ///Promo Value
-                Utils.checkPromoDiscount('general_1', context, orderState.itemList[0].id_business).promotionId != 'empty'
+                Utils.checkPromoDiscountTotal('general_1', context, orderState.itemList[0].id_business).promotionId != 'empty'
                     ? Expanded(
                     flex: 1,
                     child: Container(
