@@ -1488,8 +1488,8 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                               order.progress == Utils.enumToString(OrderStatus.pending) ||
                                               order.progress == Utils.enumToString(OrderStatus.toBePaidAtCheckout) ||
                                               order.progress == Utils.enumToString(OrderStatus.holding) ||
-                                              order.progress == Utils.enumToString(OrderStatus.accepted)) &&
-                                              (order.itemList.first.date.isAtSameMomentAs(currentTime) || order.itemList.first.date.isAfter(currentTime)) && order.itemList.first.time != null)
+                                              order.progress == Utils.enumToString(OrderStatus.accepted))
+                                              /*(order.itemList.first.date.isAtSameMomentAs(currentTime) || order.itemList.first.date.isAfter(currentTime)) && order.itemList.first.time != null*/)
                                             userOrderList.add(order);
                                           orderList.add(order);
                                         });
