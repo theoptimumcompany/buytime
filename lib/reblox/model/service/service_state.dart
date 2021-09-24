@@ -2,13 +2,13 @@ import 'package:Buytime/reblox/model/service/service_slot_time_state.dart';
 import '../file/optimum_file_to_upload.dart';
 import 'package:json_annotation/json_annotation.dart';
 
+import 'convention_slot_state.dart';
 part 'service_state.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class ServiceState {
   String serviceId;
   String businessId;
-  // String serviceCreatorId;
   List<String> categoryId;
   String image1;
   String image2;
@@ -22,6 +22,8 @@ class ServiceState {
   List<String> tag;
   @JsonKey(defaultValue: false)
   bool switchSlots = false;
+  @JsonKey(defaultValue: false)
+  bool hubConvention = false;
   @JsonKey(defaultValue: false)
   bool switchAutoConfirm = false;
   @JsonKey(defaultValue: [])
@@ -47,6 +49,9 @@ class ServiceState {
   @JsonKey(defaultValue: '')
   String condition;
 
+  @JsonKey(defaultValue: [])
+  List<ConventionSlot> conventionSlotList;
+
   ///Out Database
   @JsonKey(ignore: true)
   List<OptimumFileToUpload> fileToUploadList;
@@ -64,9 +69,11 @@ class ServiceState {
     this.price,
     this.vat,
     this.fileToUploadList,
+    this.conventionSlotList,
     this.timesSold,
     this.tag,
     this.switchSlots,
+    this.hubConvention,
     this.switchAutoConfirm,
     this.serviceSlot,
     this.spinnerVisibility,
@@ -97,9 +104,11 @@ class ServiceState {
       price: 0.00,
       vat: 22,
       fileToUploadList: [],
+      conventionSlotList: [],
       timesSold: 0,
       tag: [],
       switchSlots: false,
+      hubConvention: false,
       switchAutoConfirm: false,
       serviceSlot: [],
       spinnerVisibility: false,
@@ -130,9 +139,11 @@ class ServiceState {
     this.price = service.price;
     this.vat = service.vat;
     this.fileToUploadList = service.fileToUploadList;
+    this.conventionSlotList = service.conventionSlotList;
     this.timesSold = service.timesSold;
     this.tag = service.tag;
     this.switchSlots = service.switchSlots;
+    this.hubConvention = service.hubConvention;
     this.switchAutoConfirm = service.switchAutoConfirm;
     this.serviceSlot = service.serviceSlot;
     this.spinnerVisibility = service.spinnerVisibility;
@@ -162,9 +173,11 @@ class ServiceState {
     double price,
     int vat,
     List<OptimumFileToUpload> fileToUploadList,
+    List<ConventionSlot> conventionSlotList,
     int timesSold,
     List<String> tag,
     bool switchSlots,
+    bool hubConvention,
     bool switchAutoConfirm,
     List<ServiceSlot> serviceSlot,
     bool spinnerVisibility,
@@ -193,9 +206,11 @@ class ServiceState {
       price: price ?? this.price,
       vat: vat ?? this.vat,
       fileToUploadList: fileToUploadList ?? this.fileToUploadList,
+      conventionSlotList: conventionSlotList ?? this.conventionSlotList,
       timesSold: timesSold ?? this.timesSold,
       tag: tag ?? this.tag,
       switchSlots: switchSlots ?? this.switchSlots,
+      hubConvention: hubConvention ?? this.hubConvention,
       switchAutoConfirm: switchAutoConfirm ?? this.switchAutoConfirm,
       serviceSlot: serviceSlot ?? this.serviceSlot,
       spinnerVisibility: spinnerVisibility ?? this.spinnerVisibility,

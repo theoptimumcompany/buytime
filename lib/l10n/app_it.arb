@@ -609,5 +609,8 @@
   "discoverEnd": "services around you",
   "tableNumber": "numero tavolo",
   "insertTableNumber": "Inserisci il numero del tuo tavolo",
+  "hubConventionAccepted": "Questo servizio accetta convenzioni con gli HUB",
+  "activeHubConventions": "Convenzioni HUB attive",
+  "hubConvention": "Convenzione HUB",
   "noServiceSlot": "No Service slot found"
 }

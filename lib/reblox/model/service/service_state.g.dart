@@ -19,9 +19,16 @@ ServiceState _$ServiceStateFromJson(Map<String, dynamic> json) {
     visibility: json['visibility'] as String,
     price: (json['price'] as num)?.toDouble(),
     vat: json['vat'] as int,
+    conventionSlotList: (json['conventionSlotList'] as List)
+            ?.map((e) => e == null
+                ? null
+                : ConventionSlot.fromJson(e as Map<String, dynamic>))
+            ?.toList() ??
+        [],
     timesSold: json['timesSold'] as int,
     tag: (json['tag'] as List)?.map((e) => e as String)?.toList(),
     switchSlots: json['switchSlots'] as bool ?? false,
+    hubConvention: json['hubConvention'] as bool ?? false,
     switchAutoConfirm: json['switchAutoConfirm'] as bool ?? false,
     serviceSlot: (json['serviceSlot'] as List)
             ?.map((e) => e == null
@@ -60,6 +67,7 @@ Map<String, dynamic> _$ServiceStateToJson(ServiceState instance) =>
       'timesSold': instance.timesSold,
       'tag': instance.tag,
       'switchSlots': instance.switchSlots,
+      'hubConvention': instance.hubConvention,
       'switchAutoConfirm': instance.switchAutoConfirm,
       'serviceSlot': instance.serviceSlot?.map((e) => e?.toJson())?.toList(),
       'spinnerVisibility': instance.spinnerVisibility,
@@ -74,4 +82,6 @@ Map<String, dynamic> _$ServiceStateToJson(ServiceState instance) =>
       'paymentMethodCard': instance.paymentMethodCard,
       'paymentMethodOnSite': instance.paymentMethodOnSite,
       'condition': instance.condition,
+      'conventionSlotList':
+          instance.conventionSlotList?.map((e) => e?.toJson())?.toList(),
     };

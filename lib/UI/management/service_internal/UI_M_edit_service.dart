@@ -28,6 +28,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
 import 'RUI_M_service_list.dart';
+import 'UI_M_hub_convention.dart';
 
 class UI_EditService extends StatefulWidget {
   String serviceId;
@@ -257,6 +258,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
   }
 
   bool canEditService = false;
+  bool hubConvention = false;
 
   String serviceName = '';
   String serviceCondition = '';
@@ -1417,7 +1419,6 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
 
                                               snapshot.serviceState.switchSlots
                                                   ?
-
                                                   ///Service Resevable Slot Block
                                                   Padding(
                                                       padding: const EdgeInsets.only(
@@ -1610,6 +1611,232 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                       ),
                                                     )
                                                   : Container(),
+
+                                              ///Divider under switch booking block
+                                              Container(
+                                                child: Divider(
+                                                  indent: 0.0,
+                                                  color: BuytimeTheme.DividerGrey,
+                                                  thickness: 20.0,
+                                                ),
+                                              ),
+                                              ///Switch HUB Convention
+                                              Padding(
+                                                padding: const EdgeInsets.only(top: 0.0, bottom: 10.0, left: 20.0, right: 20.0),
+                                                child: Container(
+                                                  child: Row(
+                                                    children: [
+                                                      Switch(
+                                                          activeColor: BuytimeTheme.ManagerPrimary,
+                                                          value: snapshot.serviceState.hubConvention,
+                                                          onChanged:  (value) {
+                                                            setState(() {
+                                                              StoreProvider.of<AppState>(context).dispatch(SetServiceHubConvention(value));
+                                                            });
+                                                          }
+                                                          ),
+                                                      Expanded(
+                                                        child: Text(
+                                                          AppLocalizations.of(context).hubConventionAccepted,
+                                                          textAlign: TextAlign.start,
+                                                          overflow: TextOverflow.clip,
+                                                          style: TextStyle(
+                                                            fontSize: media.height * 0.018,
+                                                            color: BuytimeTheme.TextGrey,
+                                                            fontWeight: FontWeight.w500,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+
+                                              snapshot.serviceState.hubConvention
+                                                  ?
+                                              ///Service Convention Slot Block
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                  left: 0.0,
+                                                  right: 0.0,
+                                                  bottom: 20.0,
+                                                ),
+                                                child: Column(
+                                                  children: [
+                                                    Padding(
+                                                      padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 35.0),
+                                                      child: Row(
+                                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                        children: [
+                                                          Container(
+                                                            child: Text(
+                                                              AppLocalizations.of(context).activeHubConventions,
+                                                              textAlign: TextAlign.start,
+                                                              overflow: TextOverflow.clip,
+                                                              style: TextStyle(
+                                                                fontSize: 14,
+                                                                color: BuytimeTheme.TextBlack,
+                                                                fontWeight: FontWeight.w500,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          Container(
+                                                              child: GestureDetector(
+                                                                child: Icon(Icons.add, color: BuytimeTheme.SymbolGrey),
+                                                                onTap:() {
+                                                                  // StoreProvider.of<AppState>(context).dispatch(SetServiceSlotToEmpty());
+                                                                  Navigator.push(
+                                                                    context,
+                                                                    MaterialPageRoute(builder: (context) => UI_M_HubConvention(
+                                                                      createSlot: true,
+                                                                      editSlot: false,)),
+                                                                  );
+                                                                },
+                                                              )),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    snapshot.serviceState.conventionSlotList.length > 0
+                                                        ? Padding(
+                                                      padding: const EdgeInsets.only(left: 20.0),
+                                                      child: ConstrainedBox(
+                                                        constraints: BoxConstraints(),
+                                                        child: ListView.builder(
+                                                          shrinkWrap: true,
+                                                          physics: const NeverScrollableScrollPhysics(),
+                                                          itemCount: snapshot.serviceState.conventionSlotList.length,
+                                                          itemBuilder: (context, index) {
+                                                            return Dismissible(
+                                                              key: UniqueKey(),
+                                                              direction: DismissDirection.endToStart,
+                                                              background: Container(
+                                                                color: Colors.red,
+                                                                margin: EdgeInsets.symmetric(horizontal: 0),
+                                                                alignment: Alignment.centerRight,
+                                                                child: Icon(
+                                                                  Icons.delete,
+                                                                  color: BuytimeTheme.SymbolWhite,
+                                                                ),
+                                                              ),
+                                                              onDismissed: (direction) {
+                                                                setState(() {
+                                                                  ///Deleting Slot
+                                                                  StoreProvider.of<AppState>(context).dispatch(DeleteConventionSlot(index));
+                                                                });
+                                                              },
+                                                              child: GestureDetector(
+                                                                onTap:() {
+                                                                  Navigator.push(
+                                                                    context,
+                                                                    MaterialPageRoute(
+                                                                        builder: (context) => UI_M_HubConvention(
+                                                                          createSlot: false,
+                                                                          editSlot: true,
+                                                                          indexSlot: index,
+                                                                        )),
+                                                                  );
+                                                                },
+                                                                child: Padding(
+                                                                  padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 0.0),
+                                                                  child: Column(
+                                                                    children: [
+                                                                      Container(
+                                                                        height: 88,
+                                                                        child: ListTile(
+                                                                          title: Row(
+                                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                            children: [
+                                                                              Text(
+                                                                                '${AppLocalizations.of(context).hubConvention} ' + (index + 1).toString(),
+                                                                                style: TextStyle(
+                                                                                  fontSize: 16,
+                                                                                  color: BuytimeTheme.TextBlack,
+                                                                                  fontWeight: FontWeight.w400,
+                                                                                ),
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                          subtitle: Column(
+                                                                            mainAxisAlignment: MainAxisAlignment.start,
+                                                                            children: [
+                                                                              Container(
+                                                                                margin: EdgeInsets.only(top: 10),
+                                                                                child: Row(
+                                                                                  children: [
+                                                                                    Text(
+                                                                                      snapshot.serviceState.conventionSlotList[index].discount.toString() + "%" ,
+                                                                                      style: TextStyle(
+                                                                                        fontSize: 14,
+                                                                                        color: BuytimeTheme.TextBlack,
+                                                                                        fontWeight: FontWeight.w400,
+                                                                                      ),
+                                                                                    ),
+                                                                                  ],
+                                                                                ),
+                                                                              ),
+                                                                              Row(
+                                                                                children: [
+                                                                                  Text(
+                                                                                    snapshot.serviceState.conventionSlotList[index].hubName,
+                                                                                    style: TextStyle(
+                                                                                      fontSize: 14,
+                                                                                      color: BuytimeTheme.TextBlack,
+                                                                                      fontWeight: FontWeight.w400,
+                                                                                    ),
+                                                                                  ),
+                                                                                ],
+                                                                              ),
+                                                                              //showSlotInterval(snapshot.serviceState.serviceSlot[index].numberOfInterval, media, index),
+                                                                            ],
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                      Container(
+                                                                        height: 1,
+                                                                        color: BuytimeTheme.DividerGrey,
+                                                                        margin: EdgeInsets.only(left: 20),
+                                                                      )
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            );
+                                                          },
+                                                        ),
+                                                      ),
+                                                    )
+                                                        : Padding(
+                                                      padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 12.0),
+                                                      child: Row(
+                                                        children: [
+                                                          Flexible(
+                                                              flex: 1,
+                                                              child: Container(
+                                                                height: SizeConfig.safeBlockVertical * 5,
+                                                                margin: EdgeInsets.only(left: 20, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * .5),
+                                                                decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(5)),
+                                                                child: Center(
+                                                                    child: Container(
+                                                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 1),
+                                                                      alignment: Alignment.center,
+                                                                      child: Text(
+                                                                        (snapshot.serviceState.name != null && snapshot.serviceState.name != ""
+                                                                            ? Utils.retriveField(Localizations.localeOf(context).languageCode, snapshot.serviceState.name)
+                                                                            : AppLocalizations.of(context).theService) +
+                                                                            ' ' +
+                                                                            AppLocalizations.of(context).spaceHasNotReservableSlots,
+                                                                        style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextGrey, fontWeight: FontWeight.w500, fontSize: 14),
+                                                                      ),
+                                                                    )),
+                                                              ))
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              )
+                                                  : Container(),
+
                                             ],
                                           ),
                                         ),

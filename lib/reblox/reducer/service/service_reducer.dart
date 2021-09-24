@@ -41,6 +41,14 @@ class SetServiceServiceCrossSell {
   bool get serviceCrossSell => _serviceCrossSell;
 }
 
+class SetServiceHubConvention {
+  bool _serviceHubConvention;
+
+  SetServiceHubConvention(this._serviceHubConvention);
+
+  bool get serviceHubConvention => _serviceHubConvention;
+}
+
 class ServiceRequestByID {
   String _serviceId;
 
@@ -330,6 +338,14 @@ class DeleteServiceSlot {
   int get index => _index;
 }
 
+class DeleteConventionSlot {
+  int _index;
+  DeleteConventionSlot(this._index);
+  int get index => _index;
+}
+
+
+
 ServiceState serviceReducer(ServiceState state, action) {
   ServiceState serviceState = ServiceState.fromState(state);
   if (action is SetCreatedService) {
@@ -363,6 +379,10 @@ ServiceState serviceReducer(ServiceState state, action) {
   }
   if (action is SetServiceServiceCrossSell) {
     serviceState.serviceCrossSell = action.serviceCrossSell;
+    return serviceState;
+  }
+  if (action is SetServiceHubConvention) {
+    serviceState.hubConvention = action.serviceHubConvention;
     return serviceState;
   }
   if (action is SetServiceDescription) {
