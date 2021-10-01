@@ -13,7 +13,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:intl/intl.dart';
 import 'package:share/share.dart';
 
-import '../environment_abstract.dart';
+import '../../../../environment_abstract.dart';
 
 typedef OnBookingCallback = void Function(bool clicked);
 class BookingCardWidget extends StatefulWidget {

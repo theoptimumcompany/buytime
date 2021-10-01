@@ -7,7 +7,7 @@ import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:Buytime/reblox/model/business/external_business_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
-import 'package:Buytime/reusable/enterExitRoute.dart';
+import 'package:Buytime/reusable/animation/enterExitRoute.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/utils/utils.dart';

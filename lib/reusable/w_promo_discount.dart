@@ -1,4 +1,4 @@
-import 'package:Buytime/reusable/material_design_icons.dart';
+import 'package:Buytime/reusable/icon/material_design_icons.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';

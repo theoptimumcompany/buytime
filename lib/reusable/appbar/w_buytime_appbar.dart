@@ -1,5 +1,4 @@
-import 'package:Buytime/reusable/appbar/container_shape_bottom_circle.dart';
-import 'package:Buytime/splash_screen.dart';
+import 'package:Buytime/reusable/appbar/w_container_shape_bottom_circle.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:flutter/material.dart';
 

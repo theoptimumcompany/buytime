@@ -14,15 +14,15 @@ import 'package:Buytime/reblox/reducer/external_business_imported_list_reducer.d
 import 'package:Buytime/reblox/reducer/external_service_imported_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/service_list_snippet_reducer.dart';
 import 'package:Buytime/reblox/reducer/user_reducer.dart';
-import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
+import 'package:Buytime/reusable/appbar/w_buytime_appbar.dart';
 import 'package:Buytime/UI/management/service_internal/UI_M_service_list.dart';
 import 'package:Buytime/UI/model/manager_model.dart';
 import 'package:Buytime/UI/model/service_model.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reblox/model/category/category_state.dart';
-import 'package:Buytime/reusable/enterExitRoute.dart';
-import 'package:Buytime/reusable/menu/UI_M_business_list_drawer.dart';
+import 'package:Buytime/reusable/animation/enterExitRoute.dart';
+import 'package:Buytime/reusable/menu/w_manager_drawer.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/utils/utils.dart';
@@ -220,7 +220,7 @@ class _RBusinessState extends State<RBusiness> {
               ),
             ],
           ),
-          drawer: UI_M_BusinessListDrawer(),
+          drawer: ManagerDrawer(),
           body: ConstrainedBox(
             constraints: BoxConstraints(),
             child: Center(

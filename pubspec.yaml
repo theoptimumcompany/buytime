@@ -138,7 +138,7 @@ flutter_icons:
 flutter:
   generate: true
   # The following line ensures that the Material Icons font is
-  # included with your application, so that you can use the icons in
+  # included with your application, so that you can use the icon in
   # the material Icons class.
   uses-material-design: true
 

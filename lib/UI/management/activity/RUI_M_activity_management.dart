@@ -8,14 +8,14 @@ import 'package:Buytime/reblox/model/order/order_entry.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/reducer/order_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
-import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
+import 'package:Buytime/reusable/appbar/w_buytime_appbar.dart';
 import 'package:Buytime/UI/model/manager_model.dart';
 import 'package:Buytime/UI/model/service_model.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
-import 'package:Buytime/reusable/buytime_icons.dart';
-import 'package:Buytime/reusable/menu/UI_M_business_list_drawer.dart';
-import 'package:Buytime/reusable/sliverAppBarDelegate.dart';
+import 'package:Buytime/reusable/icon/buytime_icons.dart';
+import 'package:Buytime/reusable/menu/w_manager_drawer.dart';
+import 'package:Buytime/reusable/w_sliver_app_bar_delegate.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/utils/utils.dart';
@@ -766,7 +766,7 @@ class _RActivityManagementState extends State<RActivityManagement> {
             )
           ],
         ),
-        drawer: UI_M_BusinessListDrawer(),
+        drawer: ManagerDrawer(),
         body: ConstrainedBox(
           constraints: BoxConstraints(),
           child: StreamBuilder<QuerySnapshot>(

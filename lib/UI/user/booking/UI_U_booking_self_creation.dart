@@ -4,7 +4,7 @@ import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reblox/model/user/snippet/user_snippet_state.dart';
 import 'package:Buytime/reblox/reducer/booking_reducer.dart';
-import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
+import 'package:Buytime/reusable/appbar/w_buytime_appbar.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/utils/utils.dart';

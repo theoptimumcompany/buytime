@@ -2,7 +2,7 @@ import 'package:Buytime/UI/management/business/UI_M_business.dart';
 import 'package:Buytime/UI/management/service_external/UI_M_external_service_list.dart';
 import 'package:Buytime/UI/management/service_internal/UI_M_service_list.dart';
 import 'package:Buytime/reblox/model/category/category_state.dart';
-import 'package:Buytime/reusable/enterExitRoute.dart';
+import 'package:Buytime/reusable/animation/enterExitRoute.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:flutter/material.dart';

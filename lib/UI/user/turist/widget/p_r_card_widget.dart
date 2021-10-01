@@ -2,7 +2,7 @@ import 'package:Buytime/UI/user/category/UI_U_filter_by_category.dart';
 import 'package:Buytime/UI/user/service/UI_U_service_details.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
-import 'package:Buytime/reusable/W_promo_discount.dart';
+import 'package:Buytime/reusable/w_promo_discount.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/utils/utils.dart';

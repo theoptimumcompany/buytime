@@ -6,7 +6,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:share/share.dart';
-import 'package:Buytime/reusable/material_design_icons.dart';
+import 'package:Buytime/reusable/icon/material_design_icons.dart';
 
 class BookingListItem extends StatefulWidget {
 

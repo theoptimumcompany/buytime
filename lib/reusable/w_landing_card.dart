@@ -1,7 +1,5 @@
-import 'package:Buytime/UI/user/landing/invite_guest_form.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
-import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 
 class LandingCardWidget extends StatefulWidget {

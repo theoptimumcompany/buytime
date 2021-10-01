@@ -9,10 +9,10 @@ import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/model/user/snippet/user_snippet_state.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reservable_list_reducer.dart';
-import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
-import 'package:Buytime/reusable/booking_page_service_list_item.dart';
-import 'package:Buytime/reusable/buytime_icons.dart';
-import 'package:Buytime/reusable/material_design_icons.dart';
+import 'package:Buytime/reusable/appbar/w_buytime_appbar.dart';
+import 'package:Buytime/reusable/w_service_list_item.dart';
+import 'package:Buytime/reusable/icon/buytime_icons.dart';
+import 'package:Buytime/reusable/icon/material_design_icons.dart';
 import 'package:Buytime/utils/globals.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
@@ -535,7 +535,7 @@ class _FilterGeneralState extends State<FilterGeneral> {
                                               },
                                               child: Column(
                                                 children: [
-                                                  BookingListServiceListItem(service, false, index),
+                                                  ServiceListItem(service, false, index),
                                                   Container(
                                                     margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 30),
                                                     height: SizeConfig.safeBlockVertical * .2,

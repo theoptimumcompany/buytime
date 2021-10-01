@@ -4,10 +4,7 @@ import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/utils/utils.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
-import 'package:share/share.dart';
-import 'package:Buytime/UI/user/service/UI_U_service_details.dart';
 
 class SlotManagementServiceListItem extends StatefulWidget {
 

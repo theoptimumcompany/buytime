@@ -4,7 +4,7 @@ import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/notification/notification_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/reducer/notification_reducer.dart';
-import 'package:Buytime/reusable/buytime_icons.dart';
+import 'package:Buytime/reusable/icon/buytime_icons.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/utils/utils.dart';

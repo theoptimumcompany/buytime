@@ -4,10 +4,10 @@ import 'package:Buytime/reblox/model/booking/booking_list_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reblox/reducer/booking_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/booking_reducer.dart';
-import 'package:Buytime/reusable/booking_list_item.dart';
-import 'package:Buytime/reusable/booking_month_list.dart';
-import 'package:Buytime/reusable/custom_bottom_button_widget.dart';
-import 'package:Buytime/reusable/menu/UI_M_business_list_drawer.dart';
+import 'package:Buytime/UI/management/invite/widget/w_booking_list_item.dart';
+import 'package:Buytime/UI/management/invite/widget/w_booking_month_list.dart';
+import 'package:Buytime/reusable/w_custom_bottom_button.dart';
+import 'package:Buytime/reusable/menu/w_manager_drawer.dart';
 import 'package:Buytime/services/booking_service_epic.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
@@ -83,7 +83,7 @@ class _BookingListState extends State<BookingList> {
             ),
           ),
         ),
-        drawer: UI_M_BusinessListDrawer(),
+        drawer: ManagerDrawer(),
         body: Center(
           child: ConstrainedBox(
             constraints: BoxConstraints(),

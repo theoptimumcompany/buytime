@@ -1,36 +1,12 @@
 import 'package:Buytime/UI/management/activity/RUI_M_activity_management.dart';
-import 'package:Buytime/UI/management/activity/UI_M_activity_management.dart';
-import 'package:Buytime/UI/management/business/UI_M_business_list.dart';
 import 'package:Buytime/UI/management/notification/RUI_M_notification_center.dart';
 import 'package:Buytime/UI/management/slot/UI_M_slot_management.dart';
 import 'package:Buytime/UI/user/landing/UI_U_landing.dart';
 import 'package:Buytime/UI/user/turist/RUI_U_service_explorer.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/reducer/app_reducer.dart';
-import 'package:Buytime/reblox/reducer/booking_list_reducer.dart';
-import 'package:Buytime/reblox/reducer/booking_reducer.dart';
-import 'package:Buytime/reblox/reducer/business_list_reducer.dart';
-import 'package:Buytime/reblox/reducer/business_reducer.dart';
-import 'package:Buytime/reblox/reducer/category_invite_reducer.dart';
-import 'package:Buytime/reblox/reducer/category_list_reducer.dart';
-import 'package:Buytime/reblox/reducer/category_reducer.dart';
-import 'package:Buytime/reblox/reducer/category_tree_reducer.dart';
-import 'package:Buytime/reblox/reducer/external_business_list_reducer.dart';
-import 'package:Buytime/reblox/reducer/order_detail_reducer.dart';
-import 'package:Buytime/reblox/reducer/order_list_reducer.dart';
-import 'package:Buytime/reblox/reducer/order_reducer.dart';
-import 'package:Buytime/reblox/reducer/order_reservable_list_reducer.dart';
-import 'package:Buytime/reblox/reducer/order_reservable_reducer.dart';
-import 'package:Buytime/reblox/reducer/pipeline_list_reducer.dart';
-import 'package:Buytime/reblox/reducer/pipeline_reducer.dart';
-import 'package:Buytime/reblox/reducer/service/service_list_reducer.dart';
-import 'package:Buytime/reblox/reducer/service/service_reducer.dart';
-import 'package:Buytime/reblox/reducer/service/service_slot_time_reducer.dart';
-import 'package:Buytime/reblox/reducer/stripe_payment_reducer.dart';
-import 'package:Buytime/reblox/reducer/user_reducer.dart';
 import 'package:Buytime/utils/theme/buytime_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -42,13 +18,11 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:Buytime/UI/management/business/RUI_M_business_list.dart';
 
-import '../../utils/globals.dart';
-
 final GoogleSignIn googleSignIn = new GoogleSignIn();
 enum DrawerSelection { BusinessList, NotificationCenter, ActivityManagement, SlotManagement }
 
-class UI_M_BusinessListDrawer extends StatefulWidget {
-  UI_M_BusinessListDrawer({
+class ManagerDrawer extends StatefulWidget {
+  ManagerDrawer({
     Key key,
     @required this.mediaz,
   }) : super(key: key);
@@ -56,12 +30,12 @@ class UI_M_BusinessListDrawer extends StatefulWidget {
   final Size mediaz;
 
   @override
-  _UI_M_BusinessListDrawerState createState() => _UI_M_BusinessListDrawerState();
+  _ManagerDrawerState createState() => _ManagerDrawerState();
 }
 
 DrawerSelection drawerSelection = DrawerSelection.BusinessList;
 
-class _UI_M_BusinessListDrawerState extends State<UI_M_BusinessListDrawer> {
+class _ManagerDrawerState extends State<ManagerDrawer> {
 
   ///Storage
   final storage = new FlutterSecureStorage();

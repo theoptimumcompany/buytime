@@ -1,27 +1,25 @@
+import 'package:Buytime/UI/user/service/UI_U_service_details.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
-import 'package:Buytime/reusable/W_green_choice.dart';
+import 'package:Buytime/reusable/w_green_choice.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/utils/utils.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
-import 'package:share/share.dart';
-import 'package:Buytime/UI/user/service/UI_U_service_details.dart';
 
-import 'W_promo_discount.dart';
+import 'w_promo_discount.dart';
 
-class BookingListServiceListItem extends StatefulWidget {
+class ServiceListItem extends StatefulWidget {
   ServiceState serviceState;
   bool tourist;
   int index;
-  BookingListServiceListItem(this.serviceState, this.tourist, this.index);
+  ServiceListItem(this.serviceState, this.tourist, this.index);
 
   @override
-  _BookingListServiceListItemState createState() => _BookingListServiceListItemState();
+  _ServiceListItemState createState() => _ServiceListItemState();
 }
 
-class _BookingListServiceListItemState extends State<BookingListServiceListItem> {
+class _ServiceListItemState extends State<ServiceListItem> {
   @override
   Widget build(BuildContext context) {
     //debugPrint('image: ${widget.serviceState.image1}');

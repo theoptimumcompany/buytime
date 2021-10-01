@@ -5,7 +5,6 @@ import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/utils/utils.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
-import 'package:Buytime/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:intl/intl.dart';

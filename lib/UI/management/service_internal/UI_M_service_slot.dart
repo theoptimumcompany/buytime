@@ -6,7 +6,7 @@ import 'package:Buytime/UI/management/service_internal/widget/W_service_step_pri
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/reducer/service/service_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/service_slot_time_reducer.dart';
-import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
+import 'package:Buytime/reusable/appbar/w_buytime_appbar.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/utils/utils.dart';

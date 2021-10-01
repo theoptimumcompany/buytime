@@ -35,10 +35,10 @@ import 'package:Buytime/reblox/reducer/service/service_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/service_slot_time_reducer.dart';
 import 'package:Buytime/reblox/reducer/stripe_payment_reducer.dart';
 import 'package:Buytime/reblox/reducer/user_reducer.dart';
-import 'package:Buytime/reusable/custom_bottom_button_widget.dart';
-import 'package:Buytime/reusable/landing_card_widget.dart';
-import 'package:Buytime/reusable/material_design_icons.dart';
-import 'package:Buytime/reusable/menu/UI_M_business_list_drawer.dart';
+import 'package:Buytime/reusable/w_custom_bottom_button.dart';
+import 'package:Buytime/reusable/w_landing_card.dart';
+import 'package:Buytime/reusable/icon/material_design_icons.dart';
+import 'package:Buytime/reusable/menu/w_manager_drawer.dart';
 import 'package:Buytime/utils/theme/buytime_config.dart';
 import 'package:animations/animations.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -60,9 +60,9 @@ import 'package:Buytime/reblox/reducer/area_reducer.dart';
 import 'package:Buytime/reblox/reducer/category_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/notification_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
-import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
-import 'package:Buytime/reusable/booking_page_service_list_item.dart';
-import 'package:Buytime/reusable/buytime_icons.dart';
+import 'package:Buytime/reusable/appbar/w_buytime_appbar.dart';
+import 'package:Buytime/reusable/w_service_list_item.dart';
+import 'package:Buytime/reusable/icon/buytime_icons.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/utils/utils.dart';
@@ -2728,7 +2728,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                           ServiceState service = serviceList.elementAt(index);
                                                           return Column(
                                                             children: [
-                                                              BookingListServiceListItem(service, true, index),
+                                                              ServiceListItem(service, true, index),
                                                               Container(
                                                                 margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 30),
                                                                 height: SizeConfig.safeBlockVertical * .2,

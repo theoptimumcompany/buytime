@@ -7,9 +7,9 @@ import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/service_reducer.dart';
-import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
-import 'package:Buytime/reusable/buytime_icons.dart';
-import 'package:Buytime/reusable/menu/UI_M_business_list_drawer.dart';
+import 'package:Buytime/reusable/appbar/w_buytime_appbar.dart';
+import 'package:Buytime/reusable/icon/buytime_icons.dart';
+import 'package:Buytime/reusable/menu/w_manager_drawer.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -134,7 +134,7 @@ class _RNotificationCenterState extends State<RNotificationCenter> {
 
                 ],
               ),
-              drawer: UI_M_BusinessListDrawer(),
+              drawer: ManagerDrawer(),
               body: SafeArea(
                 child: SingleChildScrollView(
                   child: ConstrainedBox(

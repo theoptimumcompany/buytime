@@ -4,7 +4,7 @@ import 'package:Buytime/UI/management/invite/UI_M_booking_details.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reblox/model/order/order_entry.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
-import 'package:Buytime/reusable/buytime_icons.dart';
+import 'package:Buytime/reusable/icon/buytime_icons.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/utils/utils.dart';
@@ -12,7 +12,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:share/share.dart';
-import 'package:Buytime/reusable/material_design_icons.dart';
+import 'package:Buytime/reusable/icon/material_design_icons.dart';
 
 class DashboardListItem extends StatefulWidget {
   OrderState orderState;

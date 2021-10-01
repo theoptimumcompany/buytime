@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 import 'dart:math';
 
 import 'package:Buytime/environment_abstract.dart';
@@ -10,16 +9,11 @@ import 'package:Buytime/reblox/model/notification/id_state.dart';
 import 'package:Buytime/reblox/model/order/order_reservable_state.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
-import 'package:Buytime/reblox/model/promotion/promotion_list_state.dart';
 import 'package:Buytime/reblox/model/promotion/promotion_state.dart';
-import 'package:Buytime/reblox/model/service/service_state.dart';
-import 'package:Buytime/reblox/reducer/promotion/promotion_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/service_reducer.dart';
 import 'package:Buytime/utils/size_config.dart';
-import 'package:Buytime/utils/theme/buytime_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:emojis/emoji.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_redux/flutter_redux.dart';

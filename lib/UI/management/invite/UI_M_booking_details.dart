@@ -7,7 +7,7 @@ import 'package:Buytime/reblox/model/email/template_data_state.dart';
 import 'package:Buytime/reblox/model/email/template_state.dart';
 import 'package:Buytime/reblox/reducer/booking_reducer.dart';
 import 'package:Buytime/reblox/reducer/email_reducer.dart';
-import 'package:Buytime/reusable/material_design_icons.dart';
+import 'package:Buytime/reusable/icon/material_design_icons.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/utils/utils.dart';

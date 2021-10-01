@@ -1,12 +1,10 @@
-import 'package:Buytime/UI/management/invite/UI_M_booking_details.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
-import 'package:Buytime/reusable/booking_list_item.dart';
+import 'package:Buytime/UI/management/invite/widget/w_booking_list_item.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:share/share.dart';
 
 class BookingMonthList extends StatefulWidget {
 

@@ -24,11 +24,11 @@ import 'package:Buytime/reblox/reducer/notification_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reservable_list_reducer.dart';
-import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
-import 'package:Buytime/reusable/booking_page_service_list_item.dart';
-import 'package:Buytime/reusable/buytime_icons.dart';
-import 'package:Buytime/reusable/custom_bottom_button_widget.dart';
-import 'package:Buytime/reusable/find_your_inspiration_card_widget.dart';
+import 'package:Buytime/reusable/appbar/w_buytime_appbar.dart';
+import 'package:Buytime/reusable/w_service_list_item.dart';
+import 'package:Buytime/reusable/icon/buytime_icons.dart';
+import 'package:Buytime/reusable/w_custom_bottom_button.dart';
+import 'package:Buytime/reusable/w_find_your_inspiration_card.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
@@ -1126,7 +1126,7 @@ class _BookingPageState extends State<BookingPage> {
                                                               },
                                                               child: Column(
                                                                 children: [
-                                                                  BookingListServiceListItem(service, false, index),
+                                                                  ServiceListItem(service, false, index),
                                                                   Container(
                                                                     margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 30),
                                                                     height: SizeConfig.safeBlockVertical * .2,

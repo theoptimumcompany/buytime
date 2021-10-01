@@ -10,7 +10,7 @@ import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/user/user_state.dart';
 import 'package:Buytime/reblox/reducer/user_reducer.dart';
-import 'package:Buytime/reusable/branded_button.dart';
+import 'package:Buytime/reusable/w_branded_button.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:device_info/device_info.dart';

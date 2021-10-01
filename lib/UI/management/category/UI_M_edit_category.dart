@@ -6,7 +6,7 @@ import 'package:Buytime/reblox/reducer/category_invite_reducer.dart';
 import 'package:Buytime/reblox/model/snippet/manager.dart';
 import 'package:Buytime/reblox/model/snippet/parent.dart';
 import 'package:Buytime/reblox/model/snippet/worker.dart';
-import 'package:Buytime/reusable/form/optimum_form_multi_photo.dart';
+import 'package:Buytime/reusable/form/w_optimum_form_multi_photo.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
@@ -21,7 +21,7 @@ import 'package:share/share.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../environment_abstract.dart';
-import '../../../reusable/appbar/buytime_appbar.dart';
+import '../../../reusable/appbar/w_buytime_appbar.dart';
 
 class UI_M_EditCategory extends StatefulWidget {
   final String title = 'Categories';
