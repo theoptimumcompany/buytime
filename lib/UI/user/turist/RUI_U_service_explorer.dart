@@ -3,38 +3,17 @@ import 'dart:io';
 
 import 'package:Buytime/UI/management/activity/RUI_M_activity_management.dart';
 import 'package:Buytime/UI/management/business/RUI_M_business_list.dart';
-import 'package:Buytime/UI/user/booking/RUI_U_notifications.dart';
 import 'package:Buytime/UI/user/booking/RUI_notification_bell.dart';
 import 'package:Buytime/UI/user/booking/UI_U_all_bookings.dart';
-import 'package:Buytime/UI/user/booking/UI_U_booking_self_creation.dart';
 import 'package:Buytime/UI/user/booking/UI_U_my_bookings.dart';
-import 'package:Buytime/UI/user/booking/UI_U_notifications.dart';
-import 'package:Buytime/UI/user/landing/UI_U_landing.dart';
 import 'package:Buytime/UI/user/landing/invite_guest_form.dart';
 import 'package:Buytime/UI/user/login/UI_U_home.dart';
 import 'package:Buytime/UI/user/login/UI_U_registration.dart';
-import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reblox/model/role/role.dart';
 import 'package:Buytime/reblox/reducer/app_reducer.dart';
 import 'package:Buytime/reblox/reducer/booking_list_reducer.dart';
-import 'package:Buytime/reblox/reducer/booking_reducer.dart';
-import 'package:Buytime/reblox/reducer/business_list_reducer.dart';
-import 'package:Buytime/reblox/reducer/business_reducer.dart';
-import 'package:Buytime/reblox/reducer/category_invite_reducer.dart';
-import 'package:Buytime/reblox/reducer/category_reducer.dart';
-import 'package:Buytime/reblox/reducer/external_business_list_reducer.dart';
-import 'package:Buytime/reblox/reducer/order_detail_reducer.dart';
-import 'package:Buytime/reblox/reducer/order_list_reducer.dart';
-import 'package:Buytime/reblox/reducer/order_reservable_list_reducer.dart';
-import 'package:Buytime/reblox/reducer/order_reservable_reducer.dart';
-import 'package:Buytime/reblox/reducer/pipeline_list_reducer.dart';
-import 'package:Buytime/reblox/reducer/pipeline_reducer.dart';
 import 'package:Buytime/reblox/reducer/promotion/promotion_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/service_list_reducer.dart';
-import 'package:Buytime/reblox/reducer/service/service_reducer.dart';
-import 'package:Buytime/reblox/reducer/service/service_slot_time_reducer.dart';
-import 'package:Buytime/reblox/reducer/stripe_payment_reducer.dart';
-import 'package:Buytime/reblox/reducer/user_reducer.dart';
 import 'package:Buytime/reusable/w_custom_bottom_button.dart';
 import 'package:Buytime/reusable/w_landing_card.dart';
 import 'package:Buytime/reusable/icon/material_design_icons.dart';
@@ -100,7 +79,6 @@ class RServiceExplorer extends StatefulWidget {
 class _RServiceExplorerState extends State<RServiceExplorer> {
   TextEditingController _searchController = TextEditingController();
   List<LandingCardWidget> cards = [];
-  //List<ServiceState> serviceState = [];
   List<ServiceState> popularList = [];
   List<ServiceState> recommendedList = [];
   List<CategoryState> categoryList = [];
@@ -109,6 +87,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
   List<BusinessState> businessList = [];
   String sortBy = '';
   OrderState order = OrderState().toEmpty();
+  DynamicLinkHelper dynamicLinkHelper = DynamicLinkHelper();
 
   ///Storage
   String selfBookingCode = '';
@@ -117,9 +96,6 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
 
   String orderId = '';
   String userId = '';
-
-  String businessToSearch = '';
-  String businessToSearchId = '';
 
   bool onBookingCode = false;
   bool rippleLoading = false;
@@ -131,34 +107,11 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
     super.initState();
     _searchController.text = widget.searched;
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      debugPrint('UI_U_Landing => initState()');
-      ///Download Promotions
       StoreProvider.of<AppState>(context).dispatch(PromotionListRequest());
     });
-    initDynamicLinks();
+    dynamicLinkHelper.initDynamicLinks(context);
   }
 
-  searchLeSirene() async {
-    businessToSearch = await storage.read(key: 'discoverLeSireneName') ?? '';
-    businessToSearchId = await storage.read(key: 'discoverLeSireneId') ?? '';
-    debugPrint('RUI_U_service_explorer :  DEEP LINK EMPTY | discoverLeSireneName : $businessToSearch | discoverLeSireneId: $businessToSearchId');
-    await storage.delete(key: 'discoverLeSireneName');
-    await storage.delete(key: 'discoverLeSireneId');
-
-    if (businessToSearch.isNotEmpty && businessToSearchId.isNotEmpty) {
-      await storage.write(key: 'discoverLeSireneNameRead', value: 'false');
-      await storage.write(key: 'discoverLeSireneIdRead', value: 'false');
-    }
-  }
-
-  /*void undoDeletion(index, item) {
-  This method accepts the parameters index and item and re-inserts the {item} at
-  index {index}
-
-    setState(() {
-      tmpServiceList.insert(index, item);
-    });
-  }*/
 
   List<dynamic> searchedList = [];
   Map<String, List<String>> categoryListIds = Map();
@@ -170,12 +123,9 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
     for (var z = 0; z < serviceListSnippetListState.length; z++) {
       for (var w = 0; w < serviceListSnippetListState[z].businessSnippet.length; w++) {
         for (var y = 0; y < serviceListSnippetListState[z].businessSnippet[w].serviceList.length; y++) {
-          //debugPrint('INSIDE SERVICE PATH  => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath} - $serviceId - $categoryId');
           if (serviceId != null && categoryId != null &&
               serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath.contains(serviceId) &&
               serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath.contains(categoryId)) {
-            //  debugPrint('INSIDE CATEGORY ROOT => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceName}');
-            //debugPrint('INSIDE SERVICE PATH  => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath}');
             sub = true;
           }
         }
@@ -185,8 +135,6 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
   }
 
   void searchCategory(List<CategoryState> list) {
-    debugPrint('UI_U_service_explorer => CATEGORY SEARCH');
-    debugPrint('UI_U_service_explorer => CATEGORY SEARCH - SERVICE LENGTH: ${StoreProvider.of<AppState>(context).state.serviceList.serviceListState.length}');
     setState(() {
       List<CategoryState> categoryState = list;
       categoryList.clear();
@@ -206,7 +154,6 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
               }
             });
           }
-
           businessList.forEach((business) {
             if (business.name.toLowerCase().contains(_searchController.text.toLowerCase().trim())) {
               if (business.id_firestore == element.businessId) {
@@ -232,13 +179,11 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
     bool found = false;
     categoryList.forEach((cL) {
       if (cL.name == element.name) {
-        //debugPrint('UI_U_service_explorer => EQUAL CATEGORY NAME: ${element.name}');
         found = true;
       }
     });
 
     if (!found) {
-      //debugPrint('UI_U_service_explorer => ADD CATEGORY NAME: ${element.name}');
       categoryList.add(element);
       categoryListIds.putIfAbsent(element.name, () => [element.id]);
     } else {
@@ -246,11 +191,6 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
         categoryListIds[element.name].add(element.id);
       }
     }
-
-    /*categoryList.forEach((element) async {
-      Color color = await getDominatColor(element.categoryImage);
-      myColors.add(color);
-    });*/
   }
 
   void searchPopular(List<ServiceState> list) {
@@ -258,7 +198,6 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
     setState(() {
       List<ServiceState> serviceState = list;
       List<ServiceState> tmp = [];
-      //popularList.clear();
       if (_searchController.text.isNotEmpty) {
         serviceState.forEach((element) {
           if (element.name.toLowerCase().contains(_searchController.text.toLowerCase().trim())) {
@@ -292,7 +231,6 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
   void searchRecommended(List<ServiceState> list) {
     debugPrint('UI_U_service_explorer => RECCOMENDED SEARCH');
     setState(() {
-      //recommendedList.clear();
       List<ServiceState> serviceState = list;
       List<ServiceState> tmpList = [];
       if (_searchController.text.isNotEmpty) {
@@ -336,7 +274,6 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
           tmp.add(rL);
         }
       });
-      //searchedList.add(recommendedList);
       searchedList.add(tmp);
     });
   }
@@ -365,7 +302,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
 
         businessList.forEach((business) {
           if (business.name.toLowerCase().contains(_searchController.text.toLowerCase().trim())) {
-            if (business.id_firestore == element.businessId && element.businessId == businessToSearchId) {
+            if (business.id_firestore == element.businessId && element.businessId == DynamicLinkHelper.discoverBusinessId) {
               StoreProvider.of<AppState>(context).state.serviceList.serviceListState.forEach((service) {
                 if (service.categoryId.contains(element.id)) {
                   createCategoryList(element);
@@ -377,13 +314,11 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
         });
       });
     }
-    //popularList.shuffle();
     searchedList.add(categoryList);
 
     setState(() {
       List<ServiceState> serviceState = list;
       List<ServiceState> tmp = [];
-      //popularList.clear();
       if (_searchController.text.isNotEmpty) {
         serviceState.forEach((element) {
           if (element.name.toLowerCase().contains(_searchController.text.toLowerCase().trim())) {
@@ -400,7 +335,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
           }
           businessList.forEach((business) {
             if (business.name.toLowerCase().contains(_searchController.text.toLowerCase().trim())) {
-              if (business.id_firestore == element.businessId && element.businessId == businessToSearchId) {
+              if (business.id_firestore == element.businessId && element.businessId == DynamicLinkHelper.discoverBusinessId) {
                 if (!tmp.contains(element)) {
                   tmp.add(element);
                 }
@@ -451,7 +386,6 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
     if (!_serviceEnabled) {
       _serviceEnabled = await location.requestService();
       if (!_serviceEnabled) {
-        debugPrint('UI_U_order_details => LOCATION NOT ENABLED');
         setState(() {
           gettingLocation = false;
           distanceFromBusiness = 0.0;
@@ -464,13 +398,11 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
     if (_permissionGranted == loc.PermissionStatus.denied) {
       _permissionGranted = await location.requestPermission();
       if (_permissionGranted != loc.PermissionStatus.granted) {
-        debugPrint('UI_U_order_details => PERMISSION NOY GARANTED');
         return;
       }
     }
 
     _locationData = await location.getLocation();
-    debugPrint('UI_U_order_details => FROM LOCATION: $_locationData');
     if (_locationData.latitude != null) {
       setState(() {
         gettingLocation = false;
@@ -514,7 +446,6 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
     var whatsappURl_android = "whatsapp://send?phone="+whatsapp+"&text=hello";
     var whatappURL_ios ="https://wa.me/$whatsapp?text=${Uri.parse("hello")}";
     if(Platform.isIOS){
-      // for iOS phone only
       if( await canLaunch(whatappURL_ios)){
         await launch(whatappURL_ios, forceSafariVC: false);
       }else{
@@ -522,7 +453,6 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
             SnackBar(content: new Text("whatsapp no installed")));
       }
     }else{
-      // android , web
       if( await canLaunch(whatsappURl_android)){
         await launch(whatsappURl_android);
       }else{
@@ -542,13 +472,10 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
     currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0).toUtc();
     final Stream<QuerySnapshot> _orderStream =  FirebaseFirestore.instance
         .collection("order")
-    //.where("businessId", isEqualTo: StoreProvider.of<AppState>(context).state.business.id_firestore)
         .where("userId", isEqualTo: StoreProvider.of<AppState>(context).state.user.uid)
-    //.where("itemList[0][time]", isNotEqualTo: null)
         .where("date", isGreaterThanOrEqualTo: currentTime)
         .limit(50)
         .snapshots(includeMetadataChanges: true);
-
     Stream<QuerySnapshot> _serviceStream;
     if (StoreProvider.of<AppState>(context).state.area != null && StoreProvider.of<AppState>(context).state.area.areaId != null && StoreProvider.of<AppState>(context).state.area.areaId.isNotEmpty) {
        _serviceStream =  FirebaseFirestore.instance.collection("service")
@@ -568,21 +495,15 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
         dynamicLinkHelper.selfCheckInFound(context);
         dynamicLinkHelper.categoryInviteFound(context);
         dynamicLinkHelper.onSitePaymentFound(context);
-
-        searchLeSirene();
-
+        dynamicLinkHelper.searchBusiness();
         store.state.categoryList.categoryListState.clear();
         store.state.serviceList.serviceListState.clear();
         startRequest = true;
-
         await _getLocation();
-        debugPrint('Service Explorer : OnInit Before AllRequestListCategory');
-
         store.dispatch(AllRequestListCategory(''));
         if (auth.FirebaseAuth != null && auth.FirebaseAuth.instance != null && auth.FirebaseAuth.instance.currentUser != null) {
           auth.User user = auth.FirebaseAuth.instance.currentUser;
           if (user != null) {
-            //store.dispatch(UserOrderListRequest());
             store.state.notificationListState.notificationListState.clear();
             store.dispatch(RequestNotificationList(store.state.user.uid, store.state.business.id_firestore));
           }
@@ -590,99 +511,36 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
       },
       builder: (context, snapshot) {
         cards.clear();
-        /*if(snapshot.bookingList.bookingListState != null && snapshot.bookingList.bookingListState.isNotEmpty && snapshot.bookingList.bookingListState.first.booking_id != null ){
-          cards.clear();
-          String startMonth = DateFormat('MM').format(snapshot.bookingList.bookingListState.first.start_date);
-          String endMonth = DateFormat('MM').format(snapshot.bookingList.bookingListState.first.end_date);
-          bool sameMonth = false;
-          if (startMonth == endMonth)
-            sameMonth = true;
-          else
-            sameMonth = false;
-
-          DateTime currentTime = DateTime.now();
-          currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0);
-
-          DateTime endTime = DateTime.now();
-          DateTime startTime = DateTime.now();
-          //DateTime startTime = DateTime.now();
-          String bookingStatus = '';
-          //debugPrint('booing_card_widget => CURRENT TIME: $currentTime | START DATE: ${widget.bookingState.start_date}');
-          endTime = new DateTime(snapshot.bookingList.bookingListState.first.end_date.year, snapshot.bookingList.bookingListState.first.end_date.month, snapshot.bookingList.bookingListState.first.end_date.day, 0, 0, 0, 0, 0);
-          startTime = new DateTime(snapshot.bookingList.bookingListState.first.start_date.year, snapshot.bookingList.bookingListState.first.start_date.month, snapshot.bookingList.bookingListState.first.start_date.day, 0, 0, 0, 0, 0);
-          if(endTime.isBefore(currentTime)){
-            bookingStatus = 'Closed';
-          }else if(startTime.isAtSameMomentAs(currentTime))
-            bookingStatus = 'Active';
-          else if(startTime.isAfter(currentTime))
-            bookingStatus = 'Upcoming';
-          else
-            bookingStatus = 'Active';
-
-          if(snapshot.bookingList.bookingListState.first.status == 'closed')
-            cards.add(LandingCardWidget(AppLocalizations.of(context).enterBookingCode, AppLocalizations.of(context).ifYouHaveABooking, 'assets/img/key.jpg', null, false));
-          else
-            cards.add(LandingCardWidget(snapshot.bookingList.bookingListState.first.business_name, sameMonth
-                ? '$bookingStatus | ${DateFormat('dd', Localizations.localeOf(context).languageCode).format(snapshot.bookingList.bookingListState.first.start_date)} - ${DateFormat('dd MMMM', Localizations.localeOf(context).languageCode).format(snapshot.bookingList.bookingListState.first.end_date)}'
-                : '$bookingStatus | ${DateFormat('dd MMM', Localizations.localeOf(context).languageCode).format(snapshot.bookingList.bookingListState.first.start_date)} - ${DateFormat('dd MMM', Localizations.localeOf(context).languageCode).format(snapshot.bookingList.bookingListState.first.end_date)}',
-                'assets/img/key.jpg', null, false));
-        }
-
-        if(snapshot.user.getRole() != Role.user)*/
         cards.add(LandingCardWidget(AppLocalizations.of(context).enterBookingCode, AppLocalizations.of(context).ifYouHaveABooking, 'assets/img/key.jpg', null, false));
-
         businessList = snapshot.businessList.businessListState;
         isManagerOrAbove = snapshot.user != null && (snapshot.user.getRole() != Role.user) ? true : false;
-
         if (_searchController.text.isEmpty && !first) {
           categoryList.clear();
           popularList.clear();
           recommendedList.clear();
           categoryListIds.clear();
           List<NotificationState> notifications = snapshot.notificationListState.notificationListState;
-
           if (snapshot.categoryList.categoryListState.isEmpty && startRequest) {
             noActivity = true;
           } else {
             if (snapshot.categoryList.categoryListState.isNotEmpty && categoryList.isEmpty || _searchController.text.isEmpty) {
               if (notifications.isNotEmpty && notifications.first.userId.isEmpty) notifications.removeLast();
-
               if (notifications.isNotEmpty) {
                 hasNotifications = false;
                 notifications.forEach((element) {
-                  //debugPrint('UI_U_booking_page => ${element.timestamp}');
-                  //debugPrint('UI_U_booking_page => ${element.notificationId} | ${element.opened}');
                   if (element.opened != null && !element.opened) {
-                    //debugPrint('UI_U_booking_page => ${element.notificationId} | ${element.data.state.orderId}');
                     hasNotifications = true;
                   }
                 });
-                //notifications.sort((b,a) => a.timestamp != null ? a.timestamp : 0 .compareTo(b.timestamp != null ? b.timestamp : 0));
                 notifications.sort((b, a) => a.timestamp.compareTo(b.timestamp));
-              }
-
-              //categoryList.addAll(snapshot.categoryList.categoryListState);
-              //popularList.addAll(snapshot.serviceList.serviceListState);
-              //recommendedList.addAll(snapshot.serviceList.serviceListState);
-              if (snapshot.categoryList.categoryListState.isNotEmpty && categoryList.isEmpty) {
-                //categoryList.shuffle();
-                //categoryList.sort((a,b) => b.name.compareTo(a.name));
               }
               first = true;
             }
             if (categoryList.isNotEmpty && categoryList.first.name == null) categoryList.removeLast();
-
             noActivity = false;
-            //categoryList.shuffle();
-            //popularList.shuffle();
-            //recommendedList.shuffle();
           }
         }
-        debugPrint('UI_U_service_explorer => CATEGORY LIST: ${categoryList.length}');
-        debugPrint('UI_U_service_explorer => SERVICE LIST: ${popularList.length}');
         order = snapshot.order.itemList != null ? (snapshot.order.itemList.length > 0 ? snapshot.order : OrderState().toEmpty()) : OrderState().toEmpty();
-        debugPrint('UI_U_BookingPage => Order List LENGTH: ${snapshot.orderList.orderListState.length}');
-        //categoryList.sort((a,b) => a.name.compareTo(b.name));
         return GestureDetector(
           onTap: () {
             FocusScopeNode currentFocus = FocusScope.of(context);
@@ -695,30 +553,6 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
             onWillPop: () async => false,
             child: Stack(
               children: [
-                /*Positioned.fill(
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: widget.controller.value.isInitialized
-                        ? SizedBox.expand(
-                      child: FittedBox(
-// If your background video doesn't look right, try changing the BoxFit property.
-// BoxFit.fill created the look I was going for.
-                        fit: BoxFit.cover,
-                        child: SizedBox(
-                          width: widget.controller.value.size?.width ?? 0,
-                          height: widget.controller.value.size?.height ?? 0,
-                          child: VideoPlayer(
-                            widget.controller,
-                          ),
-                        ),
-                      ),
-                    )
-                        : Container(
-                      color: BuytimeTheme.TextWhite,
-                    ),
-                  ),
-                ),*/
-
                 Positioned.fill(
                   child: Align(
                     alignment: Alignment.center,
@@ -981,7 +815,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                             onPressed: () {
                                               setState(() {
                                                 _searchController.clear();
-                                                businessToSearch = '';
+                                                DynamicLinkHelper.discoverBusinessId = '';
                                                 first = false;
                                               });
                                             },
@@ -1501,8 +1335,8 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                             //recommendedList.shuffle();
 
                                             WidgetsBinding.instance.addPostFrameCallback((_) {
-                                              if(Provider.of<Explorer>(context, listen: false).serviceList.isNotEmpty && businessToSearch.isNotEmpty){
-                                                _searchController.text = businessToSearch;
+                                              if(Provider.of<Explorer>(context, listen: false).serviceList.isNotEmpty && DynamicLinkHelper.discoverBusinessName.isNotEmpty){
+                                                _searchController.text = DynamicLinkHelper.discoverBusinessName;
                                                 FocusScope.of(context).unfocus();
                                                 searchedList.clear();
                                                 ///TODO make a new search system for the dynamic link
@@ -1853,39 +1687,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                         ),
                                                       ]),
                                                     )
-                                                    /*:
-                                      _searchController.text.isNotEmpty
-                                          ? Container(
-                                        height: SizeConfig.safeBlockVertical * 8,
-                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
-                                        decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
-                                        child: Center(
-                                            child: Container(
-                                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 4),
-                                              alignment: Alignment.centerLeft,
-                                              child: Text(
-                                                AppLocalizations.of(context).noServiceFoundFromTheSearch,
-                                                style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextGrey, fontWeight: FontWeight.w500, fontSize: 16),
-                                              ),
-                                            )),
-                                      )
-                                          : recommendedList.isEmpty
-                                          ? Container(
-                                        height: SizeConfig.safeBlockVertical * 8,
-                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
-                                        decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
-                                        child: Center(
-                                            child: Container(
-                                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 4),
-                                              alignment: Alignment.centerLeft,
-                                              child: Text(
-                                                AppLocalizations.of(context).noServiceFound,
-                                                style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextGrey, fontWeight: FontWeight.w500, fontSize: 16),
-                                              ),
-                                            )),
-                                      )*/
                                                         :
-
                                                     ///No List
                                                     Container(
                                                       height: SizeConfig.safeBlockVertical * 8,
@@ -1915,15 +1717,11 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                               s.forEach((service) {
                                                 if (service.categoryId != null) {
                                                   service.categoryId.forEach((element2) {
-                                                    //debugPrint('CATEGORY ID: ${element2}');
                                                     if (!tmpServiceList.contains(service)) {
                                                       if(categoryListIds[element.name].contains(element2)) {
-                                                        //tmpServiceList.add(element);
-                                                        //debugPrint('SERVICE CATEGORY ID: $element2 - CATEGORY ID: ${element.id} - CATEGORY LIST: ${categoryListIds[element.name]}' );
                                                         tmpServiceList.add(service);
                                                       }
                                                     }
-                                                    //debugPrint('SERVICE NAME: ${service.name} - CATEGORY ID: ${element.id} - SERVICE CATEGORY ID: $element2' );
                                                     snapshot.serviceListSnippetListState.serviceListSnippetListState.forEach((sl) {
                                                       sl.businessSnippet.forEach((c) {
                                                         if(!tmpServiceList.contains(service) && (c.categoryAbsolutePath.contains(element2) && categoryListIds[element.name].contains(c.categoryAbsolutePath.split('/')[1]))){
@@ -1931,31 +1729,12 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                         }
                                                       });
                                                     });
-                                                    /*snapshot.serviceListSnippetListState.serviceListSnippetListState.forEach((sl) {
-                                                      sl.businessSnippet.forEach((c) {
-                                                        c.serviceList.forEach((s) {
-                                                          if(!tmpServiceList.contains(service) && s.serviceAbsolutePath.contains(element2) && s.serviceAbsolutePath.contains(element.id) && s.serviceAbsolutePath.contains(service.serviceId))
-                                                            tmpServiceList.add(service);
-                                                        });
-                                                       
-                                                      });
-                                                    });*/
-                                                    /*snapshot.categoryList.categoryListState.forEach((element3) {
-                                                      snapshot.serviceListSnippetListState.serviceListSnippetListState.forEach((sl) {
-                                                        sl.businessSnippet.forEach((c) {
-                                                          //debugPrint('CATEGORY ABSOLUTE PATH: ${c.categoryAbsolutePath} - CATEGORY ID: ${element.id} - SERVICE CATEGORY ID: $element2' );
-                                                          if(!tmpServiceList.contains(service) && c.categoryAbsolutePath.contains(element.id) && c.categoryAbsolutePath.contains(element2)  && c.categoryAbsolutePath.contains(element3.id)  && c.categoryAbsolutePath.contains(service.businessId))
-                                                            tmpServiceList.add(service);
-                                                        });
-                                                      });
-                                                    });*/
                                                   });
                                               }});
                                               if(tmpServiceList.length >= 4)
                                                 childrens.add(Flexible(
                                                 child: Container(
                                                   margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0),
-                                                  //padding: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 2),
                                                   height: tmpServiceList.isNotEmpty || noActivity ? 320 : 200,
                                                   color: BuytimeTheme.BackgroundWhite,
                                                   child: Column(
@@ -1968,7 +1747,6 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                         child: Text(
                                                           element.name,
                                                           style: TextStyle(
-                                                            //letterSpacing: SizeConfig.safeBlockVertical * .4,
                                                               fontFamily: BuytimeTheme.FontFamily,
                                                               color: BuytimeTheme.TextBlack,
                                                               fontWeight: FontWeight.w700,
@@ -1984,7 +1762,6 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                         child: Text(
                                                           '${AppLocalizations.of(context).discoverStart} ${element.name} ${AppLocalizations.of(context).discoverEnd}',
                                                           style: TextStyle(
-                                                            //letterSpacing: SizeConfig.safeBlockVertical * .4,
                                                               fontFamily: BuytimeTheme.FontFamily,
                                                               color: BuytimeTheme.TextBlack,
                                                               fontWeight: FontWeight.w500,
@@ -2004,7 +1781,6 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                           SliverList(
                                                             delegate: SliverChildBuilderDelegate(
                                                                   (context, index) {
-                                                                //MenuItemModel menuItem = menuItems.elementAt(index);
                                                                 ServiceState service = tmpServiceList.elementAt(index);
                                                                 return Container(
                                                                   child: PRCardWidget(182, 182, service, false, true, index, element.name),
@@ -2024,8 +1800,6 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                           SliverList(
                                                             delegate: SliverChildBuilderDelegate(
                                                                   (context, index) {
-                                                                //MenuItemModel menuItem = menuItems.elementAt(index);
-                                                                //ServiceState service = popularList.elementAt(index);
                                                                 return Column(
                                                                   mainAxisAlignment: MainAxisAlignment.start,
                                                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -2049,37 +1823,6 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                         ]),
                                                       )
                                                           :
-                                                      /*_searchController.text.isNotEmpty
-                                          ? Container(
-                                        height: SizeConfig.safeBlockVertical * 8,
-                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
-                                        decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
-                                        child: Center(
-                                            child: Container(
-                                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 4),
-                                              alignment: Alignment.centerLeft,
-                                              child: Text(
-                                                AppLocalizations.of(context).noServiceFoundFromTheSearch,
-                                                style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextWhite, fontWeight: FontWeight.w500, fontSize: 16),
-                                              ),
-                                            )),
-                                      )
-                                          : popularList.isEmpty
-                                          ? Container(
-                                        height: SizeConfig.safeBlockVertical * 8,
-                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
-                                        decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
-                                        child: Center(
-                                            child: Container(
-                                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 4),
-                                              alignment: Alignment.centerLeft,
-                                              child: Text(
-                                                AppLocalizations.of(context).noServiceFound,
-                                                style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextWhite, fontWeight: FontWeight.w500, fontSize: 16),
-                                              ),
-                                            )),
-                                      ) :*/
-
                                                       ///No List
                                                       Container(
                                                         height: SizeConfig.safeBlockVertical * 8,
@@ -2099,13 +1842,6 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                   ),
                                                 ),
                                               ));
-                                              /*childrens.add(
-                                                  Container(
-                                                    height: 1,
-                                                    width: SizeConfig.screenWidth,
-                                                    margin: EdgeInsets.symmetric(horizontal: 10),
-                                                    color: BuytimeTheme.SymbolWhite,
-                                                  ));*/
                                               i++;
                                             });
                                             ///Go to business management IF manager role or above.
@@ -2117,8 +1853,6 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                   color: Colors.transparent,
                                                   child: InkWell(
                                                     onTap: () async {
-                                                      /*StoreProvider.of<AppState>(context).dispatch(SetBusinessListToEmpty());
-                                      StoreProvider.of<AppState>(context).dispatch(SetOrderListToEmpty());*/
                                                       Navigator.push(
                                                         context,
                                                         MaterialPageRoute(builder: (context) => drawerSelection == DrawerSelection.BusinessList ? RBusinessList() : RActivityManagement()),
@@ -2149,7 +1883,6 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                   color: Colors.white,
                                                   height: 64,
                                                   margin: EdgeInsets.only(top: 10),
-                                                  // width:SizeConfig.safeBlockVertical * 50 ,
                                                   child: Material(
                                                     color: Colors.transparent,
                                                     child: InkWell(
@@ -2163,7 +1896,6 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                           }
                                                         },
                                                         child: Container(
-                                                          //width: 375,
                                                           height: 64,
                                                           margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
                                                           child: Column(
@@ -2228,7 +1960,6 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                               ),
                                                               Container(
                                                                 width: double.infinity,
-                                                                //margin: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 1),
                                                                 height: SizeConfig.safeBlockVertical * .2,
                                                                 color: BuytimeTheme.DividerGrey,
                                                               )
@@ -2241,28 +1972,17 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                               Container(
                                                 color: Colors.white,
                                                 height: 64,
-                                                //padding: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 1),
                                                 child: Material(
                                                   color: Colors.transparent,
                                                   child: InkWell(
                                                       key: Key('log_out_key'),
                                                       onTap: () async {
                                                         SharedPreferences prefs = await SharedPreferences.getInstance();
-                                                        await storage.write(key: 'bookingCode', value: '');
+                                                        dynamicLinkHelper.clearBooking();
                                                         FirebaseAuth.instance.signOut().then((_) {
                                                           googleSignIn.signOut();
-                                                          //Resetto il carrello
-                                                          //cartCounter = 0;
-                                                          //Svuotare lo Store sul Logout
                                                           StoreProvider.of<AppState>(context).dispatch(SetAppStateToEmpty());
-
-                                                          //Torno al Login
                                                           drawerSelection = DrawerSelection.BusinessList;
-
-                                                          //Navigator.of(context).pushNamedAndRemoveUntil(Home.route, (Route<dynamic> route) => false);
-                                                          //Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Home()), (Route<dynamic> route) => false);
-                                                          //Navigator.replace(context, (Route<dynamic> route) => Landing.route)
-
                                                           Navigator.of(context).pushReplacementNamed(Home.route);
                                                         });
                                                       },

@@ -2,6 +2,7 @@ import 'package:Buytime/UI/management/business/RUI_M_business_list.dart';
 import 'package:Buytime/UI/user/booking/UI_U_booking_self_creation.dart';
 import 'package:Buytime/UI/user/landing/invite_guest_form.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
+import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/model/role/role.dart';
 import 'package:Buytime/reblox/reducer/booking_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/business_reducer.dart';
@@ -24,8 +25,8 @@ class DynamicLinkHelper {
   String orderId = '';
   String userId = '';
 
-  String discoverLeSireneName = '';
-  String discoverLeSireneId = '';
+  static String discoverBusinessName = '';
+  static String discoverBusinessId = '';
 
   bool onBookingCode = false;
   bool rippleLoading = false;
@@ -59,10 +60,9 @@ Future<Uri> dynamicLinksSwitch(PendingDynamicLinkData dynamicLink, BuildContext 
     String orderIdRead = await storage.containsKey(key: 'orderIdRead') ? await storage.read(key: 'orderIdRead') ?? '' : '';
     String onSiteUserIdRead = await storage.containsKey(key: 'onSiteUserIdRead') ? await storage.read(key: 'onSiteUserIdRead') ?? '' : '';
     String onSiteOrderIdRead = await storage.containsKey(key: 'onSiteOrderIdRead') ? await storage.read(key: 'onSiteOrderIdRead') ?? '' : '';
-    String discoverLeSireneNameRead = await storage.containsKey(key: 'discoverLeSireneNameRead') ? await storage.read(key: 'discoverLeSireneNameRead') ?? '' : '';
-    String discoverLeSireneIdRead = await storage.containsKey(key: 'discoverLeSireneIdRead') ? await storage.read(key: 'discoverLeSireneIdRead') ?? '' : '';
-    debugPrint('RUI_U_service_explorer :  discoverLeSireneNameRead: ${discoverLeSireneNameRead}');
-    debugPrint('RUI_U_service_explorer :  discoverLeSireneIdRead: ${discoverLeSireneIdRead}');
+    String discoverBusinessNameRead = await storage.containsKey(key: 'discoverBusinessNameRead') ? await storage.read(key: 'discoverBusinessNameRead') ?? '' : '';
+    String discoverBusinessIdRead = await storage.containsKey(key: 'discoverBusinessIdRead') ? await storage.read(key: 'discoverBusinessIdRead') ?? '' : '';
+
     if (deepLink.queryParameters.containsKey('booking') && bookingCodeRead != 'true') {
       await deepLinkBooking(deepLink, context);
     }
@@ -78,7 +78,7 @@ Future<Uri> dynamicLinksSwitch(PendingDynamicLinkData dynamicLink, BuildContext 
     else if (deepLink.queryParameters.containsKey('selfBookingCode') && deepLink.queryParameters['selfBookingCode'].length > 5) {
       await deepLinkSelfBooking(deepLink, context);
     }
-    else if (deepLink.queryParameters.containsKey('discoverLeSireneName') && deepLink.queryParameters.containsKey('discoverLeSireneId') && discoverLeSireneNameRead != 'true' && discoverLeSireneIdRead != 'true') {
+    else if (deepLink.queryParameters.containsKey('discoverBusinessName') && deepLink.queryParameters.containsKey('discoverBusinessId') && discoverBusinessNameRead != 'true' && discoverBusinessIdRead != 'true') {
       await deepLinkSearchBusiness(deepLink);
     }
   }
@@ -87,18 +87,18 @@ Future<Uri> dynamicLinksSwitch(PendingDynamicLinkData dynamicLink, BuildContext 
 
 Future<void> deepLinkSearchBusiness(Uri deepLink) async {
   debugPrint('ON SEARCH ON LINK');
-  debugPrint('RUI_U_service_explorer :  discoverLeSireneName  onLink: $discoverLeSireneName  - discoverLeSireneId onLink: $discoverLeSireneId');
-  await storage.write(key: 'discoverLeSireneName ', value: discoverLeSireneName );
-  await storage.write(key: 'discoverLeSireneId', value: discoverLeSireneId);
-  await storage.write(key: 'discoverLeSireneNameRead', value: 'true');
-  await storage.write(key: 'discoverLeSireneIdRead', value: 'true');
+  debugPrint('RUI_U_service_explorer :  discoverBusinessName  onLink: $discoverBusinessName  - discoverBusinessId onLink: $discoverBusinessId');
+  await storage.write(key: 'discoverBusinessName ', value: discoverBusinessName );
+  await storage.write(key: 'discoverBusinessId', value: discoverBusinessId);
+  await storage.write(key: 'discoverBusinessNameRead', value: 'true');
+  await storage.write(key: 'discoverBusinessIdRead', value: 'true');
   if (FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty) {
     debugPrint('RUI_U_service_explorer :  USER Is LOGGED in onLink');
-    debugPrint('SHOULD SEARCH : ${discoverLeSireneName}');
+    debugPrint('SHOULD SEARCH : ${discoverBusinessName}');
   } else
     debugPrint('RUI_U_service_explorer :  USER NOT LOGGED in onLink');
-  await storage.write(key: 'discoverLeSireneNameRead', value: 'false');
-  await storage.write(key: 'discoverLeSireneIdRead', value: 'false');
+  await storage.write(key: 'discoverBusinessNameRead', value: 'false');
+  await storage.write(key: 'discoverBusinessIdRead', value: 'false');
 }
 
 Future<void> deepLinkSelfBooking(Uri deepLink, BuildContext context) async {
@@ -238,15 +238,19 @@ onSitePaymentFound(BuildContext context) async {
   }
 }
 
-searchLeSirene() async {
-  discoverLeSireneName = await storage.read(key: 'discoverLeSireneName') ?? '';
-  discoverLeSireneId = await storage.read(key: 'discoverLeSireneId') ?? '';
-  debugPrint('RUI_U_service_explorer :  DEEP LINK EMPTY | discoverLeSireneName : $discoverLeSireneName | discoverLeSireneId: $discoverLeSireneId');
-  await storage.delete(key: 'discoverLeSireneName');
-  await storage.delete(key: 'discoverLeSireneId');
-  if (discoverLeSireneName.isNotEmpty && discoverLeSireneId.isNotEmpty) {
-    await storage.write(key: 'discoverLeSireneNameRead', value: 'false');
-    await storage.write(key: 'discoverLeSireneIdRead', value: 'false');
+clearBooking() async {
+  await storage.write(key: 'bookingCode', value: '');
+}
+
+searchBusiness() async {
+  discoverBusinessName = await storage.read(key: 'discoverBusinessName') ?? '';
+  discoverBusinessId = await storage.read(key: 'discoverBusinessId') ?? '';
+  debugPrint('RUI_U_service_explorer :  DEEP LINK EMPTY | discoverBusinessName : $discoverBusinessName | discoverBusinessId: $discoverBusinessId');
+  await storage.delete(key: 'discoverBusinessName');
+  await storage.delete(key: 'discoverBusinessId');
+  if (discoverBusinessName.isNotEmpty && discoverBusinessId.isNotEmpty) {
+    await storage.write(key: 'discoverBusinessNameRead', value: 'false');
+    await storage.write(key: 'discoverBusinessIdRead', value: 'false');
   }
 }
 
