@@ -347,6 +347,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
       tmp.shuffle();
       searchedList.add(tmp);
     });
+
   }
 
   bool startRequest = false;
@@ -541,6 +542,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
           }
         }
         order = snapshot.order.itemList != null ? (snapshot.order.itemList.length > 0 ? snapshot.order : OrderState().toEmpty()) : OrderState().toEmpty();
+
         return GestureDetector(
           onTap: () {
             FocusScopeNode currentFocus = FocusScope.of(context);
@@ -815,7 +817,8 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                             onPressed: () {
                                               setState(() {
                                                 _searchController.clear();
-                                                DynamicLinkHelper.discoverBusinessId = '';
+                                                DynamicLinkHelper.discoverBusinessName = '';
+                                                //DynamicLinkHelper.discoverBusinessId = '';
                                                 first = false;
                                               });
                                             },
@@ -1331,11 +1334,13 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                             debugPrint('LIST SERVICE FORM BUILDER: ${list.length}');
                                             debugPrint('POPULAR SERVICE FORM BUILDER: ${popularList.length}');
                                             debugPrint('RECCOMENDED SERVICE FORM BUILDER: ${recommendedList.length}');
+
                                             //popularList.shuffle();
                                             //recommendedList.shuffle();
 
                                             WidgetsBinding.instance.addPostFrameCallback((_) {
-                                              if(Provider.of<Explorer>(context, listen: false).serviceList.isNotEmpty && DynamicLinkHelper.discoverBusinessName.isNotEmpty){
+                                              debugPrint('RUI_U_service_explorer => SEARCHED BUSINESS NAME: ${DynamicLinkHelper.discoverBusinessName} | SEARCHED BUSIENSS ID:${DynamicLinkHelper.discoverBusinessId}');
+                                              if(Provider.of<Explorer>(context, listen: false).serviceList.isNotEmpty && DynamicLinkHelper.discoverBusinessName.isNotEmpty && DynamicLinkHelper.discoverBusinessId.isNotEmpty){
                                                 _searchController.text = DynamicLinkHelper.discoverBusinessName;
                                                 FocusScope.of(context).unfocus();
                                                 searchedList.clear();

@@ -162,7 +162,9 @@ class _RActivityManagementState extends State<RActivityManagement> {
           ),
         )
     );
-    for(int i = 0; i < list.length; i++){
+    widgetList.addAll(_weekSliverList(list));
+
+    /*for(int i = 0; i < list.length; i++){
       if(list[i].isNotEmpty){
         DateTime orderTime = list[i][0][0].date;
         orderTime = new DateTime(orderTime.year, orderTime.month, orderTime.day, 0, 0, 0, 0, 0);
@@ -252,7 +254,7 @@ class _RActivityManagementState extends State<RActivityManagement> {
           ),
         );
       }
-    }
+    }*/
 
     return widgetList;
   }
@@ -268,7 +270,6 @@ class _RActivityManagementState extends State<RActivityManagement> {
                 insetOnOverlap: true,
                 children: [
                   SliverPositioned.fill(
-
                     top: 0,
                     child: Container(),
                   ),
@@ -401,102 +402,218 @@ class _RActivityManagementState extends State<RActivityManagement> {
   }
 
   List<Widget> _weekSliverList(List<List<List>> list) {
+
+    Map<DateTime, Map> tileMap = Map();
+    buildTileMap(list, tileMap);
+
+
     DateTime currentTime = DateTime.now();
     currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0);
     List<Widget> widgetList = [];
+    tileMap.forEach((orderTime, tableMap) {
+      List<Widget> tmpTile = [];
+      tmpTile.add(SliverPinnedHeader(
+        child: Container(
+          height: 24,
+          decoration: BoxDecoration(
+              color: BuytimeTheme.ManagerPrimary,
+              border: Border(
+                  top: BorderSide(
+                      color: BuytimeTheme.BackgroundWhite
+                  )
+              )
+          ),
+          alignment: Alignment.centerLeft,
+          padding: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
+          child: Text(
+              orderTime.isAtSameMomentAs(currentTime) ? '${AppLocalizations.of(context).today} ${DateFormat('MMM dd',Localizations.localeOf(context).languageCode).format(orderTime).toUpperCase()}' :
+              orderTime.isAtSameMomentAs(currentTime.add(Duration(days: 1))) ? '${AppLocalizations.of(context).tomorrow} ${DateFormat('MMM dd',Localizations.localeOf(context).languageCode).format(orderTime).toUpperCase()}' :
+              '${DateFormat('MMM dd').format(orderTime).toUpperCase()}',
+              style: TextStyle(
+                letterSpacing: 1.25,
+                fontFamily: BuytimeTheme.FontFamily,
+                color: BuytimeTheme.TextWhite,
+                fontSize: 14, /// SizeConfig.safeBlockHorizontal * 4
+                fontWeight: FontWeight.w500,
+              )
+          ),
+        ),
+      ));
+      tableMap.forEach((key, value) {
+        debugPrint('KEY: $key - LIST LENGTH: ${value.length}');
+        if(key == '-'){
+          tmpTile.add(SliverClip(
+            child: MultiSliver(
+              children: <Widget>[
+                SliverAnimatedPaintExtent(
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeOut,
+                  child: SliverList(
+                    delegate: SliverChildBuilderDelegate((context, index) {
+                      //debugPrint('UI_M_activity_management => LIST SIZE: ${list[i].length}');
+                      OrderState order = value.elementAt(index)[0];
+                      OrderEntry entry = value.elementAt(index)[1];
+                      /// when the manager clicks on the button we  block all the buttons (for this order) until the response rebuilds the list
+                      /// or the entry?
+                      bool managerHasChosenAction = false;
+                      return Container(
+                        alignment: Alignment.center,
+                        //color: Colors.lightBlue[100 * (index % 9)],
+                        child: Column(
+                          children: [
+                            ///Order Info
+                            DashboardListItem(order, entry),
+                            ///Actions
+                            buildActivityButtons(order, context, managerHasChosenAction),
+                            ///Divider
+                            Container(
+                              //margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 30),
+                              height: 2,
+                              color: BuytimeTheme.DividerGrey,
+                            )
+                          ],
+                        ),
+                      );
+                    },
+                      childCount: value.length,
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ));
+        }
+        else{
+          tmpTile.add(SliverStack(
+              insetOnOverlap: true,
+              children: [
+                MultiSliver(
+                  //pushPinnedChildren: true,
+                  children: [
+                    SliverPinnedHeader(
+                      child: Container(
+                        height: 24,
+                        decoration: BoxDecoration(
+                            color: BuytimeTheme.ManagerPrimary.withOpacity(.5),
+                            border: Border(
+                                top: BorderSide(
+                                    color: BuytimeTheme.BackgroundWhite
+                                )
+                            )
+                        ),
+                        alignment: Alignment.centerLeft,
+                        padding: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
+                        child: Text(
+                            '${AppLocalizations.of(context).tableNumber.toUpperCase()} ${key}',
+                            style: TextStyle(
+                              letterSpacing: 1.25,
+                              fontFamily: BuytimeTheme.FontFamily,
+                              color: BuytimeTheme.TextWhite,
+                              fontSize: 14, /// SizeConfig.safeBlockHorizontal * 4
+                              fontWeight: FontWeight.w500,
+                            )
+                        ),
+                      ),
+                    ),
+                    SliverClip(
+                      child: MultiSliver(
+                        children: <Widget>[
+                          SliverAnimatedPaintExtent(
+                            duration: const Duration(milliseconds: 300),
+                            curve: Curves.easeOut,
+                            child: SliverList(
+                              delegate: SliverChildBuilderDelegate((context, index) {
+                                //debugPrint('UI_M_activity_management => LIST SIZE: ${list[i].length}');
+                                OrderState order = value.elementAt(index)[0];
+                                OrderEntry entry = value.elementAt(index)[1];
+                                /// when the manager clicks on the button we  block all the buttons (for this order) until the response rebuilds the list
+                                /// or the entry?
+                                bool managerHasChosenAction = false;
+                                return Container(
+                                  alignment: Alignment.center,
+                                  //color: Colors.lightBlue[100 * (index % 9)],
+                                  child: Column(
+                                    children: [
+                                      ///Order Info
+                                      DashboardListItem(order, entry),
+                                      ///Actions
+                                      buildActivityButtons(order, context, managerHasChosenAction),
+                                      ///Divider
+                                      Container(
+                                        //margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 30),
+                                        height: 2,
+                                        color: BuytimeTheme.DividerGrey,
+                                      )
+                                    ],
+                                  ),
+                                );
+                              },
+                                childCount: value.length,
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    )
+                  ],
+                )
+              ]
+          ));
+        }
+      });
+      widgetList
+        ..add(SliverClip(
+          child: MultiSliver(
+            pushPinnedChildren: true,
+            children: [
+              SliverStack(
+                  insetOnOverlap: true,
+                  children: [
+                    MultiSliver(
+                      children: tmpTile
+                    )
+                  ]
+              ),
+            ],
+          ),
+        ));
+    });
+
     for (int i = 0; i < list.length; i++){
       if(list[i] != null && list[i].isNotEmpty){
         DateTime orderTime = list[i][0][0].date;
         orderTime = new DateTime(orderTime.year, orderTime.month, orderTime.day, 0, 0, 0, 0, 0);
-        widgetList
-          ..add(SliverClip(
-                child: MultiSliver(
-                  pushPinnedChildren: true,
-                  children: [
-                    SliverStack(
-                        insetOnOverlap: true,
-                        children: [
-                          MultiSliver(
-                            children: [
-                              SliverPinnedHeader(
-                                child: Container(
-                                  height: 24,
-                                  decoration: BoxDecoration(
-                                      color: BuytimeTheme.ManagerPrimary,
-                                      border: Border(
-                                          top: BorderSide(
-                                              color: BuytimeTheme.BackgroundWhite
-                                          )
-                                      )
-                                  ),
-                                  alignment: Alignment.centerLeft,
-                                  padding: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
-                                  child: Text(
-                                      orderTime.isAtSameMomentAs(currentTime) ? '${AppLocalizations.of(context).today} ${DateFormat('MMM dd',Localizations.localeOf(context).languageCode).format(orderTime).toUpperCase()}' :
-                                      orderTime.isAtSameMomentAs(currentTime.add(Duration(days: 1))) ? '${AppLocalizations.of(context).tomorrow} ${DateFormat('MMM dd',Localizations.localeOf(context).languageCode).format(orderTime).toUpperCase()}' :
-                                      '${DateFormat('MMM dd').format(orderTime).toUpperCase()}',
-                                      style: TextStyle(
-                                        letterSpacing: 1.25,
-                                        fontFamily: BuytimeTheme.FontFamily,
-                                        color: BuytimeTheme.TextWhite,
-                                        fontSize: 14, /// SizeConfig.safeBlockHorizontal * 4
-                                        fontWeight: FontWeight.w500,
-                                      )
-                                  ),
-                                ),
-                              ),
-                              SliverClip(
-                                child: MultiSliver(
-                                  children: <Widget>[
-                                    SliverAnimatedPaintExtent(
-                                      duration: const Duration(milliseconds: 300),
-                                      curve: Curves.easeOut,
-                                      child: SliverList(
-                                        delegate: SliverChildBuilderDelegate((context, index) {
-                                          //debugPrint('UI_M_activity_management => LIST SIZE: ${list[i].length}');
-                                          OrderState order = list[i].elementAt(index)[0];
-                                          OrderEntry entry = list[i].elementAt(index)[1];
-                                          /// when the manager clicks on the button we  block all the buttons (for this order) until the response rebuilds the list
-                                          /// or the entry?
-                                          bool managerHasChosenAction = false;
-                                          return Container(
-                                            alignment: Alignment.center,
-                                            //color: Colors.lightBlue[100 * (index % 9)],
-                                            child: Column(
-                                              children: [
-                                                ///Order Info
-                                                DashboardListItem(order, entry),
-                                                ///Actions
-                                                buildActivityButtons(order, context, managerHasChosenAction),
-                                                ///Divider
-                                                Container(
-                                                  //margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 30),
-                                                  height: 2,
-                                                  color: BuytimeTheme.DividerGrey,
-                                                )
-                                              ],
-                                            ),
-                                          );
-                                        },
-                                          childCount: list[i].length,
-                                        ),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              )
-                            ],
-                          )
-                        ]
-                    ),
-                  ],
-                ),
-              ));
+
+
+
       }
     }
 
 
+
     return widgetList;
+  }
+
+  void buildTileMap(List<List<List<dynamic>>> list, Map<DateTime, Map<dynamic, dynamic>> tileMap) {
+    for (int i = 0; i < list.length; i++){
+      if(list[i] != null && list[i].isNotEmpty){
+        DateTime orderTime = list[i][0][0].date;
+        orderTime = new DateTime(orderTime.year, orderTime.month, orderTime.day, 0, 0, 0, 0, 0);
+        Map<String, List> tableMap = Map();
+        tileMap.putIfAbsent(orderTime, () => tableMap);
+        for(int j = 0; j <  list[i].length; j++){
+          OrderState order = list[i].elementAt(j)[0];
+          OrderEntry entry =  list[i].elementAt(j)[1];
+          if(order.tableNumber != null && order.tableNumber.isNotEmpty){
+            tableMap.putIfAbsent('${order.tableNumber}', () => []);
+            tableMap['${order.tableNumber}'].add([order, entry]);
+          }else{
+            tableMap.putIfAbsent('-', () => []);
+            tableMap['-'].add([order, entry]);
+          }
+        }
+      }
+    }
   }
 
   Container buildActivityButtons(OrderState order, BuildContext context, bool managerHasChosenAction) {

@@ -14,6 +14,7 @@ import 'package:Buytime/reblox/reducer/booking_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reblox/reducer/service_list_snippet_list_reducer.dart';
 import 'package:Buytime/reusable/animation/enterExitRoute.dart';
+import 'package:Buytime/services/dynamic_links/dynamic_links_helper.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
@@ -57,132 +58,24 @@ class RBusinessListState extends State<RBusinessList> {
   }
   String orderId = '';
   String userId = '';
+
+  DynamicLinkHelper dynamicLinkHelper = DynamicLinkHelper();
+
   @override
   void initState() {
     super.initState();
     emptyCategoryInvite();
-    initDynamicLinks();
+    //initDynamicLinks();
+    dynamicLinkHelper.initDynamicLinks(context);
   }
-  onSitePaymentFound() async {
-    userId = await storage.read(key: 'onSiteUserId') ?? '';
-    orderId = await storage.read(key: 'onSiteOrderId') ?? '';
-    debugPrint('UI_U_landing: DEEP LINK EMPTY | userId: $userId | orderId: $orderId');
-    await storage.delete(key: 'onSiteUserId');
-    await storage.delete(key: 'onSiteOrderId');
 
-    if (userId.isNotEmpty && orderId.isNotEmpty) {
-      if (StoreProvider.of<AppState>(context).state.user.getRole() != Role.user) {
-        StoreProvider.of<AppState>(context).dispatch(OrderRequest(orderId));
-        await Future.delayed(Duration(milliseconds: 3000));
-        StoreProvider.of<AppState>(context).state.order.progress = 'paid';
-        StoreProvider.of<AppState>(context).dispatch(UpdateOrderByManager(StoreProvider.of<AppState>(context).state.order, OrderStatus.paid));
-      } else {
-        debugPrint('USER NO PERMISSION');
-      }
-
-      await storage.write(key: 'onSiteUserIdRead', value: 'false');
-      await storage.write(key: 'onSiteOrderIdRead', value: 'false');
-    }
-  }
-  void initDynamicLinks() async {
-    print("Dentro initial dynamic");
-    Uri deepLink;
-
-    FirebaseDynamicLinks.instance.onLink(onSuccess: (PendingDynamicLinkData dynamicLink) async {
-      deepLink = null;
-      deepLink = dynamicLink?.link;
-      debugPrint('UI_U_landing: DEEPLINK onLink: $deepLink');
-      if (deepLink != null) {
-        String onSiteUserIdRead = await storage.containsKey(key: 'onSiteUserIdRead') ? await storage.read(key: 'onSiteUserIdRead') ?? '' : '';
-        String onSiteOrderIdRead = await storage.containsKey(key: 'onSiteOrderIdRead') ? await storage.read(key: 'onSiteOrderIdRead') ?? '' : '';
-
-        if (deepLink.queryParameters.containsKey('userId') && deepLink.queryParameters.containsKey('orderId') && onSiteUserIdRead != 'true' && onSiteOrderIdRead != 'true') {
-          debugPrint('ON SITE PAYMENT ON LINK');
-          String orderId = deepLink.queryParameters['orderId'];
-          String userId = deepLink.queryParameters['userId'];
-          debugPrint('UI_U_landing: userId onLink: $userId - orderId onLink: $orderId');
-          await storage.write(key: 'onSiteUserId', value: userId);
-          await storage.write(key: 'onSiteOrderId', value: orderId);
-          await storage.write(key: 'onSiteUserIdRead', value: 'true');
-          await storage.write(key: 'onSiteOrderIdRead', value: 'true');
-          /*setState(() {
-            onBookingCode = true;
-          });*/
-          //StoreProvider.of<AppState>(context).dispatch(BookingRequestResponse(BookingState(booking_code: id)));
-          //Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => InviteGuestForm(id: id, fromLanding: false,)), (Route<dynamic> route) => false);
-          if (FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty) {
-            debugPrint('UI_U_landing: USER Is LOGGED in onLink');
-            //Navigator.of(context).push(MaterialPageRoute(builder: (context) => InviteGuestForm(id: id, fromLanding: true,)));
-            if (StoreProvider.of<AppState>(context).state.user.getRole() != Role.user) {
-              StoreProvider.of<AppState>(context).dispatch(OrderRequest(orderId));
-              await Future.delayed(Duration(milliseconds: 3000));
-              StoreProvider.of<AppState>(context).state.order.progress = 'paid';
-              StoreProvider.of<AppState>(context).dispatch(UpdateOrderByManager(StoreProvider.of<AppState>(context).state.order, OrderStatus.paid));
-            } else {
-              debugPrint('USER NO PERMISSION in LINK');
-            }
-
-            await storage.write(key: 'onSiteUserIdRead', value: 'false');
-            await storage.write(key: 'onSiteOrderIdRead', value: 'false');
-          } else
-            debugPrint('UI_U_landing: USER NOT LOGGED in onLink');
-        }
-      }
-    }, onError: (OnLinkErrorException e) async {
-      print('onLinkError');
-      print(e.message);
-    });
-
-    await Future.delayed(Duration(seconds: 2)); // TODO: vi spezzo le gambine. AHAHAHAH Riccaa attentoooo.
-
-    ///Serve un delay che altrimenti getInitialLink torna NULL
-    final PendingDynamicLinkData data = await FirebaseDynamicLinks.instance.getInitialLink();
-    deepLink = null;
-    deepLink = data?.link;
-    debugPrint('UI_U_landing: DEEPLINK getInitialLink: $deepLink');
-    if (deepLink != null) {
-      String onSiteUserIdRead = await storage.containsKey(key: 'onSiteUserIdRead') ? await storage.read(key: 'onSiteUserIdRead') ?? '' : '';
-      String onSiteOrderIdRead = await storage.containsKey(key: 'onSiteOrderIdRead') ? await storage.read(key: 'onSiteOrderIdRead') ?? '' : '';
-
-      if (deepLink.queryParameters.containsKey('userId') && deepLink.queryParameters.containsKey('orderId') && onSiteUserIdRead != 'true' && onSiteOrderIdRead != 'true') {
-          String orderId = deepLink.queryParameters['orderId'];
-          String userId = deepLink.queryParameters['userId'];
-          debugPrint('UI_U_landing: userId onLink: $userId - orderId onLink: $orderId');
-          await storage.write(key: 'onSiteUserId', value: userId);
-          await storage.write(key: 'onSiteOrderId', value: orderId);
-          await storage.write(key: 'onSiteUserIdRead', value: 'true');
-          await storage.write(key: 'onSiteOrderIdRead', value: 'true');
-          /*setState(() {
-            onBookingCode = true;
-          });*/
-          //StoreProvider.of<AppState>(context).dispatch(BookingRequestResponse(BookingState(booking_code: id)));
-          //Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => InviteGuestForm(id: id, fromLanding: false,)), (Route<dynamic> route) => false);
-          if (FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty) {
-            debugPrint('UI_U_landing: USER Is LOGGED in onLink');
-            //Navigator.of(context).push(MaterialPageRoute(builder: (context) => InviteGuestForm(id: id, fromLanding: true,)));
-            if (StoreProvider.of<AppState>(context).state.user.getRole() != Role.user) {
-              StoreProvider.of<AppState>(context).dispatch(OrderRequest(orderId));
-              await Future.delayed(Duration(milliseconds: 3000));
-              StoreProvider.of<AppState>(context).state.order.progress = 'paid';
-              StoreProvider.of<AppState>(context).dispatch(UpdateOrderByManager(StoreProvider.of<AppState>(context).state.order, OrderStatus.paid));
-            } else {
-              debugPrint('USER NO PERMISSION in LINK');
-            }
-
-            await storage.write(key: 'onSiteUserIdRead', value: 'false');
-            await storage.write(key: 'onSiteOrderIdRead', value: 'false');
-          } else
-            debugPrint('UI_U_landing: USER NOT LOGGED in onLink');
-        }
-    }
-  }
 
   List<int> networkServicesList = [];
 
 
   @override
   Widget build(BuildContext context) {
-    onSitePaymentFound();
+    dynamicLinkHelper.onSitePaymentFound(context);
     var media = MediaQuery.of(context).size;
     var mediaHeight = media.height;
     SizeConfig().init(context);

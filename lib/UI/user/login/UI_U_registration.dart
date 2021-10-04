@@ -1,7 +1,9 @@
 import 'dart:io';
+import 'package:Buytime/UI/management/business/RUI_M_business_list.dart';
 import 'package:Buytime/UI/user/login/UI_U_login.dart';
 import 'package:Buytime/UI/user/turist/RUI_U_service_explorer.dart';
 import 'package:Buytime/reblox/model/autoComplete/auto_complete_state.dart';
+import 'package:Buytime/reblox/model/role/role.dart';
 import 'package:Buytime/reblox/model/snippet/device.dart';
 import 'package:Buytime/reblox/model/snippet/token.dart';
 import 'package:Buytime/reblox/reducer/auto_complete_list_reducer.dart';
@@ -842,6 +844,17 @@ class RegistrationState extends State<Registration> {
         setState(() {
           _success = true;
           _userEmail = user.email;
+          Future.delayed(Duration(seconds: 1), (){
+            if (StoreProvider.of<AppState>(context).state.user.getRole() != Role.user){
+              debugPrint('UI_U_login => Account authority: > User');
+              Navigator.push(context, MaterialPageRoute(builder: (context) => RBusinessList()));
+            } else{
+              debugPrint('UI_U_login => Account authority: <= User');
+              Navigator.of(context).pushNamedAndRemoveUntil(AppRoutes.serviceExplorer, (Route<dynamic> route) => false);
+            }
+            //Navigator.of(context).pushNamedAndRemoveUntil(AppRoutes.myBookings, ModalRoute.withName(AppRoutes.landing));
+            //StoreProvider.of<AppState>(context).dispatch(new UserBookingRequest(user.email));
+          });
         });
       }
     });

@@ -58,6 +58,7 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
     debugPrint('splash_screen => AUTO COMPLETE LENGTH: ${completes.length}');
     StoreProvider.of<AppState>(context).dispatch(AddAutoCompleteToList(completes));
   }
+
   String version = '';
   getAppInfo()async{
     PackageInfo packageInfo = await PackageInfo.fromPlatform();

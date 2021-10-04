@@ -33,7 +33,8 @@ class UserRequestService implements EpicClass<AppState> {
       actionArray.add(UpdateStatistics(statisticsState));
       if(stateFromFirebase != null)
        actionArray.add(UserToState(stateFromFirebase));
-      actionArray.add(NavigatePushAction(AppRoutes.serviceExplorer));
+
+      //actionArray.add(NavigatePushAction(AppRoutes.serviceExplorer));
       return actionArray;
     });
   }

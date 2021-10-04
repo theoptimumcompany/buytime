@@ -78,7 +78,8 @@ Future<Uri> dynamicLinksSwitch(PendingDynamicLinkData dynamicLink, BuildContext 
     else if (deepLink.queryParameters.containsKey('selfBookingCode') && deepLink.queryParameters['selfBookingCode'].length > 5) {
       await deepLinkSelfBooking(deepLink, context);
     }
-    else if (deepLink.queryParameters.containsKey('discoverBusinessName') && deepLink.queryParameters.containsKey('discoverBusinessId') && discoverBusinessNameRead != 'true' && discoverBusinessIdRead != 'true') {
+    //else if (deepLink.queryParameters.containsKey('discoverBusinessName') && deepLink.queryParameters.containsKey('discoverBusinessId') && discoverBusinessNameRead != 'true' && discoverBusinessIdRead != 'true') {
+    else if (deepLink.queryParameters.containsKey('discoverLeSireneName') && deepLink.queryParameters.containsKey('discoverLeSireneId') && discoverBusinessNameRead != 'true' && discoverBusinessIdRead != 'true') {
       await deepLinkSearchBusiness(deepLink);
     }
   }
@@ -86,17 +87,22 @@ Future<Uri> dynamicLinksSwitch(PendingDynamicLinkData dynamicLink, BuildContext 
 }
 
 Future<void> deepLinkSearchBusiness(Uri deepLink) async {
+  //discoverBusinessName = deepLink.queryParameters['discoverBusinessName'];
+  discoverBusinessName = deepLink.queryParameters['discoverLeSireneName'];
+  //discoverBusinessId = deepLink.queryParameters['discoverBusinessId'];
+  discoverBusinessId = deepLink.queryParameters['discoverLeSireneId'];
+
   debugPrint('ON SEARCH ON LINK');
   debugPrint('RUI_U_service_explorer :  discoverBusinessName  onLink: $discoverBusinessName  - discoverBusinessId onLink: $discoverBusinessId');
   await storage.write(key: 'discoverBusinessName ', value: discoverBusinessName );
   await storage.write(key: 'discoverBusinessId', value: discoverBusinessId);
   await storage.write(key: 'discoverBusinessNameRead', value: 'true');
   await storage.write(key: 'discoverBusinessIdRead', value: 'true');
-  if (FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty) {
+  /*if (FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty) {
     debugPrint('RUI_U_service_explorer :  USER Is LOGGED in onLink');
     debugPrint('SHOULD SEARCH : ${discoverBusinessName}');
   } else
-    debugPrint('RUI_U_service_explorer :  USER NOT LOGGED in onLink');
+    debugPrint('RUI_U_service_explorer :  USER NOT LOGGED in onLink');*/
   await storage.write(key: 'discoverBusinessNameRead', value: 'false');
   await storage.write(key: 'discoverBusinessIdRead', value: 'false');
 }

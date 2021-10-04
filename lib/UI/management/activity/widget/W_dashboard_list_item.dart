@@ -1,6 +1,7 @@
 import 'package:Buytime/UI/management/activity/RUI_M_activity_management_item_details.dart';
 import 'package:Buytime/UI/management/activity/UI_M_activity_management_item_details.dart';
 import 'package:Buytime/UI/management/invite/UI_M_booking_details.dart';
+import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reblox/model/order/order_entry.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
@@ -10,6 +11,7 @@ import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/utils/utils.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:intl/intl.dart';
 import 'package:share/share.dart';
 import 'package:Buytime/reusable/icon/material_design_icons.dart';
@@ -89,7 +91,9 @@ class _DashboardListItemState extends State<DashboardListItem> {
                                 /*  widget.orderState.selected == null || widget.orderState.selected.isEmpty ?
                                 '${widget.orderState.user.name ?? ''} ${widget.orderState.user.surname ?? ''}' :
                                 '${widget.orderState.user.name ?? ''} ${widget.orderState.user.surname ?? ''} - ${widget.orderEntry.time}',*/
-                                widget.orderState.selected == null || widget.orderState.selected.isEmpty ? '${AppLocalizations.of(context).product}' : '${AppLocalizations.of(context).service} - ${widget.orderEntry.time}',
+                                 widget.orderState.itemList != null && widget.orderState.itemList.length > 1  ?
+                                  '${AppLocalizations.of(context).multipleOrders}' :
+                                  '${Utils.retriveField(Localizations.localeOf(context).languageCode, widget.orderState.itemList.first.name)} - ${DateFormat('HH:mm', Localizations.localeOf(context).languageCode).format(widget.orderState.creationDate.add(Duration(hours: 2)))}',
                                 style: TextStyle(fontFamily: BuytimeTheme.FontFamily, fontSize: 16, letterSpacing: 0.15, fontWeight: FontWeight.w400),
                               ),
                             ),
@@ -99,16 +103,14 @@ class _DashboardListItemState extends State<DashboardListItem> {
 
                       ///Service Name & Price
                       Container(
-                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
+                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * .5),
                         child: Row(
                           children: [
                             Container(
                               child: Text(
                                 widget.orderState.selected == null || widget.orderState.selected.isEmpty
-                                    ? widget.orderState.itemList.length > 1
-                                        ? '${AppLocalizations.of(context).multipleOrders} - ${AppLocalizations.of(context).currency} ${widget.orderState.total.toStringAsFixed(2)}'
-                                        : '${Utils.retriveField(Localizations.localeOf(context).languageCode, widget.orderState.itemList.first.name)} - ${AppLocalizations.of(context).currency} ${widget.orderState.total.toStringAsFixed(2)}'
-                                    : '${Utils.retriveField(Localizations.localeOf(context).languageCode, widget.orderEntry.name)} - € ${widget.orderEntry.price.toStringAsFixed(2)}',
+                                    ? '${AppLocalizations.of(context).tableNumber} ${widget.orderState.tableNumber} - ${AppLocalizations.of(context).currency} ${widget.orderState.total.toStringAsFixed(2)}'
+                                    : '${widget.orderState.user.email} - ${AppLocalizations.of(context).currency} ${widget.orderState.total.toStringAsFixed(2)}',
                                 style: TextStyle(fontFamily: BuytimeTheme.FontFamily, fontSize: 14, letterSpacing: 0.25, fontWeight: FontWeight.w400, color: BuytimeTheme.TextMedium),
                               ),
                             )
@@ -117,7 +119,7 @@ class _DashboardListItemState extends State<DashboardListItem> {
                       ),
 
                       ///Order Creation Time
-                      Container(
+                      /*Container(
                         margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 0.4),
                         child: Row(
                           children: [
@@ -129,7 +131,7 @@ class _DashboardListItemState extends State<DashboardListItem> {
                             )
                           ],
                         ),
-                      ),
+                      ),*/
 
                       ///Status
                       Container(
