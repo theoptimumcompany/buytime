@@ -1069,6 +1069,7 @@ class _BookingPageState extends State<BookingPage> {
                                                                     order.business.name = snapshot.business.name;
                                                                     order.business.id = snapshot.business.id_firestore;
                                                                     order.user.name = snapshot.user.name;
+                                                                    order.user.email = snapshot.user.email;
                                                                     order.user.id = snapshot.user.uid;
                                                                     // order.addItem(service, snapshot.business.ownerId, context);
                                                                     if (!order.addingFromAnotherBusiness(service.businessId)) {

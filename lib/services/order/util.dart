@@ -23,6 +23,7 @@ OrderState configureOrder(OrderState orderStateFromEvent, AppState state) {
   orderState.user = UserSnippet();
   orderState.user.id = state.user.uid;
   orderState.user.name = state.user.name;
+  orderState.user.email = state.user.email;
   orderState.userId = state.user.uid;
 
   if (isExternal) {
@@ -76,6 +77,7 @@ OrderReservableState configureOrderReservable(OrderReservableState orderStateFro
   orderState.user = UserSnippet();
   orderState.user.id = store.state.user.uid;
   orderState.user.name = store.state.user.name;
+  orderState.user.email = store.state.user.email;
   orderState.userId = store.state.user.uid;
 
   ///TODO: Maneggiare store per tirare fuori orario chiusura della giornata

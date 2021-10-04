@@ -608,6 +608,7 @@
   "checkAvailability": "Controlla disponibilità",
   "discoverEnd": "services around you",
   "tableNumber": "numero tavolo",
+  "table": "tavolo",
   "insertTableNumber": "Inserisci il numero del tuo tavolo",
   "hubConventionAccepted": "Questo servizio accetta convenzioni con gli HUB",
   "activeHubConventions": "Convenzioni HUB attive",

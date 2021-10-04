@@ -865,6 +865,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                               }
                                               order.user.name = snapshot.user.name;
                                               order.user.id = snapshot.user.uid;
+                                              order.user.email = snapshot.user.email;
                                               if (!order.addingFromAnotherBusiness(widget.serviceState.businessId)) {
                                                 order.addItem(widget.serviceState, snapshot.business.ownerId, context);
                                                 order.cartCounter++;
@@ -961,6 +962,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                               }
                                               order.user.name = snapshot.user.name;
                                               order.user.id = snapshot.user.uid;
+                                              order.user.email = snapshot.user.email;
                                               // order.addItem(widget.serviceState, snapshot.business.ownerId, context);
                                               if (!order.addingFromAnotherBusiness(widget.serviceState.businessId)) {
                                                 order.addItem(widget.serviceState, snapshot.business.ownerId, context);

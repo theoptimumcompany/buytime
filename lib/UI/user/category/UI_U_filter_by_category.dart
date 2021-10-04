@@ -935,6 +935,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                                             order.business.id = snapshot.business.id_firestore;
                                                             order.user.name = snapshot.user.name;
                                                             order.user.id = snapshot.user.uid;
+                                                            order.user.email = snapshot.user.email;
                                                             // order.addItem(service, snapshot.business.ownerId, context);
                                                             if (!order.addingFromAnotherBusiness(service.businessId)) {
                                                               order.addItem(service, snapshot.business.ownerId, context);

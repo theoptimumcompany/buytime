@@ -125,6 +125,7 @@ class ServiceListState extends State<ServiceList> {
                                                         order.business.id = snapshot.business.id_firestore;
                                                         order.user.name = snapshot.user.name;
                                                         order.user.id = snapshot.user.uid;
+                                                        order.user.email = snapshot.user.email;
                                                         // order.addItem(serviceList[index], snapshot.business.ownerId, context);
                                                         if (!order.addingFromAnotherBusiness(serviceList[index].businessId)) {
                                                           order.addItem(serviceList[index], snapshot.business.ownerId, context);

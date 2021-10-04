@@ -411,7 +411,7 @@ class _RActivityManagementItemDetailsState extends State<RActivityManagementItem
                                     child: Container(
                                       margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * .5, bottom: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 2.5),
                                       child: Text(
-                                        '${AppLocalizations.of(context).tableNumber}',
+                                        '${AppLocalizations.of(context).table}',
                                         //'${orderState.itemList.first.description}',
                                         overflow: TextOverflow.ellipsis,
                                         maxLines: 2,

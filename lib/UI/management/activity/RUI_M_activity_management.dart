@@ -488,7 +488,7 @@ class _RActivityManagementState extends State<RActivityManagement> {
               insetOnOverlap: true,
               children: [
                 MultiSliver(
-                  //pushPinnedChildren: true,
+                  pushPinnedChildren: true,
                   children: [
                     SliverPinnedHeader(
                       child: Container(
@@ -504,7 +504,7 @@ class _RActivityManagementState extends State<RActivityManagement> {
                         alignment: Alignment.centerLeft,
                         padding: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
                         child: Text(
-                            '${AppLocalizations.of(context).tableNumber.toUpperCase()} ${key}',
+                            '${AppLocalizations.of(context).table.toUpperCase()} ${key}',
                             style: TextStyle(
                               letterSpacing: 1.25,
                               fontFamily: BuytimeTheme.FontFamily,

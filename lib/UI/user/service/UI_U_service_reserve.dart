@@ -1205,7 +1205,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                                       order.business.name = snapshot.business.name;
                                                                       order.business.id = snapshot.business.id_firestore;
                                                                     }
-                                                                    order.user.name = snapshot.user.name;
+                                                                    order.user.name = snapshot.user.name; order.user.email = snapshot.user.email;
                                                                     order.user.id = snapshot.user.uid;
                                                                     order.addReserveItem(widget.serviceState, snapshot.business.ownerId, serviceSlot[2].startTime, duration, dates[index], serviceSlot[2].price, serviceSlot[2].slotId);
                                                                     order.selected.add(indexes[index][i]);
@@ -1404,6 +1404,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                                         }
                                                                         reserveState.order.user.name = userState.name;
                                                                         reserveState.order.user.id = userState.uid;
+                                                                        reserveState.order.user.email = userState.email;
                                                                         reserveState.order.addReserveItem(widget.serviceState, businessState.ownerId, serviceSlot[2].on, duration, dates[index], serviceSlot[1].price, serviceSlot[2].uid, context);
                                                                         reserveState.order.selected.add(indexes[index][i]);
                                                                         //order.selected.add(selected);
