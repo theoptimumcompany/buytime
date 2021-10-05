@@ -14,6 +14,7 @@ import 'package:Buytime/UI/model/service_model.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reusable/icon/buytime_icons.dart';
+import 'package:Buytime/reusable/icon/material_design_icons.dart';
 import 'package:Buytime/reusable/menu/w_manager_drawer.dart';
 import 'package:Buytime/reusable/w_sliver_app_bar_delegate.dart';
 import 'package:Buytime/utils/size_config.dart';
@@ -100,6 +101,10 @@ class _RActivityManagementState extends State<RActivityManagement> {
   @override
   void initState() {
     super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      sortBy = AppLocalizations.of(context).sortTime;
+    });
   }
 
   bool startRequest = false;
@@ -604,13 +609,15 @@ class _RActivityManagementState extends State<RActivityManagement> {
         for(int j = 0; j <  list[i].length; j++){
           OrderState order = list[i].elementAt(j)[0];
           OrderEntry entry =  list[i].elementAt(j)[1];
-          if(order.tableNumber != null && order.tableNumber.isNotEmpty){
+          tableMap.putIfAbsent('-', () => []);
+          tableMap['-'].add([order, entry]);
+          /*if(order.tableNumber != null && order.tableNumber.isNotEmpty){
             tableMap.putIfAbsent('${order.tableNumber}', () => []);
             tableMap['${order.tableNumber}'].add([order, entry]);
           }else{
             tableMap.putIfAbsent('-', () => []);
             tableMap['-'].add([order, entry]);
-          }
+          }*/
         }
       }
     }
@@ -800,7 +807,7 @@ class _RActivityManagementState extends State<RActivityManagement> {
   bool filterPending = false;
   bool filterAccepted = false;
 
-
+  String sortBy = '';
   @override
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context).size;
@@ -951,7 +958,8 @@ class _RActivityManagementState extends State<RActivityManagement> {
                   if(orderTime.toUtc().isBefore(DateTime.now().toUtc())) {
                     if(element.itemList.first.time != null){
                       tmpToRemove.add(element);
-
+                    }else if(element.tableNumber != null && element.progress == 'paid'){
+                      tmpToRemove.add(element);
                     }
                   }
                 });
@@ -977,9 +985,17 @@ class _RActivityManagementState extends State<RActivityManagement> {
                   }
                 });
 
-                pendingList = pendingList.reversed.toList();
-                acceptedList = acceptedList.reversed.toList();
-                canceledList = canceledList.reversed.toList();
+                if(sortBy == AppLocalizations.of(context).sortTime){
+                  pendingList = pendingList.reversed.toList();
+                  acceptedList = acceptedList.reversed.toList();
+                  canceledList = canceledList.reversed.toList();
+                }else if(sortBy == AppLocalizations.of(context).sortTableNumber){
+                  pendingList.sort((a,b) => (a.first.tableNumber).compareTo(b.first.tableNumber));
+                  acceptedList.sort((a,b) => (a.first.tableNumber).compareTo(b.first.tableNumber));
+                  canceledList.sort((a,b) => (a.first.tableNumber).compareTo(b.first.tableNumber));
+                }
+
+
 
 
                 pendingList.forEach((pending) {
@@ -1182,11 +1198,114 @@ class _RActivityManagementState extends State<RActivityManagement> {
                       ],
                     ),
                   ),
+                  ///Sort By
+                  Container(
+                    //width: SizeConfig.safeBlockHorizontal * 20,
+                    width: double.infinity,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Container(
+                          //width: SizeConfig.safeBlockHorizontal * 20,
+                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5),
+                          child: DropdownButton(
+                            underline: Container(),
+                            hint: Row(
+                              children: [
+                                Icon(
+                                  Icons.sort,
+                                  color: BuytimeTheme.TextMedium,
+                                  size: 24,
+                                ),
+                                Container(
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 10.0),
+                                    child: Text(
+                                      AppLocalizations.of(context).sortBy,
+                                      textAlign: TextAlign.start,
+                                      style: TextStyle(
+                                        fontSize: 14,
+
+                                        ///SizeConfig.safeBlockHorizontal * 4
+                                        color: BuytimeTheme.TextMedium,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 4),
+                                    child: Text(
+                                      sortBy,
+                                      textAlign: TextAlign.start,
+                                      style: TextStyle(
+                                        fontSize: 14,
+
+                                        ///SizeConfig.safeBlockHorizontal * 4
+                                        color: BuytimeTheme.TextBlack,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            isExpanded: false,
+                            iconSize: 0,
+                            style: TextStyle(color: Colors.blue),
+                            items: [AppLocalizations.of(context).sortTime, AppLocalizations.of(context).sortTableNumber].map(
+                                  (val) {
+                                return DropdownMenuItem<String>(
+                                  value: val,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Container(
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(left: 10.0),
+                                          child: Text(
+                                            val,
+                                            textAlign: TextAlign.start,
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              color: BuytimeTheme.TextMedium,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      sortBy == val
+                                          ? Icon(
+                                        MaterialDesignIcons.done,
+                                        color: BuytimeTheme.TextMedium,
+                                        size: SizeConfig.safeBlockHorizontal * 5,
+                                      )
+                                          : Container(),
+                                    ],
+                                  ),
+                                );
+                              },
+                            ).toList(),
+                            onChanged: (val) {
+                              setState(
+                                    () {
+                                  //_dropDownValue = val;
+                                  sortBy = val;
+
+                                },
+                              );
+                            },
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
                   orderList.isNotEmpty ?
                   ///Order List
                   Flexible(
                     child: Container(
-                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 0, right: SizeConfig.safeBlockHorizontal * 0, top: SizeConfig.safeBlockVertical * 5),
+                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 0, right: SizeConfig.safeBlockHorizontal * 0, top: SizeConfig.safeBlockVertical * 1),
                       child: CustomScrollView(
                         shrinkWrap: true,
                         slivers: !seeAll ?

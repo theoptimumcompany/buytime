@@ -614,5 +614,7 @@
   "hubConventionAccepted": "The service accepts HUB’s conventions",
   "activeHubConventions": "Active HUB's conventions",
   "hubConvention": "HUB Convention",
-  "noServiceSlot": "No Service slot found"
+  "noServiceSlot": "No Service slot found",
+  "sortTableNumber": "Table Number",
+  "sortTime": "Time"
 }

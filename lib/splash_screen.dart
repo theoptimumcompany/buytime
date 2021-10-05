@@ -75,6 +75,7 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
     );
     print('User granted permission: ${settings.authorizationStatus}');
   }
+  MessagingHelper messagingHelper = MessagingHelper();
 
   @override
   void initState() {
@@ -85,7 +86,7 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
       StoreProvider.of<AppState>(context).dispatch(AreaListRequest());
       final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
       if (!kIsWeb) {
-        MessagingHelper().messagingManagement(firebaseMessaging, context);
+        messagingHelper.messagingManagement(firebaseMessaging, context);
       }
       readFromStorage();
       Timer(Duration(seconds: 1), () => check_logged());

@@ -613,5 +613,7 @@
   "hubConventionAccepted": "Questo servizio accetta convenzioni con gli HUB",
   "activeHubConventions": "Convenzioni HUB attive",
   "hubConvention": "Convenzione HUB",
-  "noServiceSlot": "No Service slot found"
+  "noServiceSlot": "No Service slot found",
+  "sortTableNumber": "Numero Tavolo",
+  "sortTime": "Orario"
 }
