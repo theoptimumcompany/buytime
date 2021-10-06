@@ -15,6 +15,7 @@ import 'package:Buytime/reblox/model/role/role.dart';
 import 'package:Buytime/reblox/navigation/navigation_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reservable_list_reducer.dart';
+import 'package:Buytime/reusable/icon/material_design_icons.dart';
 import 'package:Buytime/reusable/w_green_choice.dart';
 import 'package:Buytime/reusable/w_promo_discount.dart';
 import 'package:Buytime/reusable/appbar/w_buytime_appbar.dart';
@@ -798,7 +799,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                 Flexible(
                                   child: Container(
                                     width: double.infinity,
-                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, bottom: SizeConfig.safeBlockVertical * 1, top: SizeConfig.safeBlockVertical * .5),
+                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, bottom: SizeConfig.safeBlockVertical * 0, top: SizeConfig.safeBlockVertical * .5),
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
@@ -824,6 +825,21 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                         )
                                       ],
                                     ),
+                                  ),
+                                ),
+
+                                ///Original & Translate
+                                Container(
+                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, bottom: SizeConfig.safeBlockVertical * 1, top: SizeConfig.safeBlockVertical * .5),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Icon(
+                                          MaterialDesignIcons.language,
+                                        size: 19,
+                                        color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
+                                      )
+                                    ],
                                   ),
                                 )
                               ],
