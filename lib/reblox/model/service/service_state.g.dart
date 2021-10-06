@@ -42,7 +42,7 @@ ServiceState _$ServiceStateFromJson(Map<String, dynamic> json) {
     serviceCrossSell: json['serviceCrossSell'] as bool ?? true,
     serviceBusinessAddress: json['serviceBusinessAddress'] as String,
     serviceBusinessCoordinates: json['serviceBusinessCoordinates'] as String,
-    originalLanguage: json['originalLanguage'] as String ?? 'en',
+    originalLanguage: json['originalLanguage'] as String ?? '',
     serviceAddress: json['serviceAddress'] as String,
     serviceCoordinates: json['serviceCoordinates'] as String,
     paymentMethodRoom: json['paymentMethodRoom'] as bool ?? true,

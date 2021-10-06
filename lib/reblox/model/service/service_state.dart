@@ -40,7 +40,7 @@ class ServiceState {
   String serviceBusinessCoordinates;
   String serviceAddress;
   String serviceCoordinates;
-  @JsonKey(defaultValue: "en")
+  @JsonKey(defaultValue: '')
   String originalLanguage;
   @JsonKey(defaultValue: true)
   bool paymentMethodRoom = true;
@@ -120,7 +120,7 @@ class ServiceState {
       serviceCrossSell: false,
       serviceBusinessAddress: '',
       serviceBusinessCoordinates: '',
-      originalLanguage: 'en',
+      originalLanguage: '',
       serviceAddress: '',
       serviceCoordinates: '',
       paymentMethodRoom: true,
