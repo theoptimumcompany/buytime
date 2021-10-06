@@ -615,5 +615,9 @@
   "hubConvention": "HUB Convention",
   "noServiceSlot": "No Service slot found",
   "sortTableNumber": "Table Number",
-  "sortTime": "Time"
+  "sortTime": "Time",
+  "translatedWith": "Translated with Google",
+  "original": "Original Text",
+  "translated": "Translated Text",
+  "clickHere": "Click here to translate"
 }

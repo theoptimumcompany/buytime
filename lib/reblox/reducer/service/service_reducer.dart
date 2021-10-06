@@ -184,6 +184,14 @@ class SetServiceName {
   String get name => _name;
 }
 
+class SetServiceOriginalLanguage {
+  String _originalLanguage;
+
+  SetServiceOriginalLanguage(this._originalLanguage);
+
+  String get originalLanguage => _originalLanguage;
+}
+
 class SetServiceImage1 {
   String _image;
 
@@ -363,6 +371,11 @@ ServiceState serviceReducer(ServiceState state, action) {
   if (action is SetServiceName) {
     serviceState.name = action.name;
     debugPrint('service_reducer: state value: ${serviceState.name} | action value: ${action.name}');
+    return serviceState;
+  }
+  if (action is SetServiceOriginalLanguage) {
+    serviceState.originalLanguage = action.originalLanguage;
+    //debugPrint('service_reducer: state value: ${serviceState.name} | action value: ${action.name}');
     return serviceState;
   }
   if (action is SetServiceImage1) {

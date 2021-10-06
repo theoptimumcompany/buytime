@@ -325,6 +325,8 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                     //  debugPrint('UI_M_create_service => Service Description: ${tmpService.description}');
                                     //  debugPrint('UI_M_create_service => Service Address: ${tmpService.serviceBusinessAddress}');
                                       Provider.of<Spinner>(context, listen: false).initLoad(true);
+                                      if(tmpService.originalLanguage.isEmpty)
+                                        tmpService.originalLanguage = myLocale.languageCode;
                                       StoreProvider.of<AppState>(context).dispatch(CreateService(tmpService));
 
                                     }

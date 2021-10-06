@@ -62,16 +62,19 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
     super.dispose();
   }
 
+  bool useOriginal = false;
+
   bool isExternal = false;
   ExternalBusinessState externalBusinessState = ExternalBusinessState().toEmpty();
   String address = '';
   String bussinessName = '-';
+  String translatedDescription = '';
 
   @override
   Widget build(BuildContext context) {
     // the media containing information on width and height
     var media = MediaQuery.of(context).size;
-
+    Locale myLocale = Localizations.localeOf(context);
     SizeConfig().init(context);
     return StoreConnector<AppState, AppState>(
       converter: (store) => store.state,
@@ -816,7 +819,9 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                         Container(
                                           margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 2),
                                           child: Text(
-                                            widget.serviceState.description.isNotEmpty ? Utils.retriveField(Localizations.localeOf(context).languageCode, widget.serviceState.description) : AppLocalizations.of(context).loreIpsum,
+                                            translatedDescription.isNotEmpty && useOriginal ? translatedDescription : widget.serviceState.description.isNotEmpty ? Utils.retriveField(useOriginal ?
+                                                serviceState.originalLanguage :
+                                            Localizations.localeOf(context).languageCode, widget.serviceState.description) : AppLocalizations.of(context).loreIpsum,
                                             style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w400, fontSize: 16
 
                                                 ///SizeConfig.safeBlockHorizontal * 4
@@ -829,6 +834,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                 ),
 
                                 ///Original & Translate
+                                serviceState.originalLanguage.isNotEmpty && myLocale.languageCode != serviceState.originalLanguage && (serviceState.description.split('|').length > 1 || translatedDescription.isNotEmpty) ?
                                 Container(
                                   margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, bottom: SizeConfig.safeBlockVertical * 1, top: SizeConfig.safeBlockVertical * .5),
                                   child: Row(
@@ -836,12 +842,91 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                     children: [
                                       Icon(
                                           MaterialDesignIcons.language,
-                                        size: 19,
+                                        //size: 19,
                                         color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
-                                      )
+                                      ),
+                                      Container(
+                                        margin: EdgeInsets.only(left: 5),
+                                        child: Text(
+                                          AppLocalizations.of(context).translatedWith,
+                                          style: TextStyle(
+                                              fontFamily: BuytimeTheme.FontFamily,
+                                            color: BuytimeTheme.TextMedium,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w400
+                                          ),
+                                        ),
+                                      ),
+                                      Container(
+                                        margin: EdgeInsets.only(left: 7, top: 1),
+                                        height: 2,
+                                        width: 2,
+                                        color: Colors.black,
+                                      ),
+                                      Container(
+                                          margin: EdgeInsets.only(left: 5),
+                                          alignment: Alignment.center,
+                                          child: Material(
+                                            color: Colors.transparent,
+                                            child: InkWell(
+                                                onTap: () {
+                                                  setState(() {
+                                                    useOriginal = !useOriginal;
+                                                  });
+                                                },
+                                                borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                                child: Container(
+                                                  padding: EdgeInsets.all(5.0),
+                                                  child: Text(
+                                                    !useOriginal ? AppLocalizations.of(context).original :  AppLocalizations.of(context).translated,
+                                                    style: TextStyle(letterSpacing: SizeConfig.safeBlockHorizontal * .2, fontFamily: BuytimeTheme.FontFamily, color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary, fontWeight: FontWeight.w500, fontSize: 15
+
+                                                      ///SizeConfig.safeBlockHorizontal * 4
+                                                    ),
+                                                  ),
+                                                )),
+                                          ))
                                     ],
                                   ),
-                                )
+                                ) : serviceState.originalLanguage.isNotEmpty && (serviceState.description.split('|').length == 1 || translatedDescription.isEmpty) ? Container(
+                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, bottom: SizeConfig.safeBlockVertical * 1, top: SizeConfig.safeBlockVertical * .5),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Icon(
+                                        MaterialDesignIcons.language,
+                                        //size: 19,
+                                        color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
+                                      ),
+                                      Container(
+                                          margin: EdgeInsets.only(left: 5),
+                                          alignment: Alignment.center,
+                                          child: Material(
+                                            color: Colors.transparent,
+                                            child: InkWell(
+                                                onTap: (){
+                                                  Utils.singleGoogleTranslate(serviceState.originalLanguage, myLocale.languageCode, Utils.retriveField(serviceState.originalLanguage, serviceState.description)).then((value) => setState(() {
+                                                    useOriginal = true;
+                                                    debugPrint('TRANLATED IN: $value');
+                                                    translatedDescription =  value;
+                                                  }));
+
+                                                },
+                                                borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                                child: Container(
+                                                  padding: EdgeInsets.all(5.0),
+                                                  child: Text(
+                                                    AppLocalizations.of(context).clickHere,
+                                                    style: TextStyle(letterSpacing: SizeConfig.safeBlockHorizontal * .2, fontFamily: BuytimeTheme.FontFamily, color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary, fontWeight: FontWeight.w500, fontSize: 15
+
+                                                      ///SizeConfig.safeBlockHorizontal * 4
+                                                    ),
+                                                  ),
+                                                )),
+                                          ))
+                                    ],
+                                  ),
+                                ) : Container()
                               ],
                             ),
                           ],
@@ -849,7 +934,6 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                       ),
                       !widget.serviceState.switchSlots
                           ?
-
                           ///Add a cart & Buy
                           Row(
                               mainAxisAlignment: MainAxisAlignment.center,

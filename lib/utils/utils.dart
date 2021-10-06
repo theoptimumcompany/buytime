@@ -424,6 +424,30 @@ class Utils {
     return controllers;
   }
 
+  static Future<String> singleGoogleTranslate(String translateFrom, String translateTo, String ogText) async {
+    //debugPrint('LanguageCode: ${language[i]} | Flag: ${flags[i]}');
+    var url = Uri.https('translation.googleapis.com', '/language/translate/v2', {'source': '${translateFrom}', 'target': '${translateTo}', 'key': '${Environment().config.googleApiKey}', 'q': '${ogText}'});
+    final http.Response response = await http.get(url, headers: {
+      //HttpHeaders.contentTypeHeader : "utf-8",
+      'charset': "utf-8"
+    });
+    debugPrint('Response code: ${response.statusCode} | Response Body: ${response.body}');
+    var text = '';
+    if (response.statusCode == 200) {
+      //var langResponseMap = jsonDecode(utf8.decode(response.bodyBytes));
+      var langResponseMap = jsonDecode(response.body);
+      //var langResponseMap = jsonDecode(Html.decode(response.bodyBytes));
+      debugPrint('${translateTo} DONE | Decode: $langResponseMap');
+      debugPrint('${translateTo} ${langResponseMap['data']['translations'][0]['translatedText']}');
+      var unescape = HtmlUnescape();
+      text = unescape.convert(langResponseMap['data']['translations'][0]['translatedText']);
+      debugPrint('Convert: $text');
+      //controllers[i].text = text;
+    }
+
+    return text.toString();
+  }
+
   static OrderTimeInterval getTimeInterval(OrderReservableState orderReservableState) {
     OrderTimeInterval orderTimeIntervalResult;
     DateTime closestTimeSlot;
@@ -692,8 +716,11 @@ class Utils {
                           debugPrint('MultiLingualTranslate => $serviceField');
                           if (isName)
                             StoreProvider.of<AppState>(context).dispatch(SetServiceName(serviceField));
-                          else if (isDescription)
+                          else if (isDescription){
                             StoreProvider.of<AppState>(context).dispatch(SetServiceDescription(serviceField));
+                            if(StoreProvider.of<AppState>(context).state.serviceState.originalLanguage.isEmpty || StoreProvider.of<AppState>(context).state.serviceState.originalLanguage == myLanguage)
+                              StoreProvider.of<AppState>(context).dispatch(SetServiceOriginalLanguage(myLanguage));
+                          }
                           else
                             StoreProvider.of<AppState>(context).dispatch(SetServiceCondition(serviceField));
                           //nextPage();

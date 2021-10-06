@@ -465,6 +465,9 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                     tmpService.serviceSlot.forEach((element) {
                                                       debugPrint('UI_M_edit_service => MAX QUANTITY: ${element.maxQuantity}');
                                                     });
+
+                                                    if(tmpService.originalLanguage.isEmpty)
+                                                      tmpService.originalLanguage = myLocale.languageCode;
                                                     Provider.of<Spinner>(context, listen: false).initLoad(true);
                                                     StoreProvider.of<AppState>(context).dispatch(UpdateService(tmpService));
                                                   }
