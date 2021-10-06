@@ -224,7 +224,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.only(left: 20.0, bottom: 20.0),
+                                padding: const EdgeInsets.only(left: 20.0, bottom: 0.0),
                                 child: Column(
                                   children: [
                                     ListTile(
@@ -257,66 +257,88 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                   ],
                                 ),
                               ),
+                              Container(
+                                height: 26,
+                                width: double.infinity,
+                                margin: EdgeInsets.only(right: 15, bottom: 20),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Container(
+                                      height: 26,
+                                      width: 119,
+                                      decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                          image: AssetImage('assets/img/brand/p_stripe.png')
+                                        )
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
                               snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.applePay)
                                   ? ApplePayButton(
                                       width: SizeConfig.blockSizeHorizontal * 65,
                                       onPressed: _handlePayPress,
                                     )
                                   : Center(
-                                      child: MaterialButton(
-                                        textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
-                                        color: widget.tourist != null && widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
-                                        disabledColor: BuytimeTheme.SymbolLightGrey,
-                                        //padding: EdgeInsets.all(media.width * 0.03),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: new BorderRadius.circular(5),
-                                        ),
-                                        child: Container(
-                                          alignment: Alignment.center,
-                                          width: SizeConfig.blockSizeHorizontal * 57,
-                                          height: 44,
-                                          child: Text(
-                                            !(widget.reserve != null && widget.reserve) ? AppLocalizations.of(context).confirmPayment : '${AppLocalizations.of(context).completeBooking.toUpperCase()}',
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                              letterSpacing: 1.25,
-                                              fontSize: 14,
-                                              fontFamily: BuytimeTheme.FontFamily,
-                                              fontWeight: FontWeight.w500,
-                                              color: BuytimeTheme.TextWhite,
+                                      child: Container(
+                                        margin: EdgeInsets.only(bottom: 10),
+                                        child: MaterialButton(
+                                          textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
+                                          color: widget.tourist != null && widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
+                                          disabledColor: BuytimeTheme.SymbolLightGrey,
+                                          //padding: EdgeInsets.all(media.width * 0.03),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: new BorderRadius.circular(5),
+                                          ),
+                                          child: Container(
+                                            alignment: Alignment.center,
+                                            width: SizeConfig.blockSizeHorizontal * 57,
+                                            height: 44,
+                                            child: Text(
+                                              !(widget.reserve != null && widget.reserve) ? AppLocalizations.of(context).confirmPayment : '${AppLocalizations.of(context).completeBooking.toUpperCase()}',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                letterSpacing: 1.25,
+                                                fontSize: 14,
+                                                fontFamily: BuytimeTheme.FontFamily,
+                                                fontWeight: FontWeight.w500,
+                                                color: BuytimeTheme.TextWhite,
+                                              ),
                                             ),
                                           ),
+                                          onPressed: () {
+                                            FirebaseAnalytics().logEvent(
+                                                name: 'ok_confirm_order',
+                                                parameters: {
+                                                  'user_email': snapshot.user.email,
+                                                  'date': DateTime.now().toString(),
+                                                  'payment_method': snapshot.stripe.chosenPaymentMethod
+                                                });
+
+                                            snapshot.order.total = double.parse(snapshot.order.total.toStringAsFixed(2));
+                                            snapshot.order.totalPromoDiscount = double.parse(snapshot.order.totalPromoDiscount.toStringAsFixed(2));
+
+                                            if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.card)) {
+                                              String selectedCardPaymentMethodId = snapshot.cardListState.cardList[0].stripeState.stripeCard.paymentMethodId;
+                                              confirmationCard(context, snapshot, snapshot.stripe.stripeCard.last4, snapshot.stripe.stripeCard.brand, snapshot.stripe.stripeCard.country, selectedCardPaymentMethodId);
+                                            } else if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.applePay)) {
+                                              confirmationNative(context, snapshot);
+                                            } else if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.googlePay)) {
+                                              /// TODO to be implemented
+                                            } else if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.room)) {
+                                              confirmationRoom(context, snapshot);
+                                            } else if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.onSite)) {
+                                              confirmationOnSite(context, snapshot);
+                                            }
+                                            // if (snapshot.promotionState.timesUsed >= snapshot.promotionState.limit) {
+                                            //     /// delete all promotions locally
+                                            //     StoreProvider.of<AppState>(context).dispatch(SetPromotionListToEmpty());
+                                            //     StoreProvider.of<AppState>(context).dispatch(SetPromotionToEmpty());
+                                            // }
+                                          },
                                         ),
-                                        onPressed: () {
-                                          FirebaseAnalytics().logEvent(
-                                              name: 'ok_confirm_order',
-                                              parameters: {
-                                                'user_email': snapshot.user.email,
-                                                'date': DateTime.now().toString(),
-                                                'payment_method': snapshot.stripe.chosenPaymentMethod
-                                              });
-
-                                          snapshot.order.total = double.parse(snapshot.order.total.toStringAsFixed(2));
-                                          snapshot.order.totalPromoDiscount = double.parse(snapshot.order.totalPromoDiscount.toStringAsFixed(2));
-
-                                          if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.card)) {
-                                            String selectedCardPaymentMethodId = snapshot.cardListState.cardList[0].stripeState.stripeCard.paymentMethodId;
-                                            confirmationCard(context, snapshot, snapshot.stripe.stripeCard.last4, snapshot.stripe.stripeCard.brand, snapshot.stripe.stripeCard.country, selectedCardPaymentMethodId);
-                                          } else if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.applePay)) {
-                                            confirmationNative(context, snapshot);
-                                          } else if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.googlePay)) {
-                                            /// TODO to be implemented
-                                          } else if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.room)) {
-                                            confirmationRoom(context, snapshot);
-                                          } else if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.onSite)) {
-                                            confirmationOnSite(context, snapshot);
-                                          }
-                                          // if (snapshot.promotionState.timesUsed >= snapshot.promotionState.limit) {
-                                          //     /// delete all promotions locally
-                                          //     StoreProvider.of<AppState>(context).dispatch(SetPromotionListToEmpty());
-                                          //     StoreProvider.of<AppState>(context).dispatch(SetPromotionToEmpty());
-                                          // }
-                                        },
                                       ),
                                     )
                             ],

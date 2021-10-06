@@ -50,6 +50,8 @@ class ServiceState {
   bool paymentMethodOnSite = false;
   @JsonKey(defaultValue: '')
   String condition;
+  @JsonKey(defaultValue: '')
+  String originalLanguage;
 
   @JsonKey(defaultValue: [])
   List<ConventionSlot> conventionSlotList;
