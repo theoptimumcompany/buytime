@@ -1,20 +1,15 @@
-import 'package:Buytime/UI/management/service_internal/UI_M_service_list.dart';
-import 'package:Buytime/UI/management/service_internal/widget/W_service_step_availabile_time.dart';
-import 'package:Buytime/UI/management/service_internal/widget/W_service_step_calendar_availability.dart';
-import 'package:Buytime/UI/management/service_internal/widget/W_service_step_length.dart';
-import 'package:Buytime/UI/management/service_internal/widget/W_service_step_price.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
-import 'package:Buytime/reblox/reducer/service/service_reducer.dart';
-import 'package:Buytime/reblox/reducer/service/service_slot_time_reducer.dart';
+import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:Buytime/reusable/appbar/w_buytime_appbar.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/utils/utils.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:intl/intl.dart';
 
 class UI_M_HubConvention extends StatefulWidget {
   bool createSlot = false;
@@ -31,31 +26,27 @@ class UI_M_HubConventionState extends State<UI_M_HubConvention> {
   int currentStep = 0;
   bool rippleLoading = false;
   int numberOfInterval = 0;
+  int discountPercentage;
+  final TextEditingController _hubController = TextEditingController();
+  List<BusinessState> hubsList = [];
+
 
   @override
-  void initState() {
+  initState() {
     super.initState();
+    FirebaseFirestore.instance
+        .collection("business")
+        .where("hub", isEqualTo: true)
+        .get().then((value) {
+      value.docs.forEach((element) {
+        BusinessState businessState = BusinessState.fromJson(element.data());
+        hubsList.add(businessState);
+      });
+    });
+
+
   }
 
-  bool validateStepper() {
-    if (StoreProvider.of<AppState>(context).state.serviceSlot.checkIn == null || StoreProvider.of<AppState>(context).state.serviceSlot.checkIn == '') {
-      print("Error CheckIn");
-      return false;
-    } else if (StoreProvider.of<AppState>(context).state.serviceSlot.checkOut == null || StoreProvider.of<AppState>(context).state.serviceSlot.checkOut == '') {
-      print("Error CheckOut");
-      return false;
-    } else if (StoreProvider.of<AppState>(context).state.serviceSlot.startTime == null || StoreProvider.of<AppState>(context).state.serviceSlot.startTime.isEmpty || StoreProvider.of<AppState>(context).state.serviceSlot.startTime.contains('null:null')) {
-      print("Error startTime");
-      return false;
-    } else if (StoreProvider.of<AppState>(context).state.serviceSlot.stopTime == null || StoreProvider.of<AppState>(context).state.serviceSlot.stopTime.isEmpty || StoreProvider.of<AppState>(context).state.serviceSlot.stopTime.contains('null:null')) {
-      print("Error stopTime");
-      return false;
-    } else if (StoreProvider.of<AppState>(context).state.serviceSlot.switchWeek == null || StoreProvider.of<AppState>(context).state.serviceSlot.switchWeek.contains(false)) {
-      print("Error week");
-      return false;
-    } else
-      return true;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -104,118 +95,131 @@ class UI_M_HubConventionState extends State<UI_M_HubConvention> {
                                     padding: const EdgeInsets.only(
                                       top: 20.0,
                                     ),
-                                    child: Stepper(
-                                      physics: const NeverScrollableScrollPhysics(),
-                                      currentStep: currentStep,
-                                      steps: [
-                                        Step(
-                                          title: Text(AppLocalizations.of(context).slotCalendar),
-                                          content: CalendarAvailability(media: media),
-                                          state: currentStep == 0 ? StepState.editing : StepState.indexed,
-                                          isActive: true,
-                                        ),
-                                        Step(
-                                          title: Text(AppLocalizations.of(context).slotLength),
-                                          content: StepLength(media: media),
-                                          state: currentStep == 2 ? StepState.editing : StepState.indexed,
-                                          //state: StepState.complete,
-                                          isActive: true,
-                                        ),
-                                        Step(
-                                          title: Text(AppLocalizations.of(context).slotAvailableTime),
-                                          content: StepAvailableTime(media: media),
-                                          state: currentStep == 1 ? StepState.editing : StepState.indexed,
-                                          isActive: true,
-                                        ),
-                                        Step(
-                                          title: Text(AppLocalizations.of(context).price),
-                                          content: StepPrice(media: media),
-                                          state: currentStep == 3 ? StepState.editing : StepState.indexed,
-                                          isActive: true,
-                                        ),
-                                      ],
-                                      type: StepperType.vertical,
-                                      onStepTapped: (step) {
-                                        setState(() {
-                                          currentStep = step;
-                                        });
-                                      },
-                                      controlsBuilder: (BuildContext context, {VoidCallback onStepContinue, VoidCallback onStepCancel}) {
-                                        return Row(
-                                          mainAxisSize: MainAxisSize.max,
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: <Widget>[
-                                            Padding(
-                                              padding: const EdgeInsets.only(top: 20.0,),
-                                              child: Container(
-                                                width: 208,
-                                                height: 44,
-                                                child: OutlinedButton(
-                                                  style: OutlinedButton.styleFrom(
-                                                    backgroundColor: BuytimeTheme.ManagerPrimary,
-                                                  ),
-                                                  onPressed: onStepContinue,
-                                                  child: Padding(
-                                                    padding: const EdgeInsets.all(0.0),
-                                                    child: Text(
-                                                      currentStep < 3 ? AppLocalizations.of(context).nextUpper : AppLocalizations.of(context).confirmUpper,
-                                                      textAlign: TextAlign.start,
-                                                      style: TextStyle(
-                                                        fontSize: 18,
-                                                        color: BuytimeTheme.TextWhite,
-                                                        fontWeight: FontWeight.w500,
+                                    child: Column(
+                                      children: [
+                                        Container(
+                                            width: 335.0,
+                                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
+                                            decoration: BoxDecoration(border: Border.all(color: BuytimeTheme.SymbolLightGrey), borderRadius: BorderRadius.all(Radius.circular(5))),
+                                            child: DropdownButtonHideUnderline(
+                                              child: ButtonTheme(
+                                                alignedDropdown: true,
+                                                child: DropdownButton(
+                                                  hint: Container(
+                                                    child: Padding(
+                                                      padding: const EdgeInsets.only(left: 10.0),
+                                                      child: Text(
+                                                        _hubController.text,
+                                                        textAlign: TextAlign.start,
+                                                        style: TextStyle(
+                                                          fontSize: 16,
+                                                          color: BuytimeTheme.TextMedium,
+                                                          fontWeight: FontWeight.w400,
+                                                        ),
                                                       ),
                                                     ),
                                                   ),
+                                                  items:
+                                                      hubsList.map(
+                                                        (val) {
+                                                      return DropdownMenuItem<String>(
+                                                        value: val.name,
+                                                        child: Row(
+                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                          children: [
+                                                            Container(
+                                                              child: Padding(
+                                                                padding: const EdgeInsets.only(left: 10.0),
+                                                                child: Text(
+                                                                  val.name,
+                                                                  textAlign: TextAlign.start,
+                                                                  style: TextStyle(
+                                                                    fontSize: 16,
+                                                                    color: BuytimeTheme.TextMedium,
+                                                                    fontWeight: FontWeight.w400,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            _hubController.text == val
+                                                                ? Icon(
+                                                              Icons.radio_button_checked,
+                                                              color: BuytimeTheme.SymbolGrey,
+                                                            )
+                                                                : Icon(
+                                                              Icons.radio_button_off,
+                                                              color: BuytimeTheme.SymbolGrey,
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      );
+                                                    },
+                                                  )?.toList() +
+                                                      [
+                                                    DropdownMenuItem<String>(
+                                                      value: AppLocalizations.of(context).allHubs,
+                                                      child: Row(
+                                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                        children: [
+                                                          Container(
+                                                            child: Padding(
+                                                              padding: const EdgeInsets.only(left: 10.0),
+                                                              child: Text(
+                                                                AppLocalizations.of(context).allHubs,
+                                                                textAlign: TextAlign.start,
+                                                                style: TextStyle(
+                                                                  fontSize: 16,
+                                                                  color: BuytimeTheme.TextMedium,
+                                                                  fontWeight: FontWeight.w400,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          _hubController.text == AppLocalizations.of(context).allHubs
+                                                              ? Icon(
+                                                            Icons.radio_button_checked,
+                                                            color: BuytimeTheme.SymbolGrey,
+                                                          )
+                                                              : Icon(
+                                                            Icons.radio_button_off,
+                                                            color: BuytimeTheme.SymbolGrey,
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    )]
+                                                  ,
+                                                  onChanged: (value) {
+                                                    setState(() {
+                                                      _hubController.text = value;
+                                                      // orderState.location = value;
+                                                      // StoreProvider.of<AppState>(context).dispatch(UpdateOrder(orderState));
+                                                    });
+                                                  },
+                                                  style: Theme.of(context).textTheme.headline1,
                                                 ),
                                               ),
-                                            ),
-                                          ],
-                                        );
-                                      },
-                                      onStepContinue: () {
-                                        setState(() {
-                                          if (currentStep < 3) {
-                                            if (currentStep == 0) {
-                                              currentStep = currentStep + 1;
-                                            } else if (currentStep == 1) {
-                                              currentStep = currentStep + 1;
-                                            } else if (currentStep == 2) {
-                                              currentStep = currentStep + 1;
-                                            }
-                                          } else {
-                                            if (validateStepper()) {
-                                              ///Aggiungo uno slot alla lista del service
-                                              if (widget.createSlot) {
-                                                StoreProvider.of<AppState>(context).dispatch(AddServiceSlot(snapshot.serviceSlot));
-                                                StoreProvider.of<AppState>(context).dispatch(SetServiceSlotToEmpty());
-                                                Navigator.pop(context);
-                                              } else if (widget.editSlot) {
-                                                debugPrint('UI_M_service_slot => MAX QUANTITY: ${snapshot.serviceSlot.maxQuantity}');
-                                                StoreProvider.of<AppState>(context).dispatch(UpdateServiceSlot(snapshot.serviceSlot, widget.indexSlot));
-                                                debugPrint('UI_M_service_slot => SERVICE MAX QUANTITY: ${snapshot.serviceState.serviceSlot[widget.indexSlot].maxQuantity}');
-                                                StoreProvider.of<AppState>(context).dispatch(SetServiceSlotToEmpty());
-                                                Navigator.pop(context);
+                                            )
+
+                                        ),
+                                        Container(
+                                          padding: EdgeInsets.all(20.0),
+                                          child: TextFormField(
+                                            keyboardType: TextInputType.number,
+                                            inputFormatters: <TextInputFormatter>[
+                                                FilteringTextInputFormatter.digitsOnly
+                                              ],
+                                            decoration: const InputDecoration(labelText: '%'),
+                                            onChanged: (value) {
+                                                setState(() {
+                                                  discountPercentage = value as int;
+                                                });
                                               }
-                                            } else {
-                                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                                content: Text(AppLocalizations.of(context).completeAllFieldsToSave),  //TOdo:trans
-                                                duration: Duration(seconds: 3),
-                                              ));
-                                            }
-                                          }
-                                        });
-                                      },
-                                      onStepCancel: () {
-                                        setState(() {
-                                          if (currentStep > 0) {
-                                            currentStep = currentStep - 1;
-                                          } else {
-                                            currentStep = 0;
-                                          }
-                                        });
-                                      },
-                                    )),
+                                          ),
+                                        )
+                                      ],
+                                    )
+
+                                ),
                               ),
                             ),
                           ),
