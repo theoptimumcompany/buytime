@@ -417,7 +417,9 @@ class CartState extends State<Cart> {
                                                             style: Theme.of(context).textTheme.headline1,
                                                           ),
                                                         ),
-                                                      ))
+                                                      )
+
+                                              )
                                                   : Container(),
 
                                               ///tableNumber TExt

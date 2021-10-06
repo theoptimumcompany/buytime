@@ -80,8 +80,6 @@ class OrderListRequestService implements EpicClass<AppState> {
         debugPrint("ORDER_SERVICE_EPIC - OrderListRequestService =>  BUSINESS ID: ${businessList[i].id_firestore}");
         QuerySnapshot ordersFirebase = await FirebaseFirestore.instance
             .collection("order")
-
-            /// 1 READ - ? DOC
             .where("businessId", isEqualTo: businessList[i].id_firestore)
             .where("date", isGreaterThanOrEqualTo: currentTime)
             .where("date", isLessThanOrEqualTo: sevenDaysFromNow)

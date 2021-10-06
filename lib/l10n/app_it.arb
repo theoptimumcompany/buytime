@@ -615,6 +615,8 @@
   "hubConvention": "Convenzione HUB",
   "noServiceSlot": "No Service slot found",
   "sortTableNumber": "Numero Tavolo",
+  "allHubs": "Tutti gli HUB",
+  "sameDiscountOnAllHubs": "Stesso sconto su tutti gli HUB",
   "sortTime": "Orario",
   "translatedWith": "Tradotto da Google",
   "original": "Testo Originale",

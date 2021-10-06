@@ -616,6 +616,8 @@
   "hubConvention": "HUB Convention",
   "noServiceSlot": "No Service slot found",
   "sortTableNumber": "Table Number",
+  "allHubs": "All Hubs",
+  "sameDiscountOnAllHubs": "Same discount on all Hubs",
   "sortTime": "Time",
   "translatedWith": "Translated with Google",
   "original": "Original Text",
