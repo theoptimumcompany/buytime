@@ -611,13 +611,13 @@ class _RActivityManagementState extends State<RActivityManagement> {
           OrderEntry entry =  list[i].elementAt(j)[1];
           tableMap.putIfAbsent('-', () => []);
           tableMap['-'].add([order, entry]);
-          /*if(order.tableNumber != null && order.tableNumber.isNotEmpty){
-            tableMap.putIfAbsent('${order.tableNumber}', () => []);
-            tableMap['${order.tableNumber}'].add([order, entry]);
-          }else{
-            tableMap.putIfAbsent('-', () => []);
-            tableMap['-'].add([order, entry]);
-          }*/
+          // if(order.tableNumber != null && order.tableNumber.isNotEmpty){
+          //   tableMap.putIfAbsent('${order.tableNumber}', () => []);
+          //   tableMap['${order.tableNumber}'].add([order, entry]);
+          // }else{
+          //   tableMap.putIfAbsent('-', () => []);
+          //   tableMap['-'].add([order, entry]);
+          // }
         }
       }
     }
@@ -959,7 +959,7 @@ class _RActivityManagementState extends State<RActivityManagement> {
                     if(element.itemList.first.time != null){
                       tmpToRemove.add(element);
                     }else if(element.tableNumber != null && element.progress == 'paid'){
-                      tmpToRemove.add(element);
+                      // tmpToRemove.add(element);
                     }
                   }
                 });

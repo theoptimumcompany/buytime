@@ -40,6 +40,8 @@ class ServiceState {
   String serviceBusinessCoordinates;
   String serviceAddress;
   String serviceCoordinates;
+  @JsonKey(defaultValue: "en")
+  String originalLanguage;
   @JsonKey(defaultValue: true)
   bool paymentMethodRoom = true;
   @JsonKey(defaultValue: true)
@@ -82,6 +84,7 @@ class ServiceState {
     this.serviceCrossSell,
     this.serviceBusinessAddress,
     this.serviceBusinessCoordinates,
+    this.originalLanguage,
     this.serviceAddress,
     this.serviceCoordinates,
     this.paymentMethodRoom,
@@ -117,6 +120,7 @@ class ServiceState {
       serviceCrossSell: false,
       serviceBusinessAddress: '',
       serviceBusinessCoordinates: '',
+      originalLanguage: 'en',
       serviceAddress: '',
       serviceCoordinates: '',
       paymentMethodRoom: true,
@@ -152,6 +156,7 @@ class ServiceState {
     this.serviceCrossSell = service.serviceCrossSell;
     this.serviceBusinessAddress = service.serviceBusinessAddress;
     this.serviceBusinessCoordinates = service.serviceBusinessCoordinates;
+    this.originalLanguage = service.originalLanguage;
     this.serviceAddress = service.serviceAddress;
     this.serviceCoordinates = service.serviceCoordinates;
     this.paymentMethodCard = service.paymentMethodCard;
@@ -186,6 +191,7 @@ class ServiceState {
     bool serviceCrossSell,
     String serviceBusinessAddress,
     String serviceBusinessCoordinates,
+    String originalLanguage,
     String serviceAddress,
     String serviceCoordinates,
     bool paymentMethodRoom,
@@ -219,6 +225,7 @@ class ServiceState {
       serviceCrossSell: serviceCrossSell ?? this.serviceCrossSell,
       serviceBusinessAddress: serviceBusinessAddress ?? this.serviceBusinessAddress,
       serviceBusinessCoordinates: serviceBusinessCoordinates ?? this.serviceBusinessCoordinates,
+      originalLanguage: originalLanguage ?? this.originalLanguage,
       serviceAddress: serviceAddress ?? this.serviceAddress,
       serviceCoordinates: serviceCoordinates ?? this.serviceCoordinates,
       paymentMethodRoom: paymentMethodRoom ?? this.paymentMethodRoom,

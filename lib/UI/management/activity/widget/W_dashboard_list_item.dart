@@ -87,6 +87,7 @@ class _DashboardListItemState extends State<DashboardListItem> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Container(
+                              width: SizeConfig.safeBlockHorizontal * 80,
                               child: Text(
                                 /*  widget.orderState.selected == null || widget.orderState.selected.isEmpty ?
                                 '${widget.orderState.user.name ?? ''} ${widget.orderState.user.surname ?? ''}' :
@@ -95,6 +96,7 @@ class _DashboardListItemState extends State<DashboardListItem> {
                                   '${AppLocalizations.of(context).multipleOrders}' :
                                   '${Utils.retriveField(Localizations.localeOf(context).languageCode, widget.orderState.itemList.first.name)} - ${DateFormat('HH:mm', Localizations.localeOf(context).languageCode).format(widget.orderState.creationDate.add(Duration(hours: 2)))}',
                                 style: TextStyle(fontFamily: BuytimeTheme.FontFamily, fontSize: 16, letterSpacing: 0.15, fontWeight: FontWeight.w400),
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
                           ],
