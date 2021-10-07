@@ -1,4 +1,5 @@
 import 'package:Buytime/UI/user/cart/UI_U_cart.dart';
+import 'package:Buytime/UI/user/turist/RUI_U_service_explorer.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
@@ -18,6 +19,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:Buytime/UI/user/booking/widget/user_service_list_item.dart';
+import 'package:provider/provider.dart';
 
 class RAllBookings extends StatefulWidget {
   static String route = '/bookingPage';
@@ -255,7 +257,7 @@ class _RAllBookingsState extends State<RAllBookings> {
                             ServiceState service = ServiceState().toEmpty();
                             StoreProvider.of<AppState>(context).state.notificationListState.notificationListState.forEach((element) {
                               if(element.notificationId != null && element.notificationId.isNotEmpty && order.orderId.isNotEmpty && order.orderId == element.data.state.orderId){
-                                StoreProvider.of<AppState>(context).state.serviceList.serviceListState.forEach((s) {
+                                Provider.of<Explorer>(context, listen: false).serviceList.forEach((s) {
                                   if(element.data.state.serviceId == s.serviceId)
                                     service = s;
                                 });
@@ -263,7 +265,7 @@ class _RAllBookingsState extends State<RAllBookings> {
                             });
 
                             order.itemList.forEach((element) {
-                              StoreProvider.of<AppState>(context).state.serviceList.serviceListState.forEach((s) {
+                              Provider.of<Explorer>(context, listen: false).serviceList.forEach((s) {
                                 if(element.id == s.serviceId)
                                   service = s;
                               });
