@@ -9,15 +9,20 @@ import 'package:Buytime/reblox/model/snippet/token.dart';
 import 'package:Buytime/reblox/model/statistics_state.dart';
 import 'package:Buytime/reblox/reducer/area_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/auto_complete_list_reducer.dart';
+import 'package:Buytime/reblox/reducer/notification_list_reducer.dart';
+import 'package:Buytime/reblox/reducer/order_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/promotion/promotion_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/card_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/stripe_list_payment_reducer.dart';
 import 'package:Buytime/services/messaging/messaging_helper.dart';
+import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/user/user_state.dart';
 import 'package:Buytime/reblox/reducer/user_reducer.dart';
 import 'package:Buytime/UI/user/login/UI_U_home.dart';
+import 'package:another_flushbar/flushbar.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:device_info/device_info.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -26,19 +31,43 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:package_info/package_info.dart';
 import 'UI/management/business/RUI_M_business_list.dart';
+import 'UI/user/booking/RUI_U_notifications.dart';
 import 'UI/user/turist/RUI_U_service_explorer.dart';
+import 'main.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
   _SplashScreenState createState() => _SplashScreenState();
 }
+
+class ReceivedNotification {
+  ReceivedNotification({
+    this.id,
+    this.title,
+    this.body,
+    this.payload,
+  });
+
+  final int id;
+  final String title;
+  final String body;
+  final String payload;
+}
+
+final BehaviorSubject<ReceivedNotification> didReceiveLocalNotificationSubject =
+BehaviorSubject<ReceivedNotification>();
+
+final BehaviorSubject<String> selectNotificationSubject =
+BehaviorSubject<String>();
 
 class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver {
   StatisticsState statisticsState;
@@ -61,42 +90,138 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
 
   String version = '';
   getAppInfo()async{
+    await Firebase.initializeApp();
+    RemoteMessage initialMessage = await FirebaseMessaging.instance.getInitialMessage();
+    debugPrint('Initial MEssage: ${initialMessage.data}');
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     version = packageInfo.version;
     debugPrint('splash_screen => VERSION: $version');
-    NotificationSettings settings = await FirebaseMessaging.instance.requestPermission(
-      alert: true,
-      announcement: false,
-      badge: true,
-      carPlay: false,
-      criticalAlert: false,
-      provisional: false,
-      sound: true,
-    );
-    print('User granted permission: ${settings.authorizationStatus}');
   }
   MessagingHelper messagingHelper = MessagingHelper();
-
+  //String serverToken = 'AAAA6xUtyfE:APA91bGHhEzVUY9fnj4FbTXJX57qcgF-8GBrfBbGIa8kEpEIdsXRgQxbtsvbhL-w-_MQYKIj0XVlSaDSf2s6O3D3SM3o-z_AZnHQwBNLiw1ygyZOuVAKa5YmXeu6Da9eBqRD9uwFHSPi';
+  String serverToken = '';
+  String token;
   @override
   void initState() {
     WidgetsBinding.instance.addObserver(this);
     super.initState();
-    Firebase.initializeApp().then((value) {
-      getAppInfo();
-      StoreProvider.of<AppState>(context).dispatch(AreaListRequest());
-      final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
-      if (!kIsWeb) {
-        messagingHelper.messagingManagement(firebaseMessaging, context);
+    getAppInfo();
+    final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
+    messagingHelper.messagingManagement(firebaseMessaging, context);
+    /*FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      debugPrint('On Message');
+      RemoteNotification notification = message.notification;
+      AndroidNotification android = message.notification?.android;
+      if (notification != null && android != null) {
+        flutterLocalNotificationsPlugin.show(
+            notification.hashCode,
+            notification.title,
+            notification.body,
+            NotificationDetails(
+              android: AndroidNotificationDetails(
+                channel.id,
+                channel.name,
+                channel.description,
+                icon: android?.smallIcon,
+              ),
+            ));
       }
+      messageDataRetriveNotify(context, notification);
+    });
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      debugPrint('messaging_helper: ON MESSAGE OPENED APP');
+      RemoteNotification notification = message.notification;
+      AndroidNotification android = message.notification?.android;
+      if (notification != null && android != null) {
+        flutterLocalNotificationsPlugin.show(
+            notification.hashCode,
+            notification.title,
+            notification.body,
+            NotificationDetails(
+              android: AndroidNotificationDetails(
+                channel.id,
+                channel.name,
+                channel.description,
+                icon: android?.smallIcon,
+              ),
+            ));
+      }
+      messageDataRetriveNotify(context, notification);
+    });*/
+    getToken();
+    //getTopics();
       readFromStorage();
       Timer(Duration(seconds: 1), () => check_logged());
-      StoreProvider.of<AppState>(context).dispatch(PromotionListRequest());
 
-    }).catchError((onError) {
-      print("error on firebase application start: " + onError.toString());
-    });
     checkIfNativePayReady();
     initPlatformState();
+  }
+
+  getToken() async {
+    token = await FirebaseMessaging.instance.getToken();
+    setState(() {
+      token = token;
+    });
+    print('DEVICE TOKEN: $token');
+  }
+
+  /*getTopics() async {
+    await FirebaseFirestore.instance
+        .collection('topics')
+        .get()
+        .then((value) => value.docs.forEach((element) {
+      if (token == element.id) {
+        subscribed = element.data().keys.toList();
+      }
+    }));
+
+    setState(() {
+      subscribed = subscribed;
+    });
+  }*/
+
+  void messageDataRetriveNotify(BuildContext context, RemoteNotification notification) {
+    StoreProvider.of<AppState>(context).dispatch(UserOrderListRequest());
+    StoreProvider.of<AppState>(context).dispatch(RequestNotificationList(StoreProvider.of<AppState>(context).state.user.uid, StoreProvider.of<AppState>(context).state.business.id_firestore));
+    notifyFlushbar(notification.title, context);
+  }
+  Flushbar notifyFlushbar(String message, BuildContext context) {
+    return Flushbar(
+      flushbarPosition: FlushbarPosition.TOP,
+      padding: EdgeInsets.all(SizeConfig.safeBlockVertical * 2),
+      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5, left: SizeConfig.blockSizeHorizontal * 20, right: SizeConfig.blockSizeHorizontal * 20),
+      borderRadius: BorderRadius.all(Radius.circular(8)),
+      backgroundColor: BuytimeTheme.SymbolLightGrey,
+      onTap: (ciao) {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => RNotifications(orderStateList: StoreProvider.of<AppState>(context).state.orderList.orderListState, tourist: false,)));
+      },
+      boxShadows: [
+        BoxShadow(
+          color: Colors.black45,
+          offset: Offset(3, 3),
+          blurRadius: 3,
+        ),
+      ],
+      dismissDirection: FlushbarDismissDirection.HORIZONTAL,
+      forwardAnimationCurve: Curves.fastLinearToSlowEaseIn,
+      messageText: Text(
+        message,
+        style: TextStyle(color: BuytimeTheme.TextBlack, fontWeight: FontWeight.bold),
+        textAlign: TextAlign.center,
+      ),
+    )..show(context);
+  }
+
+  Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+    //await Firebase.initializeApp();
+    if (message.data.containsKey('data')) {
+      final dynamic data = message.data['data'];
+      debugPrint("messaging_helper: data: " + data);
+    }
+    if (message.data.containsKey('notification')) {
+      final dynamic notification = message.data['notification'];
+      debugPrint("messaging_helper: notification: " + notification);
+    }
   }
 
   void checkIfNativePayReady() async {
@@ -178,6 +303,8 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
   }
 
   void check_logged() async {
+    StoreProvider.of<AppState>(context).dispatch(AreaListRequest());
+    StoreProvider.of<AppState>(context).dispatch(PromotionListRequest());
     if (auth.FirebaseAuth != null && auth.FirebaseAuth.instance != null && auth.FirebaseAuth.instance.currentUser != null) {
       auth.User user = auth.FirebaseAuth.instance.currentUser;
       if (user != null) {

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:Buytime/UI/user/booking/RUI_U_notifications.dart';
 import 'package:Buytime/utils/size_config.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:http/http.dart' as http;
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/reducer/notification_list_reducer.dart';
@@ -11,6 +12,8 @@ import 'package:another_flushbar/flushbar.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+
+import '../../main.dart';
 
 class MessagingHelper {
   static String serverToken = 'AAAA6xUtyfE:APA91bGHhEzVUY9fnj4FbTXJX57qcgF-8GBrfBbGIa8kEpEIdsXRgQxbtsvbhL-w-_MQYKIj0XVlSaDSf2s6O3D3SM3o-z_AZnHQwBNLiw1ygyZOuVAKa5YmXeu6Da9eBqRD9uwFHSPi';
@@ -46,6 +49,18 @@ class MessagingHelper {
       {
         AndroidNotification android = message.notification?.android;
         if (notification != null && android != null) {
+          flutterLocalNotificationsPlugin.show(
+              notification.hashCode,
+              notification.title,
+              notification.body,
+              NotificationDetails(
+                android: AndroidNotificationDetails(
+                  channel.id,
+                  channel.name,
+                  channel.description,
+                  icon: android?.smallIcon,
+                ),
+              ));
           messageDataRetriveNotify(context, notification);
         }
       }
@@ -53,6 +68,19 @@ class MessagingHelper {
       {
         AppleNotification apple = message.notification?.apple;
         if (notification != null && apple != null) {
+          /*flutterLocalNotificationsPlugin.show(
+              notification.hashCode,
+              notification.title,
+              notification.body,
+              NotificationDetails(
+                iOS: IOSNotificationDetails(
+
+                  //channel.id,
+                  channel.name,
+                  channel.description,
+                  //icon: apple?.,
+                ),
+              ));*/
           messageDataRetriveNotify(context, notification);
         }
       }
@@ -66,6 +94,7 @@ class MessagingHelper {
     });
   }
   void messageDataRetriveNotify(BuildContext context, RemoteNotification notification) {
+
     StoreProvider.of<AppState>(context).dispatch(UserOrderListRequest());
     StoreProvider.of<AppState>(context).dispatch(RequestNotificationList(StoreProvider.of<AppState>(context).state.user.uid, StoreProvider.of<AppState>(context).state.business.id_firestore));
     notifyFlushbar(notification.title, context);
