@@ -38,7 +38,7 @@ class _DashboardListItemState extends State<DashboardListItem> {
   Widget build(BuildContext context) {
     return Container(
       color: BuytimeTheme.BackgroundWhite,
-      height: 85,
+      height: 90,
       width: double.infinity,
       child: Material(
         color: Colors.transparent,
@@ -103,7 +103,7 @@ class _DashboardListItemState extends State<DashboardListItem> {
                         ),
                       ),
 
-                      ///Service Name & Price
+                      ///Table & email
                       Container(
                         margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * .5),
                         child: Row(
@@ -111,8 +111,22 @@ class _DashboardListItemState extends State<DashboardListItem> {
                             Container(
                               child: Text(
                                 widget.orderState.selected == null || widget.orderState.selected.isEmpty
-                                    ? '${AppLocalizations.of(context).table} ${widget.orderState.tableNumber} - ${AppLocalizations.of(context).currency} ${widget.orderState.total.toStringAsFixed(2)}'
-                                    : '${widget.orderState.user.email} - ${AppLocalizations.of(context).currency} ${widget.orderState.total.toStringAsFixed(2)}',
+                                    ? '${AppLocalizations.of(context).table} ${widget.orderState.tableNumber} - ${widget.orderState.user.email}'
+                                    : '${widget.orderState.user.email}',
+                                style: TextStyle(fontFamily: BuytimeTheme.FontFamily, fontSize: 14, letterSpacing: 0.25, fontWeight: FontWeight.w400, color: BuytimeTheme.TextMedium),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                      ///Price
+                      Container(
+                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * .5),
+                        child: Row(
+                          children: [
+                            Container(
+                              child: Text(
+                                '${AppLocalizations.of(context).currency} ${widget.orderState.total.toStringAsFixed(2)}',
                                 style: TextStyle(fontFamily: BuytimeTheme.FontFamily, fontSize: 14, letterSpacing: 0.25, fontWeight: FontWeight.w400, color: BuytimeTheme.TextMedium),
                               ),
                             )
@@ -143,7 +157,8 @@ class _DashboardListItemState extends State<DashboardListItem> {
                             Container(
                               child: Text(
                                 Utils.translateOrderStatus(context, widget.orderState.progress),
-                                style: TextStyle(fontFamily: BuytimeTheme.FontFamily, fontSize: 12, letterSpacing: 0.25, fontWeight: FontWeight.w400, color: BuytimeTheme.TextMedium, fontStyle: FontStyle.italic),
+                                //style: TextStyle(fontFamily: BuytimeTheme.FontFamily, fontSize: 12, letterSpacing: 0.25, fontWeight: FontWeight.w400, color: BuytimeTheme.TextMedium, fontStyle: FontStyle.italic),
+                                style: TextStyle(fontFamily: BuytimeTheme.FontFamily, fontSize: 12, letterSpacing: 0.25, fontWeight: FontWeight.bold, color: Utils.colorOrderStatus(context, widget.orderState.progress), fontStyle: FontStyle.italic),
                               ),
                             )
                           ],

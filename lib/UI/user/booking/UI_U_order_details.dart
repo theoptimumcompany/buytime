@@ -365,7 +365,8 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
     serviceState = widget.serviceState;
     businessState = StoreProvider.of<AppState>(context).state.business;
 
-    readDynamicLink(StoreProvider.of<AppState>(context).state.user.uid, StoreProvider.of<AppState>(context).state.orderDetail.orderId);
+    //readDynamicLink(StoreProvider.of<AppState>(context).state.user.uid, StoreProvider.of<AppState>(context).state.orderDetail.orderId);
+    readDynamicLink(StoreProvider.of<AppState>(context).state.user.uid, widget.orderState.orderId);
 
     // the media containing information on width and height
     var media = MediaQuery.of(context).size;
@@ -1053,7 +1054,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                               child: FittedBox(
                                 fit: BoxFit.scaleDown,
                                 child: Text(
-                                  businessState.name,
+                                  businessState.name.isEmpty ? 'Loading ...' : businessState.name,
                                   style: TextStyle(letterSpacing: 0.15, fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.BackgroundCerulean, fontWeight: FontWeight.w500, fontSize: 16
 
                                     ///SizeConfig.safeBlockHorizontal * 4

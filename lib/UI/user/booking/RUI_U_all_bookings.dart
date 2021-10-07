@@ -79,14 +79,24 @@ class _RAllBookingsState extends State<RAllBookings> {
     order = StoreProvider.of<AppState>(context).state.order.itemList != null ? (StoreProvider.of<AppState>(context).state.order.itemList.length > 0 ? StoreProvider.of<AppState>(context).state.order : OrderState().toEmpty()) : OrderState().toEmpty();
     //debugPrint('UI_U_all_bookings => CART COUNT: ${order.cartCounter}');
     DateTime currentTime = DateTime.now();
+    Stream<QuerySnapshot> _orderStream;
     currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0).toUtc();
-    final Stream<QuerySnapshot> _orderStream =  FirebaseFirestore.instance
-        .collection("order")
-        .where("businessId", isEqualTo: StoreProvider.of<AppState>(context).state.business.id_firestore)
-        .where("userId", isEqualTo: StoreProvider.of<AppState>(context).state.user.uid)
-        .where("date", isGreaterThanOrEqualTo: currentTime)
-        .limit(50)
-        .snapshots(includeMetadataChanges: true);
+    if(!widget.tourist){
+      _orderStream =  FirebaseFirestore.instance
+          .collection("order")
+          .where("businessId", isEqualTo: StoreProvider.of<AppState>(context).state.business.id_firestore)
+          .where("userId", isEqualTo: StoreProvider.of<AppState>(context).state.user.uid)
+          .where("date", isGreaterThanOrEqualTo: currentTime)
+          .limit(50)
+          .snapshots(includeMetadataChanges: true);
+    }else
+      _orderStream =  FirebaseFirestore.instance
+          .collection("order")
+          //.where("businessId", isEqualTo: StoreProvider.of<AppState>(context).state.business.id_firestore)
+          .where("userId", isEqualTo: StoreProvider.of<AppState>(context).state.user.uid)
+          .where("date", isGreaterThanOrEqualTo: currentTime)
+          .limit(50)
+          .snapshots(includeMetadataChanges: true);
     return Stack(children: [
       Positioned.fill(
         child: Align(
@@ -250,6 +260,13 @@ class _RAllBookingsState extends State<RAllBookings> {
                                     service = s;
                                 });
                               }
+                            });
+
+                            order.itemList.forEach((element) {
+                              StoreProvider.of<AppState>(context).state.serviceList.serviceListState.forEach((s) {
+                                if(element.id == s.serviceId)
+                                  service = s;
+                              });
                             });
                             return Column(
                               children: [

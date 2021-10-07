@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:Buytime/UI/management/activity/RUI_M_activity_management.dart';
 import 'package:Buytime/UI/management/business/RUI_M_business_list.dart';
+import 'package:Buytime/UI/user/booking/RUI_U_all_bookings.dart';
 import 'package:Buytime/UI/user/booking/RUI_notification_bell.dart';
 import 'package:Buytime/UI/user/booking/UI_U_all_bookings.dart';
 import 'package:Buytime/UI/user/booking/UI_U_my_bookings.dart';
@@ -939,8 +940,11 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                               order.progress == Utils.enumToString(OrderStatus.pending) ||
                                               order.progress == Utils.enumToString(OrderStatus.toBePaidAtCheckout) ||
                                               order.progress == Utils.enumToString(OrderStatus.holding) ||
+                                              order.progress == Utils.enumToString(OrderStatus.unpaid) ||
                                               order.progress == Utils.enumToString(OrderStatus.accepted))
-                                              /*(order.itemList.first.date.isAtSameMomentAs(currentTime) || order.itemList.first.date.isAfter(currentTime)) && order.itemList.first.time != null*/)
+                                            /*|| ((order.itemList.first.date.isAtSameMomentAs(currentTime) || order.itemList.first.date.isBefore(currentTime)) && order.progress != Utils.enumToString(OrderStatus.paid))*/)
+                                              /*(order.itemList.first.date.isAtSameMomentAs(currentTime) || order.itemList.first.date.isAfter(currentTime)) && order.itemList.first.time != null*/
+
                                             userOrderList.add(order);
                                           orderList.add(order);
                                         });
@@ -980,8 +984,8 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                         color: Colors.transparent,
                                                         child: InkWell(
                                                             onTap: () {
-                                                              //Navigator.push(context, MaterialPageRoute(builder: (context) => RAllBookings(fromConfirm: false, tourist: false,)),);
-                                                              Navigator.push(context, MaterialPageRoute(builder: (context) => AllBookings(orderStateList: orderList, tourist: true,)),);
+                                                              Navigator.push(context, MaterialPageRoute(builder: (context) => RAllBookings(fromConfirm: false, tourist: true,)),);
+                                                              //Navigator.push(context, MaterialPageRoute(builder: (context) => AllBookings(orderStateList: orderList, tourist: true,)),);
                                                             },
                                                             borderRadius: BorderRadius.all(Radius.circular(5.0)),
                                                             child: Container(
