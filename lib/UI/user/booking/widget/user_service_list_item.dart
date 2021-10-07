@@ -153,7 +153,7 @@ class _UserServiceListItemState extends State<UserServiceListItem> {
                               child: Text(
                                 widget.orderState.itemList[0].time != null ?
                                 DateFormat('dd MMM yyyy - ', Localizations.localeOf(context).languageCode).format(widget.orderState.itemList[0].date) + widget.orderState.itemList[0].time ?? ''
-                                : DateFormat('dd MMM yyyy ', Localizations.localeOf(context).languageCode).format(widget.orderState.itemList[0].date),
+                                : DateFormat('dd MMM yyyy - HH:mm', Localizations.localeOf(context).languageCode).format(widget.orderState.creationDate.add(Duration(hours: 2))),
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 2,
                                 style: TextStyle(
