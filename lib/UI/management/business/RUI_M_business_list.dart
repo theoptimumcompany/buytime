@@ -59,14 +59,13 @@ class RBusinessListState extends State<RBusinessList> {
   String orderId = '';
   String userId = '';
 
-  DynamicLinkHelper dynamicLinkHelper = DynamicLinkHelper();
 
   @override
   void initState() {
     super.initState();
     emptyCategoryInvite();
     //initDynamicLinks();
-    dynamicLinkHelper.initDynamicLinks(context);
+
   }
 
 
@@ -75,7 +74,6 @@ class RBusinessListState extends State<RBusinessList> {
 
   @override
   Widget build(BuildContext context) {
-    dynamicLinkHelper.onSitePaymentFound(context);
     var media = MediaQuery.of(context).size;
     var mediaHeight = media.height;
     SizeConfig().init(context);

@@ -16,7 +16,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import '../../main.dart';
 
 class MessagingHelper {
-  static String serverToken = 'AAAA6xUtyfE:APA91bGHhEzVUY9fnj4FbTXJX57qcgF-8GBrfBbGIa8kEpEIdsXRgQxbtsvbhL-w-_MQYKIj0XVlSaDSf2s6O3D3SM3o-z_AZnHQwBNLiw1ygyZOuVAKa5YmXeu6Da9eBqRD9uwFHSPi';
+  static String serverToken = '';
 
   void messagingManagement(FirebaseMessaging firebaseMessaging, BuildContext context) {
     firebaseMessaging.requestPermission(sound: true, badge: true, alert: true, provisional: true);

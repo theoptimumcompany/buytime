@@ -14,6 +14,7 @@ import 'package:Buytime/reblox/reducer/order_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/promotion/promotion_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/card_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/stripe_list_payment_reducer.dart';
+import 'package:Buytime/services/dynamic_links/dynamic_links_helper.dart';
 import 'package:Buytime/services/messaging/messaging_helper.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
@@ -98,6 +99,8 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
     debugPrint('splash_screen => VERSION: $version');
   }
   MessagingHelper messagingHelper = MessagingHelper();
+  DynamicLinkHelper dynamicLinkHelper = DynamicLinkHelper();
+
   //String serverToken = 'AAAA6xUtyfE:APA91bGHhEzVUY9fnj4FbTXJX57qcgF-8GBrfBbGIa8kEpEIdsXRgQxbtsvbhL-w-_MQYKIj0XVlSaDSf2s6O3D3SM3o-z_AZnHQwBNLiw1ygyZOuVAKa5YmXeu6Da9eBqRD9uwFHSPi';
   String serverToken = '';
   String token;
@@ -108,6 +111,7 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
     getAppInfo();
     final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
     messagingHelper.messagingManagement(firebaseMessaging, context);
+    dynamicLinkHelper.initDynamicLinks(context);
     /*FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       debugPrint('On Message');
       RemoteNotification notification = message.notification;
@@ -347,6 +351,8 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
 
   @override
   Widget build(BuildContext context) {
+    dynamicLinkHelper.onSitePaymentFound(context);
+
     return Scaffold(
       backgroundColor: Color(0xFF207CC3),
       body: Center(
