@@ -261,6 +261,13 @@ class _RAllBookingsState extends State<RAllBookings> {
                                 });
                               }
                             });
+
+                            order.itemList.forEach((element) {
+                              StoreProvider.of<AppState>(context).state.serviceList.serviceListState.forEach((s) {
+                                if(element.id == s.serviceId)
+                                  service = s;
+                              });
+                            });
                             return Column(
                               children: [
                                 UserServiceListItem(order, widget.tourist, service),
