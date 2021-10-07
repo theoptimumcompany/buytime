@@ -91,7 +91,7 @@ class MessagingHelper {
 
     StoreProvider.of<AppState>(context).dispatch(UserOrderListRequest());
     StoreProvider.of<AppState>(context).dispatch(RequestNotificationList(StoreProvider.of<AppState>(context).state.user.uid, StoreProvider.of<AppState>(context).state.business.id_firestore));
-    notifyFlushbar(notification.title, context);
+    // notifyFlushbar(notification.title, context);
   }
   Flushbar notifyFlushbar(String message, BuildContext context) {
     return Flushbar(

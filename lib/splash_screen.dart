@@ -22,7 +22,6 @@ import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/user/user_state.dart';
 import 'package:Buytime/reblox/reducer/user_reducer.dart';
 import 'package:Buytime/UI/user/login/UI_U_home.dart';
-import 'package:another_flushbar/flushbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:device_info/device_info.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -184,49 +183,6 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
     });
   }*/
 
-  void messageDataRetriveNotify(BuildContext context, RemoteNotification notification) {
-    StoreProvider.of<AppState>(context).dispatch(UserOrderListRequest());
-    StoreProvider.of<AppState>(context).dispatch(RequestNotificationList(StoreProvider.of<AppState>(context).state.user.uid, StoreProvider.of<AppState>(context).state.business.id_firestore));
-    notifyFlushbar(notification.title, context);
-  }
-  Flushbar notifyFlushbar(String message, BuildContext context) {
-    return Flushbar(
-      flushbarPosition: FlushbarPosition.TOP,
-      padding: EdgeInsets.all(SizeConfig.safeBlockVertical * 2),
-      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5, left: SizeConfig.blockSizeHorizontal * 20, right: SizeConfig.blockSizeHorizontal * 20),
-      borderRadius: BorderRadius.all(Radius.circular(8)),
-      backgroundColor: BuytimeTheme.SymbolLightGrey,
-      onTap: (ciao) {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => RNotifications(orderStateList: StoreProvider.of<AppState>(context).state.orderList.orderListState, tourist: false,)));
-      },
-      boxShadows: [
-        BoxShadow(
-          color: Colors.black45,
-          offset: Offset(3, 3),
-          blurRadius: 3,
-        ),
-      ],
-      dismissDirection: FlushbarDismissDirection.HORIZONTAL,
-      forwardAnimationCurve: Curves.fastLinearToSlowEaseIn,
-      messageText: Text(
-        message,
-        style: TextStyle(color: BuytimeTheme.TextBlack, fontWeight: FontWeight.bold),
-        textAlign: TextAlign.center,
-      ),
-    )..show(context);
-  }
-
-  Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-    //await Firebase.initializeApp();
-    if (message.data.containsKey('data')) {
-      final dynamic data = message.data['data'];
-      debugPrint("messaging_helper: data: " + data);
-    }
-    if (message.data.containsKey('notification')) {
-      final dynamic notification = message.data['notification'];
-      debugPrint("messaging_helper: notification: " + notification);
-    }
-  }
 
   void checkIfNativePayReady() async {
     // String stripeTestKey = "pk_test_51HS20eHr13hxRBpCZl1V0CKFQ7XzJbku7UipKLLIcuNGh3rp4QVsEDCThtV0l2AQ3jMtLsDN2zdC0fQ4JAK6yCOp003FIf3Wjz";
@@ -352,7 +308,11 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
   @override
   Widget build(BuildContext context) {
     dynamicLinkHelper.onSitePaymentFound(context);
-
+    dynamicLinkHelper.bookingCodeFound(context);
+    dynamicLinkHelper.selfCheckInFound(context);
+    dynamicLinkHelper.categoryInviteFound(context);
+    dynamicLinkHelper.onSitePaymentFound(context);
+    dynamicLinkHelper.searchBusiness();
     return Scaffold(
       backgroundColor: Color(0xFF207CC3),
       body: Center(

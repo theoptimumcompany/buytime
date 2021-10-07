@@ -692,7 +692,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                                                 child: FittedBox(
                                                   fit: BoxFit.scaleDown,
                                                   child: Text(
-                                                    serviceState.serviceAddress.isNotEmpty ? serviceState.serviceAddress : businessState.businessAddress,
+                                                    serviceState.serviceAddress.isNotEmpty ? serviceState.serviceAddress :  businessState.businessAddress.isNotEmpty ?  businessState.businessAddress : "loading...",
                                                     style: TextStyle(letterSpacing: 0.15, fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w500, fontSize: 16
 
                                                       ///SizeConfig.safeBlockHorizontal * 4

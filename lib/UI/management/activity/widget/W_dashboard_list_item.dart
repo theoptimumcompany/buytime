@@ -157,8 +157,8 @@ class _DashboardListItemState extends State<DashboardListItem> {
                             Container(
                               child: Text(
                                 Utils.translateOrderStatus(context, widget.orderState.progress),
-                                //style: TextStyle(fontFamily: BuytimeTheme.FontFamily, fontSize: 12, letterSpacing: 0.25, fontWeight: FontWeight.w400, color: BuytimeTheme.TextMedium, fontStyle: FontStyle.italic),
-                                style: TextStyle(fontFamily: BuytimeTheme.FontFamily, fontSize: 12, letterSpacing: 0.25, fontWeight: FontWeight.bold, color: Utils.colorOrderStatus(context, widget.orderState.progress), fontStyle: FontStyle.italic),
+                                style: TextStyle(fontFamily: BuytimeTheme.FontFamily, fontSize: 12, letterSpacing: 0.25, fontWeight: FontWeight.w400, color: BuytimeTheme.TextMedium, fontStyle: FontStyle.italic),
+                                // style: TextStyle(fontFamily: BuytimeTheme.FontFamily, fontSize: 12, letterSpacing: 0.25, fontWeight: FontWeight.bold, color: Utils.colorOrderStatus(context, widget.orderState.progress), fontStyle: FontStyle.italic),
                               ),
                             )
                           ],

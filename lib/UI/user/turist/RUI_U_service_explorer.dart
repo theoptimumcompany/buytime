@@ -110,7 +110,6 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       StoreProvider.of<AppState>(context).dispatch(PromotionListRequest());
     });
-    dynamicLinkHelper.initDynamicLinks(context);
   }
 
 
@@ -492,12 +491,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
       converter: (store) => store.state,
       onInit: (store) async {
         store.dispatch(UserBookingListRequest(store.state.user.email, false));
-        DynamicLinkHelper dynamicLinkHelper = DynamicLinkHelper();
-        dynamicLinkHelper.bookingCodeFound(context);
-        dynamicLinkHelper.selfCheckInFound(context);
-        dynamicLinkHelper.categoryInviteFound(context);
-        dynamicLinkHelper.onSitePaymentFound(context);
-        dynamicLinkHelper.searchBusiness();
+
         store.state.categoryList.categoryListState.clear();
         store.state.serviceList.serviceListState.clear();
         startRequest = true;
