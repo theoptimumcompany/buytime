@@ -105,15 +105,33 @@ class _UserServiceCardWidgetState extends State<UserServiceCardWidget> {
                   //color: Colors.black.withOpacity(.2)
                   ),
               child: Column(
+                //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  ///Order status label
+                  /*Container(
+                    margin: EdgeInsets.only(right: 5, top: 5),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [Container(
+                        height: 15,
+                        width: 15,
+                        decoration: BoxDecoration(
+                            color: Utils.colorOrderStatusUser(context, widget.orderState.progress),
+                          border: Border.all(color: Colors.white, width: .5),
+                          borderRadius: BorderRadius.all(Radius.circular(10))
+                        ),
+                      )],
+                    ),
+                  ),*/
                   ///Service name
                   Container(
                     //width: 200,
                     height: 100 / 3,
                     alignment: Alignment.centerLeft,
                     decoration: BoxDecoration(borderRadius: BorderRadius.only(bottomLeft: Radius.circular(5), bottomRight: Radius.circular(5)), color: Colors.black.withOpacity(.2)),
+                    //decoration: BoxDecoration(borderRadius: BorderRadius.only(bottomLeft: Radius.circular(5), bottomRight: Radius.circular(5)), color: Utils.colorOrderStatus(context, widget.orderState.progress).withOpacity(.2)),
                     //margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, bottom: SizeConfig.safeBlockVertical * 2),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
