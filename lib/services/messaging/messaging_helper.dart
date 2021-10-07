@@ -68,19 +68,13 @@ class MessagingHelper {
       {
         AppleNotification apple = message.notification?.apple;
         if (notification != null && apple != null) {
-          /*flutterLocalNotificationsPlugin.show(
+          flutterLocalNotificationsPlugin.show(
               notification.hashCode,
               notification.title,
               notification.body,
               NotificationDetails(
-                iOS: IOSNotificationDetails(
-
-                  //channel.id,
-                  channel.name,
-                  channel.description,
-                  //icon: apple?.,
-                ),
-              ));*/
+                iOS: IOSNotificationDetails(sound: 'slow_spring_board.aiff'),
+              ));
           messageDataRetriveNotify(context, notification);
         }
       }
