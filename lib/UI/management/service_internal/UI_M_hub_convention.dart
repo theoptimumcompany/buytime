@@ -1,5 +1,6 @@
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
+import 'package:Buytime/reblox/model/service/convention_slot_state.dart';
 import 'package:Buytime/reusable/appbar/w_buytime_appbar.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
@@ -30,6 +31,10 @@ class UI_M_HubConventionState extends State<UI_M_HubConvention> {
   final TextEditingController _hubController = TextEditingController();
   List<BusinessState> hubsList = [];
 
+  bool allHubs = true;
+
+  ConventionSlot conventionSlotAllHubs = ConventionSlot(hubName: "allHubs", hubId: "allHubs", discount: 0);
+  List<ConventionSlot> conventionSlotList = [];
 
   @override
   initState() {
@@ -97,124 +102,109 @@ class UI_M_HubConventionState extends State<UI_M_HubConvention> {
                                     ),
                                     child: Column(
                                       children: [
-                                        Container(
-                                            width: 335.0,
-                                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
-                                            decoration: BoxDecoration(border: Border.all(color: BuytimeTheme.SymbolLightGrey), borderRadius: BorderRadius.all(Radius.circular(5))),
-                                            child: DropdownButtonHideUnderline(
-                                              child: ButtonTheme(
-                                                alignedDropdown: true,
-                                                child: DropdownButton(
-                                                  hint: Container(
-                                                    child: Padding(
-                                                      padding: const EdgeInsets.only(left: 10.0),
-                                                      child: Text(
-                                                        _hubController.text,
-                                                        textAlign: TextAlign.start,
-                                                        style: TextStyle(
-                                                          fontSize: 16,
-                                                          color: BuytimeTheme.TextMedium,
-                                                          fontWeight: FontWeight.w400,
+                                        Padding(
+                                          padding: const EdgeInsets.only(top: 0.0, bottom: 10.0, left: 20.0, right: 20.0),
+                                          child: Container(
+                                            child: Row(
+                                              children: [
+                                                Switch(
+                                                    activeColor: BuytimeTheme.ManagerPrimary,
+                                                    value: allHubs,
+                                                    onChanged:  (value) {
+                                                      setState(() {
+                                                        allHubs = value;
+                                                      });
+                                                    }
+                                                ),
+                                                Expanded(
+                                                  child: Text(
+                                                    AppLocalizations.of(context).sameDiscountOnAllHubs,
+                                                    textAlign: TextAlign.start,
+                                                    overflow: TextOverflow.clip,
+                                                    style: TextStyle(
+                                                      fontSize: media.height * 0.018,
+                                                      color: BuytimeTheme.TextGrey,
+                                                      fontWeight: FontWeight.w500,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+
+                                        buildListConventionElement(context),
+
+                                        Padding(
+                                          padding: const EdgeInsets.only(top: 15.0, bottom: 5.0),
+                                          child: Container(
+                                            width: 208,
+                                            height: 44,
+                                            child: OutlinedButton(
+                                              onPressed: () {
+                                                setState(() {
+
+                                                });
+                                              },
+                                              child: Padding(
+                                                padding: const EdgeInsets.all(0.0),
+                                                child: Row(
+                                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                  children: [
+                                                    Icon(Icons.add, color: BuytimeTheme.ManagerPrimary, size:24),
+                                                    Container(
+                                                      width: 150,
+                                                      child: FittedBox(
+                                                        fit: BoxFit.scaleDown,
+                                                        child: Text(
+                                                          AppLocalizations.of(context).addNewConventionUpper,
+                                                          textAlign: TextAlign.start,
+                                                          style: TextStyle(
+                                                            fontSize: 14,
+                                                            color: BuytimeTheme.ManagerPrimary,
+                                                            fontWeight: FontWeight.w900,
+                                                          ),
                                                         ),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        Row(
+                                          mainAxisSize: MainAxisSize.max,
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: <Widget>[
+                                            Padding(
+                                              padding: const EdgeInsets.only(top: 20.0,),
+                                              child: Container(
+                                                width: 208,
+                                                height: 44,
+                                                child: OutlinedButton(
+                                                  style: OutlinedButton.styleFrom(
+                                                    backgroundColor: BuytimeTheme.ManagerPrimary,
+                                                  ),
+                                                  onPressed: () {
+
+                                                  },
+                                                  child: Padding(
+                                                    padding: const EdgeInsets.all(0.0),
+                                                    child: Text(
+                                                      AppLocalizations.of(context).saveUpper,
+                                                      textAlign: TextAlign.start,
+                                                      style: TextStyle(
+                                                        fontSize: 18,
+                                                        color: BuytimeTheme.TextWhite,
+                                                        fontWeight: FontWeight.w500,
                                                       ),
                                                     ),
                                                   ),
-                                                  items:
-                                                      hubsList.map(
-                                                        (val) {
-                                                      return DropdownMenuItem<String>(
-                                                        value: val.name,
-                                                        child: Row(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Container(
-                                                              child: Padding(
-                                                                padding: const EdgeInsets.only(left: 10.0),
-                                                                child: Text(
-                                                                  val.name,
-                                                                  textAlign: TextAlign.start,
-                                                                  style: TextStyle(
-                                                                    fontSize: 16,
-                                                                    color: BuytimeTheme.TextMedium,
-                                                                    fontWeight: FontWeight.w400,
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            _hubController.text == val
-                                                                ? Icon(
-                                                              Icons.radio_button_checked,
-                                                              color: BuytimeTheme.SymbolGrey,
-                                                            )
-                                                                : Icon(
-                                                              Icons.radio_button_off,
-                                                              color: BuytimeTheme.SymbolGrey,
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      );
-                                                    },
-                                                  )?.toList() +
-                                                      [
-                                                    DropdownMenuItem<String>(
-                                                      value: AppLocalizations.of(context).allHubs,
-                                                      child: Row(
-                                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                        children: [
-                                                          Container(
-                                                            child: Padding(
-                                                              padding: const EdgeInsets.only(left: 10.0),
-                                                              child: Text(
-                                                                AppLocalizations.of(context).allHubs,
-                                                                textAlign: TextAlign.start,
-                                                                style: TextStyle(
-                                                                  fontSize: 16,
-                                                                  color: BuytimeTheme.TextMedium,
-                                                                  fontWeight: FontWeight.w400,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                          _hubController.text == AppLocalizations.of(context).allHubs
-                                                              ? Icon(
-                                                            Icons.radio_button_checked,
-                                                            color: BuytimeTheme.SymbolGrey,
-                                                          )
-                                                              : Icon(
-                                                            Icons.radio_button_off,
-                                                            color: BuytimeTheme.SymbolGrey,
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    )]
-                                                  ,
-                                                  onChanged: (value) {
-                                                    setState(() {
-                                                      _hubController.text = value;
-                                                      // orderState.location = value;
-                                                      // StoreProvider.of<AppState>(context).dispatch(UpdateOrder(orderState));
-                                                    });
-                                                  },
-                                                  style: Theme.of(context).textTheme.headline1,
                                                 ),
                                               ),
-                                            )
-
-                                        ),
-                                        Container(
-                                          padding: EdgeInsets.all(20.0),
-                                          child: TextFormField(
-                                            keyboardType: TextInputType.number,
-                                            inputFormatters: <TextInputFormatter>[
-                                                FilteringTextInputFormatter.digitsOnly
-                                              ],
-                                            decoration: const InputDecoration(labelText: '%'),
-                                            onChanged: (value) {
-                                                setState(() {
-                                                  discountPercentage = value as int;
-                                                });
-                                              }
-                                          ),
+                                            ),
+                                          ],
                                         )
                                       ],
                                     )
@@ -263,5 +253,104 @@ class UI_M_HubConventionState extends State<UI_M_HubConvention> {
             );
           }),
     );
+  }
+
+  Column buildListConventionElement(BuildContext context) {
+    return Column(
+              children: [
+                Container(
+                    width: 335.0,
+                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
+                    decoration: BoxDecoration(border: Border.all(color: BuytimeTheme.SymbolLightGrey), borderRadius: BorderRadius.all(Radius.circular(5))),
+                    child: DropdownButtonHideUnderline(
+                      child: ButtonTheme(
+                        alignedDropdown: true,
+                        child: DropdownButton(
+                          disabledHint: Container(
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 10.0),
+                              child: Text(
+                                AppLocalizations.of(context).allHubs,
+                                textAlign: TextAlign.start,
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: BuytimeTheme.TextMedium,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ),
+                          ),
+                          hint: Container(
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 10.0),
+                              child: Text(
+                                _hubController.text != null ? _hubController.text : AppLocalizations.of(context).select,
+                                textAlign: TextAlign.start,
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: BuytimeTheme.TextMedium,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ),
+                          ),
+                          items: allHubs ?
+                          null :
+                              hubsList.map(
+                                (val) {
+                              return DropdownMenuItem<String>(
+                                value: val.name,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(left: 10.0),
+                                        child: Text(
+                                          val.name,
+                                          textAlign: TextAlign.start,
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            color: BuytimeTheme.TextMedium,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          )?.toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              _hubController.text = value;
+                              // orderState.location = value;
+                              // StoreProvider.of<AppState>(context).dispatch(UpdateOrder(orderState));
+                            });
+                          },
+                          style: Theme.of(context).textTheme.headline1,
+                        ),
+                      ),
+                    )
+
+                ),
+                Container(
+                  padding: EdgeInsets.all(20.0),
+                  child: TextFormField(
+                    keyboardType: TextInputType.number,
+                    inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.digitsOnly
+                      ],
+                    decoration: const InputDecoration(labelText: '%'),
+                    onChanged: (value) {
+                        setState(() {
+                          discountPercentage = value as int;
+                        });
+                      }
+                  ),
+                ),
+              ],
+            );
   }
 }
