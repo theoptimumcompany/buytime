@@ -13,19 +13,19 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class UI_M_HubConvention extends StatefulWidget {
+class HubConventionEdit extends StatefulWidget {
   bool createSlot = false;
   bool editSlot = false;
   int indexSlot = -1;
   ConventionSlot conventionSlot;
 
-  UI_M_HubConvention({this.createSlot, this.editSlot, this.indexSlot, this.conventionSlot});
+  HubConventionEdit({this.createSlot, this.editSlot, this.indexSlot, this.conventionSlot});
 
   @override
-  State<StatefulWidget> createState() => UI_M_HubConventionState();
+  State<StatefulWidget> createState() => HubConventionEditState();
 }
 
-class UI_M_HubConventionState extends State<UI_M_HubConvention> {
+class HubConventionEditState extends State<HubConventionEdit> {
   int currentStep = 0;
   bool rippleLoading = false;
   int numberOfInterval = 0;
@@ -47,6 +47,9 @@ class UI_M_HubConventionState extends State<UI_M_HubConvention> {
     super.initState();
     discountController.text = widget.conventionSlot.discount.toString();
     _hubController.text = widget.conventionSlot.hubName;
+    if(_hubController.text != "allHubs"){
+      allHubs = false;
+    }
   }
 
 
@@ -71,15 +74,6 @@ class UI_M_HubConventionState extends State<UI_M_HubConvention> {
               hubSnapshot.data.docs.forEach((element) {
                 BusinessState businessState = BusinessState.fromJson(element.data());
                 hubsList.add(businessState);
-              });
-
-              hubsList.forEach((hub) {
-                //debugPrint('HUB ID: ${hub.id_firestore} - CONVENTION HUB ID: ${widget.conventionSlot.hubId}');
-                if(hub.id_firestore == widget.conventionSlot.hubId){
-                  debugPrint('HUB FOUND!');
-                  //_hubController.text = widget.conventionSlot.hubName;
-                  allHubs = false;
-                }
               });
 
               return Stack(
@@ -117,79 +111,7 @@ class UI_M_HubConventionState extends State<UI_M_HubConvention> {
                                       ),
                                       child: Column(
                                         children: [
-                                          ///All hub switch
-                                          Padding(
-                                            padding: const EdgeInsets.only(top: 0.0, bottom: 10.0, left: 20.0, right: 20.0),
-                                            child: Container(
-                                              child: Row(
-                                                children: [
-                                                  Switch(
-                                                      activeColor: BuytimeTheme.ManagerPrimary,
-                                                      value: allHubs,
-                                                      onChanged:  (value) {
-                                                        setState(() {
-                                                          allHubs = value;
-                                                        });
-                                                      }
-                                                  ),
-                                                  Expanded(
-                                                    child: Text(
-                                                      AppLocalizations.of(context).sameDiscountOnAllHubs,
-                                                      textAlign: TextAlign.start,
-                                                      overflow: TextOverflow.clip,
-                                                      style: TextStyle(
-                                                        fontSize: media.height * 0.018,
-                                                        color: BuytimeTheme.TextGrey,
-                                                        fontWeight: FontWeight.w500,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          ///Hub List
                                           buildListConventionElement(context),
-
-                                          ///Add new
-                                          Padding(
-                                            padding: const EdgeInsets.only(top: 15.0, bottom: 5.0),
-                                            child: Container(
-                                              width: 208,
-                                              height: 44,
-                                              child: OutlinedButton(
-                                                onPressed: () {
-                                                  setState(() {
-
-                                                  });
-                                                },
-                                                child: Padding(
-                                                  padding: const EdgeInsets.all(0.0),
-                                                  child: Row(
-                                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                                    children: [
-                                                      Icon(Icons.add, color: BuytimeTheme.ManagerPrimary, size:24),
-                                                      Container(
-                                                        width: 150,
-                                                        child: FittedBox(
-                                                          fit: BoxFit.scaleDown,
-                                                          child: Text(
-                                                            AppLocalizations.of(context).addNewConventionUpper,
-                                                            textAlign: TextAlign.start,
-                                                            style: TextStyle(
-                                                              fontSize: 14,
-                                                              color: BuytimeTheme.ManagerPrimary,
-                                                              fontWeight: FontWeight.w900,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      )
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
                                           ///Save
                                           Row(
                                             mainAxisSize: MainAxisSize.max,
@@ -375,11 +297,6 @@ class UI_M_HubConventionState extends State<UI_M_HubConvention> {
                 FilteringTextInputFormatter.digitsOnly
               ],
               decoration: const InputDecoration(labelText: '%'),
-              onChanged: (value) {
-                setState(() {
-                  discountPercentage = value as int;
-                });
-              }
           ),
         ),
       ],
