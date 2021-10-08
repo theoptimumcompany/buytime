@@ -125,7 +125,6 @@ Future<void> main() async {
             ChangeNotifierProvider(create: (_) => Spinner(true, [], [], [])),
             ChangeNotifierProvider(create: (_) => ReserveList([], OrderReservableState().toEmpty(),[], [], [], [])),
             ChangeNotifierProvider(create: (_) => Explorer(false, [])),
-            ChangeNotifierProvider(create: (_) => Convention(false, [])),
           ],
           child: Buytime(store: store),
         ));
