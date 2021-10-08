@@ -38,7 +38,7 @@ class _W_ConventionDiscountState extends State<W_ConventionDiscount> {
             children: [
               // Icon(MaterialDesignIcons.local_activity,size: 14,color: BuytimeTheme.SymbolWhite),
               Text(
-                '${conventionHelper.getConventionDiscount(widget.serviceState, widget.businessId)}%',
+                '-${conventionHelper.getConventionDiscount(widget.serviceState, widget.businessId)}%',
                 style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextWhite, fontWeight: FontWeight.w500, fontSize: 13),
               ),
               !widget.onlyIcon ?
