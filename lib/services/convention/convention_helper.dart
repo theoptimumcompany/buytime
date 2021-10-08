@@ -10,14 +10,18 @@ class ConventionHelper{
     bool isConvention = false;
     String businessId = checkActiveBooking(bookingList);
     debugPrint('CONVENTION BUSINESS ID: $businessId');
-    if(service.conventionSlotList.isNotEmpty){
-      service.conventionSlotList.forEach((convention) {
-        debugPrint('CONVENTION SERIVCE HUB ID: ${convention.hubId}');
-        if(convention.hubId == businessId){
-          debugPrint('CONVENTION FOUND');
-          isConvention = true;
-        }
-      });
+    if(service.hubConvention && service.conventionSlotList.isNotEmpty){
+      if(service.conventionSlotList.first.hubId == 'allHubs'){
+        isConvention = true;
+      }else{
+        service.conventionSlotList.forEach((convention) {
+          debugPrint('CONVENTION SERIVCE HUB ID: ${convention.hubId}');
+          if(convention.hubId == businessId){
+            debugPrint('CONVENTION FOUND');
+            isConvention = true;
+          }
+        });
+      }
     }
     debugPrint('FINAL CONVENTION FOR $businessId IS $isConvention');
     return isConvention;
@@ -35,13 +39,18 @@ class ConventionHelper{
     int discount = 0;
     debugPrint('CONVENTION DISCOUNT BUSINESS ID: $businessId');
     if(service.conventionSlotList.isNotEmpty){
-      service.conventionSlotList.forEach((convention) {
-        debugPrint('CONVENTION DISCOUNT SERIVCE HUB ID: ${convention.hubId}');
-        if(convention.hubId == businessId){
-          debugPrint('CONVENTION DISCOUNT FOUND');
-          discount = convention.discount;
-        }
-      });
+      if(service.conventionSlotList.first.hubId == 'allHubs'){
+        discount = service.conventionSlotList.first.discount;
+      }else{
+        service.conventionSlotList.forEach((convention) {
+          debugPrint('CONVENTION DISCOUNT SERIVCE HUB ID: ${convention.hubId}');
+          if(convention.hubId == businessId){
+            debugPrint('CONVENTION DISCOUNT FOUND');
+            discount = convention.discount;
+          }
+        });
+      }
+
     }
     debugPrint('FINAL CONVENTION DISCOUNT FOR $businessId IS $discount');
     return discount;
