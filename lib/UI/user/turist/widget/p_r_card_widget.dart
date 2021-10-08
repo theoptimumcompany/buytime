@@ -2,7 +2,9 @@ import 'package:Buytime/UI/user/category/UI_U_filter_by_category.dart';
 import 'package:Buytime/UI/user/service/UI_U_service_details.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
+import 'package:Buytime/reusable/w_convention_discount.dart';
 import 'package:Buytime/reusable/w_promo_discount.dart';
+import 'package:Buytime/services/convention/convention_helper.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/utils/utils.dart';
@@ -39,7 +41,7 @@ class _PRCardWidgetState extends State<PRCardWidget> {
 
   @override
   Widget build(BuildContext context) {
-
+    //debugPrint('BUSINES ID: ${StoreProvider.of<AppState>(context).state.bookingList.bookingListState.first.business_id}');
     return  CachedNetworkImage(
       imageUrl: Utils.version200(widget.serviceState.image1),
       imageBuilder: (context, imageProvider) =>
@@ -81,21 +83,46 @@ class _PRCardWidgetState extends State<PRCardWidget> {
               Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => FilterByCategory(fromBookingPage: false,categoryState: widget.categoryState,)));*/
                   },
                   borderRadius: BorderRadius.all(Radius.circular(5)),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(5)),
-                      //color: Colors.black.withOpacity(.2)
-                    ),
-                    child: ///Promo Discount label
-                    Utils.checkPromoDiscount('general_1', context, widget.serviceState.businessId).promotionId != 'empty'
-                        ? Container(
-                      alignment: Alignment.bottomLeft,
-                      margin: EdgeInsets.only(left: 5, bottom: 5),
-                      child: FittedBox(
-                        fit: BoxFit.contain,
-                        child: W_PromoDiscount(true),
-                      ),
-                    ): Container(),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Row(
+                        children: [
+                          Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(5)),
+                                //color: Colors.black.withOpacity(.2)
+                              ),
+                              child: ///Promo Discount label
+                              Utils.checkPromoDiscount('general_1', context, widget.serviceState.businessId).promotionId != 'empty'
+                                  ? Container(
+                                alignment: Alignment.bottomLeft,
+                                margin: EdgeInsets.only(left: 5, bottom: 5),
+                                child: FittedBox(
+                                  fit: BoxFit.contain,
+                                  child: W_PromoDiscount(true),
+                                ),
+                              ) : Container(),
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.all(Radius.circular(5)),
+                              //color: Colors.black.withOpacity(.2)
+                            ),
+                            child: ///Promo Discount label
+                            ConventionHelper().getConvention(widget.serviceState, StoreProvider.of<AppState>(context).state.bookingList.bookingListState)
+                                ? Container(
+                              alignment: Alignment.bottomLeft,
+                              margin: EdgeInsets.only(left: 5, bottom: 5),
+                              child: FittedBox(
+                                fit: BoxFit.contain,
+                                child: W_ConventionDiscount(widget.serviceState, StoreProvider.of<AppState>(context).state.bookingList.bookingListState.first.business_id, true),
+                              ),
+                            ): Container(),
+                          )
+                        ],
+                      )
+                    ],
                   ),
                 ),
               ),

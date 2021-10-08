@@ -97,6 +97,8 @@ class _InviteGuestFormState extends State<InviteGuestForm> {
     FocusScopeNode currentFocus = FocusScope.of(context);
      //bool bookingRequest = false;
 
+    SizeConfig().init(context);
+
     return StoreConnector<AppState, AppState>(
         converter: (store) => store.state,
         builder: (context, snapshot) {

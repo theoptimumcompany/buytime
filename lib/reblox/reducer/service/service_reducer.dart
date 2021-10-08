@@ -1,5 +1,6 @@
 import 'package:Buytime/UI/management/service_internal/class/service_slot_classes.dart';
 import 'package:Buytime/reblox/model/file/optimum_file_to_upload.dart';
+import 'package:Buytime/reblox/model/service/convention_slot_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/model/service/service_slot_time_state.dart';
 import 'package:Buytime/reblox/model/slot/slot_list_snippet_state.dart';
@@ -310,6 +311,14 @@ class SetServiceSelectedCategories {
   List<Parent> get selectedCategories => _selectedCategories;
 }
 
+class SetServiceConventionSlotList {
+  List<ConventionSlot> _conventionSlotList;
+
+  SetServiceConventionSlotList(this._conventionSlotList);
+
+  List<ConventionSlot> get conventionSlotList => _conventionSlotList;
+}
+
 class SetServiceSwitchSlots {
   bool _enabled;
 
@@ -484,6 +493,10 @@ ServiceState serviceReducer(ServiceState state, action) {
   }
   if (action is ServiceChanged) {
     serviceState = action.serviceState.copyWith();
+    return serviceState;
+  }
+  if (action is SetServiceConventionSlotList) {
+    serviceState.conventionSlotList = action.conventionSlotList;
     return serviceState;
   }
   if (action is CreatedService) {

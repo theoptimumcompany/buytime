@@ -1,11 +1,15 @@
 import 'package:Buytime/UI/user/service/UI_U_service_details.dart';
+import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
+import 'package:Buytime/reusable/w_convention_discount.dart';
 import 'package:Buytime/reusable/w_green_choice.dart';
+import 'package:Buytime/services/convention/convention_helper.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/utils/utils.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 
 import 'w_promo_discount.dart';
 
@@ -23,6 +27,7 @@ class _ServiceListItemState extends State<ServiceListItem> {
   @override
   Widget build(BuildContext context) {
     //debugPrint('image: ${widget.serviceState.image1}');
+    ConventionHelper conventionHelper = ConventionHelper();
     return Container(
         //margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 4, right: SizeConfig.safeBlockHorizontal * 4),
         margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 0),
@@ -80,6 +85,16 @@ class _ServiceListItemState extends State<ServiceListItem> {
                                       child: FittedBox(
                                         fit: BoxFit.contain,
                                         child: W_PromoDiscount(true),
+                                      ),
+                                    ): Container(),
+                                    ///Convention Discount label
+                                    conventionHelper.getConvention(widget.serviceState, StoreProvider.of<AppState>(context).state.bookingList.bookingListState)
+                                        ? Container(
+                                      alignment: Alignment.bottomLeft,
+                                      margin: EdgeInsets.only(left: 5),
+                                      child: FittedBox(
+                                        fit: BoxFit.contain,
+                                        child: W_ConventionDiscount(widget.serviceState, StoreProvider.of<AppState>(context).state.bookingList.bookingListState.first.business_id, true),
                                       ),
                                     ): Container(),
                                     ///ECO label

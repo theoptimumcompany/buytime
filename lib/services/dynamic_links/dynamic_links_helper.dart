@@ -62,7 +62,8 @@ Future<Uri> dynamicLinksSwitch(PendingDynamicLinkData dynamicLink, BuildContext 
     String onSiteOrderIdRead = await storage.containsKey(key: 'onSiteOrderIdRead') ? await storage.read(key: 'onSiteOrderIdRead') ?? '' : '';
     String discoverBusinessNameRead = await storage.containsKey(key: 'discoverBusinessNameRead') ? await storage.read(key: 'discoverBusinessNameRead') ?? '' : '';
     String discoverBusinessIdRead = await storage.containsKey(key: 'discoverBusinessIdRead') ? await storage.read(key: 'discoverBusinessIdRead') ?? '' : '';
-
+    debugPrint('BOKING CODE READ: $bookingCodeRead');
+    //await storage.write(key: 'bookingCodeRead', value: 'false');
     if (deepLink.queryParameters.containsKey('booking') && bookingCodeRead != 'true') {
       await deepLinkBooking(deepLink, context);
     }

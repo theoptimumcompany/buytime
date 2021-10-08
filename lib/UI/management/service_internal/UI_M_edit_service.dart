@@ -5,6 +5,7 @@ import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/area/area_list_state.dart';
 import 'package:Buytime/reblox/model/category/tree/category_tree_state.dart';
 import 'package:Buytime/reblox/model/role/role.dart';
+import 'package:Buytime/reblox/model/service/convention_slot_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/model/snippet/parent.dart';
 import 'package:Buytime/reblox/reducer/category_tree_reducer.dart';
@@ -1692,7 +1693,9 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                                     context,
                                                                     MaterialPageRoute(builder: (context) => UI_M_HubConvention(
                                                                       createSlot: true,
-                                                                      editSlot: false,)),
+                                                                      editSlot: false,
+                                                                      conventionSlot: ConventionSlot().toEmpty(),
+                                                                    )),
                                                                   );
                                                                 },
                                                               )),
@@ -1709,6 +1712,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                           physics: const NeverScrollableScrollPhysics(),
                                                           itemCount: snapshot.serviceState.conventionSlotList.length,
                                                           itemBuilder: (context, index) {
+                                                            ConventionSlot conventionSlot = snapshot.serviceState.conventionSlotList[index];
                                                             return Dismissible(
                                                               key: UniqueKey(),
                                                               direction: DismissDirection.endToStart,
@@ -1736,6 +1740,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                                           createSlot: false,
                                                                           editSlot: true,
                                                                           indexSlot: index,
+                                                                          conventionSlot: conventionSlot,
                                                                         )),
                                                                   );
                                                                 },
