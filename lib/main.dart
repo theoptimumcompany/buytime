@@ -20,7 +20,7 @@ import 'package:Buytime/reblox/navigation/navigation_middleware.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'UI/management/service_internal/RUI_M_service_list.dart';
-import 'UI/management/service_internal/UI_M_hub_convention.dart';
+import 'UI/management/service_internal/UI_M_hub_convention_edit.dart';
 import 'UI/user/service/UI_U_service_reserve.dart';
 import 'UI/user/turist/RUI_U_service_explorer.dart';
 import 'app_routes.dart';

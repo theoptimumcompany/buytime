@@ -29,7 +29,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
 import 'RUI_M_service_list.dart';
-import 'UI_M_hub_convention.dart';
+import 'UI_M_hub_convention_create.dart';
+import 'UI_M_hub_convention_edit.dart';
 
 class UI_EditService extends StatefulWidget {
   String serviceId;
@@ -1691,11 +1692,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                                   // StoreProvider.of<AppState>(context).dispatch(SetServiceSlotToEmpty());
                                                                   Navigator.push(
                                                                     context,
-                                                                    MaterialPageRoute(builder: (context) => UI_M_HubConvention(
-                                                                      createSlot: true,
-                                                                      editSlot: false,
-                                                                      conventionSlot: ConventionSlot().toEmpty(),
-                                                                    )),
+                                                                    MaterialPageRoute(builder: (context) => HubConventionCreate()),
                                                                   );
                                                                 },
                                                               )),
@@ -1736,7 +1733,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                                   Navigator.push(
                                                                     context,
                                                                     MaterialPageRoute(
-                                                                        builder: (context) => UI_M_HubConvention(
+                                                                        builder: (context) => HubConventionEdit(
                                                                           createSlot: false,
                                                                           editSlot: true,
                                                                           indexSlot: index,
