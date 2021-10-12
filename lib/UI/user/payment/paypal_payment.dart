@@ -179,11 +179,12 @@ class PaypalPaymentState extends State<PaypalPayment> {
           javascriptMode: JavascriptMode.unrestricted,
           navigationDelegate: (NavigationRequest request) {
             if (request.url.contains(returnURL)) {
+              // final uri = Uri.parse(request.url);
               final uri = Uri.parse(request.url);
               final payerID = uri.queryParameters['PayerID'];
               if (payerID != null) {
                 services
-                    .executePayment(executeUrl, payerID, accessToken)
+                    .executePayment(Uri.parse(executeUrl), payerID, accessToken)
                     .then((id) {
                   widget.onFinish(id);
                   Navigator.of(context).pop();
