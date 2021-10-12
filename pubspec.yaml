@@ -111,6 +111,8 @@ dependencies:
   package_info: ^2.0.2
   shimmer: ^2.0.0
   palette_generator: ^0.3.0
+  http_auth: ^1.0.1
+  webview_flutter: ^2.1.1
 
 
 dependency_overrides:
@@ -172,6 +174,8 @@ flutter:
     - assets/img/brand/logo_appbar.png
     - assets/img/brand/logo_b.png
     - assets/img/brand/p_stripe.png
+    - assets/img/brand/bg_paypal.png
+    - assets/img/brand/paypal.png
     - assets/img/image_placeholder.png
     - assets/img/aboutus.png
     - assets/img/applePay.png

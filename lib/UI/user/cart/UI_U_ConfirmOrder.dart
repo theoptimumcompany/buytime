@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:Buytime/UI/user/booking/RUI_U_order_detail.dart';
 import 'package:Buytime/UI/user/cart/widget/W_credit_card_simple.dart';
+import 'package:Buytime/UI/user/payment/paypal_payment.dart';
 import 'package:Buytime/reblox/enum/order_time_intervals.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:Buytime/reblox/model/card/card_list_state.dart';
@@ -224,7 +225,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.only(left: 20.0, bottom: 0.0),
+                                padding: const EdgeInsets.only(left: 20.0, bottom: 0.0, right: 20),
                                 child: Column(
                                   children: [
                                     ListTile(
@@ -280,13 +281,12 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                   ? ApplePayButton(
                                       width: SizeConfig.blockSizeHorizontal * 65,
                                       onPressed: _handlePayPress,
-                                    )
-                                  : Center(
+                                    ) : Center(
                                       child: Container(
                                         margin: EdgeInsets.only(bottom: 10),
                                         child: MaterialButton(
-                                          textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
-                                          color: widget.tourist != null && widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
+                                          //textColor: snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.paypal) ? BuytimeTheme.ManagerPrimary : BuytimeTheme.BackgroundWhite.withOpacity(0.3),
+                                          color: snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.paypal) ? BuytimeTheme.Secondary : widget.tourist != null && widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
                                           disabledColor: BuytimeTheme.SymbolLightGrey,
                                           //padding: EdgeInsets.all(media.width * 0.03),
                                           shape: RoundedRectangleBorder(
@@ -300,11 +300,11 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                               !(widget.reserve != null && widget.reserve) ? AppLocalizations.of(context).confirmPayment : '${AppLocalizations.of(context).completeBooking.toUpperCase()}',
                                               textAlign: TextAlign.center,
                                               style: TextStyle(
-                                                letterSpacing: 1.25,
-                                                fontSize: 14,
+                                                letterSpacing: 1,
+                                                fontSize: 16,
                                                 fontFamily: BuytimeTheme.FontFamily,
-                                                fontWeight: FontWeight.w500,
-                                                color: BuytimeTheme.TextWhite,
+                                                fontWeight: FontWeight.bold,
+                                                color: snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.paypal) ? Colors.black : BuytimeTheme.TextWhite,
                                               ),
                                             ),
                                           ),
@@ -331,6 +331,8 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                               confirmationRoom(context, snapshot);
                                             } else if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.onSite)) {
                                               confirmationOnSite(context, snapshot);
+                                            }else if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.paypal)) {
+                                              confirmationPayPal(context, snapshot);
                                             }
                                             // if (snapshot.promotionState.timesUsed >= snapshot.promotionState.limit) {
                                             //     /// delete all promotions locally
@@ -366,6 +368,8 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
       return Text(AppLocalizations.of(context).googlePay);
     } else if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.applePay)) {
       return Text(AppLocalizations.of(context).applePay);
+    }else if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.paypal)) {
+      return Text(AppLocalizations.of(context).paypal);
     }
     return Text(AppLocalizations.of(context).choosePaymentMethod);
   }
@@ -553,11 +557,28 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
         context: context,
         builder: (BuildContext bc) {
           return Container(
-            padding: EdgeInsets.only(left: 30, top: 30),
-            height: 550,
+            padding: EdgeInsets.only(left: 30, top: 30, bottom: 30, right: 30),
+            //height: 550,
             child: new Wrap(
               children: <Widget>[
                 /// TODO wrap with realtime query for card list
+                ///Paypal
+                ListTile(
+                  leading: Image(width: SizeConfig.blockSizeHorizontal * 10, image: AssetImage('assets/img/brand/paypal.png')),
+                  title: new Text(AppLocalizations.of(context).paypal),
+                  onTap: () {
+                    /* FirebaseAnalytics().logEvent(
+                        name: 'payment_method_specific_confirm_order',
+                        parameters: {
+                          'user_email': snapshot.user.email,
+                          'date': DateTime.now().toString(),
+                          'payment_method': Utils.enumToString(PaymentType.onSite)
+                        });*/
+                    StoreProvider.of<AppState>(context).dispatch(ChoosePaymentMethod(Utils.enumToString(PaymentType.paypal)));
+                    Navigator.of(context).pop();
+                  },
+                ),
+                snapshot.serviceState.paymentMethodCard ? Divider() : Container(),
                 snapshot.serviceState.paymentMethodCard
                     ? StreamBuilder<QuerySnapshot>(
                         stream: FirebaseFirestore.instance.collection('stripeCustomer').doc(_userId).collection('card').snapshots(includeMetadataChanges: true),
@@ -661,7 +682,6 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                         },
                       )
                     : Container(),
-                Divider(),
               ],
             ),
           );
@@ -1072,6 +1092,55 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
       }
     }
   }
+  Future<void> confirmationPayPal(BuildContext context, AppState snapshot) async {
+    Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) =>
+        PaypalPayment(
+          onFinish: (number) async {
+            print('order id: '+number);
+          },
+          tourist: true,
+          orderState: snapshot.order,
+        ),
+      ),
+    );
+    //StoreProvider.of<AppState>(context).dispatch(CreatingOrder());
+    if (widget.reserve != null && widget.reserve) {
+      /// Reservable payment process starts with Native Method
+      debugPrint('UI_U_ConfirmOrder => start reservable payment process with Onsite Method');
+      // if (snapshot.orderReservable.isOrderAutoConfirmable()) {
+      //   StoreProvider.of<AppState>(context).dispatch(CreateOrderReservableOnSiteAndPay(snapshot.orderReservable, PaymentType.onSite));
+      // } else {
+      //   StoreProvider.of<AppState>(context).dispatch(CreateOrderReservableOnSitePending(snapshot.orderReservable, PaymentType.onSite));
+      // }
+      Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) =>
+          PaypalPayment(
+            onFinish: (number) async {
+              print('order id: ${snapshot.order.orderId}');
+            },
+            tourist: true,
+            orderState: OrderState.fromReservableState(snapshot.orderReservable),
+          ),
+      ),
+      );
+    } else {
+      debugPrint('UI_U_ConfirmOrder => start direct payment process with Onsite Method');
+      // if (snapshot.order.isOrderAutoConfirmable()) {
+      //   StoreProvider.of<AppState>(context).dispatch(CreateOrderOnSiteAndPay(snapshot.order, PaymentType.onSite));
+      // } else {
+      //   StoreProvider.of<AppState>(context).dispatch(CreateOrderOnSitePending(snapshot.order, PaymentType.onSite));
+      // }
+      Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) =>
+          PaypalPayment(
+            onFinish: (number) async {
+              print('order id: ${snapshot.order.orderId}');
+            },
+            tourist: true,
+            orderState: snapshot.order,
+          ),
+      ),
+      );
+    }
+  }
 
   Future<void> _requestSaveCard() async {
     if (_card == null) {
@@ -1327,6 +1396,8 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
       return Image(width: SizeConfig.blockSizeHorizontal * 10, image: AssetImage('assets/img/googlePay.png'));
     } else if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.applePay)) {
       return Image(width: SizeConfig.blockSizeHorizontal * 10, image: AssetImage('assets/img/applePay.png'));
+    } else if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.paypal)) {
+      return Image(width: SizeConfig.blockSizeHorizontal * 10, image: AssetImage('assets/img/brand/paypal.png'));
     }
     return null;
   }
