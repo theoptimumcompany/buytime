@@ -1093,7 +1093,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
     }
   }
   Future<void> confirmationPayPal(BuildContext context, AppState snapshot) async {
-    Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) =>
+    /*Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) =>
         PaypalPayment(
           onFinish: (number) async {
             print('order id: '+number);
@@ -1102,7 +1102,8 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
           orderState: snapshot.order,
         ),
       ),
-    );
+    );*/
+    ///TODO Add order creation
     //StoreProvider.of<AppState>(context).dispatch(CreatingOrder());
     if (widget.reserve != null && widget.reserve) {
       /// Reservable payment process starts with Native Method

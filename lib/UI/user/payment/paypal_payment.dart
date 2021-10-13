@@ -1,4 +1,5 @@
 import 'dart:core';
+import 'package:Buytime/UI/user/booking/RUI_U_order_detail.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/services/paypal/paypal_service.dart';
 import 'package:Buytime/utils/size_config.dart';
@@ -29,7 +30,7 @@ class PaypalPaymentState extends State<PaypalPayment> {
   PaypalServices services = PaypalServices();
 
   // you can change default currency according to your need
-  Map<dynamic,dynamic> defaultCurrency = {"symbol": "USD ", "decimalDigits": 2, "symbolBeforeTheNumber": true, "currency": "USD"};
+  Map<dynamic,dynamic> defaultCurrency = {"symbol": "EUR ", "decimalDigits": 2, "symbolBeforeTheNumber": true, "currency": "EUR"};
 
   bool isEnableShipping = false;
   bool isEnableAddress = false;
@@ -159,54 +160,86 @@ class PaypalPaymentState extends State<PaypalPayment> {
     return temp;
   }
 
+  bool executionCompelte = false;
+
   @override
   Widget build(BuildContext context) {
     print(checkoutUrl);
 
     if (checkoutUrl != null) {
-      return Scaffold(
-        appBar: AppBar(
-          backgroundColor: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
-          leading: GestureDetector(
-            child: Icon(Icons.keyboard_arrow_left,
-              color: Colors.white,
-              size: 25.0,),
-            onTap: () => Navigator.pop(context),
-          ),
-        ),
-        body: WebView(
-          initialUrl: checkoutUrl,
-          javascriptMode: JavascriptMode.unrestricted,
-          navigationDelegate: (NavigationRequest request) {
-            if (request.url.contains(returnURL)) {
-              // final uri = Uri.parse(request.url);
-              final uri = Uri.parse(request.url);
-              final payerID = uri.queryParameters['PayerID'];
-              if (payerID != null) {
-                services
-                    .executePayment(Uri.parse(executeUrl), payerID, accessToken)
-                    .then((id) {
-                  widget.onFinish(id);
-                  Navigator.of(context).pop();
-                });
-              } else {
-                Navigator.of(context).pop();
-              }
-              Navigator.of(context).pop();
-            }
-            if (request.url.contains(cancelURL)) {
-              Navigator.of(context).pop();
-            }
-            return NavigationDecision.navigate;
+      return WillPopScope(
+          onWillPop: () async {
+            ///Block iOS Back Swipe
+            if (Navigator.of(context).userGestureInProgress)
+              return false;
+            else
+              return false;
           },
-        ),
+          child: Scaffold(
+            appBar: AppBar(
+              backgroundColor: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
+              leading: executionCompelte ? Container() : GestureDetector(
+                child: Icon(Icons.keyboard_arrow_left,
+                  color: Colors.white,
+                  size: 25.0,),
+                onTap: () => Navigator.pop(context),
+              ),
+              actions: [
+                executionCompelte ? Container(
+                    child: IconButton(
+                        icon: Icon(Icons.check, color: Colors.white),
+                        onPressed: () {
+                          Navigator.of(context).push(MaterialPageRoute(builder: (context) => RUI_U_OrderDetail("")),);
+                        }
+                    )
+                ) : Container()
+              ],
+            ),
+            body: WebView(
+              initialUrl: checkoutUrl,
+              javascriptMode: JavascriptMode.unrestricted,
+              navigationDelegate: (NavigationRequest request) {
+                if (request.url.contains(returnURL)) {
+                  // final uri = Uri.parse(request.url);
+                  final uri = Uri.parse(request.url);
+                  final payerID = uri.queryParameters['PayerID'];
+                  if (payerID != null) {
+                    ///TODO Add the order progress update here
+                    ///Payment success
+                    services.executePayment(Uri.parse(executeUrl), payerID, accessToken)
+                        .then((id) {
+                      debugPrint('PAYMENT EXECUTION SUCCESS - ID: $id');
+                      widget.onFinish(id);
+                      setState(() {
+                        executionCompelte = true;
+                      });
+                      Future.delayed(Duration(seconds: 2), (){
+                        //Navigator.of(context).push(MaterialPageRoute(builder: (context) => RUI_U_OrderDetail("")),);
+                        //Navigator.of(context).pop();
+                      });
+                    });
+                  } else {
+                    ///No payer id
+                    Navigator.of(context).pop();
+                  }
+                  //Navigator.of(context).pop();
+                }
+                if (request.url.contains(cancelURL)) {
+                  Navigator.of(context).pop();
+                }
+                return NavigationDecision.navigate;
+              },
+            ),
+          )
       );
     } else {
       return Scaffold(
         key: _scaffoldKey,
         appBar: AppBar(
           leading: IconButton(
-              icon: Icon(Icons.arrow_back),
+              icon: Icon(Icons.keyboard_arrow_left,
+                color: Colors.white,
+                size: 25.0,),
               onPressed: () {
                 Navigator.of(context).pop();
               }),
