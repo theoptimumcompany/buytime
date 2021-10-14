@@ -20,7 +20,7 @@ import 'package:Buytime/reusable/w_custom_bottom_button.dart';
 import 'package:Buytime/reusable/w_landing_card.dart';
 import 'package:Buytime/reusable/icon/material_design_icons.dart';
 import 'package:Buytime/reusable/menu/w_manager_drawer.dart';
-import 'package:Buytime/services/dynamic_links/dynamic_links_helper.dart';
+import 'package:Buytime/helper/dynamic_links/dynamic_links_helper.dart';
 import 'package:Buytime/utils/theme/buytime_config.dart';
 import 'package:animations/animations.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

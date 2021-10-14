@@ -10,7 +10,7 @@ import 'package:Buytime/reblox/reducer/order_detail_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reblox/reducer/statistics_reducer.dart';
-import 'package:Buytime/services/statistic/util.dart';
+import 'package:Buytime/helper/statistic/util.dart';
 import 'package:Buytime/services/stripe_payment_service_epic.dart';
 import 'package:Buytime/utils/utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -19,7 +19,7 @@ import 'package:intl/intl.dart';
 import 'package:redux_epics/redux_epics.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:uuid/uuid.dart';
-import 'order/util.dart';
+import '../helper/order/util.dart';
 
 List<DateTime> getPeriod(DateTime dateTime, context) {
   //String weekdayDate = DateFormat('E d M y').format(dateTime);

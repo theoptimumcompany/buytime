@@ -3,7 +3,7 @@ import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reusable/w_convention_discount.dart';
 import 'package:Buytime/reusable/w_green_choice.dart';
-import 'package:Buytime/services/convention/convention_helper.dart';
+import 'package:Buytime/helper/convention/convention_helper.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/utils/utils.dart';

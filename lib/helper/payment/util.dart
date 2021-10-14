@@ -2,9 +2,10 @@ import 'package:Buytime/reblox/model/card/card_state.dart';
 import 'package:Buytime/reblox/model/stripe/stripe_card_response.dart';
 import 'package:Buytime/reblox/model/stripe/stripe_state.dart';
 import 'package:Buytime/reblox/reducer/stripe_list_payment_reducer.dart';
-import 'package:Buytime/services/statistic/util.dart';
+import 'package:Buytime/helper/statistic/util.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+
 
 List<CardState> stripeStateToCardState( List<StripeState> stripeListState) {
   List<CardState> cardList = [];

@@ -14,7 +14,7 @@ import 'package:Buytime/reblox/reducer/booking_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reblox/reducer/service_list_snippet_list_reducer.dart';
 import 'package:Buytime/reusable/animation/enterExitRoute.dart';
-import 'package:Buytime/services/dynamic_links/dynamic_links_helper.dart';
+import 'package:Buytime/helper/dynamic_links/dynamic_links_helper.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/reblox/model/app_state.dart';

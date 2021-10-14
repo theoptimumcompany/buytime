@@ -10,11 +10,9 @@ import 'package:Buytime/reblox/model/order/order_detail_state.dart';
 import 'package:Buytime/reblox/model/order/order_entry.dart';
 import 'package:Buytime/reblox/model/stripe/stripe_card_response.dart';
 import 'package:Buytime/reblox/reducer/order_detail_reducer.dart';
-import 'package:Buytime/reblox/reducer/promotion/promotion_list_reducer.dart';
-import 'package:Buytime/reblox/reducer/promotion/promotion_reducer.dart';
 import 'package:Buytime/reblox/reducer/stripe_payment_reducer.dart';
 import 'package:Buytime/reusable/w_green_choice.dart';
-import 'package:Buytime/services/order/util.dart';
+import 'package:Buytime/helper/order/util.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:pay/pay.dart' as pay;
@@ -62,7 +60,6 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
   String _email = '';
   SetupIntent _setupIntentResult;
   String _userId = '';
-  bool _saveCard = false;
   AppState state;
   OrderState orderState;
   OrderReservableState orderReservableState;
@@ -76,33 +73,12 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
   @override
   void initState() {
     super.initState();
-
-    _controller = TabController(length: 2, vsync: this);
-    _controller.addListener(() {
-      setState(() {
-        _selectedIndex = _controller.index;
-      });
-
-      // print("Selected Index: " + _controller.index.toString());
-    });
   }
 
   @override
   void dispose() {
-    StoreProvider.of<AppState>(context).dispatch(ResetOrderIfPaidOrCanceled()); //TODO: FRANCESCO CONTROLLA CHE QUESTA DA ERRORE SUL BACK PAGE
+    StoreProvider.of<AppState>(context).dispatch(ResetOrderIfPaidOrCanceled()); //TODO: NON SI SA
     super.dispose();
-  }
-
-  void calculateEcoTax() {
-    setState(() {
-      totalECO = orderState.total;
-      partialECO = (totalECO * 2.5) / 100;
-      if (carbonCompensation) {
-        totalECO = totalECO + partialECO;
-      } else {
-        totalECO = totalECO - partialECO;
-      }
-    });
   }
 
   bool waitingForUser = true;
@@ -120,16 +96,17 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
       child: StoreConnector<AppState, AppState>(
           onInit: (store) {
             store?.dispatch(CheckStripeCustomer(true));
-            store?.dispatch(AddingStripePaymentMethodReset());
-            initializeCardList(store.state.cardListState);
+
+            ///TODO: Check Delete
+            //store?.dispatch(AddingStripePaymentMethodReset());
+            //initializeCardList(store.state.cardListState);
             resetPaymentTypeIfNotAccepted(store.state);
             debugPrint('UI_U_ConfirmOrder => ON INIT');
           },
           distinct: true,
           converter: (store) => store.state,
           builder: (context, snapshot) {
-            /// check if the stripe customer have been created for this user:
-
+            ///Check if order is reservable or not
             if (widget.reserve != null && widget.reserve) {
               orderReservableState = snapshot.orderReservable;
               if (widget.tourist ||
@@ -154,16 +131,16 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
               partialECO = (orderState.total * 2.5) / 100;
             }
 
+            ///Check If External Service
+            ///Doesn't work if there isn't a booking
             if (orderState != null && orderState.itemList.isNotEmpty && orderState.itemList.first.id_business != snapshot.business.id_firestore) {
-              debugPrint('UI_U_cart => ORDER BUSINESS ID: ${orderState.itemList.first.id_business} | BUSIENSS ID: ${snapshot.business.id_firestore}');
+              debugPrint('UI_U_cart => ORDER BUSINESS ID: ${orderState.itemList.first.id_business} | BUSINESS ID: ${snapshot.business.id_firestore}');
               isExternal = true;
-              // partialECO = (orderState.total * 2.5) / 100;
             }
 
             _email = snapshot.user.email;
             _userId = snapshot.user.uid;
             state = snapshot;
-            debugPrint('T_credit_cards => ON INIT');
             return Scaffold(
                 appBar: buildBuytimeAppbar(media, context),
                 body: SafeArea(
@@ -171,44 +148,13 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                     child: ConstrainedBox(
                       constraints: BoxConstraints(),
                       child: Column(
-                        // crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        // mainAxisSize: MainAxisSize.min,
                         children: [
                           Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               ///Recap
                               buildOrderRecap(context, snapshot, media),
-
-                              // ///Divider
-                              // Container(
-                              //   color: BuytimeTheme.BackgroundLightGrey,
-                              //   height: SizeConfig.safeBlockVertical * 1,
-                              // ),
-
-                              // ///Tab bar
-                              // PreferredSize(
-                              //   preferredSize: Size.fromHeight(kToolbarHeight),
-                              //   child: Container(
-                              //     decoration: BoxDecoration(
-                              //       color: widget.tourist != null && widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
-                              //       boxShadow: [
-                              //         BoxShadow(
-                              //           color: Colors.black87.withOpacity(.3),
-                              //           spreadRadius: 1,
-                              //           blurRadius: 1,
-                              //           offset: Offset(0, 2), // changes position of shadow
-                              //         ),
-                              //       ],
-                              //     ),
-                              //     child: buildTabBar(context),
-                              //   ),
-                              // ),
-                              // ///Tab value
-                              // (() {
-                              //   return buildTabsBeforeConfirmation(snapshot.booking.booking_code, snapshot.cardListState);
-                              // }())
                             ],
                           ),
 
@@ -246,11 +192,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
 
                                         FirebaseAnalytics().logEvent(
                                             name: 'open_payment_method_confirm_order',
-                                            parameters: {
-                                              'user_email': snapshot.user.email,
-                                              'date': DateTime.now().toString(),
-                                              'service_name': serviceNameFromOrder
-                                            });
+                                            parameters: {'user_email': snapshot.user.email, 'date': DateTime.now().toString(), 'service_name': serviceNameFromOrder});
                                         _modalChoosePaymentMethod(context, snapshot);
                                       },
                                     ),
@@ -268,11 +210,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                     Container(
                                       height: 26,
                                       width: 119,
-                                      decoration: BoxDecoration(
-                                        image: DecorationImage(
-                                          image: AssetImage('assets/img/brand/p_stripe.png')
-                                        )
-                                      ),
+                                      decoration: BoxDecoration(image: DecorationImage(image: AssetImage('assets/img/brand/p_stripe.png'))),
                                     )
                                   ],
                                 ),
@@ -281,12 +219,17 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                   ? ApplePayButton(
                                       width: SizeConfig.blockSizeHorizontal * 65,
                                       onPressed: _handlePayPress,
-                                    ) : Center(
+                                    )
+                                  : Center(
                                       child: Container(
                                         margin: EdgeInsets.only(bottom: 10),
                                         child: MaterialButton(
                                           //textColor: snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.paypal) ? BuytimeTheme.ManagerPrimary : BuytimeTheme.BackgroundWhite.withOpacity(0.3),
-                                          color: snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.paypal) ? BuytimeTheme.Secondary : widget.tourist != null && widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
+                                          color: snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.paypal)
+                                              ? BuytimeTheme.Secondary
+                                              : widget.tourist != null && widget.tourist
+                                                  ? BuytimeTheme.BackgroundCerulean
+                                                  : BuytimeTheme.UserPrimary,
                                           disabledColor: BuytimeTheme.SymbolLightGrey,
                                           //padding: EdgeInsets.all(media.width * 0.03),
                                           shape: RoundedRectangleBorder(
@@ -297,7 +240,9 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                             width: SizeConfig.blockSizeHorizontal * 57,
                                             height: 44,
                                             child: Text(
-                                              !(widget.reserve != null && widget.reserve) ? AppLocalizations.of(context).confirmPayment : '${AppLocalizations.of(context).completeBooking.toUpperCase()}',
+                                              !(widget.reserve != null && widget.reserve)
+                                                  ? AppLocalizations.of(context).confirmPayment
+                                                  : '${AppLocalizations.of(context).completeBooking.toUpperCase()}',
                                               textAlign: TextAlign.center,
                                               style: TextStyle(
                                                 letterSpacing: 1,
@@ -311,18 +256,15 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                           onPressed: () {
                                             FirebaseAnalytics().logEvent(
                                                 name: 'ok_confirm_order',
-                                                parameters: {
-                                                  'user_email': snapshot.user.email,
-                                                  'date': DateTime.now().toString(),
-                                                  'payment_method': snapshot.stripe.chosenPaymentMethod
-                                                });
+                                                parameters: {'user_email': snapshot.user.email, 'date': DateTime.now().toString(), 'payment_method': snapshot.stripe.chosenPaymentMethod});
 
                                             snapshot.order.total = double.parse(snapshot.order.total.toStringAsFixed(2));
                                             snapshot.order.totalPromoDiscount = double.parse(snapshot.order.totalPromoDiscount.toStringAsFixed(2));
 
                                             if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.card)) {
                                               String selectedCardPaymentMethodId = snapshot.cardListState.cardList[0].stripeState.stripeCard.paymentMethodId;
-                                              confirmationCard(context, snapshot, snapshot.stripe.stripeCard.last4, snapshot.stripe.stripeCard.brand, snapshot.stripe.stripeCard.country, selectedCardPaymentMethodId);
+                                              confirmationCard(context, snapshot, snapshot.stripe.stripeCard.last4, snapshot.stripe.stripeCard.brand, snapshot.stripe.stripeCard.country,
+                                                  selectedCardPaymentMethodId);
                                             } else if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.applePay)) {
                                               confirmationNative(context, snapshot);
                                             } else if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.googlePay)) {
@@ -331,7 +273,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                               confirmationRoom(context, snapshot);
                                             } else if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.onSite)) {
                                               confirmationOnSite(context, snapshot);
-                                            }else if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.paypal)) {
+                                            } else if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.paypal)) {
                                               confirmationPayPal(context, snapshot);
                                             }
                                             // if (snapshot.promotionState.timesUsed >= snapshot.promotionState.limit) {
@@ -356,7 +298,10 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
 
   Text getCurrentPaymentMethod(BuildContext context, AppState snapshot) {
     if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.card)) {
-      if (snapshot.cardListState != null && snapshot.cardListState.cardList != null && snapshot.cardListState.cardList.first.stripeState != null && snapshot.cardListState.cardList.first.stripeState.stripeCard != null) {
+      if (snapshot.cardListState != null &&
+          snapshot.cardListState.cardList != null &&
+          snapshot.cardListState.cardList.first.stripeState != null &&
+          snapshot.cardListState.cardList.first.stripeState.stripeCard != null) {
         return Text(snapshot.cardListState.cardList.first.stripeState.stripeCard.brand + " " + snapshot.cardListState.cardList.first.stripeState.stripeCard.last4);
       }
       return Text(AppLocalizations.of(context).creditCard.replaceAll(":", ""));
@@ -368,7 +313,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
       return Text(AppLocalizations.of(context).googlePay);
     } else if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.applePay)) {
       return Text(AppLocalizations.of(context).applePay);
-    }else if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.paypal)) {
+    } else if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.paypal)) {
       return Text(AppLocalizations.of(context).paypal);
     }
     return Text(AppLocalizations.of(context).choosePaymentMethod);
@@ -510,7 +455,6 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
         : Container();
   }
 
-
   ///Tab bar
   TabBar buildTabBar(BuildContext context) {
     return TabBar(
@@ -601,11 +545,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                             onTap: () {
                               FirebaseAnalytics().logEvent(
                                   name: 'payment_method_specific_confirm_order',
-                                  parameters: {
-                                    'user_email': snapshot.user.email,
-                                    'date': DateTime.now().toString(),
-                                    'payment_method': Utils.enumToString(PaymentType.card)
-                                  });
+                                  parameters: {'user_email': snapshot.user.email, 'date': DateTime.now().toString(), 'payment_method': Utils.enumToString(PaymentType.card)});
                               if (cardFromFirestore != null) {
                                 StoreProvider.of<AppState>(context).dispatch(ChoosePaymentMethod(Utils.enumToString(PaymentType.card)));
                                 Navigator.of(context).pop();
@@ -627,11 +567,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                         onTap: () {
                           FirebaseAnalytics().logEvent(
                               name: 'payment_method_specific_confirm_order',
-                              parameters: {
-                                'user_email': snapshot.user.email,
-                                'date': DateTime.now().toString(),
-                                'payment_method': Utils.enumToString(PaymentType.applePay)
-                              });
+                              parameters: {'user_email': snapshot.user.email, 'date': DateTime.now().toString(), 'payment_method': Utils.enumToString(PaymentType.applePay)});
                           StoreProvider.of<AppState>(context).dispatch(ChoosePaymentMethod(Utils.enumToString(PaymentType.applePay)));
                           Navigator.of(context).pop();
                         },
@@ -654,11 +590,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                         onTap: () {
                           FirebaseAnalytics().logEvent(
                               name: 'payment_method_specific_confirm_order',
-                              parameters: {
-                                'user_email': snapshot.user.email,
-                                'date': DateTime.now().toString(),
-                                'payment_method': Utils.enumToString(PaymentType.room)
-                              });
+                              parameters: {'user_email': snapshot.user.email, 'date': DateTime.now().toString(), 'payment_method': Utils.enumToString(PaymentType.room)});
                           StoreProvider.of<AppState>(context).dispatch(ChoosePaymentMethod(Utils.enumToString(PaymentType.room)));
                           Navigator.of(context).pop();
                         },
@@ -672,11 +604,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                         onTap: () {
                           FirebaseAnalytics().logEvent(
                               name: 'payment_method_specific_confirm_order',
-                              parameters: {
-                                'user_email': snapshot.user.email,
-                                'date': DateTime.now().toString(),
-                                'payment_method': Utils.enumToString(PaymentType.onSite)
-                              });
+                              parameters: {'user_email': snapshot.user.email, 'date': DateTime.now().toString(), 'payment_method': Utils.enumToString(PaymentType.onSite)});
                           StoreProvider.of<AppState>(context).dispatch(ChoosePaymentMethod(Utils.enumToString(PaymentType.onSite)));
                           Navigator.of(context).pop();
                         },
@@ -711,14 +639,12 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                   Text(
                     () {
                       if (widget.reserve != null && widget.reserve) {
-                        // print("UI_U_ConfirmOrder => " + snapshot.orderReservable.itemList.length.toString());
                         return snapshot.orderReservable.itemList.length > 1
                             ? AppLocalizations.of(context).multipleOrders
                             : snapshot.orderReservable != null && snapshot.orderReservable.itemList.isNotEmpty
                                 ? Utils.retriveField(Localizations.localeOf(context).languageCode, snapshot.orderReservable.itemList.first.name)
                                 : 'test';
                       } else {
-                        // print("UI_U_ConfirmOrder => " + snapshot.order.itemList.length.toString());
                         return snapshot.order.itemList.length > 1
                             ? AppLocalizations.of(context).multipleOrders
                             : snapshot.order != null && snapshot.order.itemList.isNotEmpty
@@ -731,8 +657,6 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                       fontFamily: BuytimeTheme.FontFamily,
                       color: BuytimeTheme.TextBlack,
                       fontSize: 16,
-
-                      /// SizeConfig.safeBlockHorizontal * 4
                       fontWeight: FontWeight.w600,
                     ),
                   )
@@ -743,13 +667,10 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
 
           ///Total Price
           Container(
-              //color: Colors.black87,
               child: () {
             if (widget.reserve != null && widget.reserve) {
-              // print("UI_U_ConfirmOrder => " + snapshot.orderReservable.itemList.length.toString());
-              return OrderTotal(/*totalECO: totalECO,*/ media: media, orderState: OrderState.fromReservableState(snapshot.orderReservable));
+              return OrderTotal(media: media, orderState: OrderState.fromReservableState(snapshot.orderReservable));
             } else {
-              // print("UI_U_ConfirmOrder => " + snapshot.order.itemList.length.toString());
               return OrderTotal(media: media, orderState: snapshot.order);
             }
           }()),
@@ -815,13 +736,11 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                           activeColor: BuytimeTheme.ManagerPrimary,
                           value: carbonCompensation,
                           onChanged: (value) {
-                            FirebaseAnalytics().logEvent(
-                                name: 'green_confirm_order',
-                                parameters: {
-                                  'user_email': snapshot.user.email,
-                                  'date': DateTime.now().toString(),
-                                  'service_name': snapshot.serviceState.name.isNotEmpty ? snapshot.serviceState.name : 'no name found',
-                                });
+                            FirebaseAnalytics().logEvent(name: 'green_confirm_order', parameters: {
+                              'user_email': snapshot.user.email,
+                              'date': DateTime.now().toString(),
+                              'service_name': snapshot.serviceState.name.isNotEmpty ? snapshot.serviceState.name : 'no name found',
+                            });
                             setState(() {
                               carbonCompensation = value;
                               if (widget.reserve != null && widget.reserve) {
@@ -970,21 +889,26 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
       debugPrint('UI_U_ConfirmOrder => order is isOrderAutoConfirmable ' + snapshot.orderReservable.isOrderAutoConfirmable().toString());
       if (snapshot.orderReservable.isOrderAutoConfirmable()) {
         if (Utils.getTimeInterval(orderReservableState) == OrderTimeInterval.directPayment) {
-          StoreProvider.of<AppState>(context).dispatch(CreateOrderReservableCardAndPay(snapshot.orderReservable, last4, brand, country, selectedCardPaymentMethodId, PaymentType.card, context, snapshot.business.stripeCustomerId));
+          StoreProvider.of<AppState>(context)
+              .dispatch(CreateOrderReservableCardAndPay(snapshot.orderReservable, last4, brand, country, selectedCardPaymentMethodId, PaymentType.card, context, snapshot.business.stripeCustomerId));
         } else if (Utils.getTimeInterval(orderReservableState) == OrderTimeInterval.holdAndReminder) {
-          StoreProvider.of<AppState>(context).dispatch(CreateOrderReservableCardAndHold(snapshot.orderReservable, last4, brand, country, selectedCardPaymentMethodId, PaymentType.card, context, snapshot.business.stripeCustomerId));
+          StoreProvider.of<AppState>(context)
+              .dispatch(CreateOrderReservableCardAndHold(snapshot.orderReservable, last4, brand, country, selectedCardPaymentMethodId, PaymentType.card, context, snapshot.business.stripeCustomerId));
         } else if (Utils.getTimeInterval(orderReservableState) == OrderTimeInterval.reminder) {
-          StoreProvider.of<AppState>(context).dispatch(CreateOrderReservableCardAndReminder(snapshot.orderReservable, last4, brand, country, selectedCardPaymentMethodId, PaymentType.card, context, snapshot.business.stripeCustomerId));
+          StoreProvider.of<AppState>(context).dispatch(
+              CreateOrderReservableCardAndReminder(snapshot.orderReservable, last4, brand, country, selectedCardPaymentMethodId, PaymentType.card, context, snapshot.business.stripeCustomerId));
         }
       } else {
         debugPrint('UI_U_ConfirmOrder => dispatching pending order creation');
-        StoreProvider.of<AppState>(context).dispatch(CreateOrderReservableCardPending(snapshot.orderReservable, last4, brand, country, selectedCardPaymentMethodId, PaymentType.card, context, snapshot.business.stripeCustomerId));
+        StoreProvider.of<AppState>(context)
+            .dispatch(CreateOrderReservableCardPending(snapshot.orderReservable, last4, brand, country, selectedCardPaymentMethodId, PaymentType.card, context, snapshot.business.stripeCustomerId));
       }
     } else {
       /// Direct Card Payment
       debugPrint('UI_U_ConfirmOrder => start direct payment process with Credit Card');
       if (snapshot.order.isOrderAutoConfirmable()) {
-        StoreProvider.of<AppState>(context).dispatch(CreateOrderCardAndPay(snapshot.order, last4, brand, country, selectedCardPaymentMethodId, PaymentType.card, context, snapshot.business.stripeCustomerId));
+        StoreProvider.of<AppState>(context)
+            .dispatch(CreateOrderCardAndPay(snapshot.order, last4, brand, country, selectedCardPaymentMethodId, PaymentType.card, context, snapshot.business.stripeCustomerId));
       } else {
         StoreProvider.of<AppState>(context).dispatch(CreateOrderCardPending(snapshot.order, last4, brand, country, selectedCardPaymentMethodId, PaymentType.card));
       }
@@ -1010,7 +934,8 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
         } else if (Utils.getTimeInterval(orderReservableState) == OrderTimeInterval.holdAndReminder) {
           StoreProvider.of<AppState>(context).dispatch(CreateOrderReservableNativeAndHold(snapshot.orderReservable, paymentMethod, PaymentType.native, context, snapshot.business.stripeCustomerId));
         } else if (Utils.getTimeInterval(orderReservableState) == OrderTimeInterval.reminder) {
-          StoreProvider.of<AppState>(context).dispatch(CreateOrderReservableNativeAndReminder(snapshot.orderReservable, paymentMethod, PaymentType.native, context, snapshot.business.stripeCustomerId));
+          StoreProvider.of<AppState>(context)
+              .dispatch(CreateOrderReservableNativeAndReminder(snapshot.orderReservable, paymentMethod, PaymentType.native, context, snapshot.business.stripeCustomerId));
         }
       } else {
         StoreProvider.of<AppState>(context).dispatch(CreateOrderReservableNativePending(snapshot.orderReservable, paymentMethod, PaymentType.native, context, snapshot.business.stripeCustomerId));
@@ -1092,6 +1017,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
       }
     }
   }
+
   Future<void> confirmationPayPal(BuildContext context, AppState snapshot) async {
     /*Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) =>
         PaypalPayment(
@@ -1103,6 +1029,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
         ),
       ),
     );*/
+
     ///TODO Add order creation
     //StoreProvider.of<AppState>(context).dispatch(CreatingOrder());
     if (widget.reserve != null && widget.reserve) {
@@ -1113,15 +1040,16 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
       // } else {
       //   StoreProvider.of<AppState>(context).dispatch(CreateOrderReservableOnSitePending(snapshot.orderReservable, PaymentType.onSite));
       // }
-      Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) =>
-          PaypalPayment(
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (BuildContext context) => PaypalPayment(
             onFinish: (number) async {
               print('order id: ${snapshot.order.orderId}');
             },
             tourist: true,
             orderState: OrderState.fromReservableState(snapshot.orderReservable),
           ),
-      ),
+        ),
       );
     } else {
       debugPrint('UI_U_ConfirmOrder => start direct payment process with Onsite Method');
@@ -1130,15 +1058,16 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
       // } else {
       //   StoreProvider.of<AppState>(context).dispatch(CreateOrderOnSitePending(snapshot.order, PaymentType.onSite));
       // }
-      Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) =>
-          PaypalPayment(
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (BuildContext context) => PaypalPayment(
             onFinish: (number) async {
               print('order id: ${snapshot.order.orderId}');
             },
             tourist: true,
             orderState: snapshot.order,
           ),
-      ),
+        ),
       );
     }
   }
@@ -1267,7 +1196,6 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
       context,
       MaterialPageRoute(builder: (context) => RUI_U_OrderDetail("")),
     );
-
   }
 
   Future<Map<String, dynamic>> fetchPaymentIntentClientSecret(OrderState orderState) async {
@@ -1360,9 +1288,6 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
               StoreProvider.of<AppState>(context).dispatch(SetOrder(OrderState().toEmpty()));
               Navigator.of(context).popUntil(ModalRoute.withName('/bookingPage'));
             } else {
-              /*StoreProvider.of<AppState>(context).dispatch({
-                navigatorKey.currentState.pop()
-              });*/
               Navigator.of(context).pop();
             }
           }),

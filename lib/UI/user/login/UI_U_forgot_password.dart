@@ -5,7 +5,7 @@ import 'package:Buytime/environment_abstract.dart';
 import 'package:Buytime/reblox/model/role/role.dart';
 import 'package:Buytime/reblox/model/snippet/device.dart';
 import 'package:Buytime/reblox/model/snippet/token.dart';
-import 'package:Buytime/services/messaging/messaging_helper.dart';
+import 'package:Buytime/helper/messaging/messaging_helper.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/reblox/model/user/user_state.dart';

@@ -227,9 +227,10 @@ class ConfirmOrderDetailWait
 class AddingStripePaymentMethod {
   AddingStripePaymentMethod();
 }
-class AddingStripePaymentMethodReset {
-  AddingStripePaymentMethodReset();
-}
+///TODO: Check Delete
+// class AddingStripePaymentMethodReset {
+//   AddingStripePaymentMethodReset();
+// }
 class DeletingStripePaymentMethod {
   DeletingStripePaymentMethod();
 }
@@ -298,10 +299,11 @@ OrderDetailState orderDetailReducer(OrderDetailState state, action) {
     orderState.addCardProgress = Utils.enumToString(AddCardStatus.inProgress);
     return orderState;
   }
-  if (action is AddingStripePaymentMethodReset) {
-    orderState.addCardProgress = Utils.enumToString(AddCardStatus.notStarted);
-    return orderState;
-  }
+  ///TODO: Check Delete
+  // if (action is AddingStripePaymentMethodReset) {
+  //   orderState.addCardProgress = Utils.enumToString(AddCardStatus.notStarted);
+  //   return orderState;
+  // }
   if (action is AddedStripePaymentMethod) {
     orderState.addCardProgress = Utils.enumToString(AddCardStatus.done);
     return orderState;

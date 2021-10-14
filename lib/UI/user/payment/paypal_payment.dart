@@ -1,7 +1,7 @@
 import 'dart:core';
 import 'package:Buytime/UI/user/booking/RUI_U_order_detail.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
-import 'package:Buytime/services/paypal/paypal_service.dart';
+import 'package:Buytime/helper/payment/paypal/paypal_service.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:flutter/material.dart';

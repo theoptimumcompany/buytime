@@ -17,8 +17,8 @@ import 'package:Buytime/reblox/reducer/service/card_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/statistics_reducer.dart';
 import 'package:Buytime/reblox/reducer/stripe_list_payment_reducer.dart';
 import 'package:Buytime/reblox/reducer/stripe_payment_reducer.dart';
-import 'package:Buytime/services/payment/util.dart';
-import 'package:Buytime/services/statistic/util.dart';
+import 'package:Buytime/helper/payment/util.dart';
+import 'package:Buytime/helper/statistic/util.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -191,7 +191,8 @@ class CheckStripeCustomerService implements EpicClass<AppState> {
     }).expand((element) => [
       CheckedStripeCustomer(stripeCustomerCreated),
       UpdateStatistics(statisticsState),
-      if (stripeCustomerCreated && updateCardList) StripeCardListRequest('${userId}${Environment().config.stripeSuffix}') else null,
+      ///TODO: Check Delete
+     // if (stripeCustomerCreated && updateCardList) StripeCardListRequest('${userId}${Environment().config.stripeSuffix}') else null,
     ]);
   }
 }
