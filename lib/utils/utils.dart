@@ -426,7 +426,8 @@ class Utils {
 
   static Future<String> singleGoogleTranslate(String translateFrom, String translateTo, String ogText) async {
     //debugPrint('LanguageCode: ${language[i]} | Flag: ${flags[i]}');
-    var url = Uri.https('translation.googleapis.com', '/language/translate/v2', {'source': '${translateFrom}', 'target': '${translateTo}', 'key': '${Environment().config.googleApiKey}', 'q': '${ogText}'});
+    //var url = Uri.https('translation.googleapis.com', '/language/translate/v2', {'source': '${translateFrom}', 'target': '${translateTo}', 'key': '${Environment().config.googleApiKey}', 'q': '${ogText}'});
+    var url = Uri.https('translation.googleapis.com', '/language/translate/v2', { 'target': '${translateTo}', 'key': '${Environment().config.googleApiKey}', 'q': '${ogText}'});
     final http.Response response = await http.get(url, headers: {
       //HttpHeaders.contentTypeHeader : "utf-8",
       'charset': "utf-8"

@@ -52,6 +52,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:location/location.dart' as loc;
 import 'package:palette_generator/palette_generator.dart';
@@ -465,6 +466,26 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
 
   }
 
+  /*Future<void> checkout()async{
+    /// retrieve data from the backend
+    final paymentSheetData = backend.fetchPaymentSheetData();
+
+    await Stripe.instance.initPaymentSheet(
+        paymentSheetParameters: SetupPaymentSheetParameters(
+          applePay: true,
+          googlePay: true,
+          style: ThemeMode.dark,
+          testEnv: true,
+          merchantCountryCode: 'DE',
+          merchantDisplayName: 'Flutter Stripe Store Demo',
+          customerId: _paymentSheetData!['customer'],
+          paymentIntentClientSecret: _paymentSheetData!['paymentIntent'],
+          customerEphemeralKeySecret: _paymentSheetData!['ephemeralKey'],
+        ));
+
+    await Stripe.instance.presentPaymentSheet();
+  }*/
+
   @override
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context).size;
@@ -611,7 +632,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  /*IconButton(
+                                 /* IconButton(
                                     key: Key('action_button_discover'),
                                     icon: Icon(
                                       Icons.payment,

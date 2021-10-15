@@ -66,7 +66,7 @@ dependencies:
 #    git:
 #      url: git://github.com/flutter-stripe/flutter_stripe.git
 #      path: packages/stripe
-  pay: ^1.0.1
+  pay: ^1.0.6
   pay_android: ^1.0.1
   credit_card_input_form: ^2.3.0
   http: ^0.13.0

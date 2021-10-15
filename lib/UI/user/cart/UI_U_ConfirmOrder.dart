@@ -234,8 +234,9 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                               debugPrint("ui_u_confirmOrder stripe paymentSheet");
 
                                               Stripe.publishableKey = "pk_live_51HS20eHr13hxRBpCLHzfi0SXeqw8Efu911cWdYEE96BAV0zSOesvE83OiqqzRucKIxgCcKHUvTCJGY6cXRtkDVCm003CmGXYzy";
+                                              //Stripe.publishableKey = "pk_test_51HS20eHr13hxRBpCZl1V0CKFQ7XzJbku7UipKLLIcuNGh3rp4QVsEDCThtV0l2AQ3jMtLsDN2zdC0fQ4JAK6yCOp003FIf3Wjz";
                                               final paymentSheetData = await requestPaymentSheet(snapshot.user.uid, totalToSend);
-                                              Stripe.merchantIdentifier = 'any string works';
+                                              Stripe.merchantIdentifier = 'com.theoptimumcompany.buytime';
                                               await Stripe.instance.applySettings();
 
                                               debugPrint("ui_u_confirmOrder stripe paymentSheet parameters + ${paymentSheetData['customer']} + ${paymentSheetData['paymentIntent']} + ${paymentSheetData['ephemeralKey']}");
@@ -243,7 +244,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
 
                                               await Stripe.instance.initPaymentSheet(
                                                   paymentSheetParameters: SetupPaymentSheetParameters(
-                                                    applePay: true,
+                                                    applePay: Stripe.instance.isApplePaySupported.value,
                                                     googlePay: true,
                                                     style: ThemeMode.light,
                                                     testEnv: true,
@@ -377,6 +378,15 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                         },
                       )
                     : Container(),
+                ListTile(
+                  leading: Image(width: SizeConfig.blockSizeHorizontal * 10, image: AssetImage('assets/img/googlePay.png')),
+                  title: new Text(AppLocalizations.of(context).googlePay),
+                  onTap: () {
+                    FirebaseAnalytics().logEvent(name: 'payment_method_specific_confirm_order', parameters: {'user_email': snapshot.user.email, 'date': DateTime.now().toString(), 'payment_method': Utils.enumToString(PaymentType.googlePay)});
+                    StoreProvider.of<AppState>(context).dispatch(ChoosePaymentMethod(Utils.enumToString(PaymentType.googlePay)));
+                    Navigator.of(context).pop();
+                  },
+                ),
                 !widget.tourist && snapshot.serviceState.paymentMethodRoom && !isExternal ? Divider() : Container(),
                 !widget.tourist && snapshot.serviceState.paymentMethodRoom && !isExternal
                     ? ListTile(
