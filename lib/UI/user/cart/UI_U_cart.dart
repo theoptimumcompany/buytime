@@ -561,7 +561,10 @@ class CartState extends State<Cart> {
                                               hoverElevation: 0,
                                               focusElevation: 0,
                                               highlightElevation: 0,
-                                              onPressed: (snapshot.order.tableNumber != '' && businessIsBar(context)) || !businessIsBar(context) ?  () {
+                                              onPressed:
+                                                  (orderState.tableNumber != null && orderState.tableNumber != '' && businessIsBar(context)) ||
+                                                  !businessIsBar(context)
+                                                  ?  () {
                                                 auth.User user = auth.FirebaseAuth.instance.currentUser;
                                                 if (user == null) {
                                                   Navigator.push(

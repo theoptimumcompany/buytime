@@ -160,7 +160,7 @@ class PaypalPaymentState extends State<PaypalPayment> {
     return temp;
   }
 
-  bool executionCompelte = false;
+  bool executionComplete = false;
 
   @override
   Widget build(BuildContext context) {
@@ -178,14 +178,14 @@ class PaypalPaymentState extends State<PaypalPayment> {
           child: Scaffold(
             appBar: AppBar(
               backgroundColor: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
-              leading: executionCompelte ? Container() : GestureDetector(
+              leading: executionComplete ? Container() : GestureDetector(
                 child: Icon(Icons.keyboard_arrow_left,
                   color: Colors.white,
                   size: 25.0,),
                 onTap: () => Navigator.pop(context),
               ),
               actions: [
-                executionCompelte ? Container(
+                executionComplete ? Container(
                     child: IconButton(
                         icon: Icon(Icons.check, color: Colors.white),
                         onPressed: () {
@@ -211,7 +211,7 @@ class PaypalPaymentState extends State<PaypalPayment> {
                       debugPrint('PAYMENT EXECUTION SUCCESS - ID: $id');
                       widget.onFinish(id);
                       setState(() {
-                        executionCompelte = true;
+                        executionComplete = true;
                       });
                       Future.delayed(Duration(seconds: 2), (){
                         //Navigator.of(context).push(MaterialPageRoute(builder: (context) => RUI_U_OrderDetail("")),);

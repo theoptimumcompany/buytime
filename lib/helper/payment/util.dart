@@ -1,10 +1,14 @@
+import 'dart:convert';
+
 import 'package:Buytime/reblox/model/card/card_state.dart';
 import 'package:Buytime/reblox/model/stripe/stripe_card_response.dart';
 import 'package:Buytime/reblox/model/stripe/stripe_state.dart';
-import 'package:Buytime/reblox/reducer/stripe_list_payment_reducer.dart';
+import 'package:http/http.dart' as http;
 import 'package:Buytime/helper/statistic/util.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+
+import '../../environment_abstract.dart';
 
 
 List<CardState> stripeStateToCardState( List<StripeState> stripeListState) {
@@ -51,4 +55,14 @@ Future <List<CardState>> stripeCardListMaker(dynamic event, List<StripeState> st
     return stripeStateToCardState(stripeStateList);
   }
   statisticsComputation();
+}
+
+Future<Map<String, dynamic>> requestPaymentSheet(String userId, double total) async {
+  final url = Uri.https("${Environment().config.cloudFunctionLink}", "/stripePaymentSheet", {'userId': '$userId', 'total': total.toString()});
+  final response = await http.get(url);
+  final Map<String, dynamic> bodyResponse = json.decode(response.body);
+  if (bodyResponse['error'] != null) {
+    throw Exception(bodyResponse['error']);
+  }
+  return bodyResponse;
 }
