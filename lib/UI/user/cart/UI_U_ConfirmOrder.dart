@@ -236,7 +236,8 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                               Stripe.publishableKey = "pk_live_51HS20eHr13hxRBpCLHzfi0SXeqw8Efu911cWdYEE96BAV0zSOesvE83OiqqzRucKIxgCcKHUvTCJGY6cXRtkDVCm003CmGXYzy";
                                               //Stripe.publishableKey = "pk_test_51HS20eHr13hxRBpCZl1V0CKFQ7XzJbku7UipKLLIcuNGh3rp4QVsEDCThtV0l2AQ3jMtLsDN2zdC0fQ4JAK6yCOp003FIf3Wjz";
                                               final paymentSheetData = await requestPaymentSheet(snapshot.user.uid, totalToSend);
-                                              Stripe.merchantIdentifier = 'com.theoptimumcompany.buytime';
+                                              Stripe.merchantIdentifier = 'merchant.theoptimumcompany.buytime';
+                                              // Stripe.merchantIdentifier = 'com.theoptimumcompany.buytime';
                                               await Stripe.instance.applySettings();
 
                                               debugPrint("ui_u_confirmOrder stripe paymentSheet parameters + ${paymentSheetData['customer']} + ${paymentSheetData['paymentIntent']} + ${paymentSheetData['ephemeralKey']}");
@@ -249,7 +250,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                                     style: ThemeMode.light,
                                                     testEnv: true,
                                                     merchantCountryCode: 'DE',
-                                                    merchantDisplayName: 'Flutter Stripe Store Demo',
+                                                    merchantDisplayName: 'Buytime | The Optimum Company S.R.L.i.',
                                                     customerId: paymentSheetData['customer'],
                                                     paymentIntentClientSecret: paymentSheetData['paymentIntent'],
                                                     customerEphemeralKeySecret: paymentSheetData['ephemeralKey'],
