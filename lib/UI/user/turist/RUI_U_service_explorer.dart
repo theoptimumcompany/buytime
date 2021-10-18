@@ -11,6 +11,7 @@ import 'package:Buytime/UI/user/landing/invite_guest_form.dart';
 import 'package:Buytime/UI/user/login/UI_U_home.dart';
 import 'package:Buytime/UI/user/login/UI_U_registration.dart';
 import 'package:Buytime/UI/user/payment/paypal_payment.dart';
+import 'package:Buytime/helper/payment/satispay/satispay_service.dart';
 import 'package:Buytime/reblox/model/role/role.dart';
 import 'package:Buytime/reblox/reducer/app_reducer.dart';
 import 'package:Buytime/reblox/reducer/booking_list_reducer.dart';
@@ -632,7 +633,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                 /* IconButton(
+                                  /*IconButton(
                                     key: Key('action_button_discover'),
                                     icon: Icon(
                                       Icons.payment,
@@ -640,8 +641,8 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                       size: 25.0,
                                     ),
                                     tooltip: AppLocalizations.of(context).comeBack,
-                                    onPressed: () {
-                                      Navigator.of(context).push(
+                                    onPressed: () async {
+                                      *//*Navigator.of(context).push(
                                         MaterialPageRoute(
                                           builder: (BuildContext context) => PaypalPayment(
                                             onFinish: (number) async {
@@ -653,7 +654,8 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                             tourist: true,
                                           ),
                                         ),
-                                      );
+                                      );*//*
+                                      await SatispayServices().createPaypalPayment();
                                     },
                                   ),*/
                                   ///Notification
