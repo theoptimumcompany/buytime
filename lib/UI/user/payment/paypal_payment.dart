@@ -206,7 +206,7 @@ class PaypalPaymentState extends State<PaypalPayment> {
               javascriptMode: JavascriptMode.unrestricted,
               navigationDelegate: (NavigationRequest request) async {
                 debugPrint('RETURN URL: $returnURL - REQUEST: $request');
-                if (request.url.contains(returnURL) && request.url.contains('sandbox')) {
+                if (request.url.contains(returnURL)) {
                   // final uri = Uri.parse(request.url);
                   final uri = Uri.parse(request.url);
                   final payerID = uri.queryParameters['PayerID'];
@@ -248,6 +248,8 @@ class PaypalPaymentState extends State<PaypalPayment> {
                 if (request.url.contains(cancelURL)) {
                   Navigator.of(context).pop();
                 }
+
+
                 return NavigationDecision.navigate;
               },
             ),
