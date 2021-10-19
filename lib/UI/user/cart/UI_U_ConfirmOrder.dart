@@ -766,7 +766,6 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
   }
 
   Future<void> confirmationPayPal(BuildContext context, AppState snapshot) async {
-
     if (widget.reserve != null && widget.reserve) {
       /// Reservable payment process starts with Native Method
       debugPrint('UI_U_ConfirmOrder => start reservable payment process with Onsite Method');
@@ -777,6 +776,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
               print('order id: ${snapshot.order.orderId}');
             },
             tourist: true,
+            reserve: widget.reserve,
             orderState: OrderState.fromReservableState(snapshot.orderReservable),
           ),
         ),
@@ -790,6 +790,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
               print('order id: ${snapshot.order.orderId}');
             },
             tourist: true,
+            reserve: widget.reserve,
             orderState: snapshot.order,
           ),
         ),

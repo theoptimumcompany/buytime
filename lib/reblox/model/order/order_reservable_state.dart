@@ -13,6 +13,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 
 import '../app_state.dart';
+import 'order_state.dart';
 
 part 'order_reservable_state.g.dart';
 
@@ -118,6 +119,39 @@ class OrderReservableState {
     this.cardType = state.cardType;
     this.cardLast4Digit = state.cardLast4Digit;
     this.confirmOrderWait = state.confirmOrderWait;
+    this.paymentMethod = state.paymentMethod;
+    this.location = state.location;
+    this.openUntil = state.openUntil;
+    this.tableNumber = state.tableNumber;
+    this.cancellationReason = state.cancellationReason;
+    this.carbonCompensation = state.carbonCompensation;
+    this.totalPromoDiscount = state.totalPromoDiscount;
+    this.promotionId = state.promotionId;
+  }
+
+  OrderReservableState.fromReservableState(OrderState state) {
+    this.itemList = state.itemList;
+    this.date = state.date;
+    this.creationDate = state.creationDate;
+    this.position = state.position;
+    this.total = state.total;
+    this.tip = state.tip;
+    this.tax = state.tax;
+    this.taxPercent = state.taxPercent;
+    this.amount = state.amount;
+    this.progress = state.progress;
+    this.addCardProgress = state.addCardProgress;
+    this.navigate = state.navigate;
+    this.business = state.business;
+    this.businessId = state.businessId;
+    this.businessIdForGiveback = state.businessIdForGiveback;
+    this.userId = state.userId;
+    this.orderId = state.orderId;
+    this.user = state.user;
+    this.selected = state.selected;
+    this.cartCounter = state.cartCounter;
+    this.cardType = state.cardType;
+    this.cardLast4Digit = state.cardLast4Digit;
     this.paymentMethod = state.paymentMethod;
     this.location = state.location;
     this.openUntil = state.openUntil;

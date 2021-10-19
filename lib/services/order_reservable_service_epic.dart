@@ -844,6 +844,59 @@ class CreateOrderReservableOnSiteAndPayService implements EpicClass<AppState> {
   }
 }
 
+class CreateOrderReservablePaypalAndPayService implements EpicClass<AppState> {
+  StatisticsState statisticsState;
+  String state = '';
+  String paymentResult = '';
+  OrderReservableState reservable;
+
+  @override
+  Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
+    return actions.whereType<CreateOrderReservablePaypalAndPay>().asyncMap((event) async {
+      for (int i = 0; i < event.orderReservableState.itemList.length; i++) {
+        reservable = orderReservableInitialization(event, i);
+        debugPrint('UI_U_ConfirmOrder => Date: ${reservable.date}');
+        /// add needed data to the order state
+        OrderReservableState orderReservableState = configureOrderReservable(reservable, store);
+          reservable.cardType = Utils.enumToString(PaymentType.paypal);
+          reservable.progress = Utils.enumToString(OrderStatus.accepted);
+          /// send document to orders collection
+          /// This is a time based id, meaning that even if 2 users are going to generate a document at the same moment in time
+          /// there are really low chances that the rest of the id is also colliding.
+          String timeBasedId = Uuid().v1();
+          orderReservableState.orderId = timeBasedId;
+          debugPrint("order_reservable_service_epic RULE TEST" + store.state.user.uid + " " + orderReservableState.user.id.toString() + " " +  orderReservableState.userId + " " + orderReservableState.progress);
+          orderReservableState.user.id = store.state.user.uid;
+          orderReservableState.userId = store.state.user.uid;
+
+          var addedOrder = await FirebaseFirestore.instance.collection("order").doc(timeBasedId).set(orderReservableState.toJson());
+          /// add the payment method to the order sub collection on firebase
+          String bookingId = '';
+          if(store.state.booking != null && store.state.booking.booking_id != null) {
+            bookingId = store.state.booking.booking_id;
+          }
+          var addedPaymentMethod = await FirebaseFirestore.instance.collection("order/" + orderReservableState.orderId + "/orderPaymentMethod").add({
+            'paymentMethodId' : '',
+            'last4': '',
+            'brand': '',
+            'type':  Utils.enumToString(event.paymentType),
+            'country': '',
+            'bookingId': bookingId
+          });
+      }
+      statisticsComputation();
+    }).expand((element) {
+      var actionArray = [];
+      actionArray.add(CreatedOrderReservable());
+      actionArray.add(UpdateStatistics(statisticsState));
+      actionArray.add(SetOrderReservableOrderId(reservable.orderId));
+      actionArray.add(SetOrderDetail(OrderDetailState.fromReservableState(reservable)));
+      //actionArray.add(NavigatePushAction(AppRoutes.orderDetailsRealtime));
+      return actionArray;
+    });
+  }
+}
+
 /// an order always have to be created with a payment method attached in its subcollection
 /// TODO: research if there is a way to make this two operations in an atomic way
 class CreateOrderReservableRoomPendingService implements EpicClass<AppState> {
@@ -936,6 +989,54 @@ class CreateOrderReservableOnSitePendingService implements EpicClass<AppState> {
       actionArray.add(SetOrderReservableOrderId(reservable.orderId));
       actionArray.add(SetOrderDetail(OrderDetailState.fromReservableState(reservable)));
       actionArray.add(NavigatePushAction(AppRoutes.orderDetailsRealtime));
+      return actionArray;
+    });
+  }
+}
+
+class CreateOrderReservablePaypalPendingService implements EpicClass<AppState> {
+  StatisticsState statisticsState;
+  String state = '';
+  String paymentResult = '';
+  OrderReservableState reservable;
+  @override
+  Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
+    return actions.whereType<CreateOrderReservablePaypalPending>().asyncMap((event) async {
+      for (int i = 0; i < event.orderReservableState.itemList.length; i++) {
+        reservable = orderReservableInitialization(event, i);
+        debugPrint('UI_U_ConfirmOrder => Date: ${reservable.date}');
+        /// add needed data to the order state
+        OrderReservableState orderReservableState = configureOrderReservable(reservable, store);
+          reservable.cardType = Utils.enumToString(PaymentType.paypal);
+          reservable.progress = Utils.enumToString(OrderStatus.pending);
+          /// send document to orders collection
+          /// This is a time based id, meaning that even if 2 users are going to generate a document at the same moment in time
+          /// there are really low chances that the rest of the id is also colliding.
+          String timeBasedId = Uuid().v1();
+          orderReservableState.orderId = timeBasedId;
+          var addedOrder = await FirebaseFirestore.instance.collection("order").doc(timeBasedId).set(orderReservableState.toJson());
+          /// add the payment method to the order sub collection on firebase
+          String bookingId = '';
+          if(store.state.booking != null && store.state.booking.booking_id != null) {
+            bookingId = store.state.booking.booking_id;
+          }
+          var addedPaymentMethod = await FirebaseFirestore.instance.collection("order/" + orderReservableState.orderId + "/orderPaymentMethod").add({
+            'paymentMethodId' : '',
+            'last4': '',
+            'brand': '',
+            'type':  Utils.enumToString(event.paymentType),
+            'country': '',
+            'bookingId': bookingId
+          });
+      }
+      statisticsComputation();
+    }).expand((element) {
+      var actionArray = [];
+      actionArray.add(CreatedOrderReservable());
+      actionArray.add(UpdateStatistics(statisticsState));
+      actionArray.add(SetOrderReservableOrderId(reservable.orderId));
+      actionArray.add(SetOrderDetail(OrderDetailState.fromReservableState(reservable)));
+      //actionArray.add(NavigatePushAction(AppRoutes.orderDetailsRealtime));
       return actionArray;
     });
   }

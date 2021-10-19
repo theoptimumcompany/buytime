@@ -112,6 +112,14 @@ class CreateOrderOnSiteAndPay {
   PaymentType get paymentType => _paymentType;
 }
 
+class CreateOrderPaypalAndPay {
+  OrderState _orderState;
+  PaymentType _paymentType;
+  CreateOrderPaypalAndPay(this._orderState, this._paymentType);
+  OrderState get orderState => _orderState;
+  PaymentType get paymentType => _paymentType;
+}
+
 class CreateOrderCardPending {
   OrderState _orderState;
   String _last4;
@@ -150,6 +158,13 @@ class CreateOrderOnSitePending {
   OrderState _orderState;
   PaymentType _paymentType;
   CreateOrderOnSitePending(this._orderState, this._paymentType);
+  OrderState get orderState => _orderState;
+  PaymentType get paymentType => _paymentType;
+}
+class CreateOrderPaypalPending {
+  OrderState _orderState;
+  PaymentType _paymentType;
+  CreateOrderPaypalPending(this._orderState, this._paymentType);
   OrderState get orderState => _orderState;
   PaymentType get paymentType => _paymentType;
 }

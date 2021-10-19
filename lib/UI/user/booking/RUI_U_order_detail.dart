@@ -130,6 +130,13 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
           onTap: () {},
         );
         break;
+      case 'paypal':
+        widget = ListTile(
+          leading: Image(width: SizeConfig.blockSizeHorizontal * 10, image: AssetImage('assets/img/brand/paypal.png')),
+          title: Text(AppLocalizations.of(context).paypal),
+          onTap: () {},
+        );
+        break;
       case 'noPaymentMethod':
         widget = ListTile(
           leading: Image(width: SizeConfig.blockSizeHorizontal * 10, image: AssetImage('assets/img/noPaymentMethod.png')),

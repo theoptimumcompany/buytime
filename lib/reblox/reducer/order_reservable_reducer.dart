@@ -2,6 +2,7 @@ import 'package:Buytime/reblox/model/business/snippet/business_snippet_state.dar
 import 'package:Buytime/reblox/model/business/snippet/order_business_snippet_state.dart';
 import 'package:Buytime/reblox/model/order/order_entry.dart';
 import 'package:Buytime/reblox/model/order/order_reservable_state.dart';
+import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/model/stripe/stripe_state.dart';
 import 'package:Buytime/reblox/model/user/snippet/user_snippet_state.dart';
 import 'package:flutter/cupertino.dart';
@@ -158,6 +159,14 @@ class CreateOrderReservableOnSiteAndPay {
   PaymentType get paymentType => _paymentType;
 }
 
+class CreateOrderReservablePaypalAndPay {
+  OrderReservableState _orderReservableState;
+  PaymentType _paymentType;
+  CreateOrderReservablePaypalAndPay(this._orderReservableState, this._paymentType);
+  OrderReservableState get orderReservableState => _orderReservableState;
+  PaymentType get paymentType => _paymentType;
+}
+
 class CreateOrderReservableRoomPending {
   OrderReservableState _orderReservableState;
   String _roomNumber;
@@ -172,6 +181,14 @@ class CreateOrderReservableOnSitePending {
   OrderReservableState _orderReservableState;
   PaymentType _paymentType;
   CreateOrderReservableOnSitePending(this._orderReservableState, this._paymentType);
+  OrderReservableState get orderReservableState => _orderReservableState;
+  PaymentType get paymentType => _paymentType;
+}
+
+class CreateOrderReservablePaypalPending {
+  OrderReservableState _orderReservableState;
+  PaymentType _paymentType;
+  CreateOrderReservablePaypalPending(this._orderReservableState, this._paymentType);
   OrderReservableState get orderReservableState => _orderReservableState;
   PaymentType get paymentType => _paymentType;
 }

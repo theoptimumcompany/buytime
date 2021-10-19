@@ -437,6 +437,55 @@ class OrderCreateOnSiteAndPayService implements EpicClass<AppState> {
   }
 }
 
+class OrderCreatePaypalAndPayService implements EpicClass<AppState> {
+  StatisticsState statisticsState;
+  String state = '';
+  String paymentResult = '';
+  OrderState orderState;
+
+  @override
+  Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
+    return actions.whereType<CreateOrderPaypalAndPay>().asyncMap((event) async {
+      /// add needed data to the order state
+      orderState = configureOrder(event.orderState, store.state);
+      orderState.cardType = Utils.enumToString(PaymentType.paypal);
+      //orderState.progress = Utils.enumToString(OrderStatus.paid); ///TODO CLOUD: Change not paid to paid,
+
+      /// This is a time based id, meaning that even if 2 users are going to generate a document at the same moment in time
+      /// there are really low chances that the rest of the id is also colliding.
+      String timeBasedId = Uuid().v1();
+      orderState.orderId = timeBasedId;
+
+      /// send document to orders collection
+      var addedOrder = await FirebaseFirestore.instance.collection("order").doc(timeBasedId).set(orderState.toJson());
+
+      String bookingId = '';
+      if(store.state.booking != null && store.state.booking.booking_id != null && store.state.booking.booking_id.isNotEmpty) {
+        bookingId = store.state.booking.booking_id;
+      }
+
+      /// add the payment method to the order sub collection on firebase
+      var addedPaymentMethod = await FirebaseFirestore.instance.collection("order/" + orderState.orderId + "/orderPaymentMethod").add({
+        'paymentMethodId': '',
+        'last4': '',
+        'brand': '',
+        'type': Utils.enumToString(event.paymentType),
+        'country': '',
+        'bookingId': bookingId
+      });
+      statisticsComputation();
+    }).expand((element) {
+      var actionArray = [];
+      actionArray.add(CreatedOrder());
+      actionArray.add(UpdateStatistics(statisticsState));
+      actionArray.add(SetOrderOrderId(orderState.orderId));
+      actionArray.add(SetOrderDetail(OrderDetailState.fromOrderState(orderState)));
+      //actionArray.add(NavigatePushAction(AppRoutes.orderDetailsRealtime));
+      return actionArray;
+    });
+  }
+}
+
 /// an order always have to be created with a payment method attached in its subcollection
 /// TODO: research if there is a way to make this two operations in an atomic way
 class OrderCreateNativePendingService implements EpicClass<AppState> {
@@ -641,6 +690,64 @@ class OrderCreateOnSitePendingService implements EpicClass<AppState> {
       actionArray.add(UpdateStatistics(statisticsState));
       actionArray.add(SetOrderDetail(OrderDetailState.fromOrderState(orderState)));
       actionArray.add(NavigatePushAction(AppRoutes.orderDetailsRealtime));
+      return actionArray;
+    });
+  }
+}
+
+class OrderCreatePaypalPendingService implements EpicClass<AppState> {
+  StatisticsState statisticsState;
+  String state = '';
+  String paymentResult = '';
+  String orderId = '';
+  OrderState orderState;
+
+  @override
+  Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
+    return actions.whereType<CreateOrderPaypalPending>().asyncMap((event) async {
+      debugPrint('CreateOrderPending start');
+
+      /// add needed data to the order state
+      orderState = configureOrder(event.orderState, store.state);
+      orderState.cardType = Utils.enumToString(PaymentType.paypal);
+      orderState.progress = Utils.enumToString(OrderStatus.pending);
+
+      /// send document to orders collection
+      /// This is a time based id, meaning that even if 2 users are going to generate a document at the same moment in time
+      /// there are really low chances that the rest of the id is also colliding.
+      String timeBasedId = Uuid().v1();
+      orderState.orderId = timeBasedId;
+      orderId = timeBasedId;
+      var addedOrder = await FirebaseFirestore.instance.collection("order").doc(timeBasedId).set(orderState.toJson());
+
+      var bookingId = '';
+      if (store.state.booking != null && store.state.booking.booking_id != null && store.state.booking.booking_id.isNotEmpty) {
+        bookingId = store.state.booking.booking_id;
+      }
+
+      /// add the payment method to the order sub collection on firebase
+      var addedPaymentMethod = await FirebaseFirestore.instance.collection("order/" + orderState.orderId + "/orderPaymentMethod").add({
+        'paymentMethodId': '',
+        'last4': '',
+        'brand': '',
+        'type': Utils.enumToString(event.paymentType),
+        'country': '',
+        'bookingId': bookingId
+      });
+
+      statisticsComputation();
+      debugPrint('CreateOrderPending done');
+    }).expand((element) {
+      var actionArray = [];
+      actionArray.add(SetOrderOrderId(orderId));
+      return actionArray;
+    }).expand((element) {
+      var actionArray = [];
+      actionArray.add(CreatedOrder());
+      actionArray.add(SetOrderOrderId(orderId));
+      actionArray.add(UpdateStatistics(statisticsState));
+      actionArray.add(SetOrderDetail(OrderDetailState.fromOrderState(orderState)));
+      //actionArray.add(NavigatePushAction(AppRoutes.orderDetailsRealtime));
       return actionArray;
     });
   }

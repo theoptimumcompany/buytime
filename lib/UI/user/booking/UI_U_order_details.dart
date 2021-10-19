@@ -168,6 +168,13 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
           onTap: () {},
         );
         break;
+      case 'paypal':
+        widget = ListTile(
+          leading: Image(width: SizeConfig.blockSizeHorizontal * 10, image: AssetImage('assets/img/brand/paypal.png')),
+          title: Text(AppLocalizations.of(context).paypal),
+          onTap: () {},
+        );
+        break;
       case 'noPaymentMethod':
         widget = ListTile(
           leading: Image(width: SizeConfig.blockSizeHorizontal * 10, image: AssetImage('assets/img/noPaymentMethod.png')),

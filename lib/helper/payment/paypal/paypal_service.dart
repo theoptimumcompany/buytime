@@ -18,7 +18,8 @@ class PaypalServices {
   Future<String> getAccessToken() async {
     try {
       var client = BasicAuthClient(clientId, secret);
-      Uri url = Uri.https("$domain", "/v1/oauth2/token", {'grant_type': 'client_credentials'});
+      Uri url = Uri.https("$domain", "/v1/oauth2/token", {
+        'grant_type': 'client_credentials'});
       //var response = await client.post('$domain/v1/oauth2/token?grant_type=grant_type');
       var response = await client.post(url);
       debugPrint('PAYPAL GET ACCESS TOKEN RESPONSE CODE: ${response.statusCode} | BODY: ${response.body}');
@@ -32,20 +33,45 @@ class PaypalServices {
     }
   }
 
+  Future<String> identifyUser(String accessToken) async {
+    try {
+      Uri url = Uri.https("$domain", "/v1/identity/oauth2/userinfo", {
+        'schema': 'paypalv1.1'});
+      //var response = await client.post('$domain/v1/oauth2/token?grant_type=grant_type');
+      var response = await http.get(url,
+          headers: {
+            "Accept": "application/json",
+            "content-type": "application/json",
+            "Authorization": "Bearer $accessToken"
+          });
+      debugPrint('PAYPAL IDENTIFY USER RESPONSE CODE: ${response.statusCode} | BODY: ${response.body}');
+      if (response.statusCode == 200) {
+        final body = convert.jsonDecode(response.body);
+        debugPrint('PAYER ID: ${body["payer_id"]}');
+        debugPrint('NAME: ${body["name"]}');
+        return body["payer_id"];
+      }
+      return null;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   // for creating the payment request with Paypal
   Future<Map<String, String>> createPaypalPayment(transactions, accessToken) async {
     try {
+      debugPrint('ACCESS TOKEN: $accessToken');
       Uri url = Uri.https("$domain", "/v1/payments/payment");
       //var response = await http.post("$domain/v1/payments/payment",
       var response = await http.post(url,
           body: convert.jsonEncode(transactions),
           headers: {
             "content-type": "application/json",
-            'Authorization': 'Bearer ' + accessToken
+            'Authorization': 'Bearer $accessToken'
           });
 
       final body = convert.jsonDecode(response.body);
-      debugPrint('PAYPAL CREATE PATMENT RESPONSE CODE: ${response.statusCode} | BODY: ${response.body}');
+      debugPrint('PAYPAL CREATE PAYMENT RESPONSE CODE: ${response.statusCode} | BODY: ${response.body}');
       if (response.statusCode == 201) {
         if (body["links"] != null && body["links"].length > 0) {
           List links = body["links"];
@@ -62,6 +88,8 @@ class PaypalServices {
           if (item1 != null) {
             executeUrl = item1["href"];
           }
+          debugPrint('APPROVAL URL: $approvalUrl');
+          debugPrint('EXECUTE URL: $executeUrl');
           return {"executeUrl": executeUrl, "approvalUrl": approvalUrl};
         }
         return null;
@@ -73,6 +101,7 @@ class PaypalServices {
     }
   }
 
+  ///PAYID-MFXN6LI4TH50762UD956613V
   // for executing the payment transaction
   Future<String> executePayment(url, payerId, accessToken) async {
     try {
@@ -84,6 +113,7 @@ class PaypalServices {
           });
 
       final body = convert.jsonDecode(response.body);
+      debugPrint('PAYPAL EXECUTE PAYMENT RESPONSE CODE: ${response.statusCode} | BODY: ${response.body}');
       if (response.statusCode == 200) {
         return body["id"];
       }
