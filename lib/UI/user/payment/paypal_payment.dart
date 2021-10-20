@@ -53,7 +53,8 @@ class PaypalPaymentState extends State<PaypalPayment> {
     Future.delayed(Duration.zero, () async {
       try {
         accessToken = await services.getAccessToken();
-        final transactions = getOrderParams();
+        //final transactions = getOrderParams();
+        final transactions = getNewOrderParams();
         debugPrint('CALL PAYPAL CREATE PAYMENT');
         final res = await services.createPaypalPayment(transactions, accessToken);
         if (res != null) {
@@ -166,6 +167,68 @@ class PaypalPaymentState extends State<PaypalPayment> {
     return temp;
   }
 
+  Map<String, dynamic> getNewOrderParams() {
+    List items = [] ;
+    widget.orderState.itemList.length > 1 ?
+    items = [
+      {
+        "name": '${AppLocalizations.of(context).multipleOrders}',
+        "description" : "",
+        "unit_amount": {
+          "currency_code": defaultCurrency["currency"],
+          "value": '${widget.orderState.total}'
+        },
+        "quantity": '${widget.orderState.cartCounter}',
+      }
+    ] : items = [
+      {
+        "name": '${widget.orderState.itemList.first.name}',
+        "description" : "",
+        "unit_amount": {
+          "currency_code": defaultCurrency["currency"],
+          "value": '${widget.orderState.total}'
+        },
+        "quantity": '${widget.orderState.cartCounter}',
+      }
+    ];
+
+
+    // checkout invoice details
+    debugPrint('CHECK OUT INVOICE: ${widget.orderState.total} - ${widget.orderState.cartCounter}');
+
+    Map<String, dynamic> temp = {
+      "intent": "AUTHORIZE",
+      "purchase_units": [
+        {
+          "amount": {
+            "currency_code": defaultCurrency["currency"],
+            "value": '${widget.orderState.total}',
+            "breakdown": {
+              "item_total": {
+                "currency_code": defaultCurrency["currency"],
+                "value": '${widget.orderState.total}'
+              }
+            }
+          },
+          "items": items
+        }
+      ],
+    };
+
+    /*Map<String, dynamic> temp = {
+      "intent": "CAPTURE",
+      "purchase_units": [
+        {
+          "amount": {
+            "currency_code": "USD",
+            "value": "100.00"
+          }
+        }
+      ]
+    };*/
+    return temp;
+  }
+
   bool executionComplete = false;
 
   @override
@@ -204,50 +267,65 @@ class PaypalPaymentState extends State<PaypalPayment> {
             body: WebView(
               initialUrl: checkoutUrl,
               javascriptMode: JavascriptMode.unrestricted,
-              navigationDelegate: (NavigationRequest request) async {
+              navigationDelegate: (NavigationRequest request) {
                 debugPrint('RETURN URL: $returnURL - REQUEST: $request');
-                if (request.url.contains(returnURL)) {
-                  // final uri = Uri.parse(request.url);
-                  final uri = Uri.parse(request.url);
-                  final payerID = uri.queryParameters['PayerID'];
-                  //String payerID = await services.identifyUser(accessToken);
-                  if (payerID != null) {
-                    ///FIRST LOGIN ERROR
-                   /* V/InputMethodManager( 2041): b/117267690: Failed to get fallback IMM with expected displayId=110 actual IMM#displayId=0 view=io.flutter.plugins.webviewflutter.InputAwareWebView{f2c779b VFEDHVC.. .F...... 0,0-1080,1840}
-                      I/chromium( 2041): [INFO:CONSOLE(0)] "Refused to apply style from 'https://www.paypalobjects.com/webapps/return.example.com/error.css' because its MIME type ('text/html') is not a supported stylesheet MIME type, and strict MIME checking is enabled.",
-                      source: https://www.paypalobjects.com/webapps/return.example.com/?paymentId=PAYID-MFXKSGY4GV7306654020144T&token=EC-4GP91630PR3129051&PayerID=HF6VT5MWLNC4J (0)*/
-                    ///TODO Add the order progress update here
-                    ///Payment success
-                    services.executePayment(Uri.parse(executeUrl), payerID, accessToken).then((id) {
-                      debugPrint('PAYMENT EXECUTION SUCCESS - ID: $id');
-                      widget.onFinish(id);
+                setState(() {
+                  checkoutUrl = request.url;
+                });
+                if(executionComplete)
+                  return NavigationDecision.navigate;
+                if(!executionComplete){
+                  services.executePayment(Uri.parse(executeUrl), '', accessToken).then((id) {
+                    debugPrint('PAYMENT EXECUTION SUCCESS - ID: $id');
+                    widget.onFinish(id);
+                    if(id != null && id.isNotEmpty){
                       setState(() {
                         executionComplete = true;
                       });
-                      StoreProvider.of<AppState>(context).dispatch(CreatingOrder());
-                      if(widget.reserve){
-                        if (widget.orderState.isOrderAutoConfirmable()){
-                          StoreProvider.of<AppState>(context).dispatch(CreateOrderReservablePaypalAndPay(OrderReservableState.fromReservableState(widget.orderState), PaymentType.paypal));
-                        }else{
-                          StoreProvider.of<AppState>(context).dispatch(CreateOrderReservablePaypalPending(OrderReservableState.fromReservableState(widget.orderState), PaymentType.paypal));
-                        }
-                      }else{
-                        if (widget.orderState.isOrderAutoConfirmable()){
-                          StoreProvider.of<AppState>(context).dispatch(CreateOrderPaypalAndPay(widget.orderState, PaymentType.paypal));
-                        }else{
-                          StoreProvider.of<AppState>(context).dispatch(CreateOrderPaypalPending(widget.orderState, PaymentType.paypal));
-                        }
-                      }
+                      // StoreProvider.of<AppState>(context).dispatch(CreatingOrder());
+                      // if(widget.reserve){
+                      //   if (widget.orderState.isOrderAutoConfirmable()){
+                      //     StoreProvider.of<AppState>(context).dispatch(CreateOrderReservablePaypalAndPay(OrderReservableState.fromReservableState(widget.orderState), PaymentType.paypal));
+                      //   }else{
+                      //     StoreProvider.of<AppState>(context).dispatch(CreateOrderReservablePaypalPending(OrderReservableState.fromReservableState(widget.orderState), PaymentType.paypal));
+                      //   }
+                      // }else{
+                      //   if (widget.orderState.isOrderAutoConfirmable()){
+                      //     StoreProvider.of<AppState>(context).dispatch(CreateOrderPaypalAndPay(widget.orderState, PaymentType.paypal));
+                      //   }else{
+                      //     StoreProvider.of<AppState>(context).dispatch(CreateOrderPaypalPending(widget.orderState, PaymentType.paypal));
+                      //   }
+                      // }
+                    }
+                    Future.delayed(Duration(seconds: 1), (){
+
                     });
-                  } else {
-                    ///No payer id
-                    Navigator.of(context).pop();
-                  }
-                  //Navigator.of(context).pop();
+
+                  });
                 }
-                if (request.url.contains(cancelURL)) {
-                  Navigator.of(context).pop();
-                }
+
+                // if (request.url.contains(returnURL)) {
+                //   // final uri = Uri.parse(request.url);
+                //   final uri = Uri.parse(request.url);
+                //   final payerID = uri.queryParameters['PayerID'];
+                //   //String payerID = await services.identifyUser(accessToken);
+                //   if (payerID != null) {
+                //     ///FIRST LOGIN ERROR
+                //    /* V/InputMethodManager( 2041): b/117267690: Failed to get fallback IMM with expected displayId=110 actual IMM#displayId=0 view=io.flutter.plugins.webviewflutter.InputAwareWebView{f2c779b VFEDHVC.. .F...... 0,0-1080,1840}
+                //       I/chromium( 2041): [INFO:CONSOLE(0)] "Refused to apply style from 'https://www.paypalobjects.com/webapps/return.example.com/error.css' because its MIME type ('text/html') is not a supported stylesheet MIME type, and strict MIME checking is enabled.",
+                //       source: https://www.paypalobjects.com/webapps/return.example.com/?paymentId=PAYID-MFXKSGY4GV7306654020144T&token=EC-4GP91630PR3129051&PayerID=HF6VT5MWLNC4J (0)*/
+                //     ///TODO Add the order progress update here
+                //     ///Payment success
+                //
+                //   } else {
+                //     ///No payer id
+                //     Navigator.of(context).pop();
+                //   }
+                //   //Navigator.of(context).pop();
+                // }
+                // if (request.url.contains(cancelURL)) {
+                //   Navigator.of(context).pop();
+                // }
 
 
                 return NavigationDecision.navigate;

@@ -61,7 +61,8 @@ class PaypalServices {
   Future<Map<String, String>> createPaypalPayment(transactions, accessToken) async {
     try {
       debugPrint('ACCESS TOKEN: $accessToken');
-      Uri url = Uri.https("$domain", "/v1/payments/payment");
+      //Uri url = Uri.https("$domain", "/v1/payments/payment");
+      Uri url = Uri.https("$domain", "/v2/checkout/orders");
       //var response = await http.post("$domain/v1/payments/payment",
       var response = await http.post(url,
           body: convert.jsonEncode(transactions),
@@ -88,6 +89,16 @@ class PaypalServices {
           if (item1 != null) {
             executeUrl = item1["href"];
           }
+          final item2 = links.firstWhere((o) => o["rel"] == "approve",
+              orElse: () => null);
+          if (item2 != null) {
+            approvalUrl = item2["href"];
+          }
+          final item3 = links.firstWhere((o) => o["rel"] == "authorize",
+              orElse: () => null);
+          if (item3 != null) {
+            executeUrl = item3["href"];
+          }
           debugPrint('APPROVAL URL: $approvalUrl');
           debugPrint('EXECUTE URL: $executeUrl');
           return {"executeUrl": executeUrl, "approvalUrl": approvalUrl};
@@ -106,7 +117,7 @@ class PaypalServices {
   Future<String> executePayment(url, payerId, accessToken) async {
     try {
       var response = await http.post(url,
-          body: convert.jsonEncode({"payer_id": payerId}),
+          //body: convert.jsonEncode({"payer_id": payerId}),
           headers: {
             "content-type": "application/json",
             'Authorization': 'Bearer ' + accessToken
@@ -114,7 +125,7 @@ class PaypalServices {
 
       final body = convert.jsonDecode(response.body);
       debugPrint('PAYPAL EXECUTE PAYMENT RESPONSE CODE: ${response.statusCode} | BODY: ${response.body}');
-      if (response.statusCode == 200) {
+      if (response.statusCode == 201) {
         return body["id"];
       }
       return null;

@@ -449,7 +449,7 @@ class OrderCreatePaypalAndPayService implements EpicClass<AppState> {
       /// add needed data to the order state
       orderState = configureOrder(event.orderState, store.state);
       orderState.cardType = Utils.enumToString(PaymentType.paypal);
-      //orderState.progress = Utils.enumToString(OrderStatus.paid); ///TODO CLOUD: Change not paid to paid,
+      orderState.progress = Utils.enumToString(OrderStatus.paid); ///TODO CLOUD: Change not paid to paid,
 
       /// This is a time based id, meaning that even if 2 users are going to generate a document at the same moment in time
       /// there are really low chances that the rest of the id is also colliding.
