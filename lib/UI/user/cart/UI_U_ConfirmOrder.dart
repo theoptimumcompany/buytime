@@ -233,8 +233,8 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                             if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.applePay) || snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.googlePay) || snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.card)) {
                                               debugPrint("ui_u_confirmOrder stripe paymentSheet");
 
-                                              Stripe.publishableKey = "pk_live_51HS20eHr13hxRBpCLHzfi0SXeqw8Efu911cWdYEE96BAV0zSOesvE83OiqqzRucKIxgCcKHUvTCJGY6cXRtkDVCm003CmGXYzy";
-                                              //Stripe.publishableKey = "pk_test_51HS20eHr13hxRBpCZl1V0CKFQ7XzJbku7UipKLLIcuNGh3rp4QVsEDCThtV0l2AQ3jMtLsDN2zdC0fQ4JAK6yCOp003FIf3Wjz";
+                                              // Stripe.publishableKey = "pk_live_51HS20eHr13hxRBpCLHzfi0SXeqw8Efu911cWdYEE96BAV0zSOesvE83OiqqzRucKIxgCcKHUvTCJGY6cXRtkDVCm003CmGXYzy";
+                                              Stripe.publishableKey = "pk_test_51HS20eHr13hxRBpCZl1V0CKFQ7XzJbku7UipKLLIcuNGh3rp4QVsEDCThtV0l2AQ3jMtLsDN2zdC0fQ4JAK6yCOp003FIf3Wjz";
                                               final paymentSheetData = await requestPaymentSheet(snapshot.user.uid, totalToSend);
                                               Stripe.merchantIdentifier = 'merchant.theoptimumcompany.buytime';
                                               // Stripe.merchantIdentifier = 'com.theoptimumcompany.buytime';

@@ -282,20 +282,20 @@ class PaypalPaymentState extends State<PaypalPayment> {
                       setState(() {
                         executionComplete = true;
                       });
-                      // StoreProvider.of<AppState>(context).dispatch(CreatingOrder());
-                      // if(widget.reserve){
-                      //   if (widget.orderState.isOrderAutoConfirmable()){
-                      //     StoreProvider.of<AppState>(context).dispatch(CreateOrderReservablePaypalAndPay(OrderReservableState.fromReservableState(widget.orderState), PaymentType.paypal));
-                      //   }else{
-                      //     StoreProvider.of<AppState>(context).dispatch(CreateOrderReservablePaypalPending(OrderReservableState.fromReservableState(widget.orderState), PaymentType.paypal));
-                      //   }
-                      // }else{
-                      //   if (widget.orderState.isOrderAutoConfirmable()){
-                      //     StoreProvider.of<AppState>(context).dispatch(CreateOrderPaypalAndPay(widget.orderState, PaymentType.paypal));
-                      //   }else{
-                      //     StoreProvider.of<AppState>(context).dispatch(CreateOrderPaypalPending(widget.orderState, PaymentType.paypal));
-                      //   }
-                      // }
+                      StoreProvider.of<AppState>(context).dispatch(CreatingOrder());
+                      if(widget.reserve){
+                        if (widget.orderState.isOrderAutoConfirmable()){
+                          StoreProvider.of<AppState>(context).dispatch(CreateOrderReservablePaypalAndPay(OrderReservableState.fromReservableState(widget.orderState), PaymentType.paypal));
+                        }else{
+                          StoreProvider.of<AppState>(context).dispatch(CreateOrderReservablePaypalPending(OrderReservableState.fromReservableState(widget.orderState), PaymentType.paypal));
+                        }
+                      }else{
+                        if (widget.orderState.isOrderAutoConfirmable()){
+                          StoreProvider.of<AppState>(context).dispatch(CreateOrderPaypalAndPay(widget.orderState, PaymentType.paypal));
+                        }else{
+                          StoreProvider.of<AppState>(context).dispatch(CreateOrderPaypalPending(widget.orderState, PaymentType.paypal));
+                        }
+                      }
                     }
                     Future.delayed(Duration(seconds: 1), (){
 

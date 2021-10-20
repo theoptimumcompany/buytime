@@ -104,8 +104,9 @@ class ProdConfig implements BaseConfig {
   String get fireStorageServiceStorageBucket => 'buytime-458a1.appspot.com';
   String get googleApiKey => 'AIzaSyBwDB1i6FveSGC0rFar4ZYcJM3xacQqZ1g';
   String get serverToken => '';
-  String get stripePublicKey => 'pk_live_51HS20eHr13hxRBpCLHzfi0SXeqw8Efu911cWdYEE96BAV0zSOesvE83OiqqzRucKIxgCcKHUvTCJGY6cXRtkDVCm003CmGXYzy';
-  String get stripeSuffix => '';
+  // String get stripePublicKey => 'pk_live_51HS20eHr13hxRBpCLHzfi0SXeqw8Efu911cWdYEE96BAV0zSOesvE83OiqqzRucKIxgCcKHUvTCJGY6cXRtkDVCm003CmGXYzy';
+  String get stripePublicKey => 'pk_test_51HS20eHr13hxRBpCZl1V0CKFQ7XzJbku7UipKLLIcuNGh3rp4QVsEDCThtV0l2AQ3jMtLsDN2zdC0fQ4JAK6yCOp003FIf3Wjz';
+  String get stripeSuffix => '_test';
 
   @override
   set cloudFunctionLink(String _cloudFunctionLink) {
