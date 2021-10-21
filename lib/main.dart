@@ -19,6 +19,7 @@ import 'package:redux/redux.dart';
 import 'package:Buytime/reblox/navigation/navigation_middleware.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:rxdart/rxdart.dart';
 import 'UI/management/service_internal/RUI_M_service_list.dart';
 import 'UI/management/service_internal/UI_M_hub_convention_edit.dart';
 import 'UI/user/service/UI_U_service_reserve.dart';
@@ -53,8 +54,8 @@ const AndroidNotificationChannel channel = AndroidNotificationChannel(
 );
 
 
-final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-FlutterLocalNotificationsPlugin();
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+final BehaviorSubject<ReceivedNotification> didReceiveLocalNotificationSubject = BehaviorSubject<ReceivedNotification>();
 Future<void> main() async {
   // runZonedGuarded(() async {
     final epics = combinedEpics;
@@ -65,6 +66,7 @@ Future<void> main() async {
       middleware: createNavigationMiddleware(epics),
     );
     WidgetsFlutterBinding.ensureInitialized();
+    final NotificationAppLaunchDetails notificationAppLaunchDetails = await flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
     await Firebase.initializeApp();
     NotificationSettings settings = await FirebaseMessaging.instance.requestPermission(
       alert: true,
@@ -89,8 +91,7 @@ Future<void> main() async {
       badge: true,
       sound: true,
     );
-    var initialzationSettingsAndroid =
-    AndroidInitializationSettings('@mipmap/ic_launcher');
+    var initialzationSettingsAndroid = AndroidInitializationSettings('@mipmap/ic_launcher');
     final IOSInitializationSettings initializationSettingsIOS =
     IOSInitializationSettings(
         requestAlertPermission: false,
@@ -112,7 +113,13 @@ Future<void> main() async {
           );
         });
     var initializationSettings = InitializationSettings(android: initialzationSettingsAndroid, iOS: initializationSettingsIOS);
-    flutterLocalNotificationsPlugin.initialize(initializationSettings);
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        onSelectNotification: (String? payload) async {
+          if (payload != null) {
+            debugPrint('notification payload: $payload');
+          }
+          selectNotificationSubject.add(payload);
+        });
     const String environment = String.fromEnvironment(
       'ENVIRONMENT',
       defaultValue: Environment.PROD,

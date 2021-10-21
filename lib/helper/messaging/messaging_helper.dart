@@ -18,7 +18,19 @@ import '../../main.dart';
 class MessagingHelper {
   static String serverToken = '';
 
+  void _requestPermissions() {
+    flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+        IOSFlutterLocalNotificationsPlugin>()
+        ?.requestPermissions(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
+  }
+
   void messagingManagement(FirebaseMessaging firebaseMessaging, BuildContext context) {
+    _requestPermissions();
     firebaseMessaging.requestPermission(sound: true, badge: true, alert: true, provisional: true);
     firebaseMessaging.getToken().then((String token) {
       assert(token != null);
