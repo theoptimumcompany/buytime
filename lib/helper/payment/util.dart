@@ -60,6 +60,7 @@ Future <List<CardState>> stripeCardListMaker(dynamic event, List<StripeState> st
 Future<Map<String, dynamic>> requestPaymentSheet(String userId, double total) async {
   final url = Uri.https("${Environment().config.cloudFunctionLink}", "/stripePaymentSheet", {'userId': '$userId', 'total': total.toString()});
   final response = await http.get(url);
+  print("/// " + response.body + " " + userId + " " + total.toString() + " ////");
   final Map<String, dynamic> bodyResponse = json.decode(response.body);
   if (bodyResponse['error'] != null) {
     throw Exception(bodyResponse['error']);

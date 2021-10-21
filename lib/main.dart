@@ -94,9 +94,9 @@ Future<void> main() async {
     var initialzationSettingsAndroid = AndroidInitializationSettings('@mipmap/ic_launcher');
     final IOSInitializationSettings initializationSettingsIOS =
     IOSInitializationSettings(
-        requestAlertPermission: false,
-        requestBadgePermission: false,
-        requestSoundPermission: false,
+        requestAlertPermission: true,
+        requestBadgePermission: true,
+        requestSoundPermission: true,
         onDidReceiveLocalNotification: (
             int id,
             String title,

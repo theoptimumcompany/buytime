@@ -315,6 +315,7 @@ class OrderCreateCardAndPayService implements EpicClass<AppState> {
           String timeBasedId = Uuid().v1();
           orderState = configureOrder(event.orderState, store.state);
           orderState.orderId = timeBasedId;
+          orderState.cardType = Utils.enumToString(event.paymentType);
 
           /// send document to orders collection
           var addedOrder = await FirebaseFirestore.instance.collection("order").doc(timeBasedId).set(orderState.toJson());
@@ -329,7 +330,7 @@ class OrderCreateCardAndPayService implements EpicClass<AppState> {
             'booking_id': store.state.booking.booking_id
           });
           StripePaymentService stripePaymentService = StripePaymentService();
-          paymentResult = await stripePaymentService.processPaymentAsDirectCharge(orderState.orderId, event.businessStripeAccount);
+          //paymentResult = await stripePaymentService.processPaymentAsDirectCharge(orderState.orderId, event.businessStripeAccount);
         }
         statisticsComputation();
     }).expand((element) {

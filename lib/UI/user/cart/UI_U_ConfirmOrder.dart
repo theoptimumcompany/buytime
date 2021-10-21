@@ -26,7 +26,6 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:pay/pay.dart';
 
-
 import 'UI_U_card_choice.dart';
 
 class ConfirmOrder extends StatefulWidget {
@@ -91,7 +90,11 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
             ///Check if order is reservable or not
             if (widget.reserve != null && widget.reserve) {
               orderReservableState = snapshot.orderReservable;
-              if (widget.tourist || snapshot.booking != null && snapshot.booking.booking_id != null && snapshot.booking.booking_id.isNotEmpty && (snapshot.orderReservable != null && snapshot.orderReservable.itemList.isNotEmpty && snapshot.orderReservable.itemList[0].id_business != snapshot.booking.business_id)) {
+              if (widget.tourist ||
+                  snapshot.booking != null &&
+                      snapshot.booking.booking_id != null &&
+                      snapshot.booking.booking_id.isNotEmpty &&
+                      (snapshot.orderReservable != null && snapshot.orderReservable.itemList.isNotEmpty && snapshot.orderReservable.itemList[0].id_business != snapshot.booking.business_id)) {
                 disableRoomPayment = true;
               } else {
                 disableRoomPayment = false;
@@ -99,7 +102,9 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
               partialECO = (orderReservableState.total * 2.5) / 100;
             } else {
               orderState = snapshot.order;
-              if ((widget != null && widget.tourist != null && widget.tourist) || ((snapshot.booking != null && snapshot.booking.business_id != null && snapshot.booking.business_id.isNotEmpty) && (snapshot.order != null && snapshot.order.itemList.isNotEmpty && snapshot.order.itemList[0].id_business != snapshot.booking.business_id))) {
+              if ((widget != null && widget.tourist != null && widget.tourist) ||
+                  ((snapshot.booking != null && snapshot.booking.business_id != null && snapshot.booking.business_id.isNotEmpty) &&
+                      (snapshot.order != null && snapshot.order.itemList.isNotEmpty && snapshot.order.itemList[0].id_business != snapshot.booking.business_id))) {
                 disableRoomPayment = true;
               } else {
                 disableRoomPayment = false;
@@ -165,7 +170,9 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                         } else {
                                           serviceNameFromOrder = snapshot.order.itemList.first.name;
                                         }
-                                        FirebaseAnalytics().logEvent(name: 'open_payment_method_confirm_order', parameters: {'user_email': snapshot.user.email, 'date': DateTime.now().toString(), 'service_name': serviceNameFromOrder});
+                                        FirebaseAnalytics().logEvent(
+                                            name: 'open_payment_method_confirm_order',
+                                            parameters: {'user_email': snapshot.user.email, 'date': DateTime.now().toString(), 'service_name': serviceNameFromOrder});
                                         _modalChoosePaymentMethod(context, snapshot);
                                       },
                                     ),
@@ -173,7 +180,9 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                   ],
                                 ),
                               ),
-                              snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.applePay) || snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.googlePay) || snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.card)
+                              snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.applePay) ||
+                                      snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.googlePay) ||
+                                      snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.card)
                                   ? Container(
                                       height: 26,
                                       width: double.infinity,
@@ -195,82 +204,101 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                               //
                               //     /// TODO: CASO STRIPE
                               //     Container()
-                                  Center(
-                                      child: Container(
-                                        margin: EdgeInsets.only(bottom: 10),
-                                        child: MaterialButton(
-                                          color: snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.paypal)
-                                              ? BuytimeTheme.Secondary
-                                              : widget.tourist != null && widget.tourist
-                                                  ? BuytimeTheme.BackgroundCerulean
-                                                  : BuytimeTheme.UserPrimary,
-                                          disabledColor: BuytimeTheme.SymbolLightGrey,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: new BorderRadius.circular(5),
-                                          ),
-                                          child: Container(
-                                            alignment: Alignment.center,
-                                            width: SizeConfig.blockSizeHorizontal * 57,
-                                            height: 44,
-                                            child: Text(
-                                              !(widget.reserve != null && widget.reserve) ? AppLocalizations.of(context).confirmPayment : '${AppLocalizations.of(context).completeBooking.toUpperCase()}',
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                letterSpacing: 1,
-                                                fontSize: 16,
-                                                fontFamily: BuytimeTheme.FontFamily,
-                                                fontWeight: FontWeight.bold,
-                                                color: snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.paypal) ? Colors.black : BuytimeTheme.TextWhite,
-                                              ),
-                                            ),
-                                          ),
-                                          onPressed: () async {
-                                            FirebaseAnalytics().logEvent(name: 'ok_confirm_order', parameters: {'user_email': snapshot.user.email, 'date': DateTime.now().toString(), 'payment_method': snapshot.stripe.chosenPaymentMethod});
-
-                                            double totalToSend = snapshot.order.total;
-                                            snapshot.order.total = double.parse(snapshot.order.total.toStringAsFixed(2));
-                                            snapshot.order.totalPromoDiscount = double.parse(snapshot.order.totalPromoDiscount.toStringAsFixed(2));
-
-                                            if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.applePay) || snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.googlePay) || snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.card)) {
-                                              debugPrint("ui_u_confirmOrder stripe paymentSheet");
-
-                                              // Stripe.publishableKey = "pk_live_51HS20eHr13hxRBpCLHzfi0SXeqw8Efu911cWdYEE96BAV0zSOesvE83OiqqzRucKIxgCcKHUvTCJGY6cXRtkDVCm003CmGXYzy";
-                                              Stripe.publishableKey = "pk_test_51HS20eHr13hxRBpCZl1V0CKFQ7XzJbku7UipKLLIcuNGh3rp4QVsEDCThtV0l2AQ3jMtLsDN2zdC0fQ4JAK6yCOp003FIf3Wjz";
-                                              final paymentSheetData = await requestPaymentSheet(snapshot.user.uid, totalToSend);
-                                              Stripe.merchantIdentifier = 'merchant.theoptimumcompany.buytime';
-                                              // Stripe.merchantIdentifier = 'com.theoptimumcompany.buytime';
-                                              await Stripe.instance.applySettings();
-
-                                              debugPrint("ui_u_confirmOrder stripe paymentSheet parameters + ${paymentSheetData['customer']} + ${paymentSheetData['paymentIntent']} + ${paymentSheetData['ephemeralKey']}");
-                                              debugPrint("ui_u_confirmOrder stripe paymentSheet parameters json + $paymentSheetData");
-
-                                              await Stripe.instance.initPaymentSheet(
-                                                  paymentSheetParameters: SetupPaymentSheetParameters(
-                                                    applePay: Stripe.instance.isApplePaySupported.value,
-                                                    googlePay: true,
-                                                    style: ThemeMode.light,
-                                                    testEnv: true,
-                                                    merchantCountryCode: 'DE',
-                                                    merchantDisplayName: 'Buytime | The Optimum Company S.R.L.i.',
-                                                    customerId: paymentSheetData['customer'],
-                                                    paymentIntentClientSecret: paymentSheetData['paymentIntent'],
-                                                    customerEphemeralKeySecret: paymentSheetData['ephemeralKey'],
-                                                  ));
-
-                                              await Stripe.instance.presentPaymentSheet();
-                                              debugPrint("ui_u_confirmOrder stripe paymentSheet end");
-
-                                            } else if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.room)) {
-                                              confirmationRoom(context, snapshot);
-                                            } else if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.onSite)) {
-                                              confirmationOnSite(context, snapshot);
-                                            } else if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.paypal)) {
-                                              confirmationPayPal(context, snapshot);
-                                            }
-                                          },
+                              Center(
+                                child: Container(
+                                  margin: EdgeInsets.only(bottom: 10),
+                                  child: MaterialButton(
+                                    color: snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.paypal)
+                                        ? BuytimeTheme.Secondary
+                                        : widget.tourist != null && widget.tourist
+                                            ? BuytimeTheme.BackgroundCerulean
+                                            : BuytimeTheme.UserPrimary,
+                                    disabledColor: BuytimeTheme.SymbolLightGrey,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: new BorderRadius.circular(5),
+                                    ),
+                                    child: Container(
+                                      alignment: Alignment.center,
+                                      width: SizeConfig.blockSizeHorizontal * 57,
+                                      height: 44,
+                                      child: Text(
+                                        !(widget.reserve != null && widget.reserve) ? AppLocalizations.of(context).confirmPayment : '${AppLocalizations.of(context).completeBooking.toUpperCase()}',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          letterSpacing: 1,
+                                          fontSize: 16,
+                                          fontFamily: BuytimeTheme.FontFamily,
+                                          fontWeight: FontWeight.bold,
+                                          color: snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.paypal) ? Colors.black : BuytimeTheme.TextWhite,
                                         ),
                                       ),
-                                    )
+                                    ),
+                                    onPressed: () async {
+                                      FirebaseAnalytics().logEvent(
+                                          name: 'ok_confirm_order',
+                                          parameters: {'user_email': snapshot.user.email, 'date': DateTime.now().toString(), 'payment_method': snapshot.stripe.chosenPaymentMethod});
+
+                                      double totalToSend = snapshot.order.total;
+                                      snapshot.order.total = double.parse(snapshot.order.total.toStringAsFixed(2));
+                                      snapshot.order.totalPromoDiscount = double.parse(snapshot.order.totalPromoDiscount.toStringAsFixed(2));
+
+                                      if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.applePay) ||
+                                          snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.googlePay) ||
+                                          snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.card)) {
+                                        debugPrint("ui_u_confirmOrder stripe paymentSheet");
+
+                                        // Stripe.publishableKey = "pk_live_51HS20eHr13hxRBpCLHzfi0SXeqw8Efu911cWdYEE96BAV0zSOesvE83OiqqzRucKIxgCcKHUvTCJGY6cXRtkDVCm003CmGXYzy";
+                                        Stripe.publishableKey = "pk_test_51HS20eHr13hxRBpCZl1V0CKFQ7XzJbku7UipKLLIcuNGh3rp4QVsEDCThtV0l2AQ3jMtLsDN2zdC0fQ4JAK6yCOp003FIf3Wjz";
+                                        final paymentSheetData = await requestPaymentSheet(snapshot.user.uid, totalToSend);
+                                        Stripe.merchantIdentifier = 'merchant.theoptimumcompany.buytime';
+                                        // Stripe.merchantIdentifier = 'com.theoptimumcompany.buytime';
+                                        await Stripe.instance.applySettings();
+
+                                        debugPrint(
+                                            "ui_u_confirmOrder stripe paymentSheet parameters + ${paymentSheetData['customer']} + ${paymentSheetData['paymentIntent']} + ${paymentSheetData['ephemeralKey']}");
+                                        debugPrint("ui_u_confirmOrder stripe paymentSheet parameters json + $paymentSheetData");
+
+                                        await Stripe.instance.initPaymentSheet(
+                                            paymentSheetParameters: SetupPaymentSheetParameters(
+                                          applePay: Stripe.instance.isApplePaySupported.value,
+                                          googlePay: true,
+                                          style: ThemeMode.light,
+                                          testEnv: true,
+                                          merchantCountryCode: 'DE',
+                                          merchantDisplayName: 'Buytime | The Optimum Company S.R.L.i.',
+                                          customerId: paymentSheetData['customer'],
+                                          paymentIntentClientSecret: paymentSheetData['paymentIntent'],
+                                          customerEphemeralKeySecret: paymentSheetData['ephemeralKey'],
+                                        ));
+
+                                        try {
+                                          await Stripe.instance.presentPaymentSheet();
+                                          print("OK");
+                                          if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.card)) {
+                                            print("CARD Confirm Order");
+                                            confirmationCard(context, snapshot, '', '', '', '');
+                                          } else {
+                                            confirmationNative(context, snapshot);
+                                          }
+                                        } on Exception catch (e) {
+                                          if (e is StripeException) {
+                                            print("No Stripe Exception");
+                                          } else {
+                                            print("No general error Exception");
+                                          }
+                                        }
+                                        debugPrint("ui_u_confirmOrder stripe paymentSheet end");
+                                      } else if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.room)) {
+                                        confirmationRoom(context, snapshot);
+                                      } else if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.onSite)) {
+                                        confirmationOnSite(context, snapshot);
+                                      } else if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.paypal)) {
+                                        confirmationPayPal(context, snapshot);
+                                      }
+                                    },
+                                  ),
+                                ),
+                              )
                             ],
                           )
                         ],
@@ -284,7 +312,10 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
 
   Text getCurrentPaymentMethod(BuildContext context, AppState snapshot) {
     if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.card)) {
-      if (snapshot.cardListState != null && snapshot.cardListState.cardList != null && snapshot.cardListState.cardList.first.stripeState != null && snapshot.cardListState.cardList.first.stripeState.stripeCard != null) {
+      if (snapshot.cardListState != null &&
+          snapshot.cardListState.cardList != null &&
+          snapshot.cardListState.cardList.first.stripeState != null &&
+          snapshot.cardListState.cardList.first.stripeState.stripeCard != null) {
         return Text(snapshot.cardListState.cardList.first.stripeState.stripeCard.brand + " " + snapshot.cardListState.cardList.first.stripeState.stripeCard.last4);
       }
       return Text(AppLocalizations.of(context).creditCard.replaceAll(":", ""));
@@ -303,17 +334,20 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
   }
 
   bool resetPaymentTypeIfNotAccepted(AppState snapshot) {
-    if (((snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.card) || snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.applePay) || snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.paypal) || snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.googlePay)) && !snapshot.serviceState.paymentMethodCard) || (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.room) && (!snapshot.serviceState.paymentMethodRoom || isExternal)) || (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.onSite) && !snapshot.serviceState.paymentMethodOnSite)) {
+    if (((snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.card) ||
+                snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.applePay) ||
+                snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.paypal) ||
+                snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.googlePay)) &&
+            !snapshot.serviceState.paymentMethodCard) ||
+        (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.room) && (!snapshot.serviceState.paymentMethodRoom || isExternal)) ||
+        (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.onSite) && !snapshot.serviceState.paymentMethodOnSite)) {
       StoreProvider.of<AppState>(context).dispatch(ResetPaymentMethod());
     }
   }
 
-  Pay _payClient = Pay.withAssets([
-    'google_pay_payment_profile.json'
-  ]);
+  Pay _payClient = Pay.withAssets(['google_pay_payment_profile.json']);
 
   Future<void> _modalChoosePaymentMethod(context, AppState snapshot) {
-
     showModalBottomSheet(
         elevation: 3,
         shape: RoundedRectangleBorder(
@@ -358,7 +392,9 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                             title: creditCardText(context, cardFromFirestore),
                             trailing: creditCardTrailing(context, cardFromFirestore),
                             onTap: () {
-                              FirebaseAnalytics().logEvent(name: 'payment_method_specific_confirm_order', parameters: {'user_email': snapshot.user.email, 'date': DateTime.now().toString(), 'payment_method': Utils.enumToString(PaymentType.card)});
+                              FirebaseAnalytics().logEvent(
+                                  name: 'payment_method_specific_confirm_order',
+                                  parameters: {'user_email': snapshot.user.email, 'date': DateTime.now().toString(), 'payment_method': Utils.enumToString(PaymentType.card)});
                               StoreProvider.of<AppState>(context).dispatch(ChoosePaymentMethod(Utils.enumToString(PaymentType.card)));
                               Navigator.of(context).pop();
                             },
@@ -371,51 +407,59 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                         leading: Image(width: SizeConfig.blockSizeHorizontal * 10, image: AssetImage('assets/img/applePay.png')),
                         title: new Text(AppLocalizations.of(context).applePay),
                         onTap: () {
-                          FirebaseAnalytics().logEvent(name: 'payment_method_specific_confirm_order', parameters: {'user_email': snapshot.user.email, 'date': DateTime.now().toString(), 'payment_method': Utils.enumToString(PaymentType.applePay)});
+                          FirebaseAnalytics().logEvent(
+                              name: 'payment_method_specific_confirm_order',
+                              parameters: {'user_email': snapshot.user.email, 'date': DateTime.now().toString(), 'payment_method': Utils.enumToString(PaymentType.applePay)});
                           StoreProvider.of<AppState>(context).dispatch(ChoosePaymentMethod(Utils.enumToString(PaymentType.applePay)));
                           Navigator.of(context).pop();
                         },
                       )
                     : Container(),
-                Platform.isAndroid ?
-                FutureBuilder<bool>(
-                  future: _payClient.userCanPay(PayProvider.google_pay),
-                  builder: (context, snapshotPay) {
-                    if (snapshotPay.connectionState == ConnectionState.done) {
-                      if (snapshotPay.data == true) {
-                        return Divider();
-                      }
-                    }
-                    return Container();
-                  },
-                ) : Container(),
-                Platform.isAndroid ?
-                FutureBuilder<bool>(
-                  future: _payClient.userCanPay(PayProvider.google_pay),
-                  builder: (context, snapshotPay) {
-                    if (snapshotPay.connectionState == ConnectionState.done) {
-                      if (snapshotPay.data == true) {
-                        return ListTile(
-                          leading: Image(width: SizeConfig.blockSizeHorizontal * 10, image: AssetImage('assets/img/googlePay.png')),
-                          title: new Text(AppLocalizations.of(context).googlePay),
-                          onTap: () {
-                            FirebaseAnalytics().logEvent(name: 'payment_method_specific_confirm_order', parameters: {'user_email': snapshot.user.email, 'date': DateTime.now().toString(), 'payment_method': Utils.enumToString(PaymentType.googlePay)});
-                            StoreProvider.of<AppState>(context).dispatch(ChoosePaymentMethod(Utils.enumToString(PaymentType.googlePay)));
-                            Navigator.of(context).pop();
-                          },
-                        );
-                      }
-                    }
-                    return Container();
-                  },
-                ) : Container(),
+                Platform.isAndroid
+                    ? FutureBuilder<bool>(
+                        future: _payClient.userCanPay(PayProvider.google_pay),
+                        builder: (context, snapshotPay) {
+                          if (snapshotPay.connectionState == ConnectionState.done) {
+                            if (snapshotPay.data == true) {
+                              return Divider();
+                            }
+                          }
+                          return Container();
+                        },
+                      )
+                    : Container(),
+                Platform.isAndroid
+                    ? FutureBuilder<bool>(
+                        future: _payClient.userCanPay(PayProvider.google_pay),
+                        builder: (context, snapshotPay) {
+                          if (snapshotPay.connectionState == ConnectionState.done) {
+                            if (snapshotPay.data == true) {
+                              return ListTile(
+                                leading: Image(width: SizeConfig.blockSizeHorizontal * 10, image: AssetImage('assets/img/googlePay.png')),
+                                title: new Text(AppLocalizations.of(context).googlePay),
+                                onTap: () {
+                                  FirebaseAnalytics().logEvent(
+                                      name: 'payment_method_specific_confirm_order',
+                                      parameters: {'user_email': snapshot.user.email, 'date': DateTime.now().toString(), 'payment_method': Utils.enumToString(PaymentType.googlePay)});
+                                  StoreProvider.of<AppState>(context).dispatch(ChoosePaymentMethod(Utils.enumToString(PaymentType.googlePay)));
+                                  Navigator.of(context).pop();
+                                },
+                              );
+                            }
+                          }
+                          return Container();
+                        },
+                      )
+                    : Container(),
                 !widget.tourist && snapshot.serviceState.paymentMethodRoom && !isExternal ? Divider() : Container(),
                 !widget.tourist && snapshot.serviceState.paymentMethodRoom && !isExternal
                     ? ListTile(
                         leading: Image(width: SizeConfig.blockSizeHorizontal * 10, image: AssetImage('assets/img/room.png')),
                         title: new Text(AppLocalizations.of(context).room.replaceAll(":", "")),
                         onTap: () {
-                          FirebaseAnalytics().logEvent(name: 'payment_method_specific_confirm_order', parameters: {'user_email': snapshot.user.email, 'date': DateTime.now().toString(), 'payment_method': Utils.enumToString(PaymentType.room)});
+                          FirebaseAnalytics().logEvent(
+                              name: 'payment_method_specific_confirm_order',
+                              parameters: {'user_email': snapshot.user.email, 'date': DateTime.now().toString(), 'payment_method': Utils.enumToString(PaymentType.room)});
                           StoreProvider.of<AppState>(context).dispatch(ChoosePaymentMethod(Utils.enumToString(PaymentType.room)));
                           Navigator.of(context).pop();
                         },
@@ -427,7 +471,9 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                         leading: Image(width: SizeConfig.blockSizeHorizontal * 10, image: AssetImage('assets/img/cash.png')),
                         title: new Text(AppLocalizations.of(context).onSite),
                         onTap: () {
-                          FirebaseAnalytics().logEvent(name: 'payment_method_specific_confirm_order', parameters: {'user_email': snapshot.user.email, 'date': DateTime.now().toString(), 'payment_method': Utils.enumToString(PaymentType.onSite)});
+                          FirebaseAnalytics().logEvent(
+                              name: 'payment_method_specific_confirm_order',
+                              parameters: {'user_email': snapshot.user.email, 'date': DateTime.now().toString(), 'payment_method': Utils.enumToString(PaymentType.onSite)});
                           StoreProvider.of<AppState>(context).dispatch(ChoosePaymentMethod(Utils.enumToString(PaymentType.onSite)));
                           Navigator.of(context).pop();
                         },
@@ -679,17 +725,20 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
       debugPrint('UI_U_ConfirmOrder => order is isOrderAutoConfirmable ' + snapshot.orderReservable.isOrderAutoConfirmable().toString());
       if (snapshot.orderReservable.isOrderAutoConfirmable()) {
         if (Utils.getTimeInterval(orderReservableState) == OrderTimeInterval.directPayment) {
-          StoreProvider.of<AppState>(context).dispatch(CreateOrderReservableCardAndPay(snapshot.orderReservable, last4, brand, country, selectedCardPaymentMethodId, PaymentType.card, context, snapshot.business.stripeCustomerId));
+          StoreProvider.of<AppState>(context)
+              .dispatch(CreateOrderReservableCardAndPay(snapshot.orderReservable, last4, brand, country, selectedCardPaymentMethodId, PaymentType.card, context, snapshot.business.stripeCustomerId));
         }
       } else {
         debugPrint('UI_U_ConfirmOrder => dispatching pending order creation');
-        StoreProvider.of<AppState>(context).dispatch(CreateOrderReservableCardPending(snapshot.orderReservable, last4, brand, country, selectedCardPaymentMethodId, PaymentType.card, context, snapshot.business.stripeCustomerId));
+        StoreProvider.of<AppState>(context)
+            .dispatch(CreateOrderReservableCardPending(snapshot.orderReservable, last4, brand, country, selectedCardPaymentMethodId, PaymentType.card, context, snapshot.business.stripeCustomerId));
       }
     } else {
       /// Direct Card Payment
       debugPrint('UI_U_ConfirmOrder => start direct payment process with Credit Card');
       if (snapshot.order.isOrderAutoConfirmable()) {
-        StoreProvider.of<AppState>(context).dispatch(CreateOrderCardAndPay(snapshot.order, last4, brand, country, selectedCardPaymentMethodId, PaymentType.card, context, snapshot.business.stripeCustomerId));
+        StoreProvider.of<AppState>(context)
+            .dispatch(CreateOrderCardAndPay(snapshot.order, last4, brand, country, selectedCardPaymentMethodId, PaymentType.card, context, snapshot.business.stripeCustomerId));
       } else {
         StoreProvider.of<AppState>(context).dispatch(CreateOrderCardPending(snapshot.order, last4, brand, country, selectedCardPaymentMethodId, PaymentType.card));
       }
@@ -699,6 +748,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
   Future<void> confirmationNative(BuildContext context, AppState snapshot) async {
     StoreProvider.of<AppState>(context).dispatch(CreatingOrder());
     PaymentMethod paymentMethod;
+
     /// 1: create the payment method
     if (widget.reserve != null && widget.reserve) {
       /// Reservable payment process starts with Native Method
@@ -717,6 +767,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
       if (paymentMethod != null) {
         /// 2: add the payment method to the order state
         StoreProvider.of<AppState>(context).dispatch(SetOrderPaymentMethod(paymentMethod));
+
         /// 3: now we can create the order on the database and its sub collection
         if (snapshot.order.isOrderAutoConfirmable()) {
           StoreProvider.of<AppState>(context).dispatch(CreateOrderNativeAndPay(snapshot.order, paymentMethod, PaymentType.native, context, snapshot.business.stripeCustomerId));
@@ -896,5 +947,4 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
       return null;
     }
   }
-
 }
