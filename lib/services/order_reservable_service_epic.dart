@@ -891,7 +891,7 @@ class CreateOrderReservablePaypalAndPayService implements EpicClass<AppState> {
       actionArray.add(UpdateStatistics(statisticsState));
       actionArray.add(SetOrderReservableOrderId(reservable.orderId));
       actionArray.add(SetOrderDetail(OrderDetailState.fromReservableState(reservable)));
-      //actionArray.add(NavigatePushAction(AppRoutes.orderDetailsRealtime));
+      actionArray.add(NavigatePushAction(AppRoutes.orderDetailsRealtime));
       return actionArray;
     });
   }
@@ -1036,7 +1036,7 @@ class CreateOrderReservablePaypalPendingService implements EpicClass<AppState> {
       actionArray.add(UpdateStatistics(statisticsState));
       actionArray.add(SetOrderReservableOrderId(reservable.orderId));
       actionArray.add(SetOrderDetail(OrderDetailState.fromReservableState(reservable)));
-      //actionArray.add(NavigatePushAction(AppRoutes.orderDetailsRealtime));
+      actionArray.add(NavigatePushAction(AppRoutes.orderDetailsRealtime));
       return actionArray;
     });
   }
