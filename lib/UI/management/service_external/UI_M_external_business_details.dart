@@ -143,10 +143,10 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
     serviceSnippetList.forEach((sLSL) {
       if(sLSL.businessId == serviceState.businessId){
         sLSL.businessSnippet.forEach((bS) {
-          //debugPrint('CATEGORY NAME: ${bS.categoryName}');
+          //debugPrint('UI_M_external_business_details => CATEGORY NAME: ${bS.categoryName}');
           bS.serviceList.forEach((sL) {
             if(sL.serviceAbsolutePath.split('/').last == serviceState.serviceId){
-              //debugPrint('SERVICE NAME: ${sL.serviceName} - SERVICE ID: ${sL.serviceAbsolutePath}');
+              //debugPrint('UI_M_external_business_details => SERVICE NAME: ${sL.serviceName} - SERVICE ID: ${sL.serviceAbsolutePath}');
               eSIS.externalCategoryName = bS.categoryName;
             }
           });
@@ -192,14 +192,14 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
       }
     });
     if(equalBusiness){
-      debugPrint('${ service.name} | if | business true');
+      debugPrint('UI_M_external_business_details => ${ service.name} | if | business true');
       externalServices.forEach((element) {
         if(element.externalServiceId == service.serviceId && element.imported == true){
-          debugPrint('${ service.name} | if | business true | service true');
+          debugPrint('UI_M_external_business_details => ${ service.name} | if | business true | service true');
           equalService = true;
         }
         if(element.externalServiceId == service.serviceId && element.imported == false){
-          debugPrint('${ service.name} | if | business true | service false');
+          debugPrint('UI_M_external_business_details => ${ service.name} | if | business true | service false');
           equalService = false;
           equalBusiness = false;
         }
@@ -235,7 +235,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
     double lon2 = 0.0;
     if(businessState.coordinate != null && businessState.coordinate.isNotEmpty){
       List<String> latLng1 = businessState.coordinate.replaceAll('(', '').replaceAll(')', '').replaceAll(' ', '').split(',');
-      debugPrint('W_add_external_business_list_item => $businessState.name} | Cordinates 1: $latLng1');
+      debugPrint('UI_M_external_business_details => $businessState.name} | Cordinates 1: $latLng1');
       if(latLng1.length == 2){
         lat1 = double.parse(latLng1[0]);
         lon1 = double.parse(latLng1[1]);
@@ -243,7 +243,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
     }
     if(widget.externalBusinessState.coordinate != null && widget.externalBusinessState.coordinate.isNotEmpty){
       List<String> latLng2 = widget.externalBusinessState.coordinate.replaceAll('(', '').replaceAll(')', '').replaceAll(' ', '').split(',');
-      debugPrint('W_add_external_business_list_item => ${widget.externalBusinessState.name} | Cordinates 2: $latLng2');
+      debugPrint('UI_M_external_business_details => ${widget.externalBusinessState.name} | Cordinates 2: $latLng2');
       if(latLng2.length == 2){
         lat2 = double.parse(latLng2[0]);
         lon2 = double.parse(latLng2[1]);
@@ -255,7 +255,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
         c(lat1 * p) * c(lat2 * p) *
             (1 - c((lon2 - lon1) * p))/2;
     double tmp = (12742 * asin(sqrt(a)));
-    debugPrint('W_add_external_business_list_item => Distance: $tmp');
+    debugPrint('UI_M_external_business_details => Distance: $tmp');
 
     return  tmp;
   }
@@ -282,7 +282,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
         }
         else{
           store.state.externalBusiness = ExternalBusinessState().toEmpty();
-          debugPrint('UI:M_external_business_details => Request Business for: ${widget.externalBusinessState.id_firestore}');
+          debugPrint('UI_M_external_business_details => Request Business for: ${widget.externalBusinessState.id_firestore}');
           store.dispatch(ExternalBusinessRequest(widget.externalBusinessState.id_firestore));
           //store.state.serviceList.serviceListState.clear();
           List<String> serviceIds = [];
@@ -348,11 +348,11 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
           }
         }else{
           if(snapshot.externalBusiness.id_firestore.isEmpty && tmpServiceList.isEmpty && startRequest){
-            debugPrint('UI:M_external_business_details => Requesting: ${snapshot.externalBusiness.id_firestore}');
+            debugPrint('UI_M_external_business_details => Requesting: ${snapshot.externalBusiness.id_firestore}');
             noActivity = true;
           }else{
             if(snapshot.externalBusiness != null && snapshot.externalBusiness.id_firestore != null && snapshot.externalBusiness.id_firestore.isNotEmpty){
-              debugPrint('UI:M_external_business_details => Business from request: ${snapshot.externalBusiness.id_firestore}');
+              debugPrint('UI_M_external_business_details => Business from request: ${snapshot.externalBusiness.id_firestore}');
               widget.externalBusinessState = snapshot.externalBusiness;
             }
 
@@ -395,7 +395,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
           if(sLS.visibility != 'Invisible')
             count++;
         });
-        debugPrint('Count: $count | tmp: ${tmp.length}');
+        debugPrint('UI_M_external_business_details => Count: $count | tmp: ${tmp.length}');
         if(count != 0 && count == tmp.length)
           equalService = true;
 
@@ -1040,7 +1040,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                                                 });
                                                 if (direction == DismissDirection.endToStart) {
 
-                                                  debugPrint('UI_U_external_service_list => DX to DELETE');
+                                                  debugPrint('UI_M_external_business_details => DX to DELETE');
                                                   // Show a snackbar. This snackbar could also contain "Undo" actions.
                                                   cancelExternalService(snapshot.business, service.serviceId, snapshot.serviceListSnippetListState.serviceListSnippetListState);
                                                   /*Scaffold.of(context).showSnackBar(SnackBar(
@@ -1567,7 +1567,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                                                     setState(() {
                                                       allServiceList.removeAt(index);
                                                     });
-                                                    debugPrint('UI_U_SearchPage => SX to BOOK');
+                                                    debugPrint('UI_M_external_business_details => SX to BOOK');
                                                     createExternalService(snapshot.business, service, snapshot.serviceListSnippetListState.serviceListSnippetListState);
                                                     undoAllDeletion(index, service);
                                                   },
@@ -1633,7 +1633,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                                                     setState(() {
                                                       allServiceList.removeAt(index);
                                                     });
-                                                    debugPrint('UI_U_SearchPage => SX to BOOK');
+                                                    debugPrint('UI_M_external_business_details => SX to BOOK');
                                                     createExternalService(snapshot.business, service, snapshot.serviceListSnippetListState.serviceListSnippetListState);
                                                     undoAllDeletion(index, service);
                                                   },

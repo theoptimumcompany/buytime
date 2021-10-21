@@ -1,5 +1,5 @@
 import 'dart:core';
-import 'package:Buytime/UI/management/invite/UI_M_RoomPaymentList.dart';
+import 'package:Buytime/UI/management/invite/UI_M_room_payment_list.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reblox/model/email/email_state.dart';
@@ -88,7 +88,7 @@ class _BookingDetailsState extends State<BookingDetails> {
       ),
     );
     var dynamicUrl = await parameters.buildUrl();
-    print("Link dinamico creato " + dynamicUrl.toString());
+    debugPrint("Link dinamico creato " + dynamicUrl.toString());
     return dynamicUrl;
   }
 
@@ -122,13 +122,13 @@ class _BookingDetailsState extends State<BookingDetails> {
 
         readDynamicLink(bookingState.booking_code);
 
-        debugPrint('UI_M_BookingDetails => BOOKING CODE: ${bookingState.booking_code}');
+        debugPrint('UI_M_Booking_details => BOOKING CODE: ${bookingState.booking_code}');
         //emailState = snapshot.emailState;
         if (snapshot.emailState.sent != null && snapshot.emailState.sent) {
-          debugPrint('UI_M_BookingDetails => EMAIL SENT');
+          debugPrint('UI_M_Booking_details => EMAIL SENT');
           snapshot.emailState.sent = null;
         } else {
-          debugPrint('UI_M_BookingDetails => EMAIL NOT SENT');
+          debugPrint('UI_M_Booking_details => EMAIL NOT SENT');
         }
 
         return WillPopScope(
@@ -378,7 +378,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                                                       suffixIcon: Icon(Icons.calendar_today)),
                                                   style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextMedium, fontWeight: FontWeight.w600, fontSize: 16),
                                                   /*validator: (String value) {
-                                                    debugPrint('${checkIn.compareTo(checkOut)}');
+                                                    debugPrint('UI_M_Booking_details => ${checkIn.compareTo(checkOut)}');
                                                     if (value.isEmpty || checkIn.compareTo(checkOut) > 0) {
                                                       return 'Please enter a valid interval of dates';
                                                     }

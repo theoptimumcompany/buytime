@@ -128,7 +128,7 @@ class HubConventionEditState extends State<HubConventionEdit> {
                                                     ),
                                                     onPressed: () {
                                                       StoreProvider.of<AppState>(context).state.serviceState.conventionSlotList.forEach((element) {
-                                                        debugPrint('THIS SERVICE CONVENTIONS BEFORE: ${element.hubId} | ${element.hubName} | ${element.discount}');
+                                                        debugPrint('UI_M_hub_convention_edit => THIS SERVICE CONVENTIONS BEFORE: ${element.hubId} | ${element.hubName} | ${element.discount}');
                                                         if(element.hubId == widget.conventionSlot.hubId){
                                                           element.discount = int.parse(discountController.text);
                                                           element.hubName = _hubController.text;
@@ -137,7 +137,7 @@ class HubConventionEditState extends State<HubConventionEdit> {
                                                               element.hubId = hub.id_firestore;
                                                           });
                                                         }
-                                                        debugPrint('THIS SERVICE CONVENTIONS AFTER: ${element.hubId} | ${element.hubName} | ${element.discount}');
+                                                        debugPrint('UI_M_hub_convention_edit => THIS SERVICE CONVENTIONS AFTER: ${element.hubId} | ${element.hubName} | ${element.discount}');
                                                       });
                                                     },
                                                     child: Padding(

@@ -108,11 +108,11 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
         //store.state.externalServiceImportedListState.externalServiceImported.clear();
         store.dispatch(ExternalServiceImportedListRequest(store.state.business.id_firestore));
         store.dispatch(ExternalBusinessImportedListRequest(store.state.business.id_firestore));
-        print("On Init Business : Request List of Root Categories");
+        debugPrint("UI_M_business => On Init Business : Request List of Root Categories");
         //store.dispatch(RequestRootListCategory(store.state.business.id_firestore));
         store.dispatch(ServiceListSnippetRequest(store.state.business.id_firestore));
         /*store.state.business.business_type.forEach((element) {
-          print("UI_M_Business => Business Type: ${element.name}");
+          debugPrint("UI_M_Business => Business Type: ${element.name}");
           if (element.name == 'Hotel') hotel = true;
         });*/
         if(store.state.business.hub != null && store.state.business.hub)
@@ -165,7 +165,7 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
       builder: (context, snapshot) {
 
         List<CategoryState> categoryRootList = snapshot.categoryList.categoryListState;
-        //print("UI_M_Business => Categories : ${snapshot.serviceListSnippetState.businessSnippet}");
+        //debugPrint("UI_M_Business => Categories : ${snapshot.serviceListSnippetState.businessSnippet}");
         /*if(snapshot.serviceListSnippetState.businessSnippet != null && snapshot.serviceListSnippetState.businessSnippet.isNotEmpty){
           categories = snapshot.serviceListSnippetState.businessSnippet;
         }*/
@@ -174,12 +174,12 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
           noActivity = true;
         }else{
           if(snapshot.serviceListSnippetState.businessId != null && snapshot.serviceListSnippetState.businessId.isNotEmpty && !generated){
-            print("UI_M_Business => Business Id from snippet: ${snapshot.serviceListSnippetState.businessId}");
+            debugPrint("UI_M_Business => Business Id from snippet: ${snapshot.serviceListSnippetState.businessId}");
             internalCategories.clear();
             externalCategories.clear();
             tmpInternalCategoriesTable.clear();
             tmpExternalCategoriesTable.clear();
-            //print("UI_M_Business => BEFORE | Categories length: ${categories.length}");
+            //debugPrint("UI_M_Business => BEFORE | Categories length: ${categories.length}");
             networkServices = snapshot.serviceListSnippetState.businessServiceNumberInternal + snapshot.serviceListSnippetState.businessServiceNumberExternal;
             //categories = snapshot.serviceListSnippetState.businessSnippet;
             List<CategorySnippetState> tmpCategories = snapshot.serviceListSnippetState.businessSnippet;
@@ -195,22 +195,22 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                   }
                 });
               });
-            //print("UI_M_Business => AFTER | Categories length: ${categories.length}");
+            //debugPrint("UI_M_Business => AFTER | Categories length: ${categories.length}");
             tmpCategories.forEach((allC) {
-              print("UI_M_Business => Category: ${allC.categoryName} | Category services: ${allC.serviceList.length}");
+              debugPrint("UI_M_Business => Category: ${allC.categoryName} | Category services: ${allC.serviceList.length}");
               if(allC.categoryAbsolutePath.split('/').first == snapshot.business.id_firestore){
                 internalCategories.forEach((c) {
-                  print("UI_M_Business => Category: INTERNAL | ${c.categoryName} | Category services: ${c.serviceList.length}");
+                  debugPrint("UI_M_Business => Category: INTERNAL | ${c.categoryName} | Category services: ${c.serviceList.length}");
                   if(allC.categoryAbsolutePath != c.categoryAbsolutePath && allC.categoryAbsolutePath.split('/').contains(c.categoryAbsolutePath.split('/').last)){
-                    print("UI_M_Business => INTERNAL | Main category: ${c.categoryName}");
-                    print("UI_M_Business => INTERNAL | Sub category: ${allC.categoryName}");
-                    print("UI_M_Business => INTERNAL | Sub category service list length: ${allC.serviceList.length}");
-                    print("UI_M_Business => INTERNAL | BEFORE | Main category service list length: ${c.serviceList.length}");
+                    debugPrint("UI_M_Business => INTERNAL | Main category: ${c.categoryName}");
+                    debugPrint("UI_M_Business => INTERNAL | Sub category: ${allC.categoryName}");
+                    debugPrint("UI_M_Business => INTERNAL | Sub category service list length: ${allC.serviceList.length}");
+                    debugPrint("UI_M_Business => INTERNAL | BEFORE | Main category service list length: ${c.serviceList.length}");
                     allC.serviceList.forEach((s) {
                       if(!c.serviceList.contains(s) && s.serviceAbsolutePath.split('/').first == snapshot.business.id_firestore)
                         c.serviceList.add(s);
                     });
-                    print("UI_M_Business => INTERNAL | AFTER | Main category service list length: ${c.serviceList.length}");
+                    debugPrint("UI_M_Business => INTERNAL | AFTER | Main category service list length: ${c.serviceList.length}");
                     c.serviceNumberInternal = c.serviceList.length;
                   }
                 });
@@ -218,17 +218,17 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
 
               if(allC.categoryAbsolutePath.split('/').first != snapshot.business.id_firestore){
                 externalCategories.forEach((c) {
-                  print("UI_M_Business => Category: EXTERNAL | ${c.categoryName} | Category services: ${c.serviceList.length}");
+                  debugPrint("UI_M_Business => Category: EXTERNAL | ${c.categoryName} | Category services: ${c.serviceList.length}");
                   if(allC.categoryAbsolutePath != c.categoryAbsolutePath && allC.categoryAbsolutePath.split('/').contains(c.categoryAbsolutePath.split('/').last)){
-                    print("UI_M_Business => EXTERNAL | Main category: ${c.categoryName}");
-                    print("UI_M_Business => EXTERNAL | Sub category: ${allC.categoryName}");
-                    print("UI_M_Business => EXTERNAL | Sub category service list length: ${allC.serviceList.length}");
-                    print("UI_M_Business => EXTERNAL | BEFORE | Main category service list length: ${c.serviceList.length}");
+                    debugPrint("UI_M_Business => EXTERNAL | Main category: ${c.categoryName}");
+                    debugPrint("UI_M_Business => EXTERNAL | Sub category: ${allC.categoryName}");
+                    debugPrint("UI_M_Business => EXTERNAL | Sub category service list length: ${allC.serviceList.length}");
+                    debugPrint("UI_M_Business => EXTERNAL | BEFORE | Main category service list length: ${c.serviceList.length}");
                     allC.serviceList.forEach((s) {
                       if(!c.serviceList.contains(s) && s.serviceAbsolutePath.split('/').first != snapshot.business.id_firestore)
                         c.serviceList.add(s);
                     });
-                    print("UI_M_Business => EXTERNAL | AFTER | Main category service list length: ${c.serviceList.length}");
+                    debugPrint("UI_M_Business => EXTERNAL | AFTER | Main category service list length: ${c.serviceList.length}");
                     c.serviceNumberExternal = c.serviceList.length;
                   }
                 });

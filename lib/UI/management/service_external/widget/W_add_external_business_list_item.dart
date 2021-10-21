@@ -66,7 +66,7 @@ class _AddExternalBusinessListItemState extends State<AddExternalBusinessListIte
   @override
   Widget build(BuildContext context) {
 
-    debugPrint('coordinates: ${calculateDistance()}');
+    debugPrint('W_add_external_business_list_item => coordinates: ${calculateDistance()}');
     return Container(
         //margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 4, right: SizeConfig.safeBlockHorizontal * 4),
         margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 0),

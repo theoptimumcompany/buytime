@@ -247,7 +247,7 @@ class PersonalInfoParkState extends State<PersonalInfoPark> with SingleTickerPro
                   ),
                   onPressed: () async {
                     if(formKey.currentState.validate()) {
-                      debugPrint("UI_U_personal_info_park validation ok");
+                      debugPrint("UI_U_personal_info_park => validation ok");
                       setState(() {
                         requestFlying = true;
                       });
@@ -256,7 +256,7 @@ class PersonalInfoParkState extends State<PersonalInfoPark> with SingleTickerPro
                       final http.Response response = await http.get(url);
                       var responseObject =  json.decode(response.body);
                       if (responseObject["status"] == false) {
-                        debugPrint("UI_U_personal_info_park slot problem: " + responseObject["message"] );
+                        debugPrint("UI_U_personal_info_park => slot problem: " + responseObject["message"] );
                       } else {
                         setState(() {
                           requestFlying = false;
@@ -264,7 +264,7 @@ class PersonalInfoParkState extends State<PersonalInfoPark> with SingleTickerPro
                         });
                       }
                     } else {
-                      debugPrint("UI_U_personal_info_park validation failed");
+                      debugPrint("UI_U_personal_info_park => validation failed");
                     }
                   },
                 ),
@@ -301,7 +301,7 @@ class PersonalInfoParkState extends State<PersonalInfoPark> with SingleTickerPro
                   ),
                   onPressed: () async {
                     if(formKey.currentState.validate()) {
-                      debugPrint("UI_U_personal_info_park validation ok");
+                      debugPrint("UI_U_personal_info_park => validation ok");
                       setState(() {
                         requestFlying = false;
                       });
@@ -350,7 +350,7 @@ class PersonalInfoParkState extends State<PersonalInfoPark> with SingleTickerPro
                       Stripe.publishableKey = "pk_test_51HS20eHr13hxRBpCZl1V0CKFQ7XzJbku7UipKLLIcuNGh3rp4QVsEDCThtV0l2AQ3jMtLsDN2zdC0fQ4JAK6yCOp003FIf3Wjz";
 
                     } else {
-                      debugPrint("UI_U_personal_info_park validation failed");
+                      debugPrint("UI_U_personal_info_park => validation failed");
                     }
                   },
                 ),

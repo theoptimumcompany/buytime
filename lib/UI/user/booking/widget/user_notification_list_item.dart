@@ -67,7 +67,7 @@ class _UserNotificationListItemState extends State<UserNotificationListItem> {
   @override
   Widget build(BuildContext context) {
 
-    //debugPrint('image: ${widget.serviceState.image1}');
+    //debugPrint('user_notification_list_item => image: ${widget.serviceState.image1}');
     return Container(
       //margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 4, right: SizeConfig.safeBlockHorizontal * 4),
         //padding: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),

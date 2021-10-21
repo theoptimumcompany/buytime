@@ -79,7 +79,7 @@ class _RAllBookingsState extends State<RAllBookings> {
     var media = MediaQuery.of(context).size;
     SizeConfig().init(context);
     order = StoreProvider.of<AppState>(context).state.order.itemList != null ? (StoreProvider.of<AppState>(context).state.order.itemList.length > 0 ? StoreProvider.of<AppState>(context).state.order : OrderState().toEmpty()) : OrderState().toEmpty();
-    //debugPrint('UI_U_all_bookings => CART COUNT: ${order.cartCounter}');
+    //debugPrint('RUI_U_all_bookings => CART COUNT: ${order.cartCounter}');
     DateTime currentTime = DateTime.now();
     Stream<QuerySnapshot> _orderStream;
     currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0).toUtc();
@@ -253,7 +253,7 @@ class _RAllBookingsState extends State<RAllBookings> {
                             for (int i = 0; i < orderStateList.length; i++) {
                               if (orderStateList[i].orderId == order.orderId) ind = i;
                             }
-                            //debugPrint('UI_U_all_bookings => CART COUNT: ${order.date}');
+                            //debugPrint('RUI_U_all_bookings => CART COUNT: ${order.date}');
                             ServiceState service = ServiceState().toEmpty();
                             StoreProvider.of<AppState>(context).state.notificationListState.notificationListState.forEach((element) {
                               if(element.notificationId != null && element.notificationId.isNotEmpty && order.orderId.isNotEmpty && order.orderId == element.data.state.orderId){

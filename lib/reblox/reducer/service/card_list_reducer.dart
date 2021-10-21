@@ -22,7 +22,7 @@ CardListState cardListReducer(CardListState state, action) {
     cardListState.cardList = action.cardList;
     if (cardListState != null && cardListState.cardList != null) {
       cardListState.cardList.forEach((element) {
-        debugPrint('card_list_reducer: added locally: ${element.stripeState.stripeCard.firestore_id}');
+        debugPrint('card_list_reducer => added locally: ${element.stripeState.stripeCard.firestore_id}');
       });
     }
     return cardListState;
@@ -33,7 +33,7 @@ CardListState cardListReducer(CardListState state, action) {
       for (int i = 0; i < cardListState.cardList.length; i++) {
         if (cardListState.cardList[i].stripeState.stripeCard.firestore_id == action.firestoreCardId){
           cardListState.cardList.removeAt(i);
-          debugPrint('card_list_reducer: removed locally: ${action.firestoreCardId}');
+          debugPrint('card_list_reducer => removed locally: ${action.firestoreCardId}');
         }
       }
     }

@@ -146,7 +146,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
 
   _buildChoiceList() {
     List<Widget> choices = [];
-    debugPrint('size: ${categoryList.length}');
+    debugPrint('UI_M_create_service => size: ${categoryList.length}');
     for(int i = 0; i < categoryList.length; i++){
       choices.add(Container(
         padding: const EdgeInsets.all(2.0),
@@ -195,14 +195,14 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
           access = true;
       });
     }
-   // debugPrint('UI_M_service_list => CAN MANAGER ACCESS THE SERVICE? $access');
+   // debugPrint('UI_M_create_service => CAN MANAGER ACCESS THE SERVICE? $access');
 
     if(!access &&  (StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin ||
         StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman ||
         StoreProvider.of<AppState>(context).state.user.getRole() == Role.owner)){
       access = true;
     }
-  //  debugPrint('UI_M_service_list => CAN MANAGER|OTHERS ACCESS THE SERVICE? $access');
+  //  debugPrint('UI_M_create_service => CAN MANAGER|OTHERS ACCESS THE SERVICE? $access');
 
     return access;
   }

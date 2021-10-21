@@ -66,7 +66,7 @@ class _CreditCardListElementState extends State<CreditCardListElement> {
                     onTap: (){
                       if (!askedForCancelation) {
                         askedForCancelation = true;
-                        debugPrint("Asked cancelation of credit card");
+                        debugPrint("W_credit_card => Asked cancelation of credit card");
                         StoreProvider.of<AppState>(context).dispatch(DeletingStripePaymentMethodOR());
                         StoreProvider.of<AppState>(context).dispatch(CreateDisposePaymentMethodIntent(firestoreCardId, StoreProvider.of<AppState>(context).state.user.uid));
                         //StoreProvider.of<AppState>(context).dispatch(AddCardToList(tmpList));

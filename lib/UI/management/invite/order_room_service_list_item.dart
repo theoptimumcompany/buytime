@@ -25,7 +25,7 @@ class _OrderRoomServiceListItemState extends State<OrderRoomServiceListItem> {
   @override
   Widget build(BuildContext context) {
 
-    //debugPrint('image: ${widget.serviceState.image1}');
+    //debugPrint('order_room_service_list_item => image: ${widget.serviceState.image1}');
     return Container(
         //margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 4, right: SizeConfig.safeBlockHorizontal * 4),
         margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1),
@@ -34,7 +34,7 @@ class _OrderRoomServiceListItemState extends State<OrderRoomServiceListItem> {
             child: InkWell(
               borderRadius: BorderRadius.all(Radius.circular(10)),
               onTap: () async {
-                debugPrint("orderId, serviceId " + widget.orderState.orderId  + " " + widget.orderState.itemList.first.id);
+                debugPrint("order_room_service_list_item => orderId, serviceId " + widget.orderState.orderId  + " " + widget.orderState.itemList.first.id);
                 StoreProvider.of<AppState>(context).dispatch(SetOrderDetailAndNavigatePop(widget.orderState.orderId, widget.orderState.itemList.first.id));
               },
               child: Container(

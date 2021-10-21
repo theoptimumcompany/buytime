@@ -99,29 +99,29 @@ class _BookingPageState extends State<BookingPage> {
     List<ServiceListSnippetState> serviceListSnippetListState = StoreProvider.of<AppState>(context).state.serviceListSnippetListState.serviceListSnippetListState;
     ServiceListSnippetState serviceListSnippetState = StoreProvider.of<AppState>(context).state.serviceListSnippetState;
 
-    //debugPrint('BUSINESS ID: ${serviceListSnippetState.businessId}');
+    //debugPrint('UI_U_booking_page => BUSINESS ID: ${serviceListSnippetState.businessId}');
     for (var w = 0; w < serviceListSnippetState.businessSnippet.length; w++) {
       for (var y = 0; y < serviceListSnippetState.businessSnippet[w].serviceList.length; y++) {
-        //debugPrint('INSIDE SERVICE PATH  => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath}');
+        //debugPrint('UI_U_booking_page => INSIDE SERVICE PATH  => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath}');
         if (serviceListSnippetState.businessSnippet[w].serviceList[y].serviceAbsolutePath.contains(serviceId) && serviceListSnippetState.businessSnippet[w].serviceList[y].serviceAbsolutePath.contains(categoryId)) {
-          //  debugPrint('INSIDE CATEGORY ROOT => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceName}');
-          //debugPrint('INSIDE SERVICE PATH  => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath}');
+          //  debugPrint('UI_U_booking_page => INSIDE CATEGORY ROOT => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceName}');
+          //debugPrint('UI_U_booking_page => INSIDE SERVICE PATH  => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath}');
           sub = true;
         }
       }
     }
 
-    debugPrint('BUSINESS LENGTH: ${serviceListSnippetListState.length}');
+    debugPrint('UI_U_booking_page => BUSINESS LENGTH: ${serviceListSnippetListState.length}');
     for (var z = 0; z < serviceListSnippetListState.length; z++) {
-      debugPrint('BUSINESS NAME => ${serviceListSnippetListState[z].businessName}');
-      debugPrint('BUSINESS NAME => ${serviceListSnippetListState[z].businessSnippet.length}');
-      debugPrint('BUSINESS ID: ${serviceListSnippetListState[z].businessId} - ${serviceListSnippetListState[z].businessName}');
+      debugPrint('UI_U_booking_page => BUSINESS NAME => ${serviceListSnippetListState[z].businessName}');
+      debugPrint('UI_U_booking_page => BUSINESS NAME => ${serviceListSnippetListState[z].businessSnippet.length}');
+      debugPrint('UI_U_booking_page => BUSINESS ID: ${serviceListSnippetListState[z].businessId} - ${serviceListSnippetListState[z].businessName}');
       for (var w = 0; w < serviceListSnippetListState[z].businessSnippet.length; w++) {
         for (var y = 0; y < serviceListSnippetListState[z].businessSnippet[w].serviceList.length; y++) {
-          //debugPrint('INSIDE SERVICE PATH  => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath}');
+          //debugPrint('UI_U_booking_page => INSIDE SERVICE PATH  => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath}');
           if (serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath.contains(serviceId) && serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath.contains(categoryId)) {
-            //  debugPrint('INSIDE CATEGORY ROOT => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceName}');
-            //debugPrint('INSIDE SERVICE PATH  => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath}');
+            //  debugPrint('UI_U_booking_page => INSIDE CATEGORY ROOT => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceName}');
+            //debugPrint('UI_U_booking_page => INSIDE SERVICE PATH  => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath}');
             sub = true;
           }
         }
@@ -275,7 +275,7 @@ class _BookingPageState extends State<BookingPage> {
         }
       },
       builder: (context, snapshot) {
-        debugPrint('UI_U_BookingPage => Order List LENGTH: ${snapshot.orderList.orderListState.length}');
+        debugPrint('UI_U_booking_page => Order List LENGTH: ${snapshot.orderList.orderListState.length}');
         //currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0).toUtc();
 
         /*bookingState = snapshot.booking;
@@ -285,9 +285,9 @@ class _BookingPageState extends State<BookingPage> {
         categoryListState = snapshot.categoryList;
         categoryList = categoryListState.categoryListState;*/
 
-        //debugPrint('UI_U_BookingPage: category list lenght => ${categoryList.length}');
-        //debugPrint('UI_U_BookingPage: business logo => ${businessState.logo}');
-        //debugPrint('UI_U_BookingPage: service list lenght => ${serviceList.length}');
+        //debugPrint('UI_U_booking_page => category list lenght => ${categoryList.length}');
+        //debugPrint('UI_U_booking_page => business logo => ${businessState.logo}');
+        //debugPrint('UI_U_booking_page => service list lenght => ${serviceList.length}');
 
 
         if (snapshot.categoryList.categoryListState.isNotEmpty && startRequest && rippleLoading) {
@@ -315,7 +315,7 @@ class _BookingPageState extends State<BookingPage> {
             if ((element.customTag == 'showcase' || element.showcase) && element.level == 0) {
               debugPrint('UI_U_booking_page => LEVEL 0 & SHOWCASE CATEGORY: ${element.name}');
               serviceListState.serviceListState.forEach((service) {
-                //debugPrint('CATAGORY ID: ${cLS.id} - CATEGORY LIST: ${service.categoryId}');
+                //debugPrint('UI_U_booking_page => CATAGORY ID: ${cLS.id} - CATEGORY LIST: ${service.categoryId}');
                 if (service.categoryId.contains(element.id) || searchCategoryAndServiceOnSnippetList(service.serviceId, element.id)) {
                   if (!categoryList.contains(element)) {
                     categoryList.add(element);
@@ -372,7 +372,7 @@ class _BookingPageState extends State<BookingPage> {
 
         order = snapshot.order.itemList != null ? (snapshot.order.itemList.length > 0 ? snapshot.order : OrderState().toEmpty()) : OrderState().toEmpty();
         debugPrint('UI_U_BookingPage => CART COUNT: ${order.cartCounter}');
-        debugPrint('UI_U_booking_page =>has notifications? $hasNotifications');
+        debugPrint('UI_U_booking_page => has notifications? $hasNotifications');
 
         return Stack(children: [
           Positioned.fill(
@@ -751,7 +751,7 @@ class _BookingPageState extends State<BookingPage> {
                                                     suffixIcon: InkWell(
                                                       key: Key('guest_search_button_key'),
                                                       onTap: () {
-                                                        debugPrint('done');
+                                                        debugPrint('UI_U_booking_page => done');
                                                         FocusScope.of(context).unfocus();
                                                         setState(() {
                                                           searched = _searchController.text;
@@ -774,7 +774,7 @@ class _BookingPageState extends State<BookingPage> {
                                                   ),
                                                   style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextMedium, fontWeight: FontWeight.w400, fontSize: 16),
                                                   onEditingComplete: () {
-                                                    debugPrint('done');
+                                                    debugPrint('UI_U_booking_page => done');
                                                     FocusScope.of(context).unfocus();
                                                     setState(() {
                                                       searched = _searchController.text;
@@ -891,7 +891,7 @@ class _BookingPageState extends State<BookingPage> {
                                                           order.itemList.first.time != null) userOrderList.add(order);
                                                       orderList.add(order);
                                                     });
-                                                    //debugPrint('asdsd');
+                                                    //debugPrint('UI_U_booking_page => asdsd');
                                                     userOrderList.sort((a, b) => a.itemList.first.date.isBefore(b.itemList.first.date)
                                                         ? -1
                                                         : a.itemList.first.date.isAtSameMomentAs(b.itemList.first.date)
@@ -1394,7 +1394,7 @@ class _BookingPageState extends State<BookingPage> {
                                                               onTap: () async {
                                                                 String url =
                                                                     StoreProvider.of<AppState>(context).state.business.phoneConcierge.isNotEmpty ? StoreProvider.of<AppState>(context).state.business.phoneConcierge : BuytimeConfig.ArunasNumber.trim();
-                                                                debugPrint('Restaurant phonenumber: ' + url);
+                                                                debugPrint('UI_U_booking_page => Restaurant phonenumber: ' + url);
                                                                 if (await canLaunch('tel:$url')) {
                                                                   await launch('tel:$url');
                                                                 } else {

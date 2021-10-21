@@ -22,7 +22,7 @@ class MessagingHelper {
     firebaseMessaging.requestPermission(sound: true, badge: true, alert: true, provisional: true);
     firebaseMessaging.getToken().then((String token) {
       assert(token != null);
-      print("messaging_helper: token " + token);
+      debugPrint("messaging_helper => token " + token);
       serverToken = token;
     });
     firebaseMessaging.onTokenRefresh.listen((newToken) {
@@ -36,14 +36,14 @@ class MessagingHelper {
   }
   void onMessageOpenedApp(BuildContext context) {
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      debugPrint('messaging_helper: ON MESSAGE OPENED APP');
+      debugPrint('messaging_helper => ON MESSAGE OPENED APP');
       RemoteNotification notification = message.notification;
       messageDataRetriveNotify(context, notification);
     });
   }
   void onMessage(BuildContext context) {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      debugPrint('messaging_helper: ON MESSAGE');
+      debugPrint('mmessaging_helper => ON MESSAGE');
       RemoteNotification notification = message.notification;
       if(Platform.isAndroid)
       {
@@ -82,7 +82,7 @@ class MessagingHelper {
   }
   void onMessageFirst(BuildContext context) {
     FirebaseMessaging.onMessage.first.then((message) => () {
-      debugPrint('messaging_helper: ON MESSAGE FIRST');
+      debugPrint('messaging_helper => ON MESSAGE FIRST');
       RemoteNotification notification = message.notification;
       messageDataRetriveNotify(context, notification);
     });
@@ -123,11 +123,11 @@ class MessagingHelper {
   static Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
     if (message.data.containsKey('data')) {
       final dynamic data = message.data['data'];
-      debugPrint("messaging_helper: data: " + data);
+      debugPrint("messaging_helper => data: " + data);
     }
     if (message.data.containsKey('notification')) {
       final dynamic notification = message.data['notification'];
-      debugPrint("messaging_helper: notification: " + notification);
+      debugPrint("messaging_helper => notification: " + notification);
     }
   }
 }

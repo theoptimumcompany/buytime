@@ -98,7 +98,7 @@ class LandingLegacyState extends State<LandingLegacy> {
 
   bookingCodeFound() async {
     bookingCode = await storage.read(key: 'bookingCode') ?? '';
-    debugPrint('UI_U_landing: DEEP LINK EMPTY | BOOKING CODE: $bookingCode');
+    debugPrint('UI_U_landing => DEEP LINK EMPTY | BOOKING CODE: $bookingCode');
     await storage.delete(key: 'bookingCode');
 
     if (bookingCode.isNotEmpty)
@@ -111,7 +111,7 @@ class LandingLegacyState extends State<LandingLegacy> {
 
   selfCheckInFound() async {
     selfBookingCode = await storage.read(key: 'selfBookingCode') ?? '';
-    debugPrint('UI_U_landing: DEEP LINK EMPTY | selfBookingCode : $selfBookingCode');
+    debugPrint('UI_U_landing => DEEP LINK EMPTY | selfBookingCode : $selfBookingCode');
     await storage.delete(key: 'selfBookingCode');
 
     if (selfBookingCode.isNotEmpty) {
@@ -123,7 +123,7 @@ class LandingLegacyState extends State<LandingLegacy> {
 
   categoryInviteFound() async {
     categoryCode = await storage.read(key: 'categoryInvite') ?? '';
-    debugPrint('UI_U_landing: DEEP LINK EMPTY | CATEGORY INVITE: $categoryCode');
+    debugPrint('UI_U_landing => DEEP LINK EMPTY | CATEGORY INVITE: $categoryCode');
     // await storage.delete(key: 'categoryInvite');
     if (categoryCode.isNotEmpty) {
       StoreProvider.of<AppState>(context).dispatch(UserBookingListRequest(StoreProvider.of<AppState>(context).state.user.email, false));
@@ -134,7 +134,7 @@ class LandingLegacyState extends State<LandingLegacy> {
   onSitePaymentFound() async {
     userId = await storage.read(key: 'onSiteUserId') ?? '';
     orderId = await storage.read(key: 'onSiteOrderId') ?? '';
-    debugPrint('UI_U_landing: DEEP LINK EMPTY | userId: $userId | orderId: $orderId');
+    debugPrint('UI_U_landing => DEEP LINK EMPTY | userId: $userId | orderId: $orderId');
     await storage.delete(key: 'onSiteUserId');
     await storage.delete(key: 'onSiteOrderId');
 
@@ -145,7 +145,7 @@ class LandingLegacyState extends State<LandingLegacy> {
         StoreProvider.of<AppState>(context).state.order.progress = 'paid';
         StoreProvider.of<AppState>(context).dispatch(UpdateOrderByManager(StoreProvider.of<AppState>(context).state.order, OrderStatus.paid));
       } else {
-        debugPrint('USER NO PERMISSION');
+        debugPrint('UI_U_landing => USER NO PERMISSION');
       }
 
       await storage.write(key: 'onSiteUserIdRead', value: 'false');
@@ -172,14 +172,14 @@ class LandingLegacyState extends State<LandingLegacy> {
     FirebaseDynamicLinks.instance.onLink(onSuccess: (PendingDynamicLinkData dynamicLink) async {
       deepLink = null;
       deepLink = dynamicLink?.link;
-      debugPrint('UI_U_landing: DEEPLINK onLink: $deepLink');
+      debugPrint('UI_U_landing => DEEPLINK onLink: $deepLink');
       if (deepLink != null) {
         String bookingCodeRead = await storage.containsKey(key: 'bookingCodeRead') ? await storage.read(key: 'bookingCodeRead') ?? '' : '';
         String categoryInviteRead = await storage.containsKey(key: 'categoryInviteRead') ? await storage.read(key: 'categoryInviteRead') ?? '' : '';
         String orderIdRead = await storage.containsKey(key: 'orderIdRead') ? await storage.read(key: 'orderIdRead') ?? '' : '';
         String onSiteUserIdRead = await storage.containsKey(key: 'onSiteUserIdRead') ? await storage.read(key: 'onSiteUserIdRead') ?? '' : '';
         String onSiteOrderIdRead = await storage.containsKey(key: 'onSiteOrderIdRead') ? await storage.read(key: 'onSiteOrderIdRead') ?? '' : '';
-        debugPrint('UI_U_landing: after reading secure storage');
+        debugPrint('UI_U_landing => after reading secure storage');
         debugPrint('UI_U_landing: bookingCodeRead: ${bookingCodeRead}');
 
         if (deepLink.queryParameters.containsKey('booking') && bookingCodeRead != 'true') {

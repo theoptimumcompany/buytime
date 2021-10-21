@@ -297,7 +297,7 @@ class _TouristSessionState extends State<TouristSession> with SingleTickerProvid
       });
     } else {
       Navigator.of(context).pop();
-      debugPrint('response: $responseMessage');
+      debugPrint('UI_U_tourist_session => response: $responseMessage');
       if (responseMessage.isEmpty) {
         setState(() {
           _success = false;
@@ -487,7 +487,7 @@ class _TouristSessionState extends State<TouristSession> with SingleTickerProvid
 
   void checkAuth() async {
     bool didAuthenticate = await localAuth.authenticateWithBiometrics(localizedReason: AppLocalizations.of(context).pleaseAuthenticateShowAccountBalance);
-    debugPrint('UI_U_Login => $didAuthenticate');
+    debugPrint('UI_U_tourist_session => $didAuthenticate');
   }
 
   ///Validation
@@ -682,7 +682,7 @@ class _TouristSessionState extends State<TouristSession> with SingleTickerProvid
       converter: (store) => store.state,
       builder: (context, snapshot) {
         autoCompleteList = snapshot.autoCompleteListState.autoCompleteListState;
-        debugPrint('UI_U_Login => Auto complete List LENGTH: ${autoCompleteList.length}');
+        debugPrint('UI_U_tourist_session => Auto complete List LENGTH: ${autoCompleteList.length}');
         return GestureDetector(
           onTap: () {
             FocusScopeNode currentFocus = FocusScope.of(context);

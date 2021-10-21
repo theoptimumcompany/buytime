@@ -79,7 +79,7 @@ class PAServiceListState extends State<PAServiceList> {
             if(sLS.visibility != 'Invisible')
               count++;
           });
-          debugPrint('Count: $count | tmp: ${tmp.length}');
+          debugPrint('UI_M_p_a_service_list => Count: $count | tmp: ${tmp.length}');
           if(count != 0 && count == tmp.length)
             equalService = true;
 
@@ -137,11 +137,11 @@ class PAServiceListState extends State<PAServiceList> {
                       onPressed: !equalService && !equalBusiness ? () {
                         List<String> tmp = [];
                         StoreProvider.of<AppState>(context).state.externalServiceImportedListState.externalServiceImported.forEach((element) {
-                          //debugPrint('here');
+                          //debugPrint('UI_M_p_a_service_list => here');
                           widget.serviceState.forEach((sL) {
-                            //debugPrint(' 2');
+                            //debugPrint('UI_M_p_a_service_list => 2');
                             if(element.externalServiceId != sL.serviceId && element.externalBusinessId == widget.externalBusinessState.id_firestore){
-                              //debugPrint('here 3');
+                              //debugPrint('UI_M_p_a_service_list => here 3');
                               tmp.add(sL.serviceId);
                             }
                           });
@@ -165,7 +165,7 @@ class PAServiceListState extends State<PAServiceList> {
                             sLSL.businessSnippet.forEach((bS) {
                               bS.serviceList.forEach((sL) {
                                 if(sL.serviceAbsolutePath.split('/').last == serviceId){
-                                  debugPrint('UI_M_external_business_details => External category name: ${bS.categoryName}');
+                                  debugPrint('UI_M_p_a_service_list => External category name: ${bS.categoryName}');
                                   eSIS.externalCategoryName = bS.categoryName;
                                 }
                               });
@@ -272,7 +272,7 @@ class PAServiceListState extends State<PAServiceList> {
                                         setState(() {
                                           serviceList.removeAt(index);
                                         });
-                                        debugPrint('UI_U_external_business_details => SX to BOOK');
+                                        debugPrint('UI_M_p_a_service_list => SX to BOOK');
                                         ExternalServiceImportedState eSIS = ExternalServiceImportedState();
                                         eSIS.internalBusinessId = snapshot.business.id_firestore;
                                         eSIS.internalBusinessName = snapshot.business.name;

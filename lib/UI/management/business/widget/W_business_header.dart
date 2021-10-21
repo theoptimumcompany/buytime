@@ -31,7 +31,7 @@ class BusinessHeaderState extends State<BusinessHeader> {
 
       },
       builder: (context, snapshot) {
-        print("UI_M_Business => Business Id from snippet: ${snapshot.serviceListSnippetState.businessId}");
+        debugPrint("W_business_header => Business Id from snippet: ${snapshot.serviceListSnippetState.businessId}");
         List<CategoryState> categoryRootList = snapshot.categoryList.categoryListState;
         networkServices =snapshot.serviceListSnippetState.businessServiceNumberInternal + snapshot.serviceListSnippetState.businessServiceNumberExternal;
         return  Column(

@@ -24,9 +24,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:pay/pay.dart';
 
 
-import 'UI_U_CardChoice.dart';
+import 'UI_U_card_choice.dart';
 
 class ConfirmOrder extends StatefulWidget {
   final String title = 'confirmOrder';
@@ -307,7 +308,12 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
     }
   }
 
-  void _modalChoosePaymentMethod(context, AppState snapshot) {
+  Pay _payClient = Pay.withAssets([
+    'google_pay_payment_profile.json'
+  ]);
+
+  Future<void> _modalChoosePaymentMethod(context, AppState snapshot) {
+
     showModalBottomSheet(
         elevation: 3,
         shape: RoundedRectangleBorder(
@@ -322,7 +328,6 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
               children: <Widget>[
                 /// TODO wrap with realtime query for card list
                 ///
-
                 ///Paypal
                 snapshot.serviceState.paymentMethodCard
                     ? ListTile(
@@ -354,15 +359,8 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                             trailing: creditCardTrailing(context, cardFromFirestore),
                             onTap: () {
                               FirebaseAnalytics().logEvent(name: 'payment_method_specific_confirm_order', parameters: {'user_email': snapshot.user.email, 'date': DateTime.now().toString(), 'payment_method': Utils.enumToString(PaymentType.card)});
-                              if (cardFromFirestore != null) {
-                                StoreProvider.of<AppState>(context).dispatch(ChoosePaymentMethod(Utils.enumToString(PaymentType.card)));
-                                Navigator.of(context).pop();
-                              } else {
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => CardChoice()),
-                                );
-                              }
+                              StoreProvider.of<AppState>(context).dispatch(ChoosePaymentMethod(Utils.enumToString(PaymentType.card)));
+                              Navigator.of(context).pop();
                             },
                           );
                         })
@@ -379,15 +377,38 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                         },
                       )
                     : Container(),
-                ListTile(
-                  leading: Image(width: SizeConfig.blockSizeHorizontal * 10, image: AssetImage('assets/img/googlePay.png')),
-                  title: new Text(AppLocalizations.of(context).googlePay),
-                  onTap: () {
-                    FirebaseAnalytics().logEvent(name: 'payment_method_specific_confirm_order', parameters: {'user_email': snapshot.user.email, 'date': DateTime.now().toString(), 'payment_method': Utils.enumToString(PaymentType.googlePay)});
-                    StoreProvider.of<AppState>(context).dispatch(ChoosePaymentMethod(Utils.enumToString(PaymentType.googlePay)));
-                    Navigator.of(context).pop();
+                Platform.isAndroid ?
+                FutureBuilder<bool>(
+                  future: _payClient.userCanPay(PayProvider.google_pay),
+                  builder: (context, snapshotPay) {
+                    if (snapshotPay.connectionState == ConnectionState.done) {
+                      if (snapshotPay.data == true) {
+                        return Divider();
+                      }
+                    }
+                    return Container();
                   },
-                ),
+                ) : Container(),
+                Platform.isAndroid ?
+                FutureBuilder<bool>(
+                  future: _payClient.userCanPay(PayProvider.google_pay),
+                  builder: (context, snapshotPay) {
+                    if (snapshotPay.connectionState == ConnectionState.done) {
+                      if (snapshotPay.data == true) {
+                        return ListTile(
+                          leading: Image(width: SizeConfig.blockSizeHorizontal * 10, image: AssetImage('assets/img/googlePay.png')),
+                          title: new Text(AppLocalizations.of(context).googlePay),
+                          onTap: () {
+                            FirebaseAnalytics().logEvent(name: 'payment_method_specific_confirm_order', parameters: {'user_email': snapshot.user.email, 'date': DateTime.now().toString(), 'payment_method': Utils.enumToString(PaymentType.googlePay)});
+                            StoreProvider.of<AppState>(context).dispatch(ChoosePaymentMethod(Utils.enumToString(PaymentType.googlePay)));
+                            Navigator.of(context).pop();
+                          },
+                        );
+                      }
+                    }
+                    return Container();
+                  },
+                ) : Container(),
                 !widget.tourist && snapshot.serviceState.paymentMethodRoom && !isExternal ? Divider() : Container(),
                 !widget.tourist && snapshot.serviceState.paymentMethodRoom && !isExternal
                     ? ListTile(

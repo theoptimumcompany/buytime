@@ -2,6 +2,7 @@ import 'package:Buytime/reblox/model/order/order_list_state.dart';
 import 'package:Buytime/reblox/model/order/order_reservable_list_state.dart';
 import 'package:Buytime/reblox/model/order/order_reservable_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
+import 'package:flutter/cupertino.dart';
 
 
 class OrderReservableListRequest {
@@ -34,7 +35,7 @@ OrderReservableListState orderReservableListReducer(OrderReservableListState sta
   }
   if (action is OrderReservableListReturned) {
     orderReservableListState = OrderReservableListState(orderReservableListState: action.orderReservableListState).copyWith();
-    print("Nel Reducer dell'OrderReservableListState ");
+    debugPrint("Nel Reducer dell'OrderReservableListState ");
     return orderReservableListState;
   }
   return state;

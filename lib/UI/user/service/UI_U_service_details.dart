@@ -54,7 +54,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
   void initState() {
     super.initState();
     serviceState = widget.serviceState;
-    debugPrint('image: ${widget.serviceState.image1}');
+    debugPrint('UI_U_service_details => image: ${widget.serviceState.image1}');
   }
 
   @override
@@ -85,34 +85,34 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
           address = widget.serviceState.serviceBusinessAddress;
         else
           address = '${AppLocalizations.of(context).noAddress}.';
-        debugPrint('UI_M_external_service_details => ADDRESS: $address');
+        debugPrint('UI_U_service_details => ADDRESS: $address');
         store.dispatch(SetService(widget.serviceState));
         //order = store.state.order.itemList != null ? (store.state.order.itemList.length > 0 ? store.state.order : order) : order;
         if (widget.serviceState.image1.isNotEmpty) images.add(widget.serviceState.image1);
         if (widget.serviceState.image2.isNotEmpty) images.add(widget.serviceState.image2);
         if (widget.serviceState.image3.isNotEmpty) images.add(widget.serviceState.image3);
 
-        debugPrint('UI_U_ServiceDetails => IMAGES: ${images.length}');
+        debugPrint('UI_U_service_details => IMAGES: ${images.length}');
 
         if (widget.serviceState.switchSlots) {
           double tmpPrice;
-          debugPrint('UI_U_ServiceDetails => SLOTS LENGTH: ${widget.serviceState.serviceSlot.length}');
+          debugPrint('UI_U_service_details => SLOTS LENGTH: ${widget.serviceState.serviceSlot.length}');
           DateTime currentTime = DateTime.now();
           currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0);
           widget.serviceState.serviceSlot.forEach((element) {
             DateTime checkOut = DateFormat('dd/MM/yyyy').parse(element.checkOut);
             if (checkOut.isAtSameMomentAs(currentTime) || checkOut.isAfter(currentTime)) {
-              debugPrint('UI_U_ServiceDetails => VALID: ${element.checkIn}');
+              debugPrint('UI_U_service_details => VALID: ${element.checkIn}');
               tmpPrice = element.price;
               if (element.price <= tmpPrice) {
                 if (element.day != 0) {
-                  debugPrint('UI_U_ServiceDetails => SLOT WITH DAYS');
+                  debugPrint('UI_U_service_details => SLOT WITH DAYS');
                   if (element.day > 1)
                     price = AppLocalizations.of(context).startingFromCurrency + ' ${element.price.toStringAsFixed(0)} / ${element.day} ${AppLocalizations.of(context).days}';
                   else
                     price = AppLocalizations.of(context).startingFromCurrency + ' ${element.price.toStringAsFixed(0)} / ${element.day} ${AppLocalizations.of(context).day}';
                 } else {
-                  debugPrint('UI_U_ServiceDetails => SLOT WITHOUT DAYS');
+                  debugPrint('UI_U_service_details => SLOT WITHOUT DAYS');
                   int tmpMin = element.hour * 60 + element.minute;
                   if (tmpMin > 90)
                     price = AppLocalizations.of(context).startingFromCurrency + ' ${element.price.toStringAsFixed(0)} / ${element.hour} h ${element.minute} ${AppLocalizations.of(context).spaceMinSpace}';
@@ -146,22 +146,22 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
 
         ///Business name from business list
         store.state.businessList.businessListState.forEach((element) {
-          debugPrint('BUSINESS NAME: ${element.id_firestore} VS ${widget.serviceState.businessId}');
+          debugPrint('UI_U_service_details => BUSINESS NAME: ${element.id_firestore} VS ${widget.serviceState.businessId}');
           if (widget.serviceState.businessId == element.id_firestore) bussinessName = element.name;
         });
 
         ///Business name from snippet
         store.state.serviceListSnippetListState.serviceListSnippetListState.forEach((element) {
-          debugPrint('BUSINESS NAME: ${element.businessId} VS ${widget.serviceState.businessId}');
+          debugPrint('UI_U_service_details => BUSINESS NAME: ${element.businessId} VS ${widget.serviceState.businessId}');
           if (widget.serviceState.businessId == element.businessId) bussinessName = element.businessName;
         });
 
         debugPrint('BUSINESS NAME: $bussinessName');
       },
       builder: (context, snapshot) {
-        debugPrint('UI_U_ServiceDetails => SNAPSHOT CART COUNT: ${snapshot.order}');
+        debugPrint('UI_U_service_details => SNAPSHOT CART COUNT: ${snapshot.order}');
         order = snapshot.order.itemList != null ? (snapshot.order.itemList.length > 0 ? snapshot.order : OrderState().toEmpty()) : OrderState().toEmpty();
-        debugPrint('UI_U_ServiceDetails => CART COUNT: ${order.cartCounter}');
+        debugPrint('UI_U_service_details => CART COUNT: ${order.cartCounter}');
 
         return GestureDetector(
           onTap: () {
@@ -907,7 +907,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                                 onTap: (){
                                                   Utils.singleGoogleTranslate(serviceState.originalLanguage, myLocale.languageCode, Utils.retriveField(serviceState.originalLanguage, serviceState.description)).then((value) => setState(() {
                                                     useOriginal = true;
-                                                    debugPrint('TRANLATED IN: $value');
+                                                    debugPrint('UI_U_service_details => TRANLATED IN: $value');
                                                     translatedDescription =  value;
                                                   }));
 

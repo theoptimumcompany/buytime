@@ -29,7 +29,7 @@ class AreaListRequestService implements EpicClass<AppState> {
 
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-    debugPrint("AREA_SERVICE_EPIC - AreaRequestService => AreaRequestService CATCHED ACTION");
+    debugPrint("area_service_epic => AreaRequestService => AreaRequestService CATCHED ACTION");
     AreaListState areaListState = AreaListState().toEmpty();
     return actions.whereType<AreaListRequest>().asyncMap((event) async {
       var areaListQuerySnapshot = await FirebaseFirestore.instance.collection("area").get();

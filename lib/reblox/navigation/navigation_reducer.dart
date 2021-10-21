@@ -84,7 +84,7 @@ class NavigatePopAction {
 
   @override
   String toString() {
-    debugPrint('pop');
+    debugPrint('navigation_reducer => pop');
     return 'NavigatePopAction';
   }
 }

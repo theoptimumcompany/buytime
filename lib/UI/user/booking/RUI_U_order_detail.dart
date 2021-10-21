@@ -200,7 +200,7 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
     if (!granted) {
       requestLocationPermission();
     }
-    debugPrint('requestContactsPermission $granted');
+    debugPrint('RUI_U_order_detail => requestContactsPermission $granted');
     return granted;
   }
 
@@ -208,7 +208,7 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
     Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best, forceAndroidLocationManager: true).then((Position position) {
       setState(() {
         _currentPosition = position;
-        debugPrint('UI_U_order_details => FROM GEOLOCATOR: $_currentPosition');
+        debugPrint('RUI_U_order_detail => FROM GEOLOCATOR: $_currentPosition');
         currentLat = _currentPosition.latitude;
         currentLng = _currentPosition.longitude;
         gettingLocation = false;
@@ -234,14 +234,14 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
     if (!_serviceEnabled) {
       _requestService = await location.requestService();
       if (!_requestService) {
-        debugPrint('UI_U_order_details => LOCATION NOT ENABLED');
+        debugPrint('RUI_U_order_detail => LOCATION NOT ENABLED');
         setState(() {
           gettingLocation = false;
           distanceFromBusiness = calculateDistance(businessState.coordinate);
         });
         return;
       }else{
-        debugPrint('UI_U_order_details => SERVICE NOT ENABLED');
+        debugPrint('RUI_U_order_detail => SERVICE NOT ENABLED');
       }
     }
 
@@ -249,19 +249,19 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
     if (_permissionGranted == loc.PermissionStatus.denied) {
       _permissionGranted = await location.requestPermission();
       if (_permissionGranted != loc.PermissionStatus.granted) {
-        debugPrint('UI_U_order_details => PERMISSION NOT GARANTED');
+        debugPrint('RUI_U_order_detail => PERMISSION NOT GARANTED');
         setState(() {
           gettingLocation = false;
           distanceFromBusiness = calculateDistance(businessState.coordinate);
         });
         return;
       }else{
-        debugPrint('UI_U_order_details => PERMISSION GARANTED');
+        debugPrint('RUI_U_order_detail => PERMISSION GARANTED');
       }
     }
 
     // _locationData = await location.getLocation();
-    // debugPrint('UI_U_order_details => FROM LOCATION: $_locationData');
+    // debugPrint('RUI_U_order_detail => FROM LOCATION: $_locationData');
     // if (_locationData.latitude != null) {
     //   /*setState(() {
     //     gettingLocation = false;
@@ -278,7 +278,7 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
     double lon2 = 0.0;
     if (coordiantes.isNotEmpty) {
       List<String> latLng1 = coordiantes.replaceAll('(', '').replaceAll(')', '').replaceAll(' ', '').split(',');
-      //debugPrint('W_add_external_business_list_item => $businessState.name} | Cordinates 1: $latLng1');
+      //debugPrint('RUI_U_order_detail => $businessState.name} | Cordinates 1: $latLng1');
       if (latLng1.length == 2) {
         lat1 = double.parse(latLng1[0]);
         lon1 = double.parse(latLng1[1]);
@@ -286,14 +286,14 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
     }
     if (serviceState.serviceCoordinates != null && serviceState.serviceCoordinates.isNotEmpty) {
       List<String> latLng2 = serviceState.serviceCoordinates.replaceAll('(', '').replaceAll(')', '').replaceAll(' ', '').split(',');
-      debugPrint('W_add_external_business_list_item => ${serviceState.name} | Cordinates 2: $latLng2');
+      debugPrint('RUI_U_order_detail => ${serviceState.name} | Cordinates 2: $latLng2');
       if (latLng2.length == 2) {
         lat2 = double.parse(latLng2[0]);
         lon2 = double.parse(latLng2[1]);
       }
     } else if (serviceState.serviceBusinessCoordinates != null && serviceState.serviceBusinessCoordinates.isNotEmpty) {
       List<String> latLng2 = serviceState.serviceBusinessCoordinates.replaceAll('(', '').replaceAll(')', '').replaceAll(' ', '').split(',');
-      //debugPrint('W_add_external_business_list_item => ${widget.externalBusinessState.name} | Cordinates 2: $latLng2');
+      //debugPrint('RUI_U_order_detail => ${widget.externalBusinessState.name} | Cordinates 2: $latLng2');
       if (latLng2.length == 2) {
         lat2 = double.parse(latLng2[0]);
         lon2 = double.parse(latLng2[1]);
@@ -303,7 +303,7 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
     var c = cos;
     var a = 0.5 - c((lat2 - lat1) * p) / 2 + c(lat1 * p) * c(lat2 * p) * (1 - c((lon2 - lon1) * p)) / 2;
     double tmp = (12742 * asin(sqrt(a)));
-    debugPrint('W_add_external_business_list_item => Distance: $tmp');
+    debugPrint('RUI_U_order_detail => Distance: $tmp');
 
     return tmp;
   }
@@ -350,7 +350,7 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
     var media = MediaQuery.of(context).size;
     orderDetails = StoreProvider.of<AppState>(context).state.orderDetail;
     tourist = !(StoreProvider.of<AppState>(context).state.booking != null && StoreProvider.of<AppState>(context).state.booking.booking_id.isNotEmpty);
-    //debugPrint('${widget.imageUrl}');
+    //debugPrint('RUI_U_order_detail => ${widget.imageUrl}');
     if (orderDetails.cardType != null && orderDetails.cardType.isNotEmpty)
       card = orderDetails.cardType.toLowerCase().substring(0, 1) == 'v' ? 'v' : 'mc';
     else
@@ -529,8 +529,8 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
                   builder: (context, AsyncSnapshot<DocumentSnapshot> businessSnapshot) {
                     if (businessSnapshot != null && businessSnapshot.data != null && !businessSnapshot.hasError && businessSnapshot.connectionState != ConnectionState.waiting) {
                       businessState = BusinessState.fromJson(businessSnapshot.data.data() as Map<String, dynamic>);
-                      //debugPrint('YUI_U_order_detail => PRICE: ${orderDetails.total}');
-                      //debugPrint('YUI_U_order_detail => CARD TYPE: ${orderDetails.cardType}');
+                      //debugPrint('RUI_U_order_detail => PRICE: ${orderDetails.total}');
+                      //debugPrint('RUI_U_order_detail => CARD TYPE: ${orderDetails.cardType}');
                       //businessState  = StoreProvider.of<AppState>(context).state.business;
                       order = StoreProvider.of<AppState>(context).state.order;
 
@@ -552,8 +552,8 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
                         if (orderSnapshot != null && orderSnapshot.data != null && !orderSnapshot.hasError && orderSnapshot.connectionState != ConnectionState.waiting) {
                           orderDetails = OrderDetailState.fromJson(orderSnapshot.data.data());
                           order = OrderState.fromJson(orderSnapshot.data.data());
-                          debugPrint('YUI_U_order_detail => PRICE: ${orderDetails.total}');
-                          debugPrint('YUI_U_order_detail => CARD TYPE: ${orderDetails.cardType}');
+                          debugPrint('RUI_U_order_detail => PRICE: ${orderDetails.total}');
+                          debugPrint('RUI_U_order_detail => CARD TYPE: ${orderDetails.cardType}');
                         } else {
                           return CircularProgressIndicator();
                         }
@@ -1306,12 +1306,12 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
                         );
                         OrderState orderState = OrderState.fromJson(orderSnapshot.data.data());
                         order = orderState.itemList != null ? (orderState.itemList.length > 0 ? orderState : OrderState().toEmpty()) : OrderState().toEmpty();
-                        debugPrint('UI_U_ServiceDetails => CART COUNT: ${order.cartCounter}');
+                        debugPrint('RUI_U_order_detail => CART COUNT: ${order.cartCounter}');
                       },
                     );
                     /*OrderState orderState = OrderState.fromJson(orderSnapshot.data.data());
                       order = orderState.itemList != null ? (orderState.itemList.length > 0 ? orderState : OrderState().toEmpty()) : OrderState().toEmpty();
-                      debugPrint('UI_U_ServiceDetails => CART COUNT: ${order.cartCounter}');*/
+                      debugPrint('RUI_U_order_detail => CART COUNT: ${order.cartCounter}');*/
                   },
                 ),
               ),

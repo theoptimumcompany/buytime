@@ -53,7 +53,7 @@
 //
 //   @override
 //   Widget build(BuildContext context) {
-//     print("MAIN DEV STRIPE CONFIGURATION : " + Environment().config.stripePublicKey);
+//     debugPrint("main => MAIN DEV STRIPE CONFIGURATION : " + Environment().config.stripePublicKey);
 //     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
 //     //SizeConfig().init(context);
 //     //ScreenUtil.init(bcontext, width: 1125, height: 2436, allowFontScaling: true);

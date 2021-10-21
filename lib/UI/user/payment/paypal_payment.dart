@@ -55,7 +55,7 @@ class PaypalPaymentState extends State<PaypalPayment> {
         accessToken = await services.getAccessToken();
         //final transactions = getOrderParams();
         final transactions = getNewOrderParams();
-        debugPrint('CALL PAYPAL CREATE PAYMENT');
+        debugPrint('paypal_payment => CALL PAYPAL CREATE PAYMENT');
         final res = await services.createPaypalPayment(transactions, accessToken);
         if (res != null) {
           setState(() {
@@ -106,7 +106,7 @@ class PaypalPaymentState extends State<PaypalPayment> {
 
 
     // checkout invoice details
-    debugPrint('CHECK OUT INVOICE: ${widget.orderState.total} - ${widget.orderState.cartCounter}');
+    debugPrint('paypal_payment => CHECK OUT INVOICE: ${widget.orderState.total} - ${widget.orderState.cartCounter}');
     String totalAmount = '${widget.orderState.total}';
     String subTotalAmount = '${widget.orderState.total}';
     String shippingCost = '0';
@@ -194,10 +194,11 @@ class PaypalPaymentState extends State<PaypalPayment> {
 
 
     // checkout invoice details
-    debugPrint('CHECK OUT INVOICE: ${widget.orderState.total} - ${widget.orderState.cartCounter}');
+    debugPrint('paypal_payment => CHECK OUT INVOICE: ${widget.orderState.total} - ${widget.orderState.cartCounter}');
 
     Map<String, dynamic> temp = {
-      "intent": "AUTHORIZE",
+      //"intent": "AUTHORIZE",
+      "intent": "CAPTURE",
       "purchase_units": [
         {
           "amount": {
@@ -268,7 +269,7 @@ class PaypalPaymentState extends State<PaypalPayment> {
               initialUrl: checkoutUrl,
               javascriptMode: JavascriptMode.unrestricted,
               navigationDelegate: (NavigationRequest request) {
-                debugPrint('RETURN URL: $returnURL - REQUEST: $request');
+                debugPrint('paypal_payment => RETURN URL: $returnURL - REQUEST: $request');
                 setState(() {
                   checkoutUrl = request.url;
                 });
@@ -276,7 +277,7 @@ class PaypalPaymentState extends State<PaypalPayment> {
                   return NavigationDecision.navigate;
                 if(!executionComplete){
                   services.executePayment(Uri.parse(executeUrl), '', accessToken).then((id) {
-                    debugPrint('PAYMENT EXECUTION SUCCESS - ID: $id');
+                    debugPrint('paypal_payment => PAYMENT EXECUTION SUCCESS - ID: $id');
                     widget.onFinish(id);
                     if(id != null && id.isNotEmpty){
                       setState(() {

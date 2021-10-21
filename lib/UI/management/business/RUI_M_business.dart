@@ -65,14 +65,14 @@ class _RBusinessState extends State<RBusiness> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       StoreProvider.of<AppState>(context).dispatch(ExternalServiceImportedListRequest(StoreProvider.of<AppState>(context).state.business.id_firestore));
       StoreProvider.of<AppState>(context).dispatch(ExternalBusinessImportedListRequest(StoreProvider.of<AppState>(context).state.business.id_firestore));
-     // debugPrint('RUI_M_business_list => BUSIENSS ID: ${StoreProvider.of<AppState>(context).state.business.id_firestore}');
+     // debugPrint('RUI_M_business => BUSIENSS ID: ${StoreProvider.of<AppState>(context).state.business.id_firestore}');
       var urlManager = Uri.https(Environment().config.cloudFunctionLink, '/getCategoriesForManagerInBusiness', {'businessId': '${StoreProvider.of<AppState>(context).state.business.id_firestore}', 'userEmail': '${StoreProvider.of<AppState>(context).state.user.email}'});
       var urlWorker = Uri.https(Environment().config.cloudFunctionLink, '/getCategoriesForWorkerInBusiness', {'businessId': '${StoreProvider.of<AppState>(context).state.business.id_firestore}', 'userEmail': '${StoreProvider.of<AppState>(context).state.user.email}'});
       final http.Response responseManager = await http.get(urlManager);
       if(responseManager.statusCode == 200){
-        //debugPrint('RUI_M_business_list => RESPONSE MANAGER: ${responseManager.body}');
-        //debugPrint('RUI_M_business_list => RESPONSE FROM JSON MANAGER: ${jsonDecode(responseManager.body)}');
-       // debugPrint('RUI_M_business_list => RESPONSE JSON MANAGER: ${jsonDecode(responseManager.body)['accessTo']}');
+        //debugPrint('RUI_M_business => RESPONSE MANAGER: ${responseManager.body}');
+        //debugPrint('RRUI_M_business => RESPONSE FROM JSON MANAGER: ${jsonDecode(responseManager.body)}');
+       // debugPrint('RUI_M_business => RESPONSE JSON MANAGER: ${jsonDecode(responseManager.body)['accessTo']}');
         //store.state.user.accessTo = jsonDecode(response.body)['accessTo'];
         var tmpJson = jsonDecode(responseManager.body)['accessTo'];
         List<String> accessList = [];
@@ -83,13 +83,13 @@ class _RBusinessState extends State<RBusiness> {
         isManagerComplete = true;
         StoreProvider.of<AppState>(context).dispatch(SetUserManagerAccessTo(accessList));
       }else{
-       // debugPrint('RUI_M_business_list => RESPONSE MANAGER: ${responseManager.body}');
+       // debugPrint('RUI_M_business => RESPONSE MANAGER: ${responseManager.body}');
       }
       final http.Response responseWorker = await http.get(urlWorker);
       if(responseWorker.statusCode == 200){
-       // debugPrint('RUI_M_business_list => RESPONSE WORKER: ${responseWorker.body}');
-        //debugPrint('RUI_M_business_list => RESPONSE FROM JSON WORKER: ${jsonDecode(responseWorker.body)}');
-       // debugPrint('RUI_M_business_list => RESPONSE JSON WORKER: ${jsonDecode(responseWorker.body)['accessTo']}');
+       // debugPrint('RUI_M_business => RESPONSE WORKER: ${responseWorker.body}');
+        //debugPrint('RUI_M_business => RESPONSE FROM JSON WORKER: ${jsonDecode(responseWorker.body)}');
+       // debugPrint('RUI_M_business => RESPONSE JSON WORKER: ${jsonDecode(responseWorker.body)['accessTo']}');
         //store.state.user.accessTo = jsonDecode(response.body)['accessTo'];
         var tmpJson = jsonDecode(responseWorker.body)['accessTo'];
         List<String> accessList = [];
@@ -100,7 +100,7 @@ class _RBusinessState extends State<RBusiness> {
         isWorkerComplete = true;
         StoreProvider.of<AppState>(context).dispatch(SetUserWorkerAccessTo(accessList));
       }else{
-      // debugPrint('RUI_M_business_list => RESPONSE WORKER: ${responseWorker.body}');
+      // debugPrint('RUI_M_business => RESPONSE WORKER: ${responseWorker.body}');
       }
     });
   }
@@ -396,7 +396,7 @@ class _RBusinessState extends State<RBusiness> {
                                   externalCategories.add(element);
                                 element.serviceList.forEach((service) { 
                                   if(service.serviceAbsolutePath.split('/').first != StoreProvider.of<AppState>(context).state.business.id_firestore){
-                                    debugPrint('EXTERNAL: ${element.categoryName}');
+                                    debugPrint('RUI_M_business => EXTERNAL: ${element.categoryName}');
                                     if(!externalCategories.contains(element))
                                       externalCategories.add(element);
                                   }
@@ -575,7 +575,7 @@ class _RBusinessState extends State<RBusiness> {
                                                   return CategoryListItemWidget(categoryItem, BuytimeTheme.SymbolLime);
                                                   // return InkWell(
                                                   //   onTap: () {
-                                                  //     debugPrint('Category Item: ${categoryItem.name.toUpperCase()} Clicked!');
+                                                  //     debugPrint('RUI_M_business => Category Item: ${categoryItem.name.toUpperCase()} Clicked!');
                                                   //   },
                                                   //   //child: MenuItemListItemWidget(menuItem),
                                                   //   child: CategoryListItemWidget(categoryItem),
@@ -705,7 +705,7 @@ class _RBusinessState extends State<RBusiness> {
                                                     return CategoryListItemWidget(categoryItem, BuytimeTheme.Indigo);
                                                     // return InkWell(
                                                     //   onTap: () {
-                                                    //     debugPrint('Category Item: ${categoryItem.name.toUpperCase()} Clicked!');
+                                                    //     debugPrint('RUI_M_business => Category Item: ${categoryItem.name.toUpperCase()} Clicked!');
                                                     //   },
                                                     //   //child: MenuItemListItemWidget(menuItem),
                                                     //   child: CategoryListItemWidget(categoryItem),

@@ -50,7 +50,7 @@ class _BookingCardWidgetState extends State<BookingCardWidget> {
     DateTime endTime = DateTime.now();
     DateTime startTime = DateTime.now();
     //DateTime startTime = DateTime.now();
-    //debugPrint('booing_card_widget => CURRENT TIME: $currentTime | START DATE: ${widget.bookingState.start_date}');
+    //debugPrint('w_booking_card => CURRENT TIME: $currentTime | START DATE: ${widget.bookingState.start_date}');
     endTime = new DateTime(widget.bookingState.end_date.year, widget.bookingState.end_date.month, widget.bookingState.end_date.day, 0, 0, 0, 0, 0);
     startTime = new DateTime(widget.bookingState.start_date.year, widget.bookingState.start_date.month, widget.bookingState.start_date.day, 0, 0, 0, 0, 0);
     if(endTime.isBefore(currentTime)){

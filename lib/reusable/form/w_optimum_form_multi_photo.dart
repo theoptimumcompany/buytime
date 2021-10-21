@@ -88,9 +88,9 @@ class OptimumFormMultiPhotoState extends State<OptimumFormMultiPhoto> {
         ImageStreamListener(
           (ImageInfo image, bool synchronousCall) {
             completer.complete(image.image);
-            debugPrint('optimum_from_multi_photo: image -> width: ${image.image.width} - height: ${image.image.height}');
+            debugPrint('optimum_from_multi_photo => image -> width: ${image.image.width} - height: ${image.image.height}');
             if (image.image.height < (minHeight ?? 1000) && image.image.width < (minWidth ?? 1000)) {
-              debugPrint('optimum_from_multi_photo: no crop');
+              debugPrint('optimum_from_multi_photo => no crop');
               setState(() {
                 underReqSize = true;
               });
@@ -111,8 +111,8 @@ class OptimumFormMultiPhotoState extends State<OptimumFormMultiPhoto> {
     if (pickedFile != null) {
       var decodedImage = await decodeImageFromList(await pickedFile.readAsBytes());
 
-      print('optimum_from_multi_photo: ${decodedImage.width}');
-      print('optimum_from_multi_photo: ${decodedImage.height}');
+      debugPrint('optimum_from_multi_photo: ${decodedImage.width}');
+      debugPrint('optimum_from_multi_photo: ${decodedImage.height}');
 
       if (decodedImage.width < (minWidth ?? 1000) && decodedImage.height < (minHeight ?? 1000)) {
         debugPrint('optimum_from_multi_photo: no crop');
@@ -174,14 +174,14 @@ class OptimumFormMultiPhotoState extends State<OptimumFormMultiPhoto> {
       completer = new Completer<ui.Image>();
     });
 
-    print("optimum_form_multi_photo: pick image");
+    debugPrint("optimum_form_multi_photo: pick image");
     // call the image picker
     getImage().then((result) {
       if (result != null){
-        print("optimum_form_multi_photo: fileType: ${path.extension(result.path)}");
-        print("optimum_form_multi_photo: localPath: ${result.path}");
-        print("optimum_form_multi_photo: remoteFolder: $remotePath");
-        print("optimum_form_multi_photo: remoteName: ${path.basename(result.path)}");
+        debugPrint("optimum_form_multi_photo: fileType: ${path.extension(result.path)}");
+        debugPrint("optimum_form_multi_photo: localPath: ${result.path}");
+        debugPrint("optimum_form_multi_photo: remoteFolder: $remotePath");
+        debugPrint("optimum_form_multi_photo: remoteName: ${path.basename(result.path)}");
         if(remotePath.endsWith('/logo'))
           StoreProvider.of<AppState>(context).state.business.logo = result.path;
         else if(remotePath.endsWith('/profile'))

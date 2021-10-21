@@ -101,7 +101,7 @@ class _BookingListState extends State<BookingList> {
                     checkedOutBookingMap.clear();
                     checkedOutBookingList.clear();
 
-                    //debugPrint('UI_M_BookingList: snapshot: ${snapshot.bookingList.bookingListState.length}');
+                    //debugPrint('UI_M_Booking_list => snapshot: ${snapshot.bookingList.bookingListState.length}');
                     bookingSnapshot.data.docs.forEach((element) {
                       bookingList.add(BookingState.fromJson(element.data()));
                     });
@@ -110,8 +110,8 @@ class _BookingListState extends State<BookingList> {
                     bookingList.sort((a,b) => DateFormat('MM').format(a.start_date).compareTo(DateFormat('MM').format(b.start_date)));
                     //DateFormat('dd/MM').format(widget.booking.start_date)
                     bookingList.forEach((element) {
-                      //debugPrint('UI_M_BookingList: snapshot booking Date Time: ${element.start_date} - ${element.end_date} | ${element.start_date.isUtc} - ${element.end_date.isUtc} | ${element.start_date.timeZoneName} - ${element.end_date.timeZoneName} | ${element.start_date.timeZoneOffset} - ${element.end_date.timeZoneOffset}');
-                      //debugPrint('UI_M_BookingList: snapshot booking status: ${element.user.first.surname} ${element.status}');
+                      //debugPrint('UI_M_Booking_list => snapshot booking Date Time: ${element.start_date} - ${element.end_date} | ${element.start_date.isUtc} - ${element.end_date.isUtc} | ${element.start_date.timeZoneName} - ${element.end_date.timeZoneName} | ${element.start_date.timeZoneOffset} - ${element.end_date.timeZoneOffset}');
+                      //debugPrint('UI_M_Booking_list => snapshot booking status: ${element.user.first.surname} ${element.status}');
                       if(element.status != 'closed'){
                         bookingMap.putIfAbsent(DateFormat('MMM yyyy').format(element.start_date), () => []);
                         bookingMap[DateFormat('MMM yyyy').format(element.start_date)].add(element);
@@ -124,7 +124,7 @@ class _BookingListState extends State<BookingList> {
 
                     bookingMap.forEach((key, value) {
                       /*value.forEach((element) {
-            debugPrint('UI_M_BookingList: value booking status: ${element.user.first.surname} ${element.status}');
+            debugPrint('UI_M_Booking_list => value booking status: ${element.user.first.surname} ${element.status}');
           });*/
                       value.sort((a,b) => DateFormat('dd').format(a.start_date).compareTo(DateFormat('dd').format(b.start_date)));
                       //value.sort((a,b) => DateFormat('dd').format(a.end_date).compareTo(DateFormat('dd').format(b.end_date)));
@@ -133,7 +133,7 @@ class _BookingListState extends State<BookingList> {
 
                     checkedOutBookingMap.forEach((key, value) {
                       /*value.forEach((element) {
-            debugPrint('UI_M_BookingList: value booking status: ${element.user.first.surname} ${element.status}');
+            debugPrint('UI_M_Booking_list => value booking status: ${element.user.first.surname} ${element.status}');
           });*/
                       value.sort((a,b) => DateFormat('dd',Localizations.localeOf(context).languageCode).format(a.start_date).compareTo(DateFormat('dd').format(b.start_date)));
                       checkedOutBookingList.add(value);
@@ -162,7 +162,7 @@ class _BookingListState extends State<BookingList> {
                                           //MenuItemModel menuItem = menuItems.elementAt(index);
                                           List<BookingState> bookings = activeBookingList.elementAt(index);
                                           bookings.forEach((element) {
-                                            //debugPrint('UI_M_BookingList: bookings booking status: ${element.user.first.surname} ${element.status}');
+                                            //debugPrint('UI_M_Booking_list => bookings booking status: ${element.user.first.surname} ${element.status}');
                                           });
                                           return BookingMonthList(bookings);
                                         },

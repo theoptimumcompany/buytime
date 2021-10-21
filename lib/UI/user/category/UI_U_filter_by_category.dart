@@ -76,10 +76,10 @@ class _FilterByCategoryState extends State<FilterByCategory> {
     ServiceListSnippetState serviceListSnippetState = StoreProvider.of<AppState>(context).state.serviceListSnippetState;
       for (var w = 0; w < serviceListSnippetState.businessSnippet.length; w++) {
         for (var y = 0; y < serviceListSnippetState.businessSnippet[w].serviceList.length; y++) {
-          //debugPrint('INSIDE SERVICE PATH  => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath}');
+          //debugPrint('UI_U_filter_by_category => INSIDE SERVICE PATH  => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath}');
           if (serviceListSnippetState.businessSnippet[w].serviceList[y].serviceAbsolutePath.contains(categoryId)  &&  serviceListSnippetState.businessSnippet[w].serviceList[y].serviceAbsolutePath.contains(serviceId)) {
             return serviceListSnippetState.businessSnippet[w].serviceList[y].serviceAbsolutePath.split('/')[1];
-           // debugPrint('searchCategoryRootId SERVICE PATH  => ${serviceListSnippetState.businessSnippet[w].serviceList[y].serviceAbsolutePath}');
+           // debugPrint('UI_U_filter_by_category => searchCategoryRootId SERVICE PATH  => ${serviceListSnippetState.businessSnippet[w].serviceList[y].serviceAbsolutePath}');
           }
         }
       }
@@ -93,10 +93,10 @@ class _FilterByCategoryState extends State<FilterByCategory> {
       ServiceListSnippetState serviceListSnippetState =  StoreProvider.of<AppState>(context).state.serviceListSnippetState;
       for (var w = 0; w < serviceListSnippetState.businessSnippet.length; w++) {
         for (var y = 0; y < serviceListSnippetState.businessSnippet[w].serviceList.length; y++) {
-          //debugPrint('INSIDE SERVICE PATH  => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath}');
+          //debugPrint('UI_U_filter_by_category => INSIDE SERVICE PATH  => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath}');
           if (serviceListSnippetState.businessSnippet[w].serviceList[y].serviceAbsolutePath.contains(serviceId) && serviceListSnippetState.businessSnippet[w].serviceList[y].serviceAbsolutePath.contains(categoryId)) {
-            //  debugPrint('INSIDE CATEGORY ROOT => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceName}');
-            //debugPrint('INSIDE SERVICE PATH  => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath}');
+            //  debugPrint('UI_U_filter_by_category => INSIDE CATEGORY ROOT => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceName}');
+            //debugPrint('UI_U_filter_by_category => INSIDE SERVICE PATH  => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath}');
             sub = true;
           }
         }
@@ -106,10 +106,10 @@ class _FilterByCategoryState extends State<FilterByCategory> {
     for (var z = 0; z < serviceListSnippetListState.length; z++) {
       for (var w = 0; w < serviceListSnippetListState[z].businessSnippet.length; w++) {
         for (var y = 0; y < serviceListSnippetListState[z].businessSnippet[w].serviceList.length; y++) {
-          //debugPrint('INSIDE SERVICE PATH  => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath}');
+          //debugPrint('UI_U_filter_by_category => INSIDE SERVICE PATH  => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath}');
           if (serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath.contains(serviceId) && serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath.contains(categoryId)) {
-            //  debugPrint('INSIDE CATEGORY ROOT => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceName}');
-            //debugPrint('INSIDE SERVICE PATH  => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath}');
+            //  debugPrint('UI_U_filter_by_category => INSIDE CATEGORY ROOT => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceName}');
+            //debugPrint('UI_U_filter_by_category => INSIDE SERVICE PATH  => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath}');
             sub = true;
           }
         }
@@ -225,7 +225,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
         }
       });
     }
-    debugPrint('i1: ${i1} - i2: ${i2} - i3: ${i3}');
+    debugPrint('UI_U_filter_by_category => i1: ${i1} - i2: ${i2} - i3: ${i3}');
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -297,7 +297,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
     }
 
     categoryListIds.forEach((key, value) {
-      debugPrint('IDS: $key | $value');
+      debugPrint('UI_U_filter_by_category => IDS: $key | $value');
     });
   }
 
@@ -325,7 +325,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                   if (widget.tourist) {
                     debugPrint('UI_U_filter_by_category => SUB CATEGORY NAME: ${element.name}');
                     Provider.of<Explorer>(context, listen: false).serviceList.forEach((service) {
-                      //debugPrint('CATAGORY ID: ${cLS.id} - CATEGORY LIST: ${service.categoryId}');
+                      //debugPrint('UI_U_filter_by_category => CATAGORY ID: ${cLS.id} - CATEGORY LIST: ${service.categoryId}');
                       if (service.categoryId.contains(element.id) || searchCategoryAndServiceOnSnippetList(service.serviceId, element.id)) {
                         createSubCategoryList(element);
                       }
@@ -333,7 +333,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                   } else{
                     debugPrint('UI_U_filter_by_category => SUB CATEGORY NAME: ${element.name}');
                     store.state.serviceList.serviceListState.forEach((service) {
-                      //debugPrint('CATAGORY ID: ${cLS.id} - CATEGORY LIST: ${service.categoryId}');
+                      //debugPrint('UI_U_filter_by_category => CATAGORY ID: ${cLS.id} - CATEGORY LIST: ${service.categoryId}');
                       if (service.categoryId.contains(element.id) || searchCategoryAndServiceOnSnippetList(service.serviceId, element.id)) {
                         createSubCategoryList(element);
                       }
@@ -344,9 +344,9 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                   if(!widget.categoryListIds.contains(element.id)){
                     if(!widget.tourist){
                       if ((element.customTag == 'showcase' || element.showcase) && element.level == 0) {
-                        debugPrint('UI_U_booking_page => LEVEL 0 & SHOWCASE CATEGORY: ${element.name}');
+                        debugPrint('UI_U_filter_by_category => LEVEL 0 & SHOWCASE CATEGORY: ${element.name}');
                         store.state.serviceList.serviceListState.forEach((service) {
-                          //debugPrint('CATAGORY ID: ${cLS.id} - CATEGORY LIST: ${service.categoryId}');
+                          //debugPrint('UI_U_filter_by_category => CATAGORY ID: ${cLS.id} - CATEGORY LIST: ${service.categoryId}');
                           if (service.categoryId.contains(element.id) || searchCategoryAndServiceOnSnippetList(service.serviceId, element.id)) {
                             createCategoryList(element);
                           }
@@ -354,9 +354,9 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                       }
                     }else{
                       if (element.level == 0) {
-                        //debugPrint('UI_U_booking_page => LEVEL 0 & SHOWCASE CATEGORY: ${element.name}');
+                        //debugPrint('UI_U_filter_by_category => LEVEL 0 & SHOWCASE CATEGORY: ${element.name}');
                         Provider.of<Explorer>(context, listen: false).serviceList.forEach((service) {
-                          //debugPrint('CATAGORY ID: ${cLS.id} - CATEGORY LIST: ${service.categoryId}');
+                          //debugPrint('UI_U_filter_by_category => CATAGORY ID: ${cLS.id} - CATEGORY LIST: ${service.categoryId}');
                           if (service.categoryId.contains(element.id) || searchCategoryAndServiceOnSnippetList(service.serviceId, element.id)) {
                             createCategoryList(element);
                           }
@@ -367,7 +367,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                 }
               });
               categoryListIds.forEach((key, value) {
-                debugPrint('IDS: $key | $value');
+                debugPrint('UI_U_filter_by_category => IDS: $key | $value');
               });
             }
           });
@@ -389,18 +389,18 @@ class _FilterByCategoryState extends State<FilterByCategory> {
           serviceList.clear();
           //s.addAll(snapshot.serviceList.serviceListState);
           s.addAll(Provider.of<Explorer>(context, listen: false).serviceList);
-          debugPrint('SERVICE LENGTH: ${s.length}');
+          debugPrint('UI_U_filter_by_category => SERVICE LENGTH: ${s.length}');
           s.forEach((element) {
             if (element.categoryId != null) {
               element.categoryId.forEach((element2) {
-                //debugPrint('CATEGORY ID: ${element2}');
+                //debugPrint('UI_U_filter_by_category => CATEGORY ID: ${element2}');
                 if (widget.categoryListIds != null && widget.categoryListIds.contains(element2)) {
                   tmpServiceList.add(element);
                   serviceList.add(element);
                 }
               });
               if (!tmpServiceList.contains(element) && !serviceList.contains(element)) {
-            //    debugPrint('categoryListIds   => ${widget.categoryListIds}');
+            //    debugPrint('UI_U_filter_by_category => categoryListIds   => ${widget.categoryListIds}');
                 if (widget.categoryListIds != null && widget.categoryListIds.contains(searchCategoryRootId(element.categoryId.first, element.serviceId))) {
                     tmpServiceList.add(element);
                     serviceList.add(element);
@@ -678,7 +678,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                       ),
                                       suffixIcon: InkWell(
                                         onTap: () {
-                                          debugPrint('done');
+                                          debugPrint('UI_U_filter_by_category => done');
                                           FocusScope.of(context).unfocus();
                                           search(serviceList);
                                         },
@@ -691,7 +691,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                     ),
                                     style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextMedium, fontWeight: FontWeight.w400, fontSize: 16),
                                     onEditingComplete: () {
-                                      debugPrint('done');
+                                      debugPrint('UI_U_filter_by_category => done');
                                       FocusScope.of(context).unfocus();
                                       search(serviceList);
                                     },
@@ -735,7 +735,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                               ),
                                               suffixIcon: InkWell(
                                                 onTap: () {
-                                                  debugPrint('done');
+                                                  debugPrint('UI_U_filter_by_category => done');
                                                   FocusScope.of(context).unfocus();
                                                   search(Provider.of<Explorer>(context, listen: false).serviceList);
                                                 },
@@ -748,7 +748,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                             ),
                                             style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextMedium, fontWeight: FontWeight.w400, fontSize: 16),
                                             onEditingComplete: () {
-                                              debugPrint('done');
+                                              debugPrint('UI_U_filter_by_category => done');
                                               FocusScope.of(context).unfocus();
                                               search(Provider.of<Explorer>(context, listen: false).serviceList);
                                             },
@@ -912,7 +912,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                                       });
                                                       if (StoreProvider.of<AppState>(context).state.user.getRole() == Role.user) {
                                                         if (direction == DismissDirection.startToEnd) {
-                                                          debugPrint('UI_U_SearchPage => DX to DELETE');
+                                                          debugPrint('UI_U_filter_by_category => DX to DELETE');
                                                           // Show a snackbar. This snackbar could also contain "Undo" actions.
                                                           Scaffold.of(context).showSnackBar(SnackBar(
                                                               content: Text("${service.name} removed"),
@@ -923,7 +923,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                                                     undoDeletion(index, service);
                                                                   })));
                                                         } else {
-                                                          debugPrint('UI_U_SearchPage => SX to BOOK');
+                                                          debugPrint('UI_U_filter_by_category => SX to BOOK');
                                                           if (service.switchSlots) {
                                                             StoreProvider.of<AppState>(context).dispatch(OrderReservableListRequest(service.serviceId));
                                                             Navigator.push(
@@ -987,9 +987,9 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                                         }
                                                       } else {
                                                         if (direction == DismissDirection.startToEnd) {
-                                                          debugPrint('UI_U_SearchPage => DX to DELETE');
+                                                          debugPrint('UI_U_filter_by_category => DX to DELETE');
                                                         } else {
-                                                          debugPrint('UI_U_SearchPage => SX to BOOK');
+                                                          debugPrint('UI_U_filter_by_category => SX to BOOK');
                                                           undoDeletion(index, service);
                                                         }
                                                       }

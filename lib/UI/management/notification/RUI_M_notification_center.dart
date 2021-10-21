@@ -65,7 +65,7 @@ class _RNotificationCenterState extends State<RNotificationCenter> {
     order = StoreProvider.of<AppState>(context).state.order;
     if(userId != null && userId.isNotEmpty) {
       if (notifications.isEmpty) {
-        debugPrint('RUI_U_notifications => ASKING FOR NOTIFICATIONS');
+        debugPrint('RUI_M_notification_center => ASKING FOR NOTIFICATIONS');
         /// first list
         _orderNotificationStream = FirebaseFirestore.instance.collection('notification')
             .where("userId", isEqualTo: userId)
@@ -170,10 +170,10 @@ class _RNotificationCenterState extends State<RNotificationCenter> {
 
                             for (int j = 0; j < notificationSnapshot.data.docs.length; j++) {
                               String idNotification = notificationSnapshot.data.docs[j].id;
-                              debugPrint('RUI_U_notifications => NOTIFICATION ID: $idNotification');
+                              debugPrint('RUI_M_notification_center => NOTIFICATION ID: $idNotification');
                               NotificationState notificationState = NotificationState.fromJson(notificationSnapshot.data.docs[j].data());
                               notificationState.notificationId = idNotification;
-                              debugPrint('RUI_U_notifications => SERVICE NAME: ${notificationState.serviceName}');
+                              debugPrint('RUI_M_notification_center => SERVICE NAME: ${notificationState.serviceName}');
                               notifications.add(notificationState);
                             }
 
@@ -186,7 +186,7 @@ class _RNotificationCenterState extends State<RNotificationCenter> {
 
           if(notifications.isNotEmpty){
             notifications.forEach((element) {
-              debugPrint('UI_U_notifications => ${element.timestamp}');
+              debugPrint('RUI_M_notification_center => ${element.timestamp}');
             });
             //notifications.sort((b,a) => a.timestamp != null ? a.timestamp : 0 .compareTo(b.timestamp != null ? b.timestamp : 0));
             notifications.sort((b,a) => a.timestamp.compareTo(b.timestamp));
@@ -219,7 +219,7 @@ class _RNotificationCenterState extends State<RNotificationCenter> {
                                                 if (_scrollController.position.pixels >
                                                     triggerFetchMoreSize) {
                                                   /// qui triggera evento di fine scroll
-                                                  debugPrint('UI_U_notifications => fine scroll 90%');
+                                                  debugPrint('RUI_M_notification_center => fine scroll 90%');
                                                 }
                                               }),
                                             shrinkWrap: true,
@@ -239,13 +239,13 @@ class _RNotificationCenterState extends State<RNotificationCenter> {
                                                     });
                                                     // widget.orderStateList.forEach((element) {
                                                     //   if(notification.data.state != null && element.orderId == notification.data.state.orderId){
-                                                    //     debugPrint('UI_U_notification => ${element.orderId}');
+                                                    //     debugPrint('RUI_M_notification_center => ${element.orderId}');
                                                     //     orderState = element;
                                                     //   }
                                                     // });
                                                     // snapshot.serviceList.serviceListState.forEach((element) {
                                                     //   if(notification.data.state != null && element.serviceId == notification.data.state.serviceId){
-                                                    //     //debugPrint('UI_U_notification => ${element.orderId}');
+                                                    //     //debugPrint('RUI_M_notification_center => ${element.orderId}');
                                                     //     serviceState = element;
                                                     //   }
                                                     // });
@@ -254,7 +254,7 @@ class _RNotificationCenterState extends State<RNotificationCenter> {
                                                     // }
                                                     return Container();
 
-                                                    //debugPrint('booking_month_list: bookings booking status: ${booking.user.first.surname} ${booking.status}');
+                                                    //debugPrint('RUI_M_notification_center => booking_month_list: bookings booking status: ${booking.user.first.surname} ${booking.status}');
                                                   },
                                                   childCount: notifications.length,
                                                 ),

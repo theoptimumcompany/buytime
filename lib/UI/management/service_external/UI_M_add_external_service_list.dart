@@ -184,7 +184,6 @@ class AddExternalServiceListState extends State<AddExternalServiceList> {
                 }
               }
             }
-            debugPrint('UI_M_add_external_service_list => ');
             noActivity = false;
             startRequest = false;
           }
@@ -254,7 +253,7 @@ class AddExternalServiceListState extends State<AddExternalServiceList> {
                             ),
                             suffixIcon: InkWell(
                               onTap: () {
-                                debugPrint('done');
+                                debugPrint('UI_M_add_external_service_list => done');
                                 FocusScope.of(context).unfocus();
                                 search(snapshot.externalBusinessList.externalBusinessListState);
                               },
@@ -267,7 +266,7 @@ class AddExternalServiceListState extends State<AddExternalServiceList> {
                           ),
                           style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextMedium, fontWeight: FontWeight.w400, fontSize: 16),
                           onEditingComplete: () {
-                            debugPrint('done');
+                            debugPrint('UI_M_add_external_service_list => done');
                             FocusScope.of(context).unfocus();
                             search(snapshot.externalBusinessList.externalBusinessListState);
                           },

@@ -21,7 +21,7 @@ class _SlotManagementServiceListItemState extends State<SlotManagementServiceLis
   @override
   Widget build(BuildContext context) {
 
-    //debugPrint('image: ${widget.serviceState.image1}');
+    //debugPrint('slot_management_service_list_item => image: ${widget.serviceState.image1}');
     return Container(
         //margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 4, right: SizeConfig.safeBlockHorizontal * 4),
         margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 0),

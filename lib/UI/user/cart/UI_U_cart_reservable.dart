@@ -51,7 +51,7 @@ class CartReservableState extends State<CartReservable> {
   }
 
   void deleteItem(OrderReservableState snapshot, OrderEntry entry, int index) {
-    debugPrint('UI_U_CartReservable => Remove Normal Item');
+    debugPrint('UI_U_cart_reservable => Remove Normal Item');
     setState(() {
       if (snapshot.itemList.length >= 1) {
         orderReservableState.cartCounter = orderReservableState.cartCounter - entry.number;
@@ -76,12 +76,12 @@ class CartReservableState extends State<CartReservable> {
   }
 
   void deleteReserveItem(OrderReservableState snapshot, OrderEntry entry, int index) {
-    debugPrint('UI_U_CartReservable => Remove Normal Item');
+    debugPrint('UI_U_cart_reservable => Remove Normal Item');
     setState(() {
       StoreProvider.of<AppState>(context).state.slotSnippetListState.slotListSnippet.forEach((element) {
         element.slot.forEach((element2) {
           if(element2.uid == entry.idSquareSlot){
-            debugPrint('ON: ${element2.on} - FREE: ${element2.free} - MAX: ${element2.max} - ORDER CAPACITY: ${entry.orderCapacity}');
+            debugPrint('UI_U_cart_reservable => ON: ${element2.on} - FREE: ${element2.free} - MAX: ${element2.max} - ORDER CAPACITY: ${entry.orderCapacity}');
             int tmp = element2.free;
             tmp = tmp+ entry.orderCapacity;
             element2.free = tmp;
@@ -202,7 +202,7 @@ class CartReservableState extends State<CartReservable> {
                                       rebuildOnChange: true,
                                       builder: (context, snapshot) {
                                         orderReservableState = snapshot;
-                                        print("UI_U_cartReservable => CART COUNT: ${orderReservableState.itemList.length}");
+                                        debugPrint("UI_U_cartReservable => CART COUNT: ${orderReservableState.itemList.length}");
                                         return Column(
                                           children: [
                                             ///Service List
@@ -213,7 +213,7 @@ class CartReservableState extends State<CartReservable> {
                                                   delegate: SliverChildBuilderDelegate(
                                                     (context, index) {
                                                       //MenuItemModel menuItem = menuItems.elementAt(index);
-                                                      debugPrint('UI_U_CartReservable => LIST| ${orderReservableState.itemList[index].name} ITEM COUNT: ${orderReservableState.itemList[index].number}');
+                                                      debugPrint('UI_U_cart_reservable => LIST| ${orderReservableState.itemList[index].name} ITEM COUNT: ${orderReservableState.itemList[index].number}');
                                                       var item = (index != orderReservableState.itemList.length ? orderReservableState.itemList[index] : null);
                                                       //int itemCount = orderState.itemList[index].number;
                                                       return  Dismissible(
@@ -232,7 +232,7 @@ class CartReservableState extends State<CartReservable> {
                                                                   orderReservableState.selected == null || orderReservableState.selected.isEmpty ?
                                                                     deleteItem(orderReservableState, item, index) :
                                                                   deleteReserveItem(orderReservableState, item, index);
-                                                                  debugPrint('UI_U_CartReservable => DX to DELETE');
+                                                                  debugPrint('UI_U_cart_reservable => DX to DELETE');
                                                                   // Show a snackbar. This snackbar could also contain "Undo" actions.
                                                                   Scaffold.of(context).showSnackBar(SnackBar(
                                                                       content: Text(Utils.retriveField(Localizations.localeOf(context).languageCode, item.name) + ' ${AppLocalizations.of(context).spaceRemoved}'),

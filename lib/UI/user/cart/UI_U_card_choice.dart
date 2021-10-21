@@ -69,7 +69,7 @@ class CardChoiceState extends State<CardChoice> with SingleTickerProviderStateMi
             ///TODO: Check Delete
             //store?.dispatch(AddingStripePaymentMethodResetOR());
             initializeCardList(store.state.cardListState);
-            debugPrint('UI_U_ConfirmOrder => ON INIT');
+            debugPrint('UI_U_card_choice => ON INIT');
           },
           distinct: true,
           converter: (store) => store.state,
@@ -140,7 +140,7 @@ class CardChoiceState extends State<CardChoice> with SingleTickerProviderStateMi
         ),
       ); // mo/ mocked data for tests
 
-      debugPrint('Setup Intent created $clientSecret, $billingDetails');
+      debugPrint('UI_U_card_choice => Setup Intent created $clientSecret, $billingDetails');
 
       // 3. Confirm setup intent
       final setupIntentResult = await Stripe.instance.confirmSetupIntent(
@@ -149,9 +149,9 @@ class CardChoiceState extends State<CardChoice> with SingleTickerProviderStateMi
           billingDetails: billingDetails,
         ), {}
       ).catchError((error) {
-        debugPrint('Setup Intent confirmed $error');
+        debugPrint('UI_U_card_choice => Setup Intent confirmed $error');
       });
-      debugPrint('Setup Intent confirmed $setupIntentResult');
+      debugPrint('UI_U_card_choice => Setup Intent confirmed $setupIntentResult');
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context).saveYourCardSuccess)));
       setState(() {
         _setupIntentResult = setupIntentResult;
@@ -166,7 +166,7 @@ class CardChoiceState extends State<CardChoice> with SingleTickerProviderStateMi
       );
       StoreProvider.of<AppState>(context).dispatch(AddStripePaymentMethod(card, _userId, setupIntentResult.paymentMethodId));
     } catch (error, s) {
-      debugPrint('Error while saving payment' + error.toString() + s.toString());
+      debugPrint('UI_U_card_choice => Error while saving payment' + error.toString() + s.toString());
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context).saveYourCardError)));
     }
   }
@@ -176,7 +176,7 @@ class CardChoiceState extends State<CardChoice> with SingleTickerProviderStateMi
     final response = await http.get(url);
     final Map<String, dynamic> bodyResponse = json.decode(response.body);
     final clientSecret = bodyResponse['clientSecret'] as String;
-    debugPrint('Client token  $clientSecret');
+    debugPrint('UI_U_card_choice => Client token  $clientSecret');
     return clientSecret;
   }
 
@@ -184,8 +184,8 @@ class CardChoiceState extends State<CardChoice> with SingleTickerProviderStateMi
     if (newStore != null && newStore.cardList != null) {
       for(int i = 0; i < newStore.cardList.length; i++) {
         cardWidgetList.add(CreditCardSimpleListElement(newStore.cardList[i]));
-        print("UI_U_ConfirmOrder initializeCardList => N:${newStore.cardList?.length} - ADD CARD FirebaseId: ${newStore.cardList[i].stripeState.stripeCard.firestore_id}");
-        print("UI_U_ConfirmOrder initializeCardList => Attributes[0]:${newStore.cardList[0].stripeState.stripeCard.paymentMethodId} - ${newStore.cardList[0].stripeState.stripeCard.last4} - ${newStore.cardList[0].stripeState.stripeCard.brand} - ${newStore.cardList[0].stripeState.stripeCard.expMonth}- ${newStore.cardList[0].stripeState.stripeCard.expYear}- ${newStore.cardList[0].stripeState.stripeCard.expYear}");
+        debugPrint("UI_U_card_choice => initializeCardList => N:${newStore.cardList?.length} - ADD CARD FirebaseId: ${newStore.cardList[i].stripeState.stripeCard.firestore_id}");
+        debugPrint("UI_U_card_choice => initializeCardList => Attributes[0]:${newStore.cardList[0].stripeState.stripeCard.paymentMethodId} - ${newStore.cardList[0].stripeState.stripeCard.last4} - ${newStore.cardList[0].stripeState.stripeCard.brand} - ${newStore.cardList[0].stripeState.stripeCard.expMonth}- ${newStore.cardList[0].stripeState.stripeCard.expYear}- ${newStore.cardList[0].stripeState.stripeCard.expYear}");
       }
     }
   }

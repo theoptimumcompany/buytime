@@ -35,7 +35,7 @@ class UI_M_RoomPaymentListState extends State<UI_M_RoomPaymentList> {
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context).size;
     var mediaHeight = media.height;
-    print(widget.bookingId);
+    debugPrint('UI_M_room_payment => ${widget.bookingId}');
     final Stream<DocumentSnapshot> _reservationsOrdersStream = FirebaseFirestore.instance.collection('booking').doc(widget.bookingId).collection('roomCharge').doc('listOfRoomCharge').snapshots();
     return Scaffold(
         appBar: AppBar(
@@ -87,13 +87,13 @@ class UI_M_RoomPaymentListState extends State<UI_M_RoomPaymentList> {
                 );
               }
               ReservationsOrdersListSnippetListState reservationsOrdersListSnippetListState = ReservationsOrdersListSnippetListState.fromJson(reservationsOrdersListSnapshot.data.data());
-              print(reservationsOrdersListSnippetListState.reservationsOrdersListSnippetListState.length);
+              debugPrint('UI_M_room_payment => ${reservationsOrdersListSnippetListState.reservationsOrdersListSnippetListState.length}');
               reservationAndOrderList = reservationsOrdersListSnippetListState.reservationsOrdersListSnippetListState;
               /// update the total.
               total = 0;
               for (int i = 0; i < reservationAndOrderList.length; i++) {
                 OrderState orderState = reservationsOrdersListSnippetListState.reservationsOrdersListSnippetListState[i].order;
-                debugPrint("ordersList price" + orderState.total.toString());
+                debugPrint("UI_M_room_payment_list => price" + orderState.total.toString());
                 if(orderState.progress == Utils.enumToString(OrderStatus.toBePaidAtCheckout)) {
                   total += orderState.total;
                 }
@@ -139,7 +139,7 @@ class UI_M_RoomPaymentListState extends State<UI_M_RoomPaymentList> {
                                             Text(reservationsOrdersListSnippetState.orderId);
                                           // return InkWell(
                                           //   onTap: () {
-                                          //     debugPrint('Category Item: ${categoryItem.name.toUpperCase()} Clicked!');
+                                          //     debugPrint('UI_M_room_payment_list => Category Item: ${categoryItem.name.toUpperCase()} Clicked!');
                                           //   },
                                           //   //child: MenuItemListItemWidget(menuItem),
                                           //   child: CategoryListItemWidget(categoryItem),
@@ -197,7 +197,7 @@ class UI_M_RoomPaymentListState extends State<UI_M_RoomPaymentList> {
     // return StoreConnector<AppState, AppState>(
     //     converter: (store) => store.state,
     //     onInit: (store){
-    //       print("On Init Room Payment List");
+    //       debugPrint("UI_M_room_payment => On Init Room Payment List");
     //     //  store.state.serviceListSnippetListState.serviceListSnippetListState.clear();
     //    //   store.state.businessList.businessListState.clear();
     //       store.dispatch(ReservationAndOrdersListSnippetListRequest(widget.bookingId));

@@ -228,7 +228,7 @@ class StepLengthState extends State<StepLength> {
           setState(() {
             maxController.text = (value[0] + 1).toString();
             maxQuantity = (value[0] + 1);
-            debugPrint('W_service_step_lenght => MAX QUANTITY: $maxQuantity');
+            debugPrint('W_service_step_length => MAX QUANTITY: $maxQuantity');
             StoreProvider.of<AppState>(context).dispatch(SetServiceSlotMaxQuantity(maxQuantity));
           });
         }).showDialog(context);

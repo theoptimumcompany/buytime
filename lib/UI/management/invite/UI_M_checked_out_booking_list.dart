@@ -95,7 +95,7 @@ class _CheckedOutBookingListState extends State<CheckedOutBookingList> {
                                     //MenuItemModel menuItem = menuItems.elementAt(index);
                                     List<BookingState> bookings = widget.checkedOutBookingsList.elementAt(index);
                                     /*bookings.forEach((element) {
-                                      debugPrint('UI_M_BookingList: bookings booking status: ${element.user.first.surname} ${element.status}');
+                                      debugPrint('UI_M_checked_out_booking_list => bookings booking status: ${element.user.first.surname} ${element.status}');
                                     });*/
                                     return BookingMonthList(bookings);
                                   },

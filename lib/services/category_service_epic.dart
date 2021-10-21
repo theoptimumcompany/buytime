@@ -30,7 +30,7 @@ class CategoryListRequestService implements EpicClass<AppState> {
 
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-    debugPrint("CATEGORY_SERVICE_EPIC - CategoryListRequestService => CATCHED ACTION");
+    debugPrint("category_service_epic  => CategoryListRequestService => CATCHED ACTION");
     return actions.whereType<RequestListCategory>().asyncMap((event) async {
 
 
@@ -48,17 +48,17 @@ class CategoryListRequestService implements EpicClass<AppState> {
         categoryStateList.add(categoryState);
       });
 
-      debugPrint('CATEGORY_SERVICE_EPIC - CategoryListRequestService => CATEGORY LENGHT: ${categoryStateList.length}');
-      debugPrint("CATEGORY_SERVICE_EPIC - CategoryListRequestService => Return list with ${categoryStateList.length}");
+      debugPrint('category_service_epic  => CategoryListRequestService => CATEGORY LENGHT: ${categoryStateList.length}');
+      debugPrint("category_service_epic  => CategoryListRequestService => Return list with ${categoryStateList.length}");
 
       statisticsState = store.state.statistics;
       int reads = statisticsState.categoryListRequestServiceRead;
       int writes = statisticsState.categoryListRequestServiceWrite;
       int documents = statisticsState.categoryListRequestServiceDocuments;
-      debugPrint('CATEGORY_SERVICE_EPIC - CategoryListRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('category_service_epic => CategoryListRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       ++reads;
       documents = documents + snapshotDocs;
-      debugPrint('CATEGORY_SERVICE_EPIC - CategoryListRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('category_service_epic => CategoryListRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       statisticsState.categoryListRequestServiceRead = reads;
       statisticsState.categoryListRequestServiceWrite = writes;
       statisticsState.categoryListRequestServiceDocuments = documents;
@@ -79,7 +79,7 @@ class CategoryListRequestService implements EpicClass<AppState> {
 //
 //   @override
 //   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-//     debugPrint("AllCategoryListRequestService - AllCategoryListRequestService => CATCHED ACTION");
+//     debugPrint("category_service_epic => AllCategoryListRequestService - AllCategoryListRequestService => CATCHED ACTION");
 //     return actions.whereType<AllRequestListCategory>().asyncMap((event) async {
 //       QuerySnapshot businessListFromFirebase;
 //       businessStateList = [];
@@ -159,8 +159,8 @@ class CategoryListRequestService implements EpicClass<AppState> {
 //           });
 //         }
 //       }
-//       debugPrint('CATEGORY_SERVICE_EPIC - AllCategoryListRequestService => CATEGORY LENGHT: ${categoryStateList.length}');
-//       debugPrint("CATEGORY_SERVICE_EPIC - AllCategoryListRequestService => Return list with ${categoryStateList.length}");
+//       debugPrint('category_service_epic => AllCategoryListRequestService => CATEGORY LENGHT: ${categoryStateList.length}');
+//       debugPrint("category_service_epic => AllCategoryListRequestService => Return list with ${categoryStateList.length}");
 //       if (categoryStateList.isEmpty) categoryStateList.add(CategoryState());
 //       if (serviceStateList.isEmpty) serviceStateList.add(ServiceState());
 //     }).expand((element) => [
@@ -183,7 +183,7 @@ class AllCategoryListRequestService implements EpicClass<AppState> {
 
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-    debugPrint("AllCategoryListRequestService - AllCategoryListRequestService => CATCHED ACTION");
+    debugPrint("category_service_epic => AllCategoryListRequestService - AllCategoryListRequestService => CATCHED ACTION");
     return actions.whereType<AllRequestListCategory>().asyncMap((event) async {
       QuerySnapshot businessListFromFirebase;
       businessStateList = [];
@@ -263,8 +263,8 @@ class AllCategoryListRequestService implements EpicClass<AppState> {
           });
         }
       }
-      debugPrint('CATEGORY_SERVICE_EPIC - AllCategoryListRequestService => CATEGORY LENGHT: ${categoryStateList.length}');
-      debugPrint("CATEGORY_SERVICE_EPIC - AllCategoryListRequestService => Return list with ${categoryStateList.length}");
+      debugPrint('category_service_epic => AllCategoryListRequestService => CATEGORY LENGHT: ${categoryStateList.length}');
+      debugPrint("category_service_epic => AllCategoryListRequestService => Return list with ${categoryStateList.length}");
       if (categoryStateList.isEmpty) categoryStateList.add(CategoryState());
       if (serviceStateList.isEmpty) serviceStateList.add(ServiceState());
     }).expand((element) => [
@@ -283,7 +283,7 @@ class UserCategoryListRequestService implements EpicClass<AppState> {
 
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-    debugPrint("CATEGORY_SERVICE_EPIC - UserCategoryListRequestService => CATCHED ACTION");
+    debugPrint("category_service_epic => UserCategoryListRequestService => CATCHED ACTION");
     return actions.whereType<UserRequestListCategory>().asyncMap((event) async {
       QuerySnapshot snapshot = await FirebaseFirestore.instance
 
@@ -296,7 +296,7 @@ class UserCategoryListRequestService implements EpicClass<AppState> {
 
       int snapshotDocs = snapshot.docs.length;
 
-      debugPrint("CATEGORY_SERVICE_EPIC - UserCategoryListRequestService => Firestore request");
+      debugPrint("category_service_epic => UserCategoryListRequestService => Firestore request");
       categoryStateList = [];
       snapshot.docs.forEach((element) {
         CategoryState categoryState = CategoryState.fromJson(element.data());
@@ -305,17 +305,17 @@ class UserCategoryListRequestService implements EpicClass<AppState> {
         categoryStateList.add(categoryState);
       });
 
-      debugPrint('CATEGORY_SERVICE_EPIC - UserCategoryListRequestService => CATEGORY LIST LENGTH: ${categoryStateList.length}');
-      debugPrint("CATEGORY_SERVICE_EPIC - UserCategoryListRequestService => Return list with ${categoryStateList.length}");
+      debugPrint('category_service_epic => UserCategoryListRequestService => CATEGORY LIST LENGTH: ${categoryStateList.length}');
+      debugPrint("category_service_epic => UserCategoryListRequestService => Return list with ${categoryStateList.length}");
 
       statisticsState = store.state.statistics;
       int reads = statisticsState.userCategoryListRequestServiceRead;
       int writes = statisticsState.userCategoryListRequestServiceWrite;
       int documents = statisticsState.userCategoryListRequestServiceDocuments;
-      debugPrint('CATEGORY_SERVICE_EPIC - UserCategoryListRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('category_service_epic => UserCategoryListRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       ++reads;
       documents = documents + snapshotDocs;
-      debugPrint('CATEGORY_SERVICE_EPIC - UserCategoryListRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('category_service_epic => UserCategoryListRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       statisticsState.userCategoryListRequestServiceRead = reads;
       statisticsState.userCategoryListRequestServiceWrite = writes;
       statisticsState.userCategoryListRequestServiceDocuments = documents;
@@ -333,7 +333,7 @@ class UserCategoryListByIdsRequestService implements EpicClass<AppState> {
 
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-    debugPrint("CATEGORY_SERVICE_EPIC - UserCategoryListByIdsRequestService => CATCHED ACTION");
+    debugPrint("category_service_epic => UserCategoryListByIdsRequestService => CATCHED ACTION");
     return actions.whereType<UserRequestListByIdsCategory>().asyncMap((event) async {
       int read = 0;
       int snapshotDocs = 0;
@@ -358,7 +358,7 @@ class UserCategoryListByIdsRequestService implements EpicClass<AppState> {
 
         snapshotDocs += snapshot.docs.length;
 
-        debugPrint("CATEGORY_SERVICE_EPIC - UserCategoryListByIdsRequestService => Firestore request");
+        debugPrint("category_service_epic => UserCategoryListByIdsRequestService => Firestore request");
         snapshot.docs.forEach((element) {
           CategoryState categoryState = CategoryState.fromJson(element.data());
           categoryState.businessId = businesId;
@@ -368,17 +368,17 @@ class UserCategoryListByIdsRequestService implements EpicClass<AppState> {
         ++read;
       }
 
-      debugPrint('CATEGORY_SERVICE_EPIC - UserCategoryListByIdsRequestService => CATEGORY LIST LENGTH: ${categoryStateList.length}');
-      debugPrint("CATEGORY_SERVICE_EPIC - UserCategoryListByIdsRequestService => Return list with ${categoryStateList.length}");
+      debugPrint('category_service_epic => UserCategoryListByIdsRequestService => CATEGORY LIST LENGTH: ${categoryStateList.length}');
+      debugPrint("category_service_epic => UserCategoryListByIdsRequestService => Return list with ${categoryStateList.length}");
 
       statisticsState = store.state.statistics;
       int reads = statisticsState.userCategoryListRequestServiceRead;
       int writes = statisticsState.userCategoryListRequestServiceWrite;
       int documents = statisticsState.userCategoryListRequestServiceDocuments;
-      debugPrint('CATEGORY_SERVICE_EPIC - UserCategoryListByIdsRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('category_service_epic => UserCategoryListByIdsRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       reads = reads + read;
       documents = documents + snapshotDocs;
-      debugPrint('CATEGORY_SERVICE_EPIC - UserCategoryListByIdsRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('category_service_epic => UserCategoryListByIdsRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       statisticsState.userCategoryListRequestServiceRead = reads;
       statisticsState.userCategoryListRequestServiceWrite = writes;
       statisticsState.userCategoryListRequestServiceDocuments = documents;
@@ -396,7 +396,7 @@ class CategoryRootListRequestService implements EpicClass<AppState> {
 
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-    debugPrint("CATEGORY_SERVICE_EPIC - CategoryRootListRequestService => CATCHED ACTION");
+    debugPrint("category_service_epic => CategoryRootListRequestService => CATCHED ACTION");
     return actions.whereType<RequestRootListCategory>().asyncMap((event) async {
       QuerySnapshot snapshot = await FirebaseFirestore.instance
 
@@ -408,7 +408,7 @@ class CategoryRootListRequestService implements EpicClass<AppState> {
           .get();
       int snapshotDocs = snapshot.docs.length;
 
-      debugPrint("CATEGORY_SERVICE_EPIC - CategoryRootListRequestService => Firestore request");
+      debugPrint("category_service_epic => CategoryRootListRequestService => Firestore request");
       categoryStateList = [];
       snapshot.docs.forEach((element) {
         CategoryState categoryState = CategoryState.fromJson(element.data());
@@ -416,17 +416,17 @@ class CategoryRootListRequestService implements EpicClass<AppState> {
         categoryState.id = element.id;
         categoryStateList.add(categoryState);
       });
-      debugPrint('CATEGORY_SERVICE_EPIC - CategoryRootListRequestService => LENGTH: ${categoryStateList.length}');
-      debugPrint("CATEGORY_SERVICE_EPIC - CategoryRootListRequestService => Return list with ${categoryStateList.length}");
+      debugPrint('category_service_epic => CategoryRootListRequestService => LENGTH: ${categoryStateList.length}');
+      debugPrint("category_service_epic => CategoryRootListRequestService => Return list with ${categoryStateList.length}");
 
       statisticsState = store.state.statistics;
       int reads = statisticsState.categoryRootListRequestServiceRead;
       int writes = statisticsState.categoryRootListRequestServiceWrite;
       int documents = statisticsState.categoryRootListRequestServiceDocuments;
-      debugPrint('CATEGORY_SERVICE_EPIC - UserCategoryListRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('category_service_epic => UserCategoryListRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       ++reads;
       documents = documents + snapshotDocs;
-      debugPrint('CATEGORY_SERVICE_EPIC - UserCategoryListRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('category_service_epic => UserCategoryListRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       statisticsState.categoryRootListRequestServiceRead = reads;
       statisticsState.categoryRootListRequestServiceWrite = writes;
       statisticsState.categoryRootListRequestServiceDocuments = documents;
@@ -444,7 +444,7 @@ class CategoryRequestService implements EpicClass<AppState> {
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<CategoryRequest>().asyncMap((event) async {
-      debugPrint("CATEGORY_SERVICE_EPIC - CategoryRequestService => CATEGORY ID: ${event.id}");
+      debugPrint("category_service_epic => CategoryRequestService => CATEGORY ID: ${event.id}");
       String categoryId = event.id;
 
       QuerySnapshot query = await FirebaseFirestore.instance
@@ -460,16 +460,16 @@ class CategoryRequestService implements EpicClass<AppState> {
       query.docs.forEach((snapshot) {
         categoryState = CategoryState.fromJson(snapshot.data());
       });
-      debugPrint("CATEGORY_SERVICE_EPIC - CategoryRequestService => CATEGORY NAME: ${categoryState.name}");
+      debugPrint("category_service_epic => CategoryRequestService => CATEGORY NAME: ${categoryState.name}");
 
       statisticsState = store.state.statistics;
       int reads = statisticsState.categoryRequestServiceRead;
       int writes = statisticsState.categoryRequestServiceWrite;
       int documents = statisticsState.categoryRequestServiceDocuments;
-      debugPrint('CATEGORY_SERVICE_EPIC - CategoryRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('category_service_epic => CategoryRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       ++reads;
       documents = documents + queryDocs;
-      debugPrint('CATEGORY_SERVICE_EPIC - CategoryRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('category_service_epic => CategoryRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       statisticsState.categoryRequestServiceRead = reads;
       statisticsState.categoryRequestServiceWrite = writes;
       statisticsState.categoryRequestServiceDocuments = documents;
@@ -490,7 +490,7 @@ class CategoryInviteManagerService implements EpicClass<AppState> {
       ///Inserisco nella categoria il manager alla lista dei manager e nella lista mailManager
       ///In seguito partirà una cloud function che fa gli opportuni controlli sui permessi dell'utente che aggiunge la nuova mail, e scrive i permessi della mail aggiunta per quella categoria
 
-      debugPrint("CATEGORY_SERVICE_EPIC - CategoryInviteManagerService => Inizia elaborazione per inserire Oggetto Manager nel Database");
+      debugPrint("category_service_epic => CategoryInviteManagerService => Inizia elaborazione per inserire Oggetto Manager nel Database");
       Manager manager = event.manager;
       int write = 0;
       FirebaseFirestore.instance
@@ -503,7 +503,7 @@ class CategoryInviteManagerService implements EpicClass<AppState> {
           .update({
         "manager": FieldValue.arrayUnion([manager.toJson()])
       }).then((value) {
-        debugPrint("CATEGORY_SERVICE_EPIC - CategoryInviteManagerService => Category Service added Manager to field manager");
+        debugPrint("category_service_epic => CategoryInviteManagerService => Category Service added Manager to field manager");
       });
 
       FirebaseFirestore.instance
@@ -516,16 +516,16 @@ class CategoryInviteManagerService implements EpicClass<AppState> {
           .update({
         "managerMailList": FieldValue.arrayUnion([manager.mail])
       }).then((value) {
-        debugPrint("CATEGORY_SERVICE_EPIC - CategoryInviteManagerService => Category Service added manager's mail to field managerMailList");
+        debugPrint("category_service_epic => CategoryInviteManagerService => Category Service added manager's mail to field managerMailList");
       });
 
       statisticsState = store.state.statistics;
       int reads = statisticsState.categoryInviteManagerServiceRead;
       int writes = statisticsState.categoryInviteManagerServiceWrite;
       int documents = statisticsState.categoryInviteManagerServiceDocuments;
-      debugPrint('CATEGORY_SERVICE_EPIC - CategoryInviteManagerService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('category_service_epic => CategoryInviteManagerService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       writes = writes + 2; //TODO check writes
-      debugPrint('CATEGORY_SERVICE_EPIC - CategoryInviteManagerService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('category_service_epic => CategoryInviteManagerService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       statisticsState.categoryInviteManagerServiceRead = reads;
       statisticsState.categoryInviteManagerServiceWrite = writes;
       statisticsState.categoryInviteManagerServiceDocuments = documents;
@@ -556,7 +556,7 @@ class CategoryInviteWorkerService implements EpicClass<AppState> {
           .update({
         "worker": FieldValue.arrayUnion([worker.toJson()])
       }).then((value) {
-        debugPrint("CATEGORY_SERVICE_EPIC - CategoryInviteWorkerService => Category Service added Worker to field worker");
+        debugPrint("category_service_epic => CategoryInviteWorkerService => Category Service added Worker to field worker");
       });
 
       FirebaseFirestore.instance
@@ -569,16 +569,16 @@ class CategoryInviteWorkerService implements EpicClass<AppState> {
           .update({
         "workerMailList": FieldValue.arrayUnion([worker.mail])
       }).then((value) {
-        debugPrint("CATEGORY_SERVICE_EPIC - CategoryInviteWorkerService => Category Service added worker's mail to field workerMailList");
+        debugPrint("category_service_epic => CategoryInviteWorkerService => Category Service added worker's mail to field workerMailList");
       });
 
       statisticsState = store.state.statistics;
       int reads = statisticsState.categoryInviteWorkerServiceRead;
       int writes = statisticsState.categoryInviteWorkerServiceWrite;
       int documents = statisticsState.categoryInviteWorkerServiceDocuments;
-      debugPrint('CATEGORY_SERVICE_EPIC - CategoryInviteWorkerService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('category_service_epic => CategoryInviteWorkerService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       writes = writes + 2; //TODO check writes
-      debugPrint('CATEGORY_SERVICE_EPIC - CategoryInviteWorkerService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('category_service_epic => CategoryInviteWorkerService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       statisticsState.categoryInviteWorkerServiceRead = reads;
       statisticsState.categoryInviteWorkerServiceWrite = writes;
       statisticsState.categoryInviteWorkerServiceDocuments = documents;
@@ -605,7 +605,7 @@ class CategoryDeleteManagerService implements EpicClass<AppState> {
           .update({
         "manager": FieldValue.arrayRemove([manager.toJson()])
       }).then((value) {
-        debugPrint("CATEGORY_SERVICE_EPIC - CategoryDeleteManagerService => Category Service deleted Manager to field manager");
+        debugPrint("category_service_epic => CategoryDeleteManagerService => Category Service deleted Manager to field manager");
       });
 
       FirebaseFirestore.instance
@@ -618,16 +618,16 @@ class CategoryDeleteManagerService implements EpicClass<AppState> {
           .update({
         "managerMailList": FieldValue.arrayRemove([manager.mail])
       }).then((value) {
-        debugPrint("CATEGORY_SERVICE_EPIC - CategoryDeleteManagerService => Category Service deleted manager's mail to field managerMailList");
+        debugPrint("category_service_epic => CategoryDeleteManagerService => Category Service deleted manager's mail to field managerMailList");
       });
 
       statisticsState = store.state.statistics;
       int reads = statisticsState.categoryDeleteManagerServiceRead;
       int writes = statisticsState.categoryDeleteManagerServiceWrite;
       int documents = statisticsState.categoryDeleteManagerServiceDocuments;
-      debugPrint('CATEGORY_SERVICE_EPIC - CategoryDeleteManagerService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('category_service_epic => CategoryDeleteManagerService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       writes = writes + 2;
-      debugPrint('CATEGORY_SERVICE_EPIC - CategoryDeleteManagerService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('category_service_epic => CategoryDeleteManagerService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       statisticsState.categoryDeleteManagerServiceRead = reads;
       statisticsState.categoryDeleteManagerServiceWrite = writes;
       statisticsState.categoryDeleteManagerServiceDocuments = documents;
@@ -656,7 +656,7 @@ class CategoryDeleteWorkerService implements EpicClass<AppState> {
           .update({
         "worker": FieldValue.arrayRemove([worker.toJson()])
       }).then((value) {
-        print("CATEGORY_SERVICE_EPIC - CategoryDeleteWorkerService => Category Service deleted Worker to field worker");
+        debugPrint("category_service_epic => CategoryDeleteWorkerService => Category Service deleted Worker to field worker");
       });
 
       FirebaseFirestore.instance
@@ -669,16 +669,16 @@ class CategoryDeleteWorkerService implements EpicClass<AppState> {
           .update({
         "workerMailList": FieldValue.arrayRemove([worker.mail])
       }).then((value) {
-        print("CATEGORY_SERVICE_EPIC - CategoryDeleteWorkerService => Category Service deleted worker's mail to field workerMailList");
+        debugPrint("category_service_epic => CategoryDeleteWorkerService => Category Service deleted worker's mail to field workerMailList");
       });
 
       statisticsState = store.state.statistics;
       int reads = statisticsState.categoryDeleteWorkerServiceRead;
       int writes = statisticsState.categoryDeleteWorkerServiceWrite;
       int documents = statisticsState.categoryDeleteWorkerServiceDocuments;
-      debugPrint('CATEGORY_SERVICE_EPIC - CategoryDeleteWorkerService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('category_service_epic => CategoryDeleteWorkerService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       writes = writes + 2; //TODO check writes
-      debugPrint('CATEGORY_SERVICE_EPIC - CategoryDeleteManagerService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('category_service_epic => CategoryDeleteManagerService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       statisticsState.categoryDeleteWorkerServiceRead = reads;
       statisticsState.categoryDeleteWorkerServiceWrite = writes;
       statisticsState.categoryDeleteWorkerServiceDocuments = documents;
@@ -707,9 +707,9 @@ class CategoryDeleteWorkerService implements EpicClass<AppState> {
     ///Qui ho il figlio da aggiornare nelle categorie
     FirebaseFirestore.instance.collection("business").doc(id_business).collection("category").doc(list[i]['nodeId']).update({"categoryRootId": rootId, "parent.parentRootId": rootId, "level": level + 1});
 
-    print("Root Nuova " + rootId);
-    print("Root Vecchia " + oldRootId);
-    print("Id  categoria da cercare " + list[i]['nodeId']);
+    debugPrint("category_service_epic => Root Nuova " + rootId);
+    debugPrint("category_service_epic => Root Vecchia " + oldRootId);
+    debugPrint("category_service_epic => Id  categoria da cercare " + list[i]['nodeId']);
 
     ///Qui ho il figlio da aggiornare nei servizi
     QuerySnapshot snapshot = await FirebaseFirestore.instance.collection("service").where("categoryId", arrayContains: list[i]['nodeId']).get();
@@ -724,7 +724,7 @@ class CategoryDeleteWorkerService implements EpicClass<AppState> {
       });
     });
 
-    print("Firebase-Update : categoryServiceEpic");
+    debugPrint("category_service_epic => Firebase-Update : categoryServiceEpic");
 
     if (list[i]['nodeCategory'] != null) {
       openTreeToUpdateSon(list[i]['nodeCategory'], id_business, rootId, level, oldRootId);
@@ -745,11 +745,11 @@ class CategoryUpdateService implements EpicClass<AppState> {
       if (event.categoryState.fileToUpload != null) {
         categoryState = await uploadFile(event.categoryState.fileToUpload, event.categoryState).catchError((error, stackTrace) {
           /// ? WRITE
-          debugPrint("CATEGORY_SERVICE_EPIC - CategoryUpdateService => category_service_epic: uploadFiles failed: $error");
+          debugPrint("category_service_epic => CategoryUpdateService => category_service_epic: uploadFiles failed: $error");
           return null;
         });
-        debugPrint("CATEGORY_SERVICE_EPIC - CategoryUpdateService => category_service_epic: uploadFiles executed.");
-        debugPrint('CATEGORY_SERVICE_EPIC - CategoryUpdateService => category_service_epic: categoryImage in: ${categoryState.categoryImage}');
+        debugPrint("category_service_epic => CategoryUpdateService => category_service_epic: uploadFiles executed.");
+        debugPrint('category_service_epic => CategoryUpdateService => category_service_epic: categoryImage in: ${categoryState.categoryImage}');
       }
 
       await FirebaseFirestore.instance
@@ -761,23 +761,23 @@ class CategoryUpdateService implements EpicClass<AppState> {
           .doc(event.categoryState.id)
           .update(event.categoryState.toJson())
           .then((value) {
-        debugPrint("CATEGORY_SERVICE_EPIC - CategoryUpdateService => Category Service should be updated online ");
+        debugPrint("category_service_epic => CategoryUpdateService => Category Service should be updated online ");
         String parentPath = '';
         store.state.serviceListSnippetState.businessSnippet.forEach((element) {
           List<String> tmp = element.categoryAbsolutePath.split('/');
           if (tmp.last == categoryState.parent.id) {
-            debugPrint('CATEGORY_SERVICE_EPIC - CategoryUpdateService => P1: ${tmp.last} | P2: ${categoryState.parent.id}');
+            debugPrint('category_service_epic => CategoryUpdateService => P1: ${tmp.last} | P2: ${categoryState.parent.id}');
             parentPath = element.categoryAbsolutePath;
-            debugPrint('CATEGORY_SERVICE_EPIC - CategoryUpdateService => P1: PARENT PATH: ${element.categoryAbsolutePath}');
+            debugPrint('category_service_epic => CategoryUpdateService => P1: PARENT PATH: ${element.categoryAbsolutePath}');
           }
           if (tmp.last == categoryState.id) {
-            debugPrint('CATEGORY_SERVICE_EPIC - CategoryUpdateService => MATCH');
-            debugPrint('CATEGORY_SERVICE_EPIC - CategoryUpdateService => CURRENT PATH: ${element.categoryAbsolutePath}');
+            debugPrint('category_service_epic => CategoryUpdateService => MATCH');
+            debugPrint('category_service_epic => CategoryUpdateService => CURRENT PATH: ${element.categoryAbsolutePath}');
             if (categoryState.parent.id != 'no_parent')
               element.categoryAbsolutePath = parentPath + '/' + categoryState.id;
             else
               element.categoryAbsolutePath = categoryState.businessId + '/' + categoryState.id;
-            debugPrint('CATEGORY_SERVICE_EPIC - CategoryUpdateService => NEW PATH: ${element.categoryAbsolutePath}');
+            debugPrint('category_service_epic => CategoryUpdateService => NEW PATH: ${element.categoryAbsolutePath}');
             element.categoryImage = categoryState.categoryImage;
             element.categoryName = categoryState.name;
             element.tags = [categoryState.customTag];
@@ -789,11 +789,11 @@ class CategoryUpdateService implements EpicClass<AppState> {
       int reads = statisticsState.categoryUpdateServiceRead;
       int writes = statisticsState.categoryUpdateServiceWrite;
       int documents = statisticsState.categoryUpdateServiceDocuments;
-      debugPrint('CATEGORY_SERVICE_EPIC - CategoryUpdateService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('category_service_epic => CategoryUpdateService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       ++reads;
       ++writes; //TODO check writes
       ++documents;
-      debugPrint('CATEGORY_SERVICE_EPIC - CategoryUpdateService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('category_service_epic => CategoryUpdateService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       statisticsState.categoryUpdateServiceRead = reads;
       statisticsState.categoryUpdateServiceWrite = writes;
       statisticsState.categoryUpdateServiceDocuments = documents;
@@ -838,16 +838,16 @@ class CategoryCreateService implements EpicClass<AppState> {
       if (event.categoryState.fileToUpload != null) {
         categoryState = await uploadFile(event.categoryState.fileToUpload, event.categoryState).catchError((error, stackTrace) {
           /// ? WRITE
-          debugPrint("CATEGORY_SERVICE_EPIC - CategoryCreateService => Category_service_epic: uploadFiles failed: $error");
+          debugPrint("category_service_epic => CategoryCreateService => Category_service_epic: uploadFiles failed: $error");
           return null;
         });
-        debugPrint("CATEGORY_SERVICE_EPIC - CategoryCreateService => category_service_epic: uploadFiles executed.");
-        debugPrint('CATEGORY_SERVICE_EPIC - CategoryCreateService => category_service_epic: categoryImage in: ${categoryState.categoryImage}');
+        debugPrint("category_service_epic => CategoryCreateService => category_service_epic: uploadFiles executed.");
+        debugPrint('category_service_epic => CategoryCreateService => category_service_epic: categoryImage in: ${categoryState.categoryImage}');
       }
 
       await docReference.set(categoryState.toJson()).then((value) async {
         /// 1 WRITE
-        debugPrint("CATEGORY_SERVICE_EPIC - CategoryCreateService => CategoryService has created new category " + docReference.id);
+        debugPrint("category_service_epic => CategoryCreateService => CategoryService has created new category " + docReference.id);
         store.state.serviceListSnippetState.businessSnippet.add(CategorySnippetState(
             categoryAbsolutePath: store.state.business.id_firestore + '/' + categoryState.id,
             categoryName: categoryState.name,
@@ -857,7 +857,7 @@ class CategoryCreateService implements EpicClass<AppState> {
             serviceList: [],
             tags: [categoryState.customTag]));
       }).catchError((error) {
-        debugPrint('CATEGORY_SERVICE_EPIC - CategoryCreateService => ERROR: $error');
+        debugPrint('category_service_epic => CategoryCreateService => ERROR: $error');
       }).then((value) {
         return null;
       });
@@ -866,11 +866,11 @@ class CategoryCreateService implements EpicClass<AppState> {
       int reads = statisticsState.categoryCreateServiceRead;
       int writes = statisticsState.categoryCreateServiceWrite;
       int documents = statisticsState.categoryCreateServiceDocuments;
-      debugPrint('CATEGORY_SERVICE_EPIC - CategoryCreateService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('category_service_epic => CategoryCreateService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       ++reads;
       ++writes; //TODO check writes
       ++documents;
-      debugPrint('CATEGORY_SERVICE_EPIC - CategoryCreateService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('category_service_epic => CategoryCreateService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       statisticsState.categoryCreateServiceRead = reads;
       statisticsState.categoryCreateServiceWrite = writes;
       statisticsState.categoryCreateServiceDocuments = documents;
@@ -911,8 +911,8 @@ class CategoryDeleteService implements EpicClass<AppState> {
       int reads = statisticsState.categoryDeleteServiceRead;
       int writes = statisticsState.categoryDeleteServiceWrite;
       int documents = statisticsState.categoryDeleteServiceDocuments;
-      debugPrint('CATEGORY_SERVICE_EPIC - CategoryDeleteService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
-      debugPrint('CATEGORY_SERVICE_EPIC - CategoryDeleteService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('category_service_epic => CategoryDeleteService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('category_service_epic => CategoryDeleteService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       statisticsState.categoryDeleteServiceRead = reads;
       statisticsState.categoryDeleteServiceWrite = writes;
       statisticsState.categoryDeleteServiceDocuments = documents;
@@ -954,12 +954,12 @@ class DefaultCategoryCreateService implements EpicClass<AppState> {
       categoryState.id = docReference.id;
 
       await docReference.set(categoryState.toJson()).then((value) async {
-        debugPrint("CATEGORY_SERVICE_EPIC - CategoryCreateService => CategoryService has created new category " + docReference.id);
+        debugPrint("category_service_epic => CategoryCreateService => CategoryService has created new category " + docReference.id);
         store.state.serviceListSnippetState.businessSnippet.add(CategorySnippetState(categoryAbsolutePath: store.state.business.id_firestore + '/' + categoryState.id, categoryName: categoryState.name, categoryImage: categoryState.categoryImage, serviceNumberExternal: 0, serviceNumberInternal: 0, serviceList: [], tags: [categoryState.customTag]));
         actionArray.add(CreatedCategory(categoryState));
         actionArray.add(AddDefaultCategoryTree(categoryState));
       }).catchError((error) {
-        debugPrint('CATEGORY_SERVICE_EPIC - CategoryCreateService => ERROR: $error');
+        debugPrint('category_service_epic => CategoryCreateService => ERROR: $error');
       }).then((value) {
         return null;
       });

@@ -1,5 +1,6 @@
 import 'package:Buytime/reblox/model/order/order_list_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
+import 'package:flutter/cupertino.dart';
 
 
 class OrderListRequest {
@@ -35,7 +36,7 @@ OrderListState orderListReducer(OrderListState state, action) {
   }
   if (action is OrderListReturned) {
     orderListState = OrderListState(orderListState: action.orderListState).copyWith();
-    print("Nel Reducer dell'OrderListState ");
+    debugPrint("Nel Reducer dell'OrderListState ");
     return orderListState;
   }
   return state;

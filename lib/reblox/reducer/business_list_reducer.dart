@@ -3,6 +3,7 @@ import 'package:Buytime/reblox/model/business/business_list_state.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:Buytime/reblox/model/role/role.dart';
 import 'package:Buytime/reblox/model/service/snippet/service_snippet_state.dart';
+import 'package:flutter/cupertino.dart';
 
 class BusinessListRequest {
   String _userId;
@@ -48,7 +49,7 @@ BusinessListState businessListReducer(BusinessListState state, action) {
   }
   if (action is BusinessListReturned) {
     businessListState = BusinessListState(businessListState: action.businessListState).copyWith();
-    print("Nel reducer business List");
+    debugPrint("Nel reducer business List");
     return businessListState;
   }
   return state;

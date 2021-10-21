@@ -98,7 +98,7 @@ class _BookingSelfCreationState extends State<BookingSelfCreation> {
     SizeConfig().init(context);
     final node = FocusScope.of(context);
 
-    debugPrint('ID Business da Link => ' + StoreProvider.of<AppState>(context).state.business.id_firestore);
+    debugPrint('UI_U_booking_self_creation => ID Business da Link => ' + StoreProvider.of<AppState>(context).state.business.id_firestore);
     images.add(StoreProvider.of<AppState>(context).state.business.wide);
     return WillPopScope(
         onWillPop: () async => false,
@@ -270,7 +270,7 @@ class _BookingSelfCreationState extends State<BookingSelfCreation> {
                                                     style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextMedium, fontWeight: FontWeight.w600, fontSize: 16),
                                                     validator: (String value) {
                                                       if (value.isEmpty || !EmailValidator.validate(value)) {
-                                                        debugPrint('UI_M_booking_creation => Email Is Empty');
+                                                        debugPrint('UI_U_booking_self_creation => Email Is Empty');
                                                         return AppLocalizations.of(context).pleaseEnterAValidEmail;
                                                       }
                                                       return null;
@@ -310,7 +310,7 @@ class _BookingSelfCreationState extends State<BookingSelfCreation> {
                                                     style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextMedium, fontWeight: FontWeight.w600, fontSize: 16),
                                                     validator: (String value) {
                                                       if (value.isEmpty) {
-                                                        debugPrint('UI_M_booking_creation => Name Is Empty');
+                                                        debugPrint('UI_U_booking_self_creation => Name Is Empty');
                                                         return AppLocalizations.of(context).pleaseEnterAValidName;
                                                       }
                                                       return null;
@@ -345,7 +345,7 @@ class _BookingSelfCreationState extends State<BookingSelfCreation> {
                                                     style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextMedium, fontWeight: FontWeight.w600, fontSize: 16),
                                                     validator: (String value) {
                                                       if (value.isEmpty) {
-                                                        debugPrint('UI_M_booking_creation => Surname Is Empty');
+                                                        debugPrint('UI_U_booking_self_creation => Surname Is Empty');
                                                         return AppLocalizations.of(context).pleaseEnterAValidSurname;
                                                       }
                                                       return null;
@@ -396,7 +396,7 @@ class _BookingSelfCreationState extends State<BookingSelfCreation> {
                                                           },
                                                           validator: (String value) {
                                                             if (value.isEmpty) {
-                                                              debugPrint('UI_M_booking_creation => Check In Is Empty');
+                                                              debugPrint('UI_U_booking_self_creation => Check In Is Empty');
                                                               return AppLocalizations.of(context).pleaseEnterAValidDateInterval;
                                                             }
                                                             return null;
@@ -443,7 +443,7 @@ class _BookingSelfCreationState extends State<BookingSelfCreation> {
                                                           validator: (String value) {
                                                             debugPrint('${checkIn.compareTo(checkOut)}');
                                                             if (value.isEmpty || checkIn.compareTo(checkOut) > 0) {
-                                                              debugPrint('UI_M_booking_creation => Check Out Is Empty');
+                                                              debugPrint('UI_U_booking_self_creation => Check Out Is Empty');
                                                               return AppLocalizations.of(context).pleaseEnterAValidDateInterval;
                                                             }
                                                             return null;
@@ -521,8 +521,8 @@ class _BookingSelfCreationState extends State<BookingSelfCreation> {
                                                     bookingState.start_date = checkIn;
                                                     bookingState.end_date = checkOut;
 
-                                                    debugPrint('UI_M_BookingCreation => Start date: ${bookingState.start_date}');
-                                                    debugPrint('UI_M_BookingCreation => End date: ${bookingState.end_date}');
+                                                    debugPrint('UI_U_booking_self_creation => Start date: ${bookingState.start_date}');
+                                                    debugPrint('UI_U_booking_self_creation => End date: ${bookingState.end_date}');
 
                                                     bookingState.status = Utils.enumToString(BookingStatus.opened);
 

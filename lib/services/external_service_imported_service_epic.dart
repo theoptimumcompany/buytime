@@ -22,7 +22,7 @@ class ExternalServiceImportedListRequestService implements EpicClass<AppState> {
 
     return actions.whereType<ExternalServiceImportedListRequest>().asyncMap((event) async {
       //ServiceState serviceState = event.serviceState;
-      debugPrint("EXTERNAL_SERVICE_IMPORTED_LIST_SERVICE_EPIC - ExternalServiceImportedCreateService => Business ID: ${event.businessId} ");
+      debugPrint("external_service_imported_list_service_epic => ExternalServiceImportedCreateService => Business ID: ${event.businessId} ");
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('business')
           .doc(event.businessId)
           .collection('external_service_imported').get();
@@ -37,10 +37,10 @@ class ExternalServiceImportedListRequestService implements EpicClass<AppState> {
       int reads = statisticsState.serviceCreateServiceRead;
       int writes = statisticsState.serviceCreateServiceWrite;
       int documents = statisticsState.serviceCreateServiceDocuments;
-      debugPrint('EXTERNAL_SERVICE_IMPORTED_LIST_SERVICE_EPIC - ServiceCreateService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('external_service_imported_list_service_epic => ServiceCreateService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       ++reads;
       ++documents;
-      debugPrint('EXTERNAL_SERVICE_IMPORTED_LIST_SERVICE_EPIC - ServiceCreateService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('external_service_imported_list_service_epic => ServiceCreateService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       statisticsState.serviceCreateServiceRead = reads;
       statisticsState.serviceCreateServiceWrite = writes;
       statisticsState.serviceCreateServiceDocuments = documents;*/
@@ -60,7 +60,7 @@ class ExternalServiceImportedCreateService implements EpicClass<AppState> {
 
     return actions.whereType<CreateExternalServiceImported>().asyncMap((event) async {
       //ServiceState serviceState = event.serviceState;
-      debugPrint("EXTERNAL_SERVICE_IMPORTED_LIST_SERVICE_EPIC - ExternalServiceImportedCreateService => Business ID: ${event.externalServiceImportedState.internalBusinessId} ");
+      debugPrint("external_service_imported_list_service_epic => ExternalServiceImportedCreateService => Business ID: ${event.externalServiceImportedState.internalBusinessId} ");
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('business')
           .doc(event.externalServiceImportedState.internalBusinessId)
           .collection('external_service_imported').get();
@@ -77,9 +77,9 @@ class ExternalServiceImportedCreateService implements EpicClass<AppState> {
         externalServiceImportedListState.externalServiceImported = eSILS;
 
         await documentReference.set(externalServiceImportedListState.toJson()).then((value) {
-          debugPrint("EXTERNAL_SERVICE_IMPORTED_LIST_SERVICE_EPIC - ExternalServiceImportedCreateService => CREATED! ");
+          debugPrint("external_service_imported_list_service_epic => ExternalServiceImportedCreateService => CREATED! ");
         }).catchError((error) {
-          debugPrint('EXTERNAL_SERVICE_IMPORTED_LIST_SERVICE_EPIC - ExternalServiceImportedCreateService => ERROR: $error');
+          debugPrint('external_service_imported_list_service_epic => ExternalServiceImportedCreateService => ERROR: $error');
           externalServiceImportedListState.externalServiceImported.removeLast();
         });
       }else{
@@ -90,9 +90,9 @@ class ExternalServiceImportedCreateService implements EpicClass<AppState> {
         externalServiceImportedListState.externalServiceImported.addAll(eSILS);
 
         await documentReference.set(externalServiceImportedListState.toJson()).then((value) {
-          debugPrint("EXTERNAL_SERVICE_IMPORTED_LIST_SERVICE_EPIC - ExternalServiceImportedCreateService => CREATED! ");
+          debugPrint("external_service_imported_list_service_epic => ExternalServiceImportedCreateService => CREATED! ");
         }).catchError((error) {
-          debugPrint('EXTERNAL_SERVICE_IMPORTED_LIST_SERVICE_EPIC - ExternalServiceImportedCreateService => ERROR: $error');
+          debugPrint('external_service_imported_list_service_epic => ExternalServiceImportedCreateService => ERROR: $error');
           externalServiceImportedListState.externalServiceImported.removeLast();
         });
       }
@@ -102,10 +102,10 @@ class ExternalServiceImportedCreateService implements EpicClass<AppState> {
       int reads = statisticsState.serviceCreateServiceRead;
       int writes = statisticsState.serviceCreateServiceWrite;
       int documents = statisticsState.serviceCreateServiceDocuments;
-      debugPrint('EXTERNAL_SERVICE_IMPORTED_LIST_SERVICE_EPIC - ServiceCreateService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('external_service_imported_list_service_epic => ServiceCreateService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       ++reads;
       ++documents;
-      debugPrint('EXTERNAL_SERVICE_IMPORTED_LIST_SERVICE_EPIC - ServiceCreateService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('external_service_imported_list_service_epic => ServiceCreateService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       statisticsState.serviceCreateServiceRead = reads;
       statisticsState.serviceCreateServiceWrite = writes;
       statisticsState.serviceCreateServiceDocuments = documents;*/
@@ -126,7 +126,7 @@ class ExternalServiceImportedCanceledService implements EpicClass<AppState> {
 
     return actions.whereType<CancelExternalServiceImported>().asyncMap((event) async {
       //ServiceState serviceState = event.serviceState;
-      debugPrint("EXTERNAL_SERVICE_IMPORTED_LIST_SERVICE_EPIC - ExternalServiceImportedCanceledService => Business ID: ${event.externalServiceImportedState.internalBusinessId} ");
+      debugPrint("external_service_imported_list_service_epic => ExternalServiceImportedCanceledService => Business ID: ${event.externalServiceImportedState.internalBusinessId} ");
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('business')
           .doc(event.externalServiceImportedState.internalBusinessId)
           .collection('external_service_imported').get();
@@ -143,9 +143,9 @@ class ExternalServiceImportedCanceledService implements EpicClass<AppState> {
         externalServiceImportedListState.externalServiceImported = eSILS;
 
         await documentReference.set(externalServiceImportedListState.toJson()).then((value) {
-          debugPrint("EXTERNAL_SERVICE_IMPORTED_LIST_SERVICE_EPIC - ExternalServiceImportedCanceledService => CREATED! ");
+          debugPrint("external_service_imported_list_service_epic => ExternalServiceImportedCanceledService => CREATED! ");
         }).catchError((error) {
-          debugPrint('EXTERNAL_SERVICE_IMPORTED_LIST_SERVICE_EPIC - ExternalServiceImportedCanceledService => ERROR: $error');
+          debugPrint('external_service_imported_list_service_epic => ExternalServiceImportedCanceledService => ERROR: $error');
           externalServiceImportedListState.externalServiceImported.removeLast();
         });
       }else{
@@ -160,9 +160,9 @@ class ExternalServiceImportedCanceledService implements EpicClass<AppState> {
         externalServiceImportedListState.externalServiceImported.add(event.externalServiceImportedState);
 
         await documentReference.set(externalServiceImportedListState.toJson()).then((value) {
-          debugPrint("EXTERNAL_SERVICE_IMPORTED_LIST_SERVICE_EPIC - ExternalServiceImportedCanceledService => CREATED! ");
+          debugPrint("external_service_imported_list_service_epic => ExternalServiceImportedCanceledService => CREATED! ");
         }).catchError((error) {
-          debugPrint('EXTERNAL_SERVICE_IMPORTED_LIST_SERVICE_EPIC - ExternalServiceImportedCanceledService => ERROR: $error');
+          debugPrint('external_service_imported_list_service_epic => ExternalServiceImportedCanceledService => ERROR: $error');
           externalServiceImportedListState.externalServiceImported.removeLast();
         });
       }
@@ -172,10 +172,10 @@ class ExternalServiceImportedCanceledService implements EpicClass<AppState> {
       int reads = statisticsState.serviceCreateServiceRead;
       int writes = statisticsState.serviceCreateServiceWrite;
       int documents = statisticsState.serviceCreateServiceDocuments;
-      debugPrint('EXTERNAL_SERVICE_IMPORTED_LIST_SERVICE_EPIC - ServiceCreateService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('external_service_imported_list_service_epic => ServiceCreateService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       ++reads;
       ++documents;
-      debugPrint('EXTERNAL_SERVICE_IMPORTED_LIST_SERVICE_EPIC - ServiceCreateService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('external_service_imported_list_service_epic => ServiceCreateService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       statisticsState.serviceCreateServiceRead = reads;
       statisticsState.serviceCreateServiceWrite = writes;
       statisticsState.serviceCreateServiceDocuments = documents;*/

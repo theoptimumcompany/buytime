@@ -35,7 +35,7 @@ class _ManagerNotificationListItemState extends State<ManagerNotificationListIte
     DateTime notificationTime = DateTime.now();
     if(widget.notificationState.timestamp != null)
       notificationTime = DateTime.fromMillisecondsSinceEpoch(widget.notificationState.timestamp);
-    debugPrint('user_notification_list_item => NOTIFICATION TIME: $notificationTime');
+    debugPrint('manager_notification_list_item => NOTIFICATION TIME: $notificationTime');
 
     DateTime currentTime = DateTime.now();
     Duration tmpDuration;
@@ -47,13 +47,13 @@ class _ManagerNotificationListItemState extends State<ManagerNotificationListIte
     if(tmpDuration.inDays != 0){
       days = tmpDuration.inDays.toString();
     }else if(tmpDuration.inHours != 0){
-      //debugPrint('user_notification_list_item => HOURS: ${tmpDuration.inHours}');
+      //debugPrint('manager_notification_list_item => HOURS: ${tmpDuration.inHours}');
       hours = tmpDuration.inHours.toString();
     }else if(tmpDuration.inMinutes != 0){
-      //debugPrint('user_notification_list_item => MINUTES: ${tmpDuration.inMinutes}');
+      //debugPrint('manager_notification_list_item => MINUTES: ${tmpDuration.inMinutes}');
       minutes = tmpDuration.inMinutes.toString();
     }else{
-      //debugPrint('user_notification_list_item => SECONDS: ${tmpDuration.inSeconds}');
+      //debugPrint('manager_notification_list_item => SECONDS: ${tmpDuration.inSeconds}');
       seconds = tmpDuration.inSeconds.toString();
     }
   }
@@ -61,7 +61,7 @@ class _ManagerNotificationListItemState extends State<ManagerNotificationListIte
   @override
   Widget build(BuildContext context) {
 
-    //debugPrint('image: ${widget.serviceState.image1}');
+    //debugPrint('manager_notification_list_item => image: ${widget.serviceState.image1}');
     return Container(
       //margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 4, right: SizeConfig.safeBlockHorizontal * 4),
         //padding: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),

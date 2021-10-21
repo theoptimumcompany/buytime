@@ -2,6 +2,7 @@ import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:Buytime/reblox/model/snippet/generic.dart';
 import 'package:Buytime/reblox/model/file/optimum_file_to_upload.dart';
 import 'package:Buytime/reusable/form/w_optimum_form_multi_photo.dart';
+import 'package:flutter/cupertino.dart';
 
 class SetBusiness {
   BusinessState _businessState;
@@ -502,7 +503,7 @@ BusinessState businessReducer(BusinessState state, action) {
     return businessState;
   }
   if (action is SetBusinessLogo) {
-    print("business_reducer: set business logo is" + action.logo);
+    debugPrint("business_reducer: set business logo is" + action.logo);
     businessState.logo = action.logo;
     return businessState;
   }
@@ -551,12 +552,12 @@ BusinessState businessReducer(BusinessState state, action) {
     return businessState;
   }
   if (action is AddFileToUploadInBusiness) {
-    print("business_reducer: addFileInbusiness. business: " + state.name);
+    debugPrint("business_reducer: addFileInbusiness. business: " + state.name);
 
     businessState.fileToUploadList = [];
 
     if (state.fileToUploadList != null) {
-      print("business_reducer: fileuploadlist != null");
+      debugPrint("business_reducer: fileuploadlist != null");
 
       businessState.fileToUploadList
         ..addAll(state.fileToUploadList);
@@ -567,7 +568,7 @@ BusinessState businessReducer(BusinessState state, action) {
 
     businessState.fileToUploadList.forEach((element) {
       if(element.remoteName != null)
-        print("business_reducer: " + element.remoteName);
+        debugPrint("business_reducer: " + element.remoteName);
     });
     return businessState;
   }

@@ -34,7 +34,7 @@ class _TimeSlotManagementWidgetState extends State<TimeSlotManagementWidget> {
   void initState() {
     super.initState();
     load = false;
-    debugPrint('FIRST: ${widget.first} - SECOND: ${widget.second}');
+    debugPrint('time_slot_management_widget => FIRST: ${widget.first} - SECOND: ${widget.second}');
   }
 
   bool load;
@@ -42,7 +42,7 @@ class _TimeSlotManagementWidgetState extends State<TimeSlotManagementWidget> {
   @override
   Widget build(BuildContext context) {
     free = widget.squareSlot.free;
-    debugPrint('FREE: ${widget.squareSlot.free} - bool: ${widget.load}');
+    debugPrint('time_slot_management_widget => FREE: ${widget.squareSlot.free} - bool: ${widget.load}');
     DateTime tmp = DateFormat('dd/MM/yyyy').parse(widget.squareSlot.date);
     Map<DateTime, List<SquareSlotState>> tmpMap = Map();
     //tmp = DateTime(tmp.year, tmp.month, 1, 0,0,0,0,0);

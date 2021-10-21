@@ -1,5 +1,6 @@
 import 'package:Buytime/reblox/model/service/service_list_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
+import 'package:flutter/cupertino.dart';
 
 class ServiceListRequest {
   String _businessId;
@@ -132,7 +133,7 @@ ServiceListState serviceListReducer(ServiceListState state, action) {
   }
   if (action is ServiceListReturned) {
     serviceListState = ServiceListState(serviceListState: action.serviceListState).copyWith();
-    print("service_list_reducer return a list length of " + action.serviceListState.length.toString());
+    debugPrint("service_list_reducer => return a list length of " + action.serviceListState.length.toString());
     return serviceListState;
   }
   return state;

@@ -326,27 +326,27 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
                                           if (snapshot.business_type.isNotEmpty)
                                             businessType = snapshot.business_type;
                                           else
-                                            debugPrint('UI_M_create_business => HAS BUSINESSS TYPE');
-                                          debugPrint('UI_M_create_business => BEFORE BUSINESS TYPE LENGTH: ${snapshot.business_type.length}');
+                                            debugPrint('UI_M_edit_business => HAS BUSINESSS TYPE');
+                                          debugPrint('UI_M_edit_business => BEFORE BUSINESS TYPE LENGTH: ${snapshot.business_type.length}');
 
                                           if (isHub != snapshot.hub) {
                                             snapshot.business_type = '';
                                             businessType = '';
                                             //StoreProvider.of<AppState>(context).dispatch(SetBusinessType([]));
                                             if (snapshot.hub) {
-                                              debugPrint('UI_M_create_business => NOW IS HUB');
+                                              debugPrint('UI_M_edit_business => NOW IS HUB');
                                               //snapshot.business_type = [GenericState(name: 'Hotel')];
                                               businessType = 'Hotel';
                                               //StoreProvider.of<AppState>(context).dispatch(SetBusinessType([GenericState(name: 'Hotel')]));
                                             } else {
-                                              debugPrint('UI_M_create_business => NOW IS NOT A HUB');
+                                              debugPrint('UI_M_edit_business => NOW IS NOT A HUB');
                                               //snapshot.business_type = [GenericState(name: 'Bar')];
                                               businessType = 'Bar';
                                               //StoreProvider.of<AppState>(context).dispatch(SetBusinessType([GenericState(name: 'Bar')]));
                                             }
                                             isHub = snapshot.hub;
                                           }
-                                          debugPrint('UI_M_create_business => AFTER BUSINESS TYPE LENGTH: ${snapshot.business_type.length}');
+                                          debugPrint('UI_M_edit_business => AFTER BUSINESS TYPE LENGTH: ${snapshot.business_type.length}');
                                         }
                                         return Stepper(
                                           steps: [
@@ -608,7 +608,7 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
                                                               value: snapshot.hub,
                                                               onChanged: StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin || StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman
                                                                   ? (value) {
-                                                                      debugPrint('UI_M-create_business => HUB: ${value}');
+                                                                      debugPrint('UI_M_edit_business => HUB: ${value}');
                                                                       StoreProvider.of<AppState>(context).dispatch(SetHub(value));
                                                                       //snapshot.hub = value;
                                                                     }
@@ -618,7 +618,7 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
                                                               value: false,
                                                               onChanged: StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin || StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman
                                                                   ? (value) {
-                                                                      debugPrint('UI_M-create_business => HUB: $value');
+                                                                      debugPrint('UI_M_edit_business => HUB: $value');
                                                                       StoreProvider.of<AppState>(context).dispatch(SetHub(value));
                                                                     }
                                                                   : (value) {}),
@@ -1494,7 +1494,7 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
                                                                 if (areaListState != null && areaListState.areaList != null) {
                                                                   for (int ij = 0; ij < areaListState.areaList.length; ij++) {
                                                                     var distance = Utils.calculateDistanceBetweenPoints(areaListState.areaList[ij].coordinates, _coordinateController.text);
-                                                                    debugPrint('UI_M_edit_business: area distance ' + distance.toString());
+                                                                    debugPrint('UI_M_edit_business => area distance ' + distance.toString());
                                                                     if (distance != null && distance < 100) {
                                                                       setState(() {
                                                                         if (areaListState.areaList[ij].areaId.isNotEmpty && !snapshot.tag.contains(areaListState.areaList[ij].areaId)) {

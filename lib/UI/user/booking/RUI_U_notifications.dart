@@ -258,7 +258,7 @@ class _RNotificationsState extends State<RNotifications> {
 
           if(notifications.isNotEmpty){
             notifications.forEach((element) {
-              debugPrint('UI_U_notifications => ${element.timestamp}');
+              debugPrint('RUI_U_notifications => ${element.timestamp}');
             });
             //notifications.sort((b,a) => a.timestamp != null ? a.timestamp : 0 .compareTo(b.timestamp != null ? b.timestamp : 0));
             notifications.sort((b,a) => a.timestamp.compareTo(b.timestamp));
@@ -291,7 +291,7 @@ class _RNotificationsState extends State<RNotifications> {
                                                 if (_scrollController.position.pixels >
                                                     triggerFetchMoreSize) {
                                                   /// qui triggera evento di fine scroll
-                                                  debugPrint('UI_U_notifications => fine scroll 90%');
+                                                  debugPrint('RUI_U_notifications => fine scroll 90%');
                                                 }
                                               }),
                                             shrinkWrap: true,
@@ -319,7 +319,7 @@ class _RNotificationsState extends State<RNotifications> {
                                                     });
                                                     // snapshot.serviceList.serviceListState.forEach((element) {
                                                     //   if(notification.data.state != null && element.serviceId == notification.data.state.serviceId){
-                                                    //     //debugPrint('UI_U_notification => ${element.orderId}');
+                                                    //     //debugPrint('RUI_U_notifications => ${element.orderId}');
                                                     //     serviceState = element;
                                                     //   }
                                                     // });
@@ -328,7 +328,7 @@ class _RNotificationsState extends State<RNotifications> {
                                                     // }
                                                     return Container();
 
-                                                    //debugPrint('booking_month_list: bookings booking status: ${booking.user.first.surname} ${booking.status}');
+                                                    //debugPrint('RUI_U_notifications => booking_month_list: bookings booking status: ${booking.user.first.surname} ${booking.status}');
                                                   },
                                                   childCount: notifications.length,
                                                 ),

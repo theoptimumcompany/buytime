@@ -26,7 +26,7 @@ class NotificationRequestService implements EpicClass<AppState> {
 
     return actions.whereType<RequestNotification>().asyncMap((event) async {
       //ServiceState serviceState = event.serviceState;
-      debugPrint("EXTERNAL_SERVICE_IMPORTED_LIST_SERVICE_EPIC - ExternalServiceImportedCreateService => Business ID: ${event.businessId} ");
+      debugPrint("notification_service_epic => ExternalServiceImportedCreateService => Business ID: ${event.businessId} ");
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('business')
           .doc(event.businessId)
           .collection('external_service_imported').get();
@@ -41,10 +41,10 @@ class NotificationRequestService implements EpicClass<AppState> {
       int reads = statisticsState.serviceCreateServiceRead;
       int writes = statisticsState.serviceCreateServiceWrite;
       int documents = statisticsState.serviceCreateServiceDocuments;
-      debugPrint('EXTERNAL_SERVICE_IMPORTED_LIST_SERVICE_EPIC - ServiceCreateService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('notification_service_epic => ServiceCreateService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       ++reads;
       ++documents;
-      debugPrint('EXTERNAL_SERVICE_IMPORTED_LIST_SERVICE_EPIC - ServiceCreateService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('notification_service_epic => ServiceCreateService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       statisticsState.serviceCreateServiceRead = reads;
       statisticsState.serviceCreateServiceWrite = writes;
       statisticsState.serviceCreateServiceDocuments = documents;*/
@@ -65,11 +65,11 @@ class NotificationListRequestService implements EpicClass<AppState> {
     return actions.whereType<RequestNotificationList>().asyncMap((event) async {
       //ServiceState serviceState = event.serviceState;
       //notificationListState = NotificationListState().toEmpty();
-      debugPrint("NOTIFICATION_SERVICE_EPIC - NotificationListRequestService => User ID: ${event.userId} ");
+      debugPrint("notification_service_epic => NotificationListRequestService => User ID: ${event.userId} ");
       DateTime currentTime = DateTime.now();
       currentTime = currentTime.subtract(Duration(days: 5));
       int time = int.parse(Timestamp.fromDate(currentTime).seconds.toString());
-      // debugPrint("NOTIFICATION_SERVICE_EPIC - NotificationListRequestService => TIMESTAMP: $time");
+      // debugPrint("notification_service_epic => NotificationListRequestService => TIMESTAMP: $time");
 
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('notification')
           .where("userId", isEqualTo: event.userId)
@@ -79,9 +79,9 @@ class NotificationListRequestService implements EpicClass<AppState> {
 
       notificationListState = [];
      if(querySnapshot.docs.isNotEmpty){
-       debugPrint("NOTIFICATION_SERVICE_EPIC - NotificationListRequestService => List not empty: ${querySnapshot.docs.length}");
+       debugPrint("notification_service_epic => NotificationListRequestService => List not empty: ${querySnapshot.docs.length}");
        querySnapshot.docs.forEach((element) {
-         // debugPrint("NOTIFICATION_SERVICE_EPIC - NotificationListRequestService => data: ${element.data()}");
+         // debugPrint("notification_service_epic => NotificationListRequestService => data: ${element.data()}");
          notificationListState.add(NotificationState.fromJson(element.data()));
          notificationListState.last.notificationId = element.id;
        });
@@ -93,10 +93,10 @@ class NotificationListRequestService implements EpicClass<AppState> {
       int reads = statisticsState.serviceCreateServiceRead;
       int writes = statisticsState.serviceCreateServiceWrite;
       int documents = statisticsState.serviceCreateServiceDocuments;
-      debugPrint('EXTERNAL_SERVICE_IMPORTED_LIST_SERVICE_EPIC - ServiceCreateService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('notification_service_epic => ServiceCreateService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       ++reads;
       ++documents;
-      debugPrint('EXTERNAL_SERVICE_IMPORTED_LIST_SERVICE_EPIC - ServiceCreateService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('notification_service_epic => ServiceCreateService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       statisticsState.serviceCreateServiceRead = reads;
       statisticsState.serviceCreateServiceWrite = writes;
       statisticsState.serviceCreateServiceDocuments = documents;*/
@@ -119,7 +119,7 @@ class NotificationUpdateRequestService implements EpicClass<AppState> {
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<UpdateNotification>().asyncMap((event) async {
 
-      print("NOTIFICATION_SERVICE_EPIC - NotificationUpdateRequestService => Notification ID: ${event.notificationState.notificationId}");
+      debugPrint("notification_service_epic => NotificationUpdateRequestService => Notification ID: ${event.notificationState.notificationId}");
       await FirebaseFirestore.instance /// 1 WRITE
           .collection("notification")
           .doc(event.notificationState.notificationId)
@@ -137,16 +137,16 @@ class NotificationUpdateRequestService implements EpicClass<AppState> {
       notificationListState.add(notificationState);
 
       notificationListState.forEach((element) {
-        //print("NOTIFICATION_SERVICE_EPIC - NotificationUpdateRequestService => Opened: ${event.notificationState.opened}");
+        //debugPrint("notification_service_epic => NotificationUpdateRequestService => Opened: ${event.notificationState.opened}");
       });
 
       /*statisticsState = store.state.statistics;
       int reads = statisticsState.bookingListRequestServiceRead;
       int writes = statisticsState.bookingListRequestServiceWrite;
       int documents = statisticsState.bookingListRequestServiceDocuments;
-      debugPrint('BOOKING_SERVICE_EPIC - BookingUpdateRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('notification_service_epic => BookingUpdateRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       ++writes;
-      debugPrint('BOOKING_SERVICE_EPIC - BookingUpdateRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('notification_service_epic => BookingUpdateRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       statisticsState.bookingListRequestServiceRead = reads;
       statisticsState.bookingListRequestServiceWrite = writes;
       statisticsState.bookingListRequestServiceDocuments = documents;*/
@@ -167,7 +167,7 @@ class NotificationUpdateRequestService implements EpicClass<AppState> {
 
     return actions.whereType<CreateNotification>().asyncMap((event) async {
       //ServiceState serviceState = event.serviceState;
-      debugPrint("EXTERNAL_SERVICE_IMPORTED_LIST_SERVICE_EPIC - ExternalServiceImportedCreateService => Business ID: ${event.notificationState.ids.businessId} ");
+      debugPrint("notification_service_epic => ExternalServiceImportedCreateService => Business ID: ${event.notificationState.ids.businessId} ");
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('business')
           .doc(event.notificationState.ids.businessId)
           .collection('notifications').get();
@@ -184,9 +184,9 @@ class NotificationUpdateRequestService implements EpicClass<AppState> {
         notificationListState.notificationListState = nS;
 
         await documentReference.set(notificationListState.toJson()).then((value) {
-          debugPrint("EXTERNAL_SERVICE_IMPORTED_LIST_SERVICE_EPIC - ExternalServiceImportedCreateService => CREATED! ");
+          debugPrint("notification_service_epic => ExternalServiceImportedCreateService => CREATED! ");
         }).catchError((error) {
-          debugPrint('EXTERNAL_SERVICE_IMPORTED_LIST_SERVICE_EPIC - ExternalServiceImportedCreateService => ERROR: $error');
+          debugPrint('notification_service_epic => ExternalServiceImportedCreateService => ERROR: $error');
           notificationListState.notificationListState.removeLast();
         });
       }else{
@@ -197,9 +197,9 @@ class NotificationUpdateRequestService implements EpicClass<AppState> {
         notificationListState.notificationListState.addAll(eSILS);
 
         await documentReference.set(notificationListState.toJson()).then((value) {
-          debugPrint("EXTERNAL_SERVICE_IMPORTED_LIST_SERVICE_EPIC - ExternalServiceImportedCreateService => CREATED! ");
+          debugPrint("notification_service_epic => ExternalServiceImportedCreateService => CREATED! ");
         }).catchError((error) {
-          debugPrint('EXTERNAL_SERVICE_IMPORTED_LIST_SERVICE_EPIC - ExternalServiceImportedCreateService => ERROR: $error');
+          debugPrint('notification_service_epic => ExternalServiceImportedCreateService => ERROR: $error');
           notificationListState.notificationListState.removeLast();
         });
       }
@@ -209,10 +209,10 @@ class NotificationUpdateRequestService implements EpicClass<AppState> {
       int reads = statisticsState.serviceCreateServiceRead;
       int writes = statisticsState.serviceCreateServiceWrite;
       int documents = statisticsState.serviceCreateServiceDocuments;
-      debugPrint('EXTERNAL_SERVICE_IMPORTED_LIST_SERVICE_EPIC - ServiceCreateService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('notification_service_epic => ServiceCreateService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       ++reads;
       ++documents;
-      debugPrint('EXTERNAL_SERVICE_IMPORTED_LIST_SERVICE_EPIC - ServiceCreateService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('notification_service_epic => ServiceCreateService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       statisticsState.serviceCreateServiceRead = reads;
       statisticsState.serviceCreateServiceWrite = writes;
       statisticsState.serviceCreateServiceDocuments = documents;*//*
@@ -234,7 +234,7 @@ class ExternalServiceImportedCanceledService implements EpicClass<AppState> {
 
     return actions.whereType<CancelExternalServiceImported>().asyncMap((event) async {
       //ServiceState serviceState = event.serviceState;
-      debugPrint("EXTERNAL_SERVICE_IMPORTED_LIST_SERVICE_EPIC - ExternalServiceImportedCreateService => Business ID: ${event.externalServiceImportedState.internalBusinessId} ");
+      debugPrint("notification_service_epic => ExternalServiceImportedCreateService => Business ID: ${event.externalServiceImportedState.internalBusinessId} ");
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('business')
           .doc(event.externalServiceImportedState.internalBusinessId)
           .collection('external_service_imported').get();
@@ -251,9 +251,9 @@ class ExternalServiceImportedCanceledService implements EpicClass<AppState> {
         externalServiceImportedListState.externalServiceImported = eSILS;
 
         await documentReference.set(externalServiceImportedListState.toJson()).then((value) {
-          debugPrint("EXTERNAL_SERVICE_IMPORTED_LIST_SERVICE_EPIC - ExternalServiceImportedCreateService => CREATED! ");
+          debugPrint("notification_service_epic => ExternalServiceImportedCreateService => CREATED! ");
         }).catchError((error) {
-          debugPrint('EXTERNAL_SERVICE_IMPORTED_LIST_SERVICE_EPIC - ExternalServiceImportedCreateService => ERROR: $error');
+          debugPrint('notification_service_epic => ExternalServiceImportedCreateService => ERROR: $error');
           externalServiceImportedListState.externalServiceImported.removeLast();
         });
       }else{
@@ -265,9 +265,9 @@ class ExternalServiceImportedCanceledService implements EpicClass<AppState> {
         });
 
         await documentReference.set(externalServiceImportedListState.toJson()).then((value) {
-          debugPrint("EXTERNAL_SERVICE_IMPORTED_LIST_SERVICE_EPIC - ExternalServiceImportedCreateService => CREATED! ");
+          debugPrint("notification_service_epic => ExternalServiceImportedCreateService => CREATED! ");
         }).catchError((error) {
-          debugPrint('EXTERNAL_SERVICE_IMPORTED_LIST_SERVICE_EPIC - ExternalServiceImportedCreateService => ERROR: $error');
+          debugPrint('notification_service_epic => ExternalServiceImportedCreateService => ERROR: $error');
           externalServiceImportedListState.externalServiceImported.removeLast();
         });
       }
@@ -278,10 +278,10 @@ class ExternalServiceImportedCanceledService implements EpicClass<AppState> {
       int reads = statisticsState.serviceCreateServiceRead;
       int writes = statisticsState.serviceCreateServiceWrite;
       int documents = statisticsState.serviceCreateServiceDocuments;
-      debugPrint('EXTERNAL_SERVICE_IMPORTED_LIST_SERVICE_EPIC - ServiceCreateService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('notification_service_epic => ServiceCreateService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       ++reads;
       ++documents;
-      debugPrint('EXTERNAL_SERVICE_IMPORTED_LIST_SERVICE_EPIC - ServiceCreateService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('notification_service_epic => ServiceCreateService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       statisticsState.serviceCreateServiceRead = reads;
       statisticsState.serviceCreateServiceWrite = writes;
       statisticsState.serviceCreateServiceDocuments = documents;*//*

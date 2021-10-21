@@ -99,6 +99,11 @@ class PaypalServices {
           if (item3 != null) {
             executeUrl = item3["href"];
           }
+          final item4 = links.firstWhere((o) => o["rel"] == "capture",
+              orElse: () => null);
+          if (item4 != null) {
+            executeUrl = item4["href"];
+          }
           debugPrint('APPROVAL URL: $approvalUrl');
           debugPrint('EXECUTE URL: $executeUrl');
           return {"executeUrl": executeUrl, "approvalUrl": approvalUrl};

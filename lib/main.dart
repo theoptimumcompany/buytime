@@ -30,8 +30,8 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
-  print('Handling a background message ${message.messageId}');
-  print(message.data);
+  debugPrint('Handling a background message ${message.messageId}');
+  debugPrint('main => ${message.data}');
   flutterLocalNotificationsPlugin.show(
       message.data.hashCode,
       message.data['title'],
@@ -75,7 +75,7 @@ Future<void> main() async {
       provisional: false,
       sound: true,
     );
-    print('User granted permission: ${settings.authorizationStatus}');
+    debugPrint('main => User granted permission: ${settings.authorizationStatus}');
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
     await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
@@ -146,7 +146,7 @@ class Buytime extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("MAIN PROD/DEV STRIPE CONFIGURATION : " + Environment().config.stripePublicKey);
+    debugPrint("main => MAIN PROD/DEV STRIPE CONFIGURATION : " + Environment().config.stripePublicKey);
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
     //SizeConfig().init(context);
     //ScreenUtil.init(bcontext, width: 1125, height: 2436, allowFontScaling: true);

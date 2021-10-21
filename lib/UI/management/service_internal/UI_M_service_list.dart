@@ -76,7 +76,7 @@ class UI_M_ServiceListState extends State<UI_M_ServiceList> {
       List<ServiceSnippetState> listRoot = [];
       List<bool> internalSpinnerVisibility = [];
       for (int s = 0; s < categories[c].serviceList.length; s++) {
-      //  debugPrint('UI_M_service_litt => ${categories[c].categoryName} - ${categories[c].serviceList[s].serviceName}');
+      //  debugPrint('UI_M_service_list => ${categories[c].categoryName} - ${categories[c].serviceList[s].serviceName}');
         listRoot.add(categories[c].serviceList[s]);
         internalSpinnerVisibility.add(false);
       }

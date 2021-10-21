@@ -434,13 +434,13 @@ OrderReservableState orderReservableReducer(OrderReservableState state, action) 
   }
   if (action is AddItemToOrderReservable) {
     if (state.itemList != null) {
-      print("orderReservable_reducer: itemList != null");
+      debugPrint("orderReservable_reducer: itemList != null");
       orderReservableState.itemList
       = []
         ..addAll(state.itemList)
         ..add(action.orderReservableEntry);
     } else {
-      print("orderReservable_reducer: itemList == null");
+      debugPrint("orderReservable_reducer: itemList == null");
       orderReservableState.itemList
       = []
         ..add(action.orderReservableEntry);

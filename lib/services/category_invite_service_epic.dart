@@ -16,7 +16,7 @@ class CategoryInviteRequestService implements EpicClass<AppState> {
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<CategoryInviteRequest>().asyncMap((event) async {
-      /*debugPrint("CATEGORY_INVITE_SERVICE_EPIC - CategoryInviteRequestService => CATEGORY ID: ${event.id}");
+      /*debugPrint("category_invite_service_epic => CategoryInviteRequestService => CATEGORY ID: ${event.id}");
       String categoryId = event.id;
 
       QuerySnapshot query = await FirebaseFirestore.instance /// 1 READ - ? DOC
@@ -34,16 +34,16 @@ class CategoryInviteRequestService implements EpicClass<AppState> {
         categoryState = CategoryState.fromJson(snapshot.data());
       });
 
-      debugPrint("CATEGORY_INVITE_SERVICE_EPIC - CategoryInviteRequestService => CATEGORY NAME: ${categoryState.name}");
+      debugPrint("category_invite_service_epic => CategoryInviteRequestService => CATEGORY NAME: ${categoryState.name}");
 
       statisticsState = store.state.statistics;
       int reads = statisticsState.categoryInviteRequestServiceRead;
       int writes = statisticsState.categoryInviteRequestServiceWrite;
       int documents = statisticsState.categoryInviteRequestServiceDocuments;
-      debugPrint('CATEGORY_INVITE_SERVICE_EPIC - CategoryInviteRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('category_invite_service_epic => CategoryInviteRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       ++reads;
       documents = documents + queryDocs;
-      debugPrint('CATEGORY_INVITE_SERVICE_EPIC - CategoryInviteRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('category_invite_service_epic => CategoryInviteRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       statisticsState.categoryInviteRequestServiceRead = reads;
       statisticsState.categoryInviteRequestServiceWrite = writes;
       statisticsState.categoryInviteRequestServiceDocuments = documents;*/
@@ -62,7 +62,7 @@ class CategoryInviteRequestService implements EpicClass<AppState> {
 //   @override
 //   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
 //     return actions.whereType<UpdateCategoryInvite>().asyncMap((event) {
-//       print("CategoryService updating category: " + event.categoryState.name);
+//       debugPrint("CategoryService updating category: " + event.categoryState.name);
 //       return FirebaseFirestore.instance
 //           .collection("business")
 //           .doc(event.categoryState.businessId)
@@ -70,7 +70,7 @@ class CategoryInviteRequestService implements EpicClass<AppState> {
 //           .doc(event.categoryState.id)
 //           .update(event.categoryState.toJson())
 //           .then((value) {
-//         print("Category Service should be updated online ");
+//         debugPrint("Category Service should be updated online ");
 //         return new UpdatedCategory(null);
 //       });
 //     }).takeUntil(actions.whereType<UnlistenCategory>());
@@ -97,20 +97,20 @@ class CategoryInviteCreateService implements EpicClass<AppState> {
       int reads = statisticsState.categoryInviteCreateServiceRead;
       int writes = statisticsState.categoryInviteCreateServiceWrite;
       int documents = statisticsState.categoryInviteCreateServiceDocuments;
-      debugPrint('CATEGORY_INVITE_SERVICE_EPIC - CategoryInviteCreateService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('category_invite_service_epic => CategoryInviteCreateService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       ++reads;
       ++writes;
       ++documents;
-      debugPrint('CATEGORY_INVITE_SERVICE_EPIC - CategoryInviteCreateService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('category_invite_service_epic => CategoryInviteCreateService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       statisticsState.categoryInviteCreateServiceRead = reads;
       statisticsState.categoryInviteCreateServiceWrite = writes;
       statisticsState.categoryInviteCreateServiceDocuments = documents;
 
       await docReference.set(categoryInviteState.toJson()).then((value) { /// 1 WRITE
-        debugPrint("CATEGORY_INVITE_SERVICE_EPIC - CategoryInviteCreateService => Has created new invite| DOCUMENT ID: ${docReference.id}");
+        debugPrint("category_invite_service_epic => CategoryInviteCreateService => Has created new invite| DOCUMENT ID: ${docReference.id}");
         //return new CreatedCategoryInvite(categoryInviteState);
       }).catchError((error) {
-        print(error);
+        debugPrint('category_invite_service_epic => $error');
       }).then((value) {
         return null;
       });
@@ -139,7 +139,7 @@ class CategoryInviteDeleteService implements EpicClass<AppState> {
         docs = docs + value.docs.length;
         value.docs.forEach((element) {
           FirebaseFirestore.instance.collection("categoryInvitation").doc(element.id).delete().then((value){ /// ? DELETE
-            debugPrint("CATEGORY_INVITE_SERVICE_EPIC - CategoryInviteDeleteService => Has deleted invite| ELEMENT: ${element.id}");
+            debugPrint("category_invite_service_epic => CategoryInviteDeleteService => Has deleted invite| ELEMENT: ${element.id}");
           });
         });
       });
@@ -148,10 +148,10 @@ class CategoryInviteDeleteService implements EpicClass<AppState> {
       int reads = statisticsState.categoryInviteDeleteServiceRead;
       int writes = statisticsState.categoryInviteDeleteServiceWrite;
       int documents = statisticsState.categoryInviteDeleteServiceDocuments;
-      debugPrint('CATEGORY_INVITE_SERVICE_EPIC - CategoryInviteDeleteService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('category_invite_service_epic => CategoryInviteDeleteService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       reads = reads + 4;
       documents = documents + docs;
-      debugPrint('CATEGORY_INVITE_SERVICE_EPIC - CategoryInviteDeleteService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('category_invite_service_epic => CategoryInviteDeleteService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       statisticsState.categoryInviteDeleteServiceRead = reads;
       statisticsState.categoryInviteDeleteServiceWrite = writes;
       statisticsState.categoryInviteDeleteServiceDocuments = documents;

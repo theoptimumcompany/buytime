@@ -25,8 +25,8 @@ class _BookingListItemState extends State<BookingListItem> {
   void initState() {
     super.initState();
     booking = widget.booking;
-    debugPrint('booking_list_item: User: ${booking.user.first.name} ${booking.user.first.surname} ${booking.user.first.email}');
-    debugPrint('booking_list_item: booking status: ${booking.user.first.surname} ${booking.status}');
+    debugPrint('w_booking_list_item => User: ${booking.user.first.name} ${booking.user.first.surname} ${booking.user.first.email}');
+    debugPrint('w_booking_list_item => booking status: ${booking.user.first.surname} ${booking.status}');
   }
 
   @override

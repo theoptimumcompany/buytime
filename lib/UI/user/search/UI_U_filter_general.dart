@@ -272,7 +272,7 @@ class _FilterGeneralState extends State<FilterGeneral> {
                                         ),
                                         suffixIcon: InkWell(
                                           onTap: () {
-                                            debugPrint('done');
+                                            debugPrint('UI_U_filter_general => done');
                                             FocusScope.of(context).unfocus();
                                             search(snapshot.serviceList.serviceListState);
                                           },
@@ -285,7 +285,7 @@ class _FilterGeneralState extends State<FilterGeneral> {
                                       ),
                                       style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextMedium, fontWeight: FontWeight.w400, fontSize: 16),
                                       onEditingComplete: () {
-                                        debugPrint('done');
+                                        debugPrint('UI_U_filter_general => done');
                                         FocusScope.of(context).unfocus();
                                         search(snapshot.serviceList.serviceListState);
                                       },
@@ -448,7 +448,7 @@ class _FilterGeneralState extends State<FilterGeneral> {
                                                 });
                                                 if(StoreProvider.of<AppState>(context).state.user.getRole() == Role.user){
                                                   if (direction == DismissDirection.startToEnd) {
-                                                    debugPrint('UI_U_SearchPage => DX to DELETE');
+                                                    debugPrint('UI_U_filter_general => DX to DELETE');
                                                     // Show a snackbar. This snackbar could also contain "Undo" actions.
                                                     Scaffold.of(context).showSnackBar(SnackBar(
                                                         content: Text(service.name + AppLocalizations.of(context).spaceRemoved),
@@ -459,7 +459,7 @@ class _FilterGeneralState extends State<FilterGeneral> {
                                                               undoDeletion(index, service);
                                                             })));
                                                   } else {
-                                                    debugPrint('UI_U_SearchPage => SX to BOOK');
+                                                    debugPrint('UI_U_filter_general => SX to BOOK');
                                                     if (service.switchSlots) {
                                                       StoreProvider.of<AppState>(context).dispatch(OrderReservableListRequest(service.serviceId));
                                                       Navigator.push(
@@ -525,10 +525,10 @@ class _FilterGeneralState extends State<FilterGeneral> {
                                                   }
                                                 }else{
                                                   if (direction == DismissDirection.startToEnd) {
-                                                    debugPrint('UI_U_SearchPage => DX to DELETE');
+                                                    debugPrint('UI_U_filter_general => DX to DELETE');
 
                                                   } else {
-                                                    debugPrint('UI_U_SearchPage => SX to BOOK');
+                                                    debugPrint('UI_U_filter_general => SX to BOOK');
                                                     undoDeletion(index, service);
                                                   }
                                                 }
@@ -601,7 +601,7 @@ class _FilterGeneralState extends State<FilterGeneral> {
                                         tmpServiceList.removeAt(index);
                                       });
                                       if(direction == DismissDirection.startToEnd){
-                                        debugPrint('UI_U_SearchPage => DX to DELETE');
+                                        debugPrint('UI_U_filter_general => DX to DELETE');
                                         // Show a snackbar. This snackbar could also contain "Undo" actions.
                                         Scaffold.of(context).showSnackBar(SnackBar(
                                             content: Text("${service.name} removed"),
@@ -612,7 +612,7 @@ class _FilterGeneralState extends State<FilterGeneral> {
                                                   undoDeletion(index, service);
                                                 })));
                                       }else{
-                                        debugPrint('UI_U_SearchPage => SX to BOOK');
+                                        debugPrint('UI_U_filter_general => SX to BOOK');
                                         order.business.name = snapshot.business.name;
                                         order.business.id = snapshot.business.id_firestore;
                                         order.user.name = snapshot.user.name;

@@ -197,7 +197,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
   }
 
   void searchPopular(List<ServiceState> list) {
-    debugPrint('UI_U_service_explorer => POPULAR SEARCH - SERVICE LENGTH: ${list.length}');
+    debugPrint('RUI_U_service_explorer => POPULAR SEARCH - SERVICE LENGTH: ${list.length}');
     setState(() {
       List<ServiceState> serviceState = list;
       List<ServiceState> tmp = [];
@@ -232,7 +232,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
   }
 
   void searchRecommended(List<ServiceState> list) {
-    debugPrint('UI_U_service_explorer => RECCOMENDED SEARCH');
+    debugPrint('RUI_U_service_explorer => RECCOMENDED SEARCH');
     setState(() {
       List<ServiceState> serviceState = list;
       List<ServiceState> tmpList = [];
@@ -365,20 +365,6 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
   double distanceFromCurrentPosition;
   bool gettingLocation = true;
 
-  _getCurrentLocation() async {
-    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.lowest, forceAndroidLocationManager: true, timeLimit: Duration(seconds: 30));
-    setState(() {
-      _currentPosition = position;
-      debugPrint('UI_U_order_details => FROM GEOLOCATOR: $_currentPosition');
-      currentLat = _currentPosition.latitude;
-      currentLng = _currentPosition.longitude;
-    });
-
-    /// set current area in the store
-    AreaListState areaListState = StoreProvider.of<AppState>(context).state.areaList;
-    StoreProvider.of<AppState>(context).dispatch(SetArea(Utils.getCurrentArea('$currentLat, $currentLng', areaListState)));
-  }
-
   _getLocation() async {
     loc.Location location = new loc.Location();
 
@@ -430,7 +416,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
   Future<Color> getDominatColor(String image) async {
     ImageProvider imageProvider = Image.network(image).image;
     PaletteGenerator p = await PaletteGenerator.fromImageProvider(imageProvider,timeout: Duration(milliseconds: 1100));
-    debugPrint('Category domina color: ${p.dominantColor.color}');
+    debugPrint('RUI_U_service_explorer => Category domina color: ${p.dominantColor.color}');
     return p.dominantColor.color;
   }
 
@@ -648,7 +634,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                             onFinish: (number) async {
 
                                               // payment done
-                                              print('order id: '+number);
+                                              debugPrint('order id: '+number);
 
                                             },
                                             tourist: true,
@@ -685,7 +671,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                     size: 24.0,
                                                   ),
                                                   onPressed: () {
-                                                    debugPrint("RUI_U_service_explorer + cart_discover");
+                                                    debugPrint("RUI_U_service_explorer => + cart_discover");
                                                     FirebaseAnalytics().logEvent(
                                                         name: 'cart_discover',
                                                         parameters: {
@@ -807,8 +793,8 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                 suffixIcon: InkWell(
                                                   key: Key('search_button_key'),
                                                   onTap: () {
-                                                    debugPrint('done');
-                                                    debugPrint('SEARCH - SERVICE LENGTH: ${Provider.of<Explorer>(context, listen: false).serviceList.length}');
+                                                    debugPrint('RUI_U_service_explorer =>  done');
+                                                    debugPrint('RUI_U_service_explorer => SEARCH - SERVICE LENGTH: ${Provider.of<Explorer>(context, listen: false).serviceList.length}');
                                                     FocusScope.of(context).unfocus();
                                                     searchedList.clear();
                                                     searchCategory(snapshot.categoryList.categoryListState);
@@ -831,7 +817,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                       'date': DateTime.now().toString(),
                                                       'string_searched': _searchController.text
                                                     });
-                                                debugPrint('done');
+                                                debugPrint('RUI_U_service_explorer => done');
                                                 FocusScope.of(context).unfocus();
                                                 searchedList.clear();
                                                 searchCategory(snapshot.categoryList.categoryListState);
@@ -990,7 +976,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                             userOrderList.add(order);
                                           orderList.add(order);
                                         });
-                                        //debugPrint('asdsd');
+                                        //debugPrint('RUI_U_service_explorer =>  asdsd');
                                         userOrderList.sort((a,b) => a.itemList.first.date.isBefore(b.itemList.first.date) ? -1 : a.itemList.first.date.isAtSameMomentAs(b.itemList.first.date) ? 0 : 1);
                                         orderList.sort((a,b) => a.date.isBefore(b.date) ? -1 : a.date.isAtSameMomentAs(b.date) ? 0 : 1);
                                         return userOrderList.isNotEmpty ? Container(
@@ -1108,7 +1094,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                             List<ServiceState> list = [];
                                             //first = false;
                                             if (serviceSnapshot.hasError || serviceSnapshot.connectionState == ConnectionState.waiting && popularList.isEmpty) {
-                                              debugPrint('SERVICE WAITING');
+                                              debugPrint('RUI_U_service_explorer => SERVICE WAITING');
                                               return Column(
                                                 mainAxisAlignment: MainAxisAlignment.start,
                                                 mainAxisSize: MainAxisSize.min,
@@ -1149,7 +1135,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                                       (context, index) {
                                                                     //MenuItemModel menuItem = menuItems.elementAt(index);
                                                                     CategoryState category = CategoryState().toEmpty();
-                                                                    //debugPrint('UI_U_service_explorer => ${category.name}: ${categoryListIds[category.name]}');
+                                                                    //debugPrint('RUI_U_service_explorer => ${category.name}: ${categoryListIds[category.name]}');
                                                                     return  Container(
                                                                       width: 100,
                                                                       height: 100,
@@ -1340,14 +1326,14 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                 }
                                               });
                                             });
-                                            debugPrint('LIST: ${list.length}');
+                                            debugPrint('RUI_U_service_explorer => LIST: ${list.length}');
 
                                             if(!once){
                                               StoreProvider.of<AppState>(context).dispatch(ServiceListReturned(list));
                                               once = true;
                                             }
                                             List<ServiceState> tmp = Provider.of<Explorer>(context, listen: false).serviceList;
-                                            debugPrint('TMP SERVICE FORM BUILDER: ${tmp.length}');
+                                            debugPrint('RUI_U_service_explorer => TMP SERVICE FORM BUILDER: ${tmp.length}');
                                             list.forEach((el1) {
                                               //if(!Provider.of<Explorer>(context, listen: false).serviceList.contains(el1))
                                               Provider.of<Explorer>(context, listen: false).serviceList.add(el1);
@@ -1362,24 +1348,24 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                             recommendedList = Provider.of<Explorer>(context, listen: false).serviceList;
 
                                             snapshot.categoryList.categoryListState.forEach((cLS) {
-                                              //debugPrint('UI_U_service_explorer CATEGORY NAME => ${cLS.name} ${cLS.level}');
+                                              //debugPrint('RUI_U_service_explorer => CATEGORY NAME => ${cLS.name} ${cLS.level}');
                                               if (cLS.level == 0) {
                                                 if (cLS.name.contains('Diving')) {
-                                                  //debugPrint('UI_U_service_explorer CATEGORY NAME => ${cLS.name} ${cLS.id} ${cLS.businessId} ${cLS.level}');
+                                                  //debugPrint('RUI_U_service_explorer =>  CATEGORY NAME => ${cLS.name} ${cLS.id} ${cLS.businessId} ${cLS.level}');
                                                 }
                                                 Provider.of<Explorer>(context, listen: false).serviceList.forEach((service) {
                                                   if ((service.categoryId != null && service.categoryId.contains(cLS.id) || searchCategoryAndServiceOnSnippetList(service.serviceId, cLS.id))) {
-                                                    //debugPrint('UI_U_service_explorer => ${cLS.name} AND LEVEL ${cLS.level}');
+                                                    //debugPrint('RUI_U_service_explorer =>  ${cLS.name} AND LEVEL ${cLS.level}');
                                                     createCategoryList(cLS);
                                                   }
                                                 });
                                               }
                                             });
 
-                                            debugPrint('SERVICE FORM BUILDER: ${Provider.of<Explorer>(context, listen: false).serviceList.length}');
-                                            debugPrint('LIST SERVICE FORM BUILDER: ${list.length}');
-                                            debugPrint('POPULAR SERVICE FORM BUILDER: ${popularList.length}');
-                                            debugPrint('RECCOMENDED SERVICE FORM BUILDER: ${recommendedList.length}');
+                                            debugPrint('RUI_U_service_explorer => SERVICE FORM BUILDER: ${Provider.of<Explorer>(context, listen: false).serviceList.length}');
+                                            debugPrint('RUI_U_service_explorer => LIST SERVICE FORM BUILDER: ${list.length}');
+                                            debugPrint('RUI_U_service_explorer => POPULAR SERVICE FORM BUILDER: ${popularList.length}');
+                                            debugPrint('RUI_U_service_explorer => RECCOMENDED SERVICE FORM BUILDER: ${recommendedList.length}');
 
                                             //popularList.shuffle();
                                             //recommendedList.shuffle();
@@ -1939,7 +1925,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                     child: InkWell(
                                                         onTap: () async {
                                                           String url = BuytimeConfig.ArunasNumber.trim();
-                                                          debugPrint('Restaurant phonenumber: ' + url);
+                                                          debugPrint('RUI_U_service_explorer => Restaurant phonenumber: ' + url);
                                                           if (await canLaunch('tel:$url')) {
                                                             await launch('tel:$url');
                                                           } else {
@@ -2104,7 +2090,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                   );
                                                 } else {
                                                   List<ServiceState> serviceList = searchedList.elementAt(index);
-                                                  debugPrint('searched index: $index | service list: ${serviceList.length}');
+                                                  debugPrint('RUI_U_service_explorer => searched index: $index | service list: ${serviceList.length}');
                                                   return CustomScrollView(shrinkWrap: true, physics: NeverScrollableScrollPhysics(), scrollDirection: Axis.vertical, slivers: [
                                                     SliverList(
                                                       delegate: SliverChildBuilderDelegate(
@@ -2203,12 +2189,12 @@ class Explorer with ChangeNotifier{
 
   initSearching(bool searching){
     this.searching = searching;
-    debugPrint('SEARCHING INIT');
+    debugPrint('RUI_U_service_explorer => SEARCHING INIT');
     notifyListeners();
   }
   initServiceList(List<ServiceState> serviceList){
     this.serviceList = serviceList;
-    debugPrint('SERVICE LIST INIT');
+    debugPrint('RUI_U_service_explorer => SERVICE LIST INIT');
     notifyListeners();
   }
 

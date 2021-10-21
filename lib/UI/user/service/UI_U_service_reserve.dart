@@ -74,27 +74,27 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
   void initState() {
     super.initState();
     serviceState = widget.serviceState;
-    debugPrint('image: ${serviceState.image1}');
+    debugPrint('UI_U_service_reserve => image: ${serviceState.image1}');
     startRequest = true;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       double tmpPrice;
-      debugPrint('UI_U_ServiceReserve => SLOTS LENGTH: ${widget.serviceState.serviceSlot.length}');
+      debugPrint('UI_U_service_reserve => SLOTS LENGTH: ${widget.serviceState.serviceSlot.length}');
       DateTime currentTime = DateTime.now();
       currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0);
       widget.serviceState.serviceSlot.forEach((element) {
         DateTime checkOut = DateFormat('dd/MM/yyyy').parse(element.checkOut);
         if (checkOut.isAtSameMomentAs(currentTime) || checkOut.isAfter(currentTime)) {
-          //debugPrint('UI_U_ServiceReserve => VALID: ${element.checkIn}');
+          //debugPrint('UI_U_service_reserve => VALID: ${element.checkIn}');
           tmpPrice = element.price;
           if (element.price <= tmpPrice) {
             if (element.day != 0) {
-              //debugPrint('UI_U_ServiceReserve => SLOT WITH DAYS');
+              //debugPrint('UI_U_service_reserve => SLOT WITH DAYS');
               if (element.day > 1)
                 price = ' ${element.price.toStringAsFixed(0)} / ${element.day} ${AppLocalizations.of(context).days}';
               else
                 price = ' ${element.price.toStringAsFixed(0)} / ${element.day} ${AppLocalizations.of(context).day}';
             } else {
-              //debugPrint('UI_U_ServiceReserve => SLOT WITHOUT DAYS');
+              //debugPrint('UI_U_service_reserve => SLOT WITHOUT DAYS');
               int tmpMin = element.hour * 60 + element.minute;
               if (tmpMin > 90)
                 price = ' ${element.price.toStringAsFixed(0)} / ${element.hour} h ${element.minute} ${AppLocalizations.of(context).spaceMinSpace}';
@@ -151,13 +151,13 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
     tmpSlots.clear();
     List<DateTime> days = [];
     for (int i = 0; i <= endDate.difference(startDate).inDays; i++) {
-      debugPrint('UI_U_ServiceReserve => LOOKING DATE: ${startDate.add(Duration(days: i))} - IS AFTER: $userStartDate - IS BEFORE: $userEndDate');
+      debugPrint('UI_U_service_reserve => LOOKING DATE: ${startDate.add(Duration(days: i))} - IS AFTER: $userStartDate - IS BEFORE: $userEndDate');
       if(startDate.add(Duration(days: i)).isAfter(userStartDate) && startDate.add(Duration(days: i)).isBefore(userEndDate)){
-        debugPrint('UI_U_ServiceReserve => LOOKED DATE: ${startDate.add(Duration(days: i))} - IS AFTER: $startDate');
+        debugPrint('UI_U_service_reserve => LOOKED DATE: ${startDate.add(Duration(days: i))} - IS AFTER: $startDate');
         if(startDate.add(Duration(days: i)).isAfter(startDate) || startDate.add(Duration(days: i)).isAtSameMomentAs(startDate)){
           DateTime currentTime = DateTime.now();
           currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0);
-          debugPrint('UI_U_ServiceReserve => LOOKED DATE: ${startDate.add(Duration(days: i))} - CURRENT DATE: ${currentTime}');
+          debugPrint('UI_U_service_reserve => LOOKED DATE: ${startDate.add(Duration(days: i))} - CURRENT DATE: ${currentTime}');
           if(startDate.add(Duration(days: i)).isAfter(currentTime) || startDate.add(Duration(days: i)).isAtSameMomentAs(currentTime)) {
               //tmpSlots.add(List.generate(slot.startTime.length, (index) => [index, slot]));
                bool isIn = false;
@@ -165,22 +165,22 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
               tmpSlots.add([]);
               Map<DateTime, List<int>> limted = Map();
               reserved.forEach((element) {
-                debugPrint('UI_U_ServiceReserve => RESERVED: ${element.date} | ${element.itemList.first.time}');
+                debugPrint('UI_U_service_reserve => RESERVED: ${element.date} | ${element.itemList.first.time}');
               });
               reserved.forEach((r) {
                 r.itemList.forEach((item) {
-                  //debugPrint('UI_U_ServiceReserve => LOOKING DATE: ${item.date}');
+                  //debugPrint('UI_U_service_reserve => LOOKING DATE: ${item.date}');
                   if(startDate.add(Duration(days: i)).isAtSameMomentAs(item.date) && !isReserved && slot.startTime.contains(item.time)){
-                    debugPrint('UI_U_ServiceReserve => LOOKED DATE: ${item.date} - RESERVED: ${startDate.add(Duration(days: i))}');
+                    debugPrint('UI_U_service_reserve => LOOKED DATE: ${item.date} - RESERVED: ${startDate.add(Duration(days: i))}');
                     for(int j = 0; j < slot.startTime.length; j++) {
-                      debugPrint('UI_U_ServiceReserve => LOOKING TIME: ${slot.startTime[j]} - TIME: ${item.time}');
+                      debugPrint('UI_U_service_reserve => LOOKING TIME: ${slot.startTime[j]} - TIME: ${item.time}');
                       if(isValid(startDate.add(Duration(days: i)), slot.daysInterval[j])){
                         if(slot.startTime[j] == item.time){
                           isReserved = true;
-                          debugPrint('UI_U_ServiceReserve => LOOKED TIME: ${item.time} - RESERVED: ${slot.startTime[j]}');
+                          debugPrint('UI_U_service_reserve => LOOKED TIME: ${item.time} - RESERVED: ${slot.startTime[j]}');
                         }else{
                           isIn = true;
-                          debugPrint('UI_U_ServiceReserve => VALID FROM RESERVED: ${DateFormat('dd MMMM yyyy').format(startDate.add(Duration(days: i)))} - ${slot.startTime[j]}');
+                          debugPrint('UI_U_service_reserve => VALID FROM RESERVED: ${DateFormat('dd MMMM yyyy').format(startDate.add(Duration(days: i)))} - ${slot.startTime[j]}');
                           tmpSlots.last.add([j, slot]);
                         }
                       }
@@ -193,25 +193,25 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                 //tmpSlots.removeLast();
                 //tmpSlots.add(List.generate(slot.startTime.length, (index) => [index, slot]));
                 for(int j = 0; j < slot.startTime.length; j++) {
-                  //debugPrint('UI_U_ServiceReserve => LOOKING TIME: ${slot.startTime[j]} - TIME: ${item.time}');
+                  //debugPrint('UI_U_service_reserve => LOOKING TIME: ${slot.startTime[j]} - TIME: ${item.time}');
                   if(isValid(startDate.add(Duration(days: i)), slot.daysInterval[j])){
-                    debugPrint('UI_U_ServiceReserve => VALID : ${DateFormat('dd MMMM yyyy').format(startDate.add(Duration(days: i)))} - ${slot.startTime[j]}');
+                    debugPrint('UI_U_service_reserve => VALID : ${DateFormat('dd MMMM yyyy').format(startDate.add(Duration(days: i)))} - ${slot.startTime[j]}');
                     isIn = true;
                     tmpSlots.last.add([j, slot]);
                   }
                 }
               }
-               debugPrint('UI_U_ServiceReserve => BEFORE | tmpSlots LENGTH: ${tmpSlots.length}');
+               debugPrint('UI_U_service_reserve => BEFORE | tmpSlots LENGTH: ${tmpSlots.length}');
               if(isIn){
-                debugPrint('UI_U_ServiceReserve => IS IN');
+                debugPrint('UI_U_service_reserve => IS IN');
                 days.add(startDate.add(Duration(days: i)));
                 if(tmpSlots.last.isEmpty)
                   tmpSlots.removeLast();
               }else{
-                debugPrint('UI_U_ServiceReserve => NOT IN');
+                debugPrint('UI_U_service_reserve => NOT IN');
                 tmpSlots.removeLast();
               }
-               debugPrint('UI_U_ServiceReserve => AFTER | tmpSlots LENGTH: ${tmpSlots.length}');
+               debugPrint('UI_U_service_reserve => AFTER | tmpSlots LENGTH: ${tmpSlots.length}');
 
                //days.add(startDate.add(Duration(days: i)));
             }
@@ -228,72 +228,72 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
     //debugPrint("UI_U_service_reserve => mySlots - " + mySlots.length.toString());
     List<DateTime> days = [];
     for (int i = 0; i <= endDate.difference(startDate).inDays; i++) {
-      //debugPrint('UI_U_ServiceReserve => LOOKING DATE: ${startDate.add(Duration(days: i))} - IS AFTER: $userStartDate - IS BEFORE: $userEndDate');
+      //debugPrint('UI_U_service_reserve => LOOKING DATE: ${startDate.add(Duration(days: i))} - IS AFTER: $userStartDate - IS BEFORE: $userEndDate');
       if ((startDate.add(Duration(days: i)).isAtSameMomentAs(userStartDate) || startDate.add(Duration(days: i)).isAfter(userStartDate)) && startDate.add(Duration(days: i)).isBefore(userEndDate)) {
-        //debugPrint('UI_U_ServiceReserve => LOOKED DATE: ${startDate.add(Duration(days: i))} - IS AFTER: $startDate');
+        //debugPrint('UI_U_service_reserve => LOOKED DATE: ${startDate.add(Duration(days: i))} - IS AFTER: $startDate');
         if (startDate.add(Duration(days: i)).isAfter(startDate) || startDate.add(Duration(days: i)).isAtSameMomentAs(startDate)) {
           DateTime currentTime = DateTime.now();
           currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0);
-          //debugPrint('UI_U_ServiceReserve => LOOKED DATE: ${startDate.add(Duration(days: i))} - CURRENT DATE: ${currentTime}');
+          //debugPrint('UI_U_service_reserve => LOOKED DATE: ${startDate.add(Duration(days: i))} - CURRENT DATE: ${currentTime}');
           if (startDate.add(Duration(days: i)).isAfter(currentTime) || startDate.add(Duration(days: i)).isAtSameMomentAs(currentTime)) {
             days.add(startDate.add(Duration(days: i)));
             tmpSlots.add([]);
             for (int j = 0; j < mySlots.length; j++) {
               if (!first /*&& mySlots[i].visibility*/) {
-               // debugPrint('FIRST TIME');
+               // debugPrint('UI_U_service_reserve => FIRST TIME');
                 if (mySlots[j].free != 0) {
-                  //debugPrint('HEREEE => ${mySlots[j].on}');
+                  //debugPrint('UI_U_service_reserve => HEREEE => ${mySlots[j].on}');
                   DateTime squareDateFormat = DateFormat("dd/MM/yyyy").parse(mySlots[j].date);
-                  //debugPrint('DATE: $squareDateFormat');
+                  //debugPrint('UI_U_service_reserve => DATE: $squareDateFormat');
                   DateTime squareDate = squareDateFormat;
                   squareDate = new DateTime(squareDate.year, squareDate.month, squareDate.day, 0, 0, 0, 0, 0);
                   DateTime squareTime = DateFormat("dd/MM/yyyy").parse(mySlots[j].date);
                   squareTime = new DateTime(squareTime.year, squareTime.month, squareTime.day, int.parse(mySlots[j].on.split(':').first), int.parse(mySlots[j].on.split(':').last), 0, 0, 0);
-                  //debugPrint('UI_U_ServiceReserve => SQUARE SLOT DATE: $squareDate - CURRENT DATE: ${startDate.add(Duration(days: i))} - SQUARE SLOT TIME: ${mySlots[j].on} - SQUARE TIME: $squareTime');
+                  //debugPrint('UI_U_service_reserve => SQUARE SLOT DATE: $squareDate - CURRENT DATE: ${startDate.add(Duration(days: i))} - SQUARE SLOT TIME: ${mySlots[j].on} - SQUARE TIME: $squareTime');
                   if (squareDate.isAtSameMomentAs(startDate.add(Duration(days: i))) && squareTime.isAfter(DateTime.now())) {
-                    //debugPrint('UI_U_ServiceReserve => SQUARE SLOT DATE: $squareDate - CURRENT DATE: ${startDate.add(Duration(days: i))} - SQUARE SLOT TIME: ${mySlots[j].on} - SQUARE TIME: $squareTime');
+                    //debugPrint('UI_U_service_reserve => SQUARE SLOT DATE: $squareDate - CURRENT DATE: ${startDate.add(Duration(days: i))} - SQUARE SLOT TIME: ${mySlots[j].on} - SQUARE TIME: $squareTime');
                     tmpSlots.last.add([j, slot, mySlots[j]]);
                   }
                 }
               } else {
-               // debugPrint('SECONDS AND OTHERS');
+               // debugPrint('UI_U_service_reserve => SECONDS AND OTHERS');
                 bool found = false;
                 Provider.of<ReserveList>(context, listen: false).order.itemList.forEach((element) {
                   if (element.idSquareSlot == mySlots[j].uid) {
                     found = true;
-                 //   debugPrint('FOUND SLOT FROM ORDER');
+                 //   debugPrint('UI_U_service_reserve => FOUND SLOT FROM ORDER');
                   }
                 });
                 if (found) {
-                  //debugPrint('FROM ORDER');
+                  //debugPrint('UI_U_service_reserve => FROM ORDER');
                   DateTime squareDateFormat = DateFormat("dd/MM/yyyy").parse(mySlots[j].date);
-                  //debugPrint('DATE: $squareDateFormat');
+                  //debugPrint('UI_U_service_reserve => DATE: $squareDateFormat');
                   DateTime squareDate = squareDateFormat;
                   squareDate = new DateTime(squareDate.year, squareDate.month, squareDate.day, 0, 0, 0, 0, 0);
                   DateTime squareTime = DateFormat("dd/MM/yyyy").parse(mySlots[j].date);
                   squareTime = new DateTime(squareTime.year, squareTime.month, squareTime.day, int.parse(mySlots[j].on.split(':').first), int.parse(mySlots[j].on.split(':').last), 0, 0, 0);
-                  //debugPrint('UI_U_ServiceReserve => SQUARE SLOT DATE: $squareDate - CURRENT DATE: ${startDate.add(Duration(days: i))} - SQUARE SLOT TIME: ${mySlots[j].on} - SQUARE TIME: $squareTime');
+                  //debugPrint('UI_U_service_reserve => SQUARE SLOT DATE: $squareDate - CURRENT DATE: ${startDate.add(Duration(days: i))} - SQUARE SLOT TIME: ${mySlots[j].on} - SQUARE TIME: $squareTime');
                   if (mySlots[j].free != 0){
                     if (squareDate.isAtSameMomentAs(startDate.add(Duration(days: i))) && squareTime.isAfter(DateTime.now())) {
-                      //debugPrint('UI_U_ServiceReserve => SQUARE SLOT DATE: $squareDate - CURRENT DATE: ${startDate.add(Duration(days: i))} - SQUARE SLOT TIME: ${mySlots[j].on} - SQUARE TIME: $squareTime');
+                      //debugPrint('UI_U_service_reserve => SQUARE SLOT DATE: $squareDate - CURRENT DATE: ${startDate.add(Duration(days: i))} - SQUARE SLOT TIME: ${mySlots[j].on} - SQUARE TIME: $squareTime');
                       tmpSlots.last.add([j, slot, mySlots[j]]);
                     }
                   }
                 } else {
                   DateTime squareDateFormat = DateFormat("dd/MM/yyyy").parse(mySlots[j].date);
-                  //debugPrint('DATE: $squareDateFormat');
+                  //debugPrint('UI_U_service_reserve => DATE: $squareDateFormat');
                   DateTime squareDate = squareDateFormat;
                   squareDate = new DateTime(squareDate.year, squareDate.month, squareDate.day, 0, 0, 0, 0, 0);
                   DateTime squareTime = DateFormat("dd/MM/yyyy").parse(mySlots[j].date);
                   squareTime = new DateTime(squareTime.year, squareTime.month, squareTime.day, int.parse(mySlots[j].on.split(':').first), int.parse(mySlots[j].on.split(':').last), 0, 0, 0);
                   if (squareDate.isAtSameMomentAs(startDate.add(Duration(days: i))) && squareTime.isAfter(DateTime.now())) {
-                    //debugPrint('UI_U_ServiceReserve => OUTSIDE SQUARE SLOT DATE: $squareDate - CURRENT DATE: ${startDate.add(Duration(days: i))} - SQUARE SLOT TIME: ${mySlots[j].on} - SQUARE TIME: $squareTime');
-                    //debugPrint('NOT FROM ORDER');
+                    //debugPrint('UI_U_service_reserve => OUTSIDE SQUARE SLOT DATE: $squareDate - CURRENT DATE: ${startDate.add(Duration(days: i))} - SQUARE SLOT TIME: ${mySlots[j].on} - SQUARE TIME: $squareTime');
+                    //debugPrint('UI_U_service_reserve => NOT FROM ORDER');
                   }
                   if (mySlots[j].free != 0) {
-                    //debugPrint('UI_U_ServiceReserve => SQUARE SLOT DATE: $squareDate - CURRENT DATE: ${startDate.add(Duration(days: i))} - SQUARE SLOT TIME: ${mySlots[j].on} - SQUARE TIME: $squareTime');
+                    //debugPrint('UI_U_service_reserve => SQUARE SLOT DATE: $squareDate - CURRENT DATE: ${startDate.add(Duration(days: i))} - SQUARE SLOT TIME: ${mySlots[j].on} - SQUARE TIME: $squareTime');
                     if (squareDate.isAtSameMomentAs(startDate.add(Duration(days: i))) && squareTime.isAfter(DateTime.now())) {
-                      //debugPrint('UI_U_ServiceReserve => SQUARE SLOT DATE: $squareDate - CURRENT DATE: ${startDate.add(Duration(days: i))} - SQUARE SLOT TIME: ${mySlots[j].on} - SQUARE TIME: $squareTime');
+                      //debugPrint('UI_U_service_reserve => SQUARE SLOT DATE: $squareDate - CURRENT DATE: ${startDate.add(Duration(days: i))} - SQUARE SLOT TIME: ${mySlots[j].on} - SQUARE TIME: $squareTime');
                       tmpSlots.last.add([j, slot, mySlots[j]]);
                     }
                   }
@@ -338,11 +338,11 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
   void deleteItem(OrderState snapshot, OrderEntry entry) {
     //setState(() {
       //cartCounter = cartCounter - entry.number;
-      debugPrint('PROVIDE RENTRY NUMBER: ${entry.number}');
+      debugPrint('UI_U_service_reserve => PROVIDE RENTRY NUMBER: ${entry.number}');
       Provider.of<ReserveList>(context, listen: false).order.cartCounter = Provider.of<ReserveList>(context, listen: false).order.cartCounter - 1;
       Provider.of<ReserveList>(context, listen: false).order.itemList.remove(entry);
       Provider.of<ReserveList>(context, listen: false).order.removeReserveItem(entry,context);
-      debugPrint('PROVIDER ITEM LIST: ${Provider.of<ReserveList>(context, listen: false).order.itemList.length}');
+      debugPrint('UI_U_service_reserve => PROVIDER ITEM LIST: ${Provider.of<ReserveList>(context, listen: false).order.itemList.length}');
       StoreProvider.of<AppState>(context).dispatch(UpdateOrderReservable(Provider.of<ReserveList>(context, listen: false).order));
     //});
   }
@@ -404,7 +404,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
     orderState =  StoreProvider.of<AppState>(context).state.order;
     userState =  StoreProvider.of<AppState>(context).state.user;
 
-    debugPrint('SERVICE RESERVE HERE');
+    debugPrint('UI_U_service_reserve => SERVICE RESERVE HERE');
     slotSnippetListState = SlotListSnippetState(slotListSnippet: []);
 
     return GestureDetector(
@@ -519,7 +519,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                   }
                   slotSnippetListState = SlotListSnippetState.fromJson(serviceSnapshot.data.docs.first.data());
                   slotSnippetListState.slotListSnippet.first.id = serviceSnapshot.data.docs.first.id;
-                  debugPrint("slotSnippetListState: ${slotSnippetListState.slotListSnippet.length}");
+                  debugPrint("UI_U_service_reserve => slotSnippetListState: ${slotSnippetListState.slotListSnippet.length}");
                   /*squareSlotList.clear();
                   slotSnippetListState.slotListSnippet.forEach((element) {
                     squareSlotList.addAll(element.slot);
@@ -592,7 +592,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                         }
                       }
                     }
-                    debugPrint('UI_U_ServiceReserve => AFTER FOR');
+                    debugPrint('UI_U_service_reserve => AFTER FOR');
                     first = true;
 
                     /*widget.serviceState.serviceSlot.forEach((element) {
@@ -641,7 +641,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                       element.sort((a, b) => (a[2].on).compareTo(b[2].on));
                     });
 
-                    debugPrint("UI_U_ServiceReserve => SLOTS LENGTH: ${Provider.of<ReserveList>(context, listen: false).slots.length} ${tmpSlots.length}");
+                    debugPrint("UI_U_service_reserve => SLOTS LENGTH: ${Provider.of<ReserveList>(context, listen: false).slots.length} ${tmpSlots.length}");
 
                     /*slots.forEach((element) {
             picked.add(List.generate(element.length, (index) => false));
@@ -679,7 +679,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                         Provider.of<ReserveList>(context, listen: false).initControllerList(List.generate(dates.length, (index) => [0, ItemScrollController()]));
                         Provider.of<ReserveList>(context, listen: false).initSlotControllerList(List.generate(dates.length, (index) => [0, ItemScrollController()]));
                       });
-                      debugPrint('UI_U_ServiceReserve => DATES LENGTH: ${dates.length} | BOOL LENGTH: ${selectQuantity.length}');
+                      debugPrint('UI_U_service_reserve => DATES LENGTH: ${dates.length} | BOOL LENGTH: ${selectQuantity.length}');
                     }
                   }
 
@@ -692,14 +692,14 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
 
                   ///First try
                   /*if(order.itemList.isNotEmpty){
-          debugPrint('UI_U_ServiceReserve => ORDER NOT EMPTY');
+          debugPrint('UI_U_service_reserve => ORDER NOT EMPTY');
           for(int i = 0; i < order.itemList.length; i++){
             for(int j = 0; j < dates.length; j++){
                 if(order.itemList[i].date == dates[j]){
                   for(int k = 0; k < picked[j].length; k++){
                     if(order.itemList[i].time == widget.serviceState.serviceSlot.first.startTime[k]){
-                      debugPrint("UI_U_ServiceReserve => $i TIME: ${order.itemList[i].time}");
-                      debugPrint("UI_U_ServiceReserve => $i DATE: ${order.itemList[i].date}");
+                      debugPrint("UI_U_service_reserve => $i TIME: ${order.itemList[i].time}");
+                      debugPrint("UI_U_service_reserve => $i DATE: ${order.itemList[i].date}");
                       picked[j][k] = true;
                     }
                   }
@@ -710,7 +710,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
 
                   ///Second try
                   /*order.selected.forEach((element) {
-          debugPrint('UI_U_ServiceReserve => SELECTED INDEXES: $element');
+          debugPrint('UI_U_service_reserve => SELECTED INDEXES: $element');
           //picked[element[0]][element[1]] = true;
         });*/
 
@@ -730,7 +730,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                         for (int k = 0; k < Provider.of<ReserveList>(context, listen: false).selectedSquareSlotList[i].length; k++) {
                           if (Provider.of<ReserveList>(context, listen: false).selectedSquareSlotList[i][k][1].uid == Provider.of<ReserveList>(context, listen: false).slots[i][j][2].uid) {
                             if (!idk.contains([i, k])) {
-                              debugPrint('FOUND TRUE: $i $k');
+                              debugPrint('UI_U_service_reserve => FOUND TRUE: $i $k');
                               idk.add([i, k]);
                             }
                           }
@@ -743,18 +743,18 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                   //_controllerList = List.generate(dates.length, (index) => [ItemScrollController(initialScrollOffset: scrollPositionList[index])]);
                   idk.forEach((element) {
                     tmpSelectedSquareSlotList[element[0]].add(Provider.of<ReserveList>(context, listen: false).selectedSquareSlotList[element[0]][element[1]]);
-                    debugPrint('FREE: ${Provider.of<ReserveList>(context, listen: false).selectedSquareSlotList[element[0]][element[1]]}');
-                    debugPrint('FREE TMP: ${tmpSelectedSquareSlotList[element[0]]}');
+                    debugPrint('UI_U_service_reserve => FREE: ${Provider.of<ReserveList>(context, listen: false).selectedSquareSlotList[element[0]][element[1]]}');
+                    debugPrint('UI_U_service_reserve => FREE TMP: ${tmpSelectedSquareSlotList[element[0]]}');
                     if (tmpSelectedSquareSlotList[element[0]].length > 1) {
-                      //debugPrint("UI_U_ServiceReserve =>JUMP TO: QUANTITY: ${_controllerList[element[0]][0]}");
-                      //debugPrint("UI_U_ServiceReserve =>JUMP TO: SLOT: ${_slotControllerList[element[0]][0]}");
+                      //debugPrint("UI_U_service_reserve => JUMP TO: QUANTITY: ${_controllerList[element[0]][0]}");
+                      //debugPrint("UI_U_service_reserve => JUMP TO: SLOT: ${_slotControllerList[element[0]][0]}");
                       //_controllerList[element[0]][1].scrollTo(index: selectedSquareSlotList[element[0]].length-1, duration: Duration(milliseconds: 500));
                       //_slotControllerList[element[0]][1].scrollTo(index: _slotControllerList[element[0]][0], duration: Duration(milliseconds: 500));
                       //slotIndex[element[0]] = _slotControllerList[element[0]][0];
                       //_controller.initialScrollOffset;
                     }
                     WidgetsBinding.instance.addPostFrameCallback((_) {
-                      debugPrint('UPDATE');
+                      debugPrint('UI_U_service_reserve => UPDATE');
                       Provider.of<ReserveList>(context, listen: false).updateSlotIndex(element[0], Provider.of<ReserveList>(context, listen: false).selectedSquareSlotList[element[0]][element[1]][2]);
                       Provider.of<ReserveList>(context, listen: false).updateControllerList(element[0], 0, Provider.of<ReserveList>(context, listen: false).selectedSquareSlotList[element[0]][element[1]][2]);
                       Provider.of<ReserveList>(context, listen: false).updateSlotControllerList(element[0], 0, Provider.of<ReserveList>(context, listen: false).selectedSquareSlotList[element[0]][element[1]][2]);
@@ -781,15 +781,15 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
           element[1].jumpTo(element[0]);
         });*/
 
-                  debugPrint("UI_U_ServiceReserve => CART COUNT: ${Provider.of<ReserveList>(context, listen: false).order.cartCounter}");
-                  debugPrint('UI_U_ServiceReserve => PICKED: ${picked.length} - $picked');
-                  debugPrint('UI_U_ServiceReserve => SELECTED: ${selectedSlot}');
-                  debugPrint('UI_U_ServiceReserve => SELECT QUANTITY: ${selectQuantity}');
-                  //debugPrint('UI_U_ServiceReserve => INTERVAL SLOTS LENGTH: ${widget.serviceState.serviceSlot.first.startTime.length}');
+                  debugPrint("UI_U_service_reserve => CART COUNT: ${Provider.of<ReserveList>(context, listen: false).order.cartCounter}");
+                  debugPrint('UI_U_service_reserve => PICKED: ${picked.length} - $picked');
+                  debugPrint('UI_U_service_reserve => SELECTED: ${selectedSlot}');
+                  debugPrint('UI_U_service_reserve => SELECT QUANTITY: ${selectQuantity}');
+                  //debugPrint('UI_U_service_reserve => INTERVAL SLOTS LENGTH: ${widget.serviceState.serviceSlot.first.startTime.length}');
                   return Consumer<ReserveList>(
                     builder: (_, reserveState, child) {
                       if(reserveState.selectedSquareSlotList.isNotEmpty && reserveState.selectedSquareSlotList.first.isNotEmpty)
-                        debugPrint('FREE ON BUILD: ${reserveState.selectedSquareSlotList.first.first.first} - ${reserveState.selectedSquareSlotList.first.first[1].free}');
+                        debugPrint('UI_U_service_reserve => FREE ON BUILD: ${reserveState.selectedSquareSlotList.first.first.first} - ${reserveState.selectedSquareSlotList.first.first[1].free}');
                       return Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
@@ -1074,7 +1074,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                         String currentDate = DateFormat('MMM dd',Localizations.localeOf(context).languageCode).format(DateTime.now()).toUpperCase();
                                         String nextDate = DateFormat('MMM dd',Localizations.localeOf(context).languageCode).format(DateTime.now().add(Duration(days: 1))).toUpperCase();
 
-                                        debugPrint('DATES: $i - $currentDate - $nextDate');
+                                        debugPrint('UI_U_service_reserve => DATES: $i - $currentDate - $nextDate');
                                         List<bool> select = picked.elementAt(index);
                                         return Column(
                                           children: [
@@ -1165,14 +1165,14 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                                     if(select[i]){
                                                                       selectedSquareSlot = serviceSlot[2];
                                                                       selectedQuantityNumber = selectedSquareSlot.maxAvailablePlace - selectedSquareSlot.availablePlaces;
-                                                                      debugPrint('SELECTED SLOT: ${selectQuantity[index]}');
+                                                                      debugPrint('UI_U_service_reserve => SELECTED SLOT: ${selectQuantity[index]}');
                                                                       selectedSquareSlotList[index].add([selectedQuantityNumber, selectedSquareSlot]);
-                                                                      debugPrint('SELECTED SLOT LIST: ${selectedSquareSlotList[index].length}');
+                                                                      debugPrint('UI_U_service_reserve => SELECTED SLOT LIST: ${selectedSquareSlotList[index].length}');
                                                                     }else{
                                                                       serviceSlot[2].availablePlaces = serviceSlot[2].maxAvailablePlace;
                                                                       selectedQuantityNumber = serviceSlot[2].maxAvailablePlace - serviceSlot[2].availablePlaces;
                                                                       int mSQQIndex = 0;
-                                                                      debugPrint('SELECTED SLOT LIST: ${selectedSquareSlotList[index].length}');
+                                                                      debugPrint('UI_U_service_reserve => SELECTED SLOT LIST: ${selectedSquareSlotList[index].length}');
                                                                       for(int j = 0; j < selectedSquareSlotList[index].length; j++){
                                                                         if(selectedSquareSlotList[index][j][1].slotId == serviceSlot[2].slotId){
                                                                           mSQQIndex = j;
@@ -1183,7 +1183,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                                   });
                                                                   if(select[i]){
                                                                     String duration = '';
-                                                                    //debugPrint('TIMESTAMP: ${Timestamp.fromDate(serviceSlot[2].date)}');
+                                                                    //debugPrint('UI_U_service_reserve => TIMESTAMP: ${Timestamp.fromDate(serviceSlot[2].date)}');
                                                                     if(serviceSlot[1].day != 0){
                                                                       if(serviceSlot[1].day > 1){
                                                                         duration = '${serviceSlot[1].day} ${AppLocalizations.of(context).days}';
@@ -1231,7 +1231,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                                     deleteItem(snapshot.order, tmp);
                                                                   }
 
-                                                                  debugPrint('UI_U_ServiceReserve => SELECTED INDEXES: ${order.selected}');
+                                                                  debugPrint('UI_U_service_reserve => SELECTED INDEXES: ${order.selected}');
                                                                 } : null,
                                                                 child: TimeSlotWidget(serviceSlot[1], serviceSlot[2], serviceSlot[0], select[i]),
                                                               )
@@ -1324,7 +1324,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                                           selectedSquareSlot.free -= 1;
                                                                           //selectedSquareSlot.free -= selectedQuantityNumber;
 
-                                                                          debugPrint('SELECTED SLOT: ${selectQuantity[index]}');
+                                                                          debugPrint('UI_U_service_reserve => SELECTED SLOT: ${selectQuantity[index]}');
                                                                           reserveState.selectedSquareSlotList[index].add([selectedQuantityNumber, selectedSquareSlot, i, serviceSlot[1]]);
                                                                           //reserveState.selectedSquareSlotList[index].add([selectedQuantityNumber, selectedSquareSlot, i+1, serviceSlot[1]]);
                                                                           Provider.of<ReserveList>(context, listen: false).initSelectedSquareSlotList(reserveState.selectedSquareSlotList);
@@ -1333,14 +1333,14 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                                           /*reserveState.selectedSquareSlotList[index].removeLast();
                                                                           Provider.of<ReserveList>(context, listen: false).initSelectedSquareSlotList(reserveState.selectedSquareSlotList);*/
                                                                           //Provider.of<ReserveList>(context, listen: false).updateSlotControllerList(index, 0, reserveState.selectedSquareSlotList[index].length - 1);
-                                                                          debugPrint('QUANTITY SLOT: ${reserveState._controllerList[index][0]}');
+                                                                          debugPrint('UI_U_service_reserve => QUANTITY SLOT: ${reserveState._controllerList[index][0]}');
                                                                           if (reserveState.selectedSquareSlotList[index].length > 1) {
-                                                                            debugPrint('MOVE TO');
+                                                                            debugPrint('UI_U_service_reserve => MOVE TO');
                                                                             reserveState._controllerList[index][1].scrollTo(index: reserveState._controllerList[index][0], duration: Duration(milliseconds: 500));
 
                                                                             //Provider.of<ReserveList>(context, listen: false)._slotControllerList[index][1].scrollTo(index: i, duration: Duration(milliseconds: 500));
                                                                           }
-                                                                          debugPrint('SELECTED SLOT LIST: ${reserveState.selectedSquareSlotList[index].length}');
+                                                                          debugPrint('UI_U_service_reserve => SELECTED SLOT LIST: ${reserveState.selectedSquareSlotList[index].length}');
                                                                         } else {
                                                                           FirebaseAnalytics().logEvent(
                                                                               name: 'slot_remove_time_slots',
@@ -1353,7 +1353,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                                           serviceSlot[2].free = serviceSlot[2].max;
                                                                           selectedQuantityNumber = serviceSlot[2].max - serviceSlot[2].free;
                                                                           int mSQQIndex = 0;
-                                                                          debugPrint('SELECTED SLOT LIST: ${reserveState.selectedSquareSlotList[index].length}');
+                                                                          debugPrint('UI_U_service_reserve => SELECTED SLOT LIST: ${reserveState.selectedSquareSlotList[index].length}');
                                                                           for (int j = 0; j < reserveState.selectedSquareSlotList[index].length; j++) {
                                                                             if (reserveState.selectedSquareSlotList[index][j][1].uid == serviceSlot[2].uid) {
                                                                               mSQQIndex = j;
@@ -1380,7 +1380,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                                       //});
                                                                       if (select[i]) {
                                                                         String duration = '';
-                                                                        //debugPrint('TIMESTAMP: ${Timestamp.fromDate(serviceSlot[2].date)}');
+                                                                        //debugPrint('UI_U_service_reserve => TIMESTAMP: ${Timestamp.fromDate(serviceSlot[2].date)}');
                                                                         if (serviceSlot[1].day != 0) {
                                                                           if (serviceSlot[1].day > 1) {
                                                                             duration = '${serviceSlot[1].day} ${AppLocalizations.of(context).days}';
@@ -1429,7 +1429,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                                         deleteItem(orderState, tmp);
                                                                       }
 
-                                                                      debugPrint('UI_U_ServiceReserve => SELECTED INDEXES: ${reserveState.order.selected}');
+                                                                      debugPrint('UI_U_service_reserve => SELECTED INDEXES: ${reserveState.order.selected}');
                                                                     }
                                                                         : null,
                                                                     child: TimeSlotWidget(serviceSlot[1], serviceSlot[2], serviceSlot[0], select[i]),
@@ -1461,12 +1461,12 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                   scrollDirection: Axis.horizontal,
                                                   //initialScrollIndex: selectedSquareSlotList[index].length - 1,
                                                   itemBuilder: (context, i) {
-                                                    //debugPrint('i OUT: $i - ${reserveState.selectedSquareSlotList[index].length}');
+                                                    //debugPrint('UI_U_service_reserve => i OUT: $i - ${reserveState.selectedSquareSlotList[index].length}');
                                                     if(i < reserveState.selectedSquareSlotList[index].length){
-                                                      //debugPrint('i IN: $i - ${reserveState.selectedSquareSlotList[index].length}');
+                                                      //debugPrint('UI_U_service_reserve => i IN: $i - ${reserveState.selectedSquareSlotList[index].length}');
                                                       SquareSlotState mySSS = reserveState.selectedSquareSlotList[index].elementAt(i)[1];
                                                       ServiceSlot tmpService = reserveState.selectedSquareSlotList[index].elementAt(i)[3];
-                                                      debugPrint('UI_U_ServiceReserve => INDEX: $index - QUANTITY INDEXES: ${reserveState.selectedSquareSlotList[index].length} '
+                                                      debugPrint('UI_U_service_reserve => INDEX: $index - QUANTITY INDEXES: ${reserveState.selectedSquareSlotList[index].length} '
                                                           '- FREE: ${Provider.of<ReserveList>(context, listen: false).selectedSquareSlotList[index][i][1].free} '
                                                           '- FREE RESERVE STATE: ${reserveState.selectedSquareSlotList[index][i][1].free} '
                                                           '- FREE MYSSS: ${mySSS.free}');
@@ -1490,7 +1490,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                                 onTap: () {
                                                                   int jump = i;
                                                                   --jump;
-                                                                  debugPrint('JUMP: $jump');
+                                                                  debugPrint('UI_U_service_reserve => JUMP: $jump');
 
                                                                   //_controllerList[index][0] = jump;
                                                                   Provider.of<ReserveList>(context, listen: false).updateControllerList(index, 0, jump);
@@ -1686,7 +1686,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                                 onTap: () {
                                                                   int jump = i;
                                                                   ++jump;
-                                                                  debugPrint('JUMP: $jump');
+                                                                  debugPrint('UI_U_service_reserve => JUMP: $jump');
                                                                   //_controllerList[index][0] = jump;
                                                                   Provider.of<ReserveList>(context, listen: false).updateControllerList(index, 0, jump);
                                                                   reserveState._controllerList[index][1].scrollTo(index: jump, duration: Duration(milliseconds: 500));
@@ -1895,32 +1895,32 @@ class ReserveList with ChangeNotifier{
 
   initSlot(List<List<List<dynamic>>> slots){
     this.slots = slots;
-    debugPrint('SLOT INIT');
+    debugPrint('UI_U_service_reserve => SLOT INIT');
     notifyListeners();
   }
   initOrder(OrderReservableState order){
     this.order = order;
-    debugPrint('ORDER INIT');
+    debugPrint('UI_U_service_reserve => ORDER INIT');
     notifyListeners();
   }
   initControllerList(List<List<dynamic>> _controllerList){
     this._controllerList = _controllerList;
-    debugPrint('CONTROLLER LIST INIT');
+    debugPrint('UI_U_service_reserve => CONTROLLER LIST INIT');
     notifyListeners();
   }
   initSlotControllerList(List<List<dynamic>> _slotControllerList){
     this._slotControllerList = _slotControllerList;
-    debugPrint('SLOT CONTROLLER LIST INIT');
+    debugPrint('UI_U_service_reserve => SLOT CONTROLLER LIST INIT');
     notifyListeners();
   }
   initSlotIndex(List<int> slotIndex){
     this.slotIndex = slotIndex;
-    debugPrint('SLOT INDEX INIT');
+    debugPrint('UI_U_service_reserve => SLOT INDEX INIT');
     notifyListeners();
   }
   initSelectedSquareSlotList(List<List<List<dynamic>>> selectedSquareSlotList){
     this.selectedSquareSlotList = selectedSquareSlotList;
-    debugPrint('SELECTED SQUARE SLOT LIST INIT');
+    debugPrint('UI_U_service_reserve => SELECTED SQUARE SLOT LIST INIT');
     notifyListeners();
   }
 

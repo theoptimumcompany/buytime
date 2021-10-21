@@ -55,7 +55,7 @@ class _RActivityManagementItemDetailsState extends State<RActivityManagementItem
   }
 
   void deleteItem(OrderState snapshot, OrderEntry entry, int index) {
-    debugPrint('UI_U_Cart => Remove Normal Item');
+    debugPrint('RUI_M_activity_management_item_details => Remove Normal Item');
     setState(() {
       if (snapshot.itemList.length >= 1) {
         snapshot.cartCounter = snapshot.cartCounter - entry.number;
@@ -79,7 +79,7 @@ class _RActivityManagementItemDetailsState extends State<RActivityManagementItem
   }
 
   void deleteReserveItem(OrderState snapshot, OrderEntry entry, int index) {
-    debugPrint('UI_U_Cart => Remove Normal Item');
+    debugPrint('RUI_M_activity_management_item_details =>  Remove Normal Item');
     setState(() {
       snapshot.cartCounter = snapshot.cartCounter - entry.number;
       snapshot.removeReserveItem(entry,context);
@@ -105,7 +105,7 @@ class _RActivityManagementItemDetailsState extends State<RActivityManagementItem
     var media = MediaQuery.of(context).size;
 
     final Stream<DocumentSnapshot> _orderStream =  FirebaseFirestore.instance.collection('order').doc(widget.orderId).snapshots(includeMetadataChanges: true);
-    debugPrint('ORDER ID: ${widget.orderId}');
+    debugPrint('RUI_M_activity_management_item_details => ORDER ID: ${widget.orderId}');
     ///Init sizeConfig
     SizeConfig().init(context);
     return StreamBuilder<DocumentSnapshot>(
@@ -453,7 +453,7 @@ class _RActivityManagementItemDetailsState extends State<RActivityManagementItem
                                     delegate: SliverChildBuilderDelegate(
                                           (context, index) {
                                         //MenuItemModel menuItem = menuItems.elementAt(index);
-                                        debugPrint('UI_M_activity_management_item_details => LIST| ${orderState.itemList[index].name} ITEM COUNT: ${orderState.itemList[index].number}');
+                                        debugPrint('RUI_M_activity_management_item_details =>  LIST| ${orderState.itemList[index].name} ITEM COUNT: ${orderState.itemList[index].number}');
                                         var item = (index != orderState.itemList.length ? orderState.itemList[index] : null);
                                         //int itemCount = orderState.itemList[index].number;
                                         return  Dismissible(
@@ -472,7 +472,7 @@ class _RActivityManagementItemDetailsState extends State<RActivityManagementItem
                                               orderState.selected == null || orderState.selected.isEmpty ?
                                               deleteItem(orderState, item, index) :
                                               deleteReserveItem(orderState, item, index);
-                                              debugPrint('UI_U_SearchPage => DX to DELETE');
+                                              debugPrint('RUI_M_activity_management_item_details => DX to DELETE');
                                               // Show a snackbar. This snackbar could also contain "Undo" actions.
                                               Scaffold.of(context).showSnackBar(SnackBar(
                                                   content: Text(Utils.retriveField(Localizations.localeOf(context).languageCode, item.name) + AppLocalizations.of(context).spaceRemoved),
@@ -529,7 +529,7 @@ class _RActivityManagementItemDetailsState extends State<RActivityManagementItem
                                     delegate: SliverChildBuilderDelegate(
                                           (context, index) {
                                         //MenuItemModel menuItem = menuItems.elementAt(index);
-                                        debugPrint('UI_M_activity_management_item_details => LIST| ${orderState.itemList[index].name} ITEM COUNT: ${orderState.itemList[index].number}');
+                                        debugPrint('RUI_M_activity_management_item_details => LIST| ${orderState.itemList[index].name} ITEM COUNT: ${orderState.itemList[index].number}');
                                         var item = (index != orderState.itemList.length ? orderState.itemList[index] : null);
                                         //int itemCount = orderState.itemList[index].number;
                                         return  Dismissible(
@@ -548,7 +548,7 @@ class _RActivityManagementItemDetailsState extends State<RActivityManagementItem
                                               orderState.selected == null || orderState.selected.isEmpty ?
                                               deleteItem(orderState, item, index) :
                                               deleteReserveItem(orderState, item, index);
-                                              debugPrint('UI_U_SearchPage => DX to DELETE');
+                                              debugPrint('RUI_M_activity_management_item_details => DX to DELETE');
                                               // Show a snackbar. This snackbar could also contain "Undo" actions.
                                               Scaffold.of(context).showSnackBar(SnackBar(
                                                   content: Text(Utils.retriveField(Localizations.localeOf(context).languageCode, item.name) + AppLocalizations.of(context).spaceRemoved),

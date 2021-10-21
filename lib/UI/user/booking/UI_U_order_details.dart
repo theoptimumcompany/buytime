@@ -67,7 +67,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
   void initState() {
     super.initState();
 
-    //debugPrint('${widget.imageUrl}');
+    //debugPrint('UI_U_order_details => ${widget.imageUrl}');
     if(widget.orderState.cardType != null && widget.orderState.cardType.isNotEmpty)
       card = widget.orderState.cardType.toLowerCase().substring(0,1) == 'v' ? 'v' : 'mc';
     else
@@ -238,7 +238,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
     if (!granted) {
       requestLocationPermission();
     }
-    debugPrint('requestContactsPermission $granted');
+    debugPrint('UI_U_order_details => requestContactsPermission $granted');
     return granted;
   }
 
@@ -329,7 +329,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
     double lon2 = 0.0;
     if(coordiantes.isNotEmpty){
       List<String> latLng1 = coordiantes.replaceAll('(', '').replaceAll(')', '').replaceAll(' ', '').split(',');
-      //debugPrint('W_add_external_business_list_item => $businessState.name} | Cordinates 1: $latLng1');
+      //debugPrint('UI_U_order_details => $businessState.name} | Cordinates 1: $latLng1');
       if(latLng1.length == 2){
         lat1 = double.parse(latLng1[0]);
         lon1 = double.parse(latLng1[1]);
@@ -337,14 +337,14 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
     }
     if(widget.serviceState.serviceCoordinates != null && widget.serviceState.serviceCoordinates.isNotEmpty){
       List<String> latLng2 = widget.serviceState.serviceCoordinates.replaceAll('(', '').replaceAll(')', '').replaceAll(' ', '').split(',');
-      debugPrint('W_add_external_business_list_item => ${widget.serviceState.name} | Cordinates 2: $latLng2');
+      debugPrint('UI_U_order_details => ${widget.serviceState.name} | Cordinates 2: $latLng2');
       if(latLng2.length == 2){
         lat2 = double.parse(latLng2[0]);
         lon2 = double.parse(latLng2[1]);
       }
     }else if(widget.serviceState.serviceBusinessCoordinates != null && widget.serviceState.serviceBusinessCoordinates.isNotEmpty){
       List<String> latLng2 = widget.serviceState.serviceBusinessCoordinates.replaceAll('(', '').replaceAll(')', '').replaceAll(' ', '').split(',');
-      //debugPrint('W_add_external_business_list_item => ${widget.externalBusinessState.name} | Cordinates 2: $latLng2');
+      //debugPrint('UI_U_order_details => ${widget.externalBusinessState.name} | Cordinates 2: $latLng2');
       if(latLng2.length == 2){
         lat2 = double.parse(latLng2[0]);
         lon2 = double.parse(latLng2[1]);
@@ -356,7 +356,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
         c(lat1 * p) * c(lat2 * p) *
             (1 - c((lon2 - lon1) * p))/2;
     double tmp = (12742 * asin(sqrt(a)));
-    debugPrint('W_add_external_business_list_item => Distance: $tmp');
+    debugPrint('UI_U_order_details => Distance: $tmp');
 
     return  tmp;
   }
@@ -378,7 +378,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
     // the media containing information on width and height
     var media = MediaQuery.of(context).size;
     tourist = widget.tourist;
-    //debugPrint('${widget.imageUrl}');
+    //debugPrint('UI_U_order_details => ${widget.imageUrl}');
     if (widget.orderState.cardType != null && (widget.orderState.cardType.isNotEmpty))
       card = (widget.orderState.cardType.toLowerCase().substring(0, 1) == 'v' ? 'v' : 'mc');
     else
@@ -552,8 +552,8 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                   builder: (context, AsyncSnapshot<DocumentSnapshot> businessSnapshot) {
                     if (businessSnapshot != null && businessSnapshot.data != null && !businessSnapshot.hasError && businessSnapshot.connectionState != ConnectionState.waiting) {
                       businessState = BusinessState.fromJson(businessSnapshot.data.data() as Map<String, dynamic>);
-                      //debugPrint('YUI_U_order_detail => PRICE: ${orderDetails.total}');
-                      //debugPrint('YUI_U_order_detail => CARD TYPE: ${orderDetails.cardType}');
+                      //debugPrint('UI_U_order_details => PRICE: ${orderDetails.total}');
+                      //debugPrint('UI_U_order_details => CARD TYPE: ${orderDetails.cardType}');
                       //businessState  = StoreProvider.of<AppState>(context).state.business;
                       order = StoreProvider.of<AppState>(context).state.order;
 
@@ -576,8 +576,8 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                         if (orderSnapshot != null && orderSnapshot.data != null && !orderSnapshot.hasError && orderSnapshot.connectionState != ConnectionState.waiting) {
                           orderDetails = OrderDetailState.fromJson(orderSnapshot.data.data());
                           order = OrderState.fromJson(orderSnapshot.data.data());
-                          debugPrint('YUI_U_order_detail => PRICE: ${orderDetails.total}');
-                          debugPrint('YUI_U_order_detail => CARD TYPE: ${orderDetails.cardType}');
+                          debugPrint('UI_U_order_details => PRICE: ${orderDetails.total}');
+                          debugPrint('UI_U_order_details => CARD TYPE: ${orderDetails.cardType}');
                         }
 
                         return Column(
@@ -1327,12 +1327,12 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                         );
                         OrderState orderState = OrderState.fromJson(orderSnapshot.data.data());
                         order = orderState.itemList != null ? (orderState.itemList.length > 0 ? orderState : OrderState().toEmpty()) : OrderState().toEmpty();
-                        debugPrint('UI_U_ServiceDetails => CART COUNT: ${order.cartCounter}');
+                        debugPrint('UI_U_order_details => CART COUNT: ${order.cartCounter}');
                       },
                     );
                     /*OrderState orderState = OrderState.fromJson(orderSnapshot.data.data());
                       order = orderState.itemList != null ? (orderState.itemList.length > 0 ? orderState : OrderState().toEmpty()) : OrderState().toEmpty();
-                      debugPrint('UI_U_ServiceDetails => CART COUNT: ${order.cartCounter}');*/
+                      debugPrint('UI_U_order_details => CART COUNT: ${order.cartCounter}');*/
                   },
                 ),
               ),

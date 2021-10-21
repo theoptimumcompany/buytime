@@ -227,7 +227,7 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
             String hour = value[0] < 10 ? "0" + value[0].toString() : value[0].toString();
             String format24 = hour + ":" + minute;
             stopController[indexController].text = format24;
-            debugPrint('W_service_step_availabile_time => stop time: $format24');
+            debugPrint('W_service_step_available_time => stop time: $format24');
             List<String> controllerList = convertListTextEditingControllerToListString(stopController);
             StoreProvider.of<AppState>(context).dispatch(SetServiceSlotStopTime(controllerList));
             setState(() {
@@ -531,7 +531,7 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
                                     daysInterval.removeAt(i);
                                     StoreProvider.of<AppState>(context).dispatch(SetServiceSlotDaysInterval(daysInterval));
                                     startController.removeAt(i);
-                                    debugPrint('W_service_step_availabile_time => startController: $startController');
+                                    debugPrint('W_service_step_available_time => startController: $startController');
                                     List<String> listStart = [];
                                     startController.forEach((element) {
                                       if (element.text.isEmpty)
@@ -539,7 +539,7 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
                                       else
                                         listStart.add(element.text);
                                     });
-                                    debugPrint('W_service_step_availabile_time => listStart: $listStart');
+                                    debugPrint('W_service_step_available_time => listStart: $listStart');
                                     StoreProvider.of<AppState>(context).dispatch(SetServiceSlotStartTime(listStart));
                                     stopController.removeAt(i);
                                     List<String> listStop = [];

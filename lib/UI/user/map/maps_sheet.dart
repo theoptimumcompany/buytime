@@ -48,7 +48,7 @@ class MapsSheet {
                           );
                           // return InkWell(
                           //   onTap: () {
-                          //     debugPrint('Category Item: ${categoryItem.name.toUpperCase()} Clicked!');
+                          //     debugPrint('maps_sheet => Category Item: ${categoryItem.name.toUpperCase()} Clicked!');
                           //   },
                           //   //child: MenuItemListItemWidget(menuItem),
                           //   child: CategoryListItemWidget(categoryItem),

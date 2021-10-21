@@ -625,7 +625,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                               value: snapshot.hub,
                                                               onChanged: StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin || StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman
                                                                   ? (value) {
-                                                                      debugPrint('UI_M-create_business => HUB: $value');
+                                                                      debugPrint('UI_M_create_business => HUB: $value');
                                                                       setState(() {
                                                                         //isHub = value;
                                                                       });

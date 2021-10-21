@@ -265,7 +265,7 @@
 //     }
 //
 //     Map<String, dynamic> paymentIntentRes = await createPaymentIntent(stripeCard, customerEmail);
-//     print("StripePayment payment method test");
+//     debugPrint("StripePayment payment method test");
 //
 //
 //
@@ -309,7 +309,7 @@
 //     // -Ask to the customer through a textfield.
 //     // -Get it from firebase Account.
 //     customerEmail = StoreProvider.of<AppState>(context).state.user.email;
-//     print("StripePayment user email: " + customerEmail);
+//     debugPrint("StripePayment user email: " + customerEmail);
 //     return customerEmail;
 //   }
 //
@@ -352,7 +352,7 @@
 //       //clientSecret = await postCreatePaymentIntent(customerEmail, paymentMethod['id']);
 //       //paymentIntentRes = await stripe.api.retrievePaymentIntent(clientSecret);
 //     } catch (e) {
-//       print("ERROR_CreatePaymentIntentAndSubmit: $e");
+//       debugPrint("ERROR_CreatePaymentIntentAndSubmit: $e");
 //       showAlertDialog(context, AppLocalizations.of(context).error, AppLocalizations.of(context).somethingWentWrong);
 //     }
 //     return paymentIntentRes;
@@ -380,7 +380,7 @@
 //       await stripe.confirmPayment(clientSecret, paymentMethodId: paymentMethodId);
 //       paymentIntentRes_3dSecure = await stripe.api.retrievePaymentIntent(clientSecret);
 //     } catch (e) {
-//       print("ERROR_ConfirmPayment3DSecure: $e");
+//       debugPrint("ERROR_ConfirmPayment3DSecure: $e");
 //       showAlertDialog(context, AppLocalizations.of(context).error, AppLocalizations.of(context).somethingWentWrong);
 //     }
 //     return paymentIntentRes_3dSecure;

@@ -312,13 +312,13 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
               setCategoryList();
 
               AppLocalizations.supportedLocales.forEach((element) {
-                debugPrint('UI_M_create_service => Locale: ${element}');
+                debugPrint('UI_M_edit_service => Locale: ${element}');
                 String flag = '';
                 if (element.languageCode == 'en')
                   flag = 'gb'.toUpperCase().replaceAllMapped(RegExp(r'[A-Z]'), (match) => String.fromCharCode(match.group(0).codeUnitAt(0) + 127397));
                 else
                   flag = element.languageCode.toUpperCase().replaceAllMapped(RegExp(r'[A-Z]'), (match) => String.fromCharCode(match.group(0).codeUnitAt(0) + 127397));
-                //debugPrint('UI_M_create_service => Locale charCode: $flag');
+                //debugPrint('UI_M_edit_service => Locale charCode: $flag');
                 flagsCharCode.add(flag);
                 languageCode.add(element.languageCode);
               });
@@ -505,7 +505,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                             image: snapshot.serviceState.image1,
                                                             cropAspectRatioPreset: CropAspectRatioPreset.square,
                                                             onFilePicked: (fileToUpload) {
-                                                              print("UI_create_service - callback upload image 1!");
+                                                              debugPrint("UI_create_service - callback upload image 1!");
                                                               StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInService(fileToUpload));
                                                             },
                                                           ),
@@ -523,7 +523,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                                 cropAspectRatioPreset: CropAspectRatioPreset.square,
                                                                 image: snapshot.serviceState.image2,
                                                                 onFilePicked: (fileToUpload) {
-                                                                  print("UI_create_service -  callback upload image 2!");
+                                                                  debugPrint("UI_create_service -  callback upload image 2!");
                                                                   StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInService(fileToUpload));
                                                                 },
                                                               ),
@@ -534,7 +534,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                               cropAspectRatioPreset: CropAspectRatioPreset.square,
                                                               image: snapshot.serviceState.image3,
                                                               onFilePicked: (fileToUpload) {
-                                                                print("UI_create_service -  callback upload image 3!");
+                                                                debugPrint("UI_create_service -  callback upload image 3!");
                                                                 StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInService(fileToUpload));
                                                               },
                                                             ),

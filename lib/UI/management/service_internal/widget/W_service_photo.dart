@@ -81,9 +81,9 @@ class WidgetServicePhotoState extends State<WidgetServicePhoto> {
         ImageStreamListener(
           (ImageInfo image, bool synchronousCall) {
             completer.complete(image.image);
-            debugPrint('optimum_from_multi_photo: image -> width: ${image.image.width} - height: ${image.image.height}');
+            debugPrint('W_service_photo => image -> width: ${image.image.width} - height: ${image.image.height}');
             if (image.image.height < 1000 && image.image.width < 1000) {
-              debugPrint('optimum_from_multi_photo: no crop');
+              debugPrint('W_service_photo => no crop');
               setState(() {
                 underReqSize = true;
               });
@@ -106,17 +106,17 @@ class WidgetServicePhotoState extends State<WidgetServicePhoto> {
       final bytes = (await pickedFile.readAsBytes()).lengthInBytes;
       final kb = bytes / 1024;
       final mb = kb / 1024;
-      print('optimum_from_multi_photo WIDTH: ${decodedImage.width}');
-      print('optimum_from_multi_photo LENGTH: ${decodedImage.height}');
-      print('optimum_from_multi_photo SIZE: MB: $mb | KB: $kb');
+      debugPrint('optimum_from_multi_photo WIDTH: ${decodedImage.width}');
+      debugPrint('optimum_from_multi_photo LENGTH: ${decodedImage.height}');
+      debugPrint('optimum_from_multi_photo SIZE: MB: $mb | KB: $kb');
 
       if (decodedImage.width < 1000 && decodedImage.height < 1000 && mb < 4) {
-        debugPrint('optimum_from_multi_photo: no crop');
+        debugPrint('W_service_photo => no crop');
         setState(() {
           underReqSize = true;
         });
       } else {
-        debugPrint('optimum_from_multi_photo: crop');
+        debugPrint('W_service_photo => crop');
         croppedFile = await ImageCropper.cropImage(
             aspectRatio: cropAspectRatioPreset == CropAspectRatioPreset.square ? CropAspectRatio(ratioX: 1, ratioY: 1) : CropAspectRatio(ratioX: 16, ratioY: 9),
             sourcePath: pickedFile.path,
@@ -157,7 +157,7 @@ class WidgetServicePhotoState extends State<WidgetServicePhoto> {
     }
 
     if (croppedFile != null) {
-      debugPrint('optimum_from_multi_photo: cropped done');
+      debugPrint('W_service_photo => cropped done');
       PickedFile tmpCroppedFile = new PickedFile(croppedFile.path);
 
       if (kIsWeb) {
@@ -198,7 +198,7 @@ class WidgetServicePhotoState extends State<WidgetServicePhoto> {
       completer = new Completer<ui.Image>();
     });
 
-    print("optimum_form_multi_photo: pick image");
+    debugPrint("optimum_form_multi_photo: pick image");
     // call the image picker
     getImage().then((result) {
       if (result != null)
@@ -208,17 +208,17 @@ class WidgetServicePhotoState extends State<WidgetServicePhoto> {
 
   bool canEdit(){
     bool edit = false;
-    debugPrint('UI_M_edit_service => USER ROLE: ${StoreProvider.of<AppState>(context).state.user.getRole()}');
+    debugPrint('W_service_photo => USER ROLE: ${StoreProvider.of<AppState>(context).state.user.getRole()}');
     if(StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin ||
         StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman ||
         StoreProvider.of<AppState>(context).state.user.getRole() == Role.owner){
       edit = true;
-      debugPrint('UI_M_edit_service => CAN EDIT ${Utils.enumToString(StoreProvider.of<AppState>(context).state.user.getRole())}');
+      debugPrint('W_service_photo => CAN EDIT ${Utils.enumToString(StoreProvider.of<AppState>(context).state.user.getRole())}');
     }
     StoreProvider.of<AppState>(context).state.category.manager.forEach((email) {
       if(email.mail == StoreProvider.of<AppState>(context).state.user.email){
         edit = true;
-        debugPrint('UI_M_edit_service => CAN EDIT MANAGER');
+        debugPrint('W_service_photo => CAN EDIT MANAGER');
       }
     });
 
@@ -227,8 +227,8 @@ class WidgetServicePhotoState extends State<WidgetServicePhoto> {
 
   @override
   Widget build(BuildContext context) {
-    //debugPrint('REMOTE PATH: $remotePath');
-    //debugPrint('IMAGE: $image');
+    //debugPrint('W_service_photo => REMOTE PATH: $remotePath');
+    //debugPrint('W_service_photo => IMAGE: $image');
     return Column(
       children: [
         Column(
@@ -284,7 +284,7 @@ class WidgetServicePhotoState extends State<WidgetServicePhoto> {
                   alignment: Alignment.topRight,
                   child: GestureDetector(
                     onTap: (){
-                      debugPrint('Remove image: $remotePath');
+                      debugPrint('W_service_photo => Remove image: $remotePath');
                       if(remotePath.endsWith('1')){
                         StoreProvider.of<AppState>(context).state.serviceState.image1 = '';
                       }

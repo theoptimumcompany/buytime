@@ -48,7 +48,7 @@ class SatispayPaymentState extends State<SatispayPayment> {
         accessToken = await services.getAccessToken();
 
         final transactions = getOrderParams();
-        debugPrint('CALL PAYPAL CREATE PAYMENT');
+        debugPrint('satispay_payment => CALL PAYPAL CREATE PAYMENT');
         final res = await services.createPaypalPayment(transactions, accessToken);
         if (res != null) {
           setState(() {
@@ -99,7 +99,7 @@ class SatispayPaymentState extends State<SatispayPayment> {
 
 
     // checkout invoice details
-    debugPrint('CHECK OUT INVOICE: ${widget.orderState.total} - ${widget.orderState.cartCounter}');
+    debugPrint('satispay_payment => CHECK OUT INVOICE: ${widget.orderState.total} - ${widget.orderState.cartCounter}');
     String totalAmount = '${widget.orderState.total}';
     String subTotalAmount = '${widget.orderState.total}';
     String shippingCost = '0';
@@ -208,7 +208,7 @@ class SatispayPaymentState extends State<SatispayPayment> {
                     ///Payment success
                     services.executePayment(Uri.parse(executeUrl), payerID, accessToken)
                         .then((id) {
-                      debugPrint('PAYMENT EXECUTION SUCCESS - ID: $id');
+                      debugPrint('satispay_payment => PAYMENT EXECUTION SUCCESS - ID: $id');
                       widget.onFinish(id);
                       setState(() {
                         executionComplete = true;

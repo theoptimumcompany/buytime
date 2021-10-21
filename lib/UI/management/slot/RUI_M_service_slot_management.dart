@@ -168,7 +168,7 @@ class _RServiceSlotManagementState extends State<RServiceSlotManagement> {
     );
 
     map.forEach((key, value) {
-      debugPrint('here - $first');
+      debugPrint('RUI_M_service_slot_management => here - $first');
       DateTime orderTime = DateFormat('dd/MM/yyyy').parse(value.first.date);
       DateTime tmp = DateFormat('dd/MM/yyyy').parse(value.first.date);
       tmp = DateTime(orderTime.year, orderTime.month, 1, 0,0,0,0,0);
@@ -290,7 +290,7 @@ class _RServiceSlotManagementState extends State<RServiceSlotManagement> {
                                 ),
                                 delegate: SliverChildBuilderDelegate(
                                       (context, index) {
-                                  //debugPrint('UI_M_activity_management => LIST SIZE: ${list[i].length}');
+                                  //debugPrint('RUI_M_service_slot_management => LIST SIZE: ${list[i].length}');
                                   //OrderState order = list[i].elementAt(index)[0];
                                   //OrderEntry entry = list[i].elementAt(index)[1];
                                   /// when the manager clicks on the button we  block all the buttons (for this order) until the response rebuilds the list
@@ -316,11 +316,11 @@ class _RServiceSlotManagementState extends State<RServiceSlotManagement> {
                                       child: TimeSlotManagementWidget(
                                           slot,
                                           (int value){
-                                            debugPrint('SLOT SNIPPET ID: ${slotSnippetListState.slotListSnippet.first.id}');
+                                            debugPrint('RUI_M_service_slot_management => SLOT SNIPPET ID: ${slotSnippetListState.slotListSnippet.first.id}');
                                             slotSnippetListState.slotListSnippet.first.slot.forEach((element) {
                                               if(element.uid == slot.uid)
                                                 element.free = value;
-                                              //debugPrint('${element.date} - ${element.on} - ${element.free}');
+                                              //debugPrint('RUI_M_service_slot_management => ${element.date} - ${element.on} - ${element.free}');
                                             });
                                             StoreProvider.of<AppState>(context).dispatch(UpdateSlotSnippet(widget.serviceState.serviceId, slotSnippetListState));
                                             /*squareSlotList.forEach((element) {
@@ -417,7 +417,7 @@ class _RServiceSlotManagementState extends State<RServiceSlotManagement> {
           //itemExtent: 50.0,
           delegate:
           SliverChildBuilderDelegate((BuildContext context, int index) {
-            debugPrint('UI_M_activity_management => LIST SIZE: ${value[index].length}');
+            debugPrint('RUI_M_service_slot_management => LIST SIZE: ${value[index].length}');
             /// when the manager clicks on the button we  block all the buttons (for this order) until the response rebuilds the list
             /// or the entry?
             bool managerHasChosenAction = false;
@@ -459,7 +459,7 @@ class _RServiceSlotManagementState extends State<RServiceSlotManagement> {
                     //itemExtent: 50.0,
                     delegate:
                     SliverChildBuilderDelegate((BuildContext context, int index2) {
-                      //debugPrint('UI_M_activity_management => LIST SIZE: ${list[i].length}');
+                      //debugPrint('RUI_M_service_slot_management => LIST SIZE: ${list[i].length}');
                       OrderState order = value[index].elementAt(index2)[0];
                       OrderEntry entry = value[index].elementAt(index2)[1];
                       /// when the manager clicks on the button we  block all the buttons (for this order) until the response rebuilds the list
@@ -550,7 +550,7 @@ class _RServiceSlotManagementState extends State<RServiceSlotManagement> {
                                       curve: Curves.easeOut,
                                       child: SliverList(
                                         delegate: SliverChildBuilderDelegate((context, index) {
-                                          //debugPrint('UI_M_activity_management => LIST SIZE: ${list[i].length}');
+                                          //debugPrint('RUI_M_service_slot_management => LIST SIZE: ${list[i].length}');
                                           OrderState order = list[i].elementAt(index)[0];
                                           OrderEntry entry = list[i].elementAt(index)[1];
                                           /// when the manager clicks on the button we  block all the buttons (for this order) until the response rebuilds the list
@@ -834,7 +834,7 @@ class _RServiceSlotManagementState extends State<RServiceSlotManagement> {
     currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0);
     //DateTime sevenDaysFromNow = new DateTime(currentTime.year, currentTime.month, currentTime.day + 7, 0, 0, 0, 0, 0).toUtc();
     DateTime sevenDaysFromNow =  currentTime.add(Duration(days: 7));
-    debugPrint('RUI_M_activity_management => CURRENT TIME: $currentTime | SEVEN DAYS IN: $sevenDaysFromNow');
+    debugPrint('RUI_M_service_slot_management => CURRENT TIME: $currentTime | SEVEN DAYS IN: $sevenDaysFromNow');
 
     if(businessIdList.isNotEmpty){
       if(businessIdList.length > 10){
@@ -854,8 +854,8 @@ class _RServiceSlotManagementState extends State<RServiceSlotManagement> {
             .snapshots();
       }
     }*/
-    debugPrint('UPDATE');
-    //debugPrint('RUI_M_activity_management => STREAM LENGTH: ${_orderListRealtime.length}');
+    debugPrint('RUI_M_service_slot_management => UPDATE');
+    //debugPrint('RUI_M_service_slot_management => STREAM LENGTH: ${_orderListRealtime.length}');
     Locale myLocale = Localizations.localeOf(context);
     ///Init sizeConfig
     SizeConfig().init(context);
@@ -948,7 +948,7 @@ class _RServiceSlotManagementState extends State<RServiceSlotManagement> {
               slotSnippetListState = SlotListSnippetState.fromJson(serviceSnapshot.data.docs.first.data());
               if(slotSnippetListState.slotListSnippet.isNotEmpty){
                 slotSnippetListState.slotListSnippet.first.id = serviceSnapshot.data.docs.first.id;
-                debugPrint("slotSnippetListState: ${slotSnippetListState.slotListSnippet.length}");
+                debugPrint("RUI_M_service_slot_management => slotSnippetListState: ${slotSnippetListState.slotListSnippet.length}");
                 squareSlotList.clear();
                 for(int i = 0; i < slotSnippetListState.slotListSnippet.length; i++){
                   squareSlotList.addAll(slotSnippetListState.slotListSnippet[i].slot);
@@ -959,7 +959,7 @@ class _RServiceSlotManagementState extends State<RServiceSlotManagement> {
                 /*slotSnippetListState.slotListSnippet.forEach((element) {
                 squareSlotList.addAll(element.slot);
               });*/
-                debugPrint("HOW MANY LIST OD SLOTS: ${slotSnippetListState.slotListSnippet.length}");
+                debugPrint("RUI_M_service_slot_management => HOW MANY LIST OD SLOTS: ${slotSnippetListState.slotListSnippet.length}");
                 //squareSlotList = slotSnippetListState.slotListSnippet.first.slot;
                 allMap.clear();
                 slotMap.clear();
@@ -980,11 +980,11 @@ class _RServiceSlotManagementState extends State<RServiceSlotManagement> {
                     if(slotTime.isAfter(DateTime.now()) || slotTime.isAtSameMomentAs(DateTime.now())){
                       allMap.putIfAbsent(tmp, () => tmpMap);
                       slotMap.putIfAbsent(tmp, () => tmpSlotMap);
-                      debugPrint('RUI_M_activity_management: VALUE LENGTH: ${squareSlotList[i].free}');
+                      debugPrint('RUI_M_service_slot_management => VALUE LENGTH: ${squareSlotList[i].free}');
                       if(allMap.containsKey(tmp)){
                         allMap[tmp].putIfAbsent(tmp2, () => []);
                         slotMap[tmp].putIfAbsent(tmp2, () => []);
-                        //debugPrint('RUI_M_activity_management: KEY: $key');
+                        //debugPrint('RUI_M_service_slot_management => KEY: $key');
                         if(allMap[tmp].containsKey(tmp2))
                           allMap[tmp][tmp2].add(squareSlotList[i]);
                         slotMap[tmp][tmp2].add(serviceSlotList[i]);
@@ -1010,11 +1010,11 @@ class _RServiceSlotManagementState extends State<RServiceSlotManagement> {
                   if(slotTime.isAfter(DateTime.now()) || slotTime.isAtSameMomentAs(DateTime.now())){
                     allMap.putIfAbsent(tmp, () => tmpMap);
                     slotMap.putIfAbsent(tmp, () => tmpSlotMap);
-                    debugPrint('RUI_M_activity_management: VALUE LENGTH: ${element.free}');
+                    debugPrint('RUI_M_service_slot_management => VALUE LENGTH: ${element.free}');
                     if(allMap.containsKey(tmp)){
                       allMap[tmp].putIfAbsent(tmp2, () => []);
                       slotMap[tmp].putIfAbsent(tmp2, () => []);
-                      //debugPrint('RUI_M_activity_management: KEY: $key');
+                      //debugPrint('RUI_M_service_slot_management => KEY: $key');
                       if(allMap[tmp].containsKey(tmp2))
                         allMap[tmp][tmp2].add(element);
                     }
@@ -1022,7 +1022,7 @@ class _RServiceSlotManagementState extends State<RServiceSlotManagement> {
                 }
               });*/
 
-              debugPrint('ALL MAP SIZE: ${allMap.length}');
+              debugPrint('RUI_M_service_slot_management => ALL MAP SIZE: ${allMap.length}');
               if(allMap.isNotEmpty){
                 return CustomScrollView(
                     shrinkWrap: true, slivers: [MultiSliver(

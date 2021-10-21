@@ -93,11 +93,11 @@ class RegistrationState extends State<Registration> {
       firebaseMessaging.requestPermission();
       firebaseMessaging.getToken().then((String token) {
         assert(token != null);
-        debugPrint("UI_U_Registration Token " + token);
+        debugPrint("UI_U_registration => Token " + token);
         serverToken = token;
       });
     }).catchError((onError) {
-      debugPrint("error on firebase application start: " + onError.toString());
+      debugPrint("UI_U_registration => error on firebase application start: " + onError.toString());
     });
     initPlatformState();
   }
@@ -846,10 +846,10 @@ class RegistrationState extends State<Registration> {
           _userEmail = user.email;
           Future.delayed(Duration(seconds: 1), (){
             if (StoreProvider.of<AppState>(context).state.user.getRole() != Role.user){
-              debugPrint('UI_U_login => Account authority: > User');
+              debugPrint('UI_U_registration => Account authority: > User');
               Navigator.push(context, MaterialPageRoute(builder: (context) => RBusinessList()));
             } else{
-              debugPrint('UI_U_login => Account authority: <= User');
+              debugPrint('UI_U_registration => Account authority: <= User');
               Navigator.of(context).pushNamedAndRemoveUntil(AppRoutes.serviceExplorer, (Route<dynamic> route) => false);
             }
             //Navigator.of(context).pushNamedAndRemoveUntil(AppRoutes.myBookings, ModalRoute.withName(AppRoutes.landing));

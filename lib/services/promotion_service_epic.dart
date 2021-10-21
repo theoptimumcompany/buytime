@@ -12,7 +12,7 @@ class PromotionListRequestService implements EpicClass<AppState> {
 
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-    debugPrint("PROMOTION_SERVICE_EPIC - PromotionListRequestService => PromotionList Service CAUGHT ACTION");
+    debugPrint("promotion_service_epic => PromotionListRequestService => PromotionList Service CAUGHT ACTION");
     List<PromotionState> promotionStateList = [];
     return actions.whereType<PromotionListRequest>().asyncMap((event) async {
       promotionStateList.clear();
@@ -27,7 +27,7 @@ class PromotionListRequestService implements EpicClass<AppState> {
 
         for(int i = 0; i <  promotionListQuery.docs.length; i++){
           promotionState = PromotionState.fromJson(promotionListQuery.docs[i].data());
-          debugPrint('PROMOTION STATE TIMESUSED BEFORE: ${promotionState.timesUsed}');
+          debugPrint('promotion_service_epic => PROMOTION STATE TIMESUSED BEFORE: ${promotionState.timesUsed}');
           promotionState.timesUsed = 0;
           if (store.state.user.uid != null && store.state.user.uid.isNotEmpty) {
             var promotionCounterCollection= await FirebaseFirestore.instance.collection('user').doc(store.state.user.uid).collection('promotionUsage').limit(1).get();
@@ -46,7 +46,7 @@ class PromotionListRequestService implements EpicClass<AppState> {
           }
         }
         if (promotionState != null) {
-          debugPrint('PROMOTION STATE TIMESUSED AFTER: ${promotionState.timesUsed}');
+          debugPrint('promotion_service_epic => PROMOTION STATE TIMESUSED AFTER: ${promotionState.timesUsed}');
         }
         if (promotionStateList.isEmpty) promotionStateList.add(PromotionState());
       }
@@ -63,7 +63,7 @@ class PromotionRequestService implements EpicClass<AppState> {
 
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-    debugPrint("PROMOTION_SERVICE_EPIC - PromotionRequestService => Promotion Service CAUGHT ACTION");
+    debugPrint("promotion_service_epic => PromotionRequestService => Promotion Service CAUGHT ACTION");
     return actions.whereType<PromotionRequest>().asyncMap((event) async {
 
       var promotionSnapshot = await FirebaseFirestore.instance.collection('promotion').get();

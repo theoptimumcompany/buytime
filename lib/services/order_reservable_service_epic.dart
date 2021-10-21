@@ -40,10 +40,10 @@ class OrderReservableListRequestService implements EpicClass<AppState> {
   List<OrderReservableState> orderStateList;
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-    debugPrint("ORDER_RESERVABLE_SERVICE_EPIC - OrderReservableListRequestService =>  CATCHED ACTION");
+    debugPrint("order_reservable_service_epic => OrderReservableListRequestService =>  CATCHED ACTION");
      return actions.whereType<OrderReservableListRequest>().asyncMap((event) async {
-       debugPrint("ORDER_RESERVABLE_SERVICE_EPIC - OrderReservableListRequestService =>  SERVICE ID: ${event.userId}");
-       //debugPrint("ORDER_RESERVABLE_SERVICE_EPIC - OrderReservableListRequestService =>  BUSINESS ID: ${store.state.business.id_firestore}");
+       debugPrint("order_reservable_service_epic => OrderReservableListRequestService =>  SERVICE ID: ${event.userId}");
+       //debugPrint("order_reservable_service_epic => OrderReservableListRequestService =>  BUSINESS ID: ${store.state.business.id_firestore}");
         String userId = store.state.business.id_firestore;
         List<BusinessState> businessList = store.state.businessList.businessListState;
         orderStateList = [];
@@ -60,7 +60,7 @@ class OrderReservableListRequestService implements EpicClass<AppState> {
         read++;
 
         ordersFirebaseDocs += ordersFirebase.docs.length;
-        debugPrint("ORDER_RESERVABLE_SERVICE_EPIC - OrderReservableListRequestService => OrderReservableListService Firestore request");
+        debugPrint("order_reservable_service_epic => OrderReservableListRequestService => OrderReservableListService Firestore request");
         /*ordersFirebase.docs.forEach((element) {
           if(event.userId != "any"){
             OrderReservableState orderState = OrderReservableState.fromJson(element.data());
@@ -79,16 +79,16 @@ class OrderReservableListRequestService implements EpicClass<AppState> {
           OrderReservableState orderState = OrderReservableState.fromJson(element.data());
           orderStateList.add(orderState);
         });
-        debugPrint("ORDER_RESERVABLE_SERVICE_EPIC - OrderReservableListRequestService => OrderReservableListService return list with " + orderStateList.length.toString());
+        debugPrint("order_reservable_service_epic => OrderReservableListRequestService => OrderReservableListService return list with " + orderStateList.length.toString());
 
         statisticsState = store.state.statistics;
         int reads = statisticsState.orderListRequestServiceRead;
         int writes = statisticsState.orderListRequestServiceWrite;
         int documents = statisticsState.orderListRequestServiceDocuments;
-        debugPrint('ORDER_RESERVABLE_SERVICE_EPIC - OrderReservableListRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+        debugPrint('order_reservable_service_epic => OrderReservableListRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
         reads = reads + read;
         documents = documents + ordersFirebaseDocs;
-        debugPrint('ORDER_RESERVABLE_SERVICE_EPIC - OrderReservableListRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+        debugPrint('order_reservable_service_epic => OrderReservableListRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
         statisticsState.orderListRequestServiceRead = reads;
         statisticsState.orderListRequestServiceWrite = writes;
         statisticsState.orderListRequestServiceDocuments = documents;
@@ -108,7 +108,7 @@ class OrderReservableRequestService implements EpicClass<AppState> {
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<OrderReservableRequest>().asyncMap((event) async{
-      debugPrint("ORDER_RESERVABLE_SERVICE_EPIC - OrderReservableRequestService => OrderReservableRequest requests document id:" + event.orderReservableStateId);
+      debugPrint("order_reservable_service_epic => OrderReservableRequestService => OrderReservableRequest requests document id:" + event.orderReservableStateId);
      DocumentSnapshot snapshot= await FirebaseFirestore.instance /// 1 READ - 1 DOC
          .collection("order").doc(event.orderReservableStateId).get();
 
@@ -118,10 +118,10 @@ class OrderReservableRequestService implements EpicClass<AppState> {
      int reads = statisticsState.orderRequestServiceRead;
      int writes = statisticsState.orderRequestServiceWrite;
      int documents = statisticsState.orderRequestServiceDocuments;
-     debugPrint('ORDER_RESERVABLE_SERVICE_EPIC - OrderReservableRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+     debugPrint('order_reservable_service_epic => OrderReservableRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
      ++reads;
      ++documents;
-     debugPrint('ORDER_RESERVABLE_SERVICE_EPIC - OrderReservableRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+     debugPrint('order_reservable_service_epic => OrderReservableRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
      statisticsState.orderRequestServiceRead = reads;
      statisticsState.orderRequestServiceWrite = writes;
      statisticsState.orderRequestServiceDocuments = documents;
@@ -145,7 +145,7 @@ class OrderReservableUpdateService implements EpicClass<AppState> {
     //     });
     //   }
     //   return updateService(event.serviceState);
-      print("BOOKING_SERVICE_EPIC - OrderReservableUpdateService => ORDER ID: ${event.orderReservableState}");
+      debugPrint("order_reservable_service_epic => OrderReservableUpdateService => ORDER ID: ${event.orderReservableState}");
 
       orderReservableState = event.orderReservableState;
 
@@ -158,9 +158,9 @@ class OrderReservableUpdateService implements EpicClass<AppState> {
       int reads = statisticsState.bookingListRequestServiceRead;
       int writes = statisticsState.bookingListRequestServiceWrite;
       int documents = statisticsState.bookingListRequestServiceDocuments;
-      debugPrint('BOOKING_SERVICE_EPIC - BookingUpdateAndNavigateRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('order_reservable_service_epic => BookingUpdateAndNavigateRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       ++writes;
-      debugPrint('BOOKING_SERVICE_EPIC - BookingUpdateAndNavigateRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('order_reservable_service_epic => BookingUpdateAndNavigateRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       statisticsState.bookingListRequestServiceRead = reads;
       statisticsState.bookingListRequestServiceWrite = writes;
       statisticsState.bookingListRequestServiceDocuments = documents;*/
@@ -216,8 +216,8 @@ class OrderReservableUpdateService implements EpicClass<AppState> {
 //       String addedOrderReservableId = addedOrderReservable.id;
 //       var url = Uri.https(Environment().config.cloudFunctionLink, '/StripePIOnOrder', {'orderId': '$addedOrderReservableId', 'currency': 'EUR'});
 //       final http.Response response = await http.get(url);
-//       print("ORDER_RESERVABLE_SERVICE_EPIC - OrderReservableCreateService => OrderReservable_service epic - response is done");
-//       print('ORDER_RESERVABLE_SERVICE_EPIC - OrderReservableCreateService => RESPONSE: ${response.body}');
+//       debugPrint("order_reservable_service_epic => OrderReservableCreateService => OrderReservable_service epic - response is done");
+//       debugPrint('order_reservable_service_epic => OrderReservableCreateService => RESPONSE: ${response.body}');
 //       if (response != null && response.body == "Error: could not handle the request\n") {
 //         // verify why this happens.
 //         var updatedOrderReservable = await FirebaseFirestore.instance /// 1 WRITE
@@ -243,7 +243,7 @@ class OrderReservableUpdateService implements EpicClass<AppState> {
 //         }*/
 //         //jsonResponse = jsonDecode(response.body);
 //         if(jsonResponse!= null && response.body != "error") {
-//           print('ORDER_RESERVABLE_SERVICE_EPIC - OrderReservableCreateService => JSON RESPONSE: $jsonResponse');
+//           debugPrint('order_reservable_service_epic => OrderReservableCreateService => JSON RESPONSE: $jsonResponse');
 //           // if an action is required, send the user to the confirmation link
 //           if (jsonResponse != null && jsonResponse["next_action_url"] != null ) {
 //             // final Stripe stripe = Stripe(
@@ -285,9 +285,9 @@ class OrderReservableUpdateService implements EpicClass<AppState> {
 //       int reads = statisticsState.orderCreateServiceRead;
 //       int writes = statisticsState.orderCreateServiceWrite;
 //       int documents = statisticsState.orderCreateServiceDocuments;
-//       debugPrint('ORDER_RESERVABLE_SERVICE_EPIC - OrderReservableCreateService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+//       debugPrint('order_reservable_service_epic => OrderReservableCreateService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
 //       writes = writes + write;
-//       debugPrint('ORDER_RESERVABLE_SERVICE_EPIC - OrderReservableCreateService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+//       debugPrint('order_reservable_service_epic => OrderReservableCreateService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
 //       statisticsState.orderCreateServiceRead = reads;
 //       statisticsState.orderCreateServiceWrite = writes;
 //       statisticsState.orderCreateServiceDocuments = documents;
@@ -344,7 +344,7 @@ class CreateOrderReservableCardAndPayService implements EpicClass<AppState> {
     return actions.whereType<CreateOrderReservableCardAndPay>().asyncMap((event) async {
       for (int i = 0; i < event.orderReservableState.itemList.length; i++) {
         reservable = orderReservableInitialization(event, i);
-        debugPrint('UI_U_ConfirmOrder => Date: ${reservable.date}');
+        debugPrint('order_reservable_service_epic => Date: ${reservable.date}');
         /// add needed data to the order state
         OrderReservableState orderReservableState = configureOrderReservable(reservable, store);
         if(event.selectedCardPaymentMethodId != null && store.state.booking != null && store.state.booking.booking_id != null) {
@@ -451,7 +451,7 @@ class CreateOrderReservableCardAndReminderService implements EpicClass<AppState>
     return actions.whereType<CreateOrderReservableCardAndReminder>().asyncMap((event) async {
       for (int i = 0; i < event.orderReservableState.itemList.length; i++) {
         reservable = orderReservableInitialization(event, i);
-        debugPrint('UI_U_ConfirmOrder => Date: ${reservable.date}');
+        debugPrint('order_reservable_service_epic => Date: ${reservable.date}');
         /// add needed data to the order state
         OrderReservableState orderReservableState = configureOrderReservable(reservable, store);
         if(event.selectedCardPaymentMethodId != null && store.state.booking != null && store.state.booking.booking_id != null) {
@@ -505,7 +505,7 @@ class CreateOrderReservableCardPendingService implements EpicClass<AppState> {
       debugPrint('order_reservable_service => in epic, itemList: ' + event.orderReservableState.itemList.length.toString());
       for (int i = 0; i < event.orderReservableState.itemList.length; i++) {
         reservable = orderReservableInitialization(event, i);
-        debugPrint('UI_U_ConfirmOrder => Date: ${reservable.date}');
+        debugPrint('Uorder_reservable_service_epic => Date: ${reservable.date}');
         /// add needed data to the order state
         OrderReservableState orderReservableState = configureOrderReservable(reservable, store);
         if(event.selectedCardPaymentMethodId != null && store.state.booking != null && store.state.booking.booking_id != null) {
@@ -556,7 +556,7 @@ class CreateOrderReservableNativeAndPayService implements EpicClass<AppState> {
       for (int i = 0; i < event.orderReservableState.itemList.length; i++) {
         reservable = orderReservableInitialization(event, i);
         OrderReservableState orderReservableState = configureOrderReservable(reservable, store);
-        debugPrint('UI_U_ConfirmOrder => Date: ${reservable.date}');
+        debugPrint('order_reservable_service_epic => Date: ${reservable.date}');
         if(event.paymentMethod != null && store.state.booking != null && store.state.booking.booking_id != null) {
           reservable.cardType = Utils.enumToString(PaymentType.card);
           reservable.progress = Utils.enumToString(OrderStatus.accepted);
@@ -605,7 +605,7 @@ class CreateOrderReservableNativeAndHoldService implements EpicClass<AppState> {
     return actions.whereType<CreateOrderReservableNativeAndHold>().asyncMap((event) async {
       for (int i = 0; i < event.orderReservableState.itemList.length; i++) {
         reservable = orderReservableInitialization(event, i);
-        debugPrint('UI_U_ConfirmOrder => Date: ${reservable.date}');
+        debugPrint('order_reservable_service_epic => Date: ${reservable.date}');
         /// add needed data to the order state
         OrderReservableState orderReservableState = configureOrderReservable(reservable, store);
         if(event.paymentMethod != null && store.state.booking != null && store.state.booking.booking_id != null) {
@@ -656,7 +656,7 @@ class CreateOrderReservableNativeAndReminderService implements EpicClass<AppStat
     return actions.whereType<CreateOrderReservableNativeAndReminder>().asyncMap((event) async {
       for (int i = 0; i < event.orderReservableState.itemList.length; i++) {
         reservable = orderReservableInitialization(event, i);
-        debugPrint('UI_U_ConfirmOrder => Date: ${reservable.date}');
+        debugPrint('order_reservable_service_epic => Date: ${reservable.date}');
         /// add needed data to the order state
         OrderReservableState orderReservableState = configureOrderReservable(reservable, store);
         if(event.paymentMethod != null && store.state.booking != null && store.state.booking.booking_id != null) {
@@ -705,7 +705,7 @@ class CreateOrderReservableNativePendingService implements EpicClass<AppState> {
     return actions.whereType<CreateOrderReservableNativePending>().asyncMap((event) async {
       for (int i = 0; i < event.orderReservableState.itemList.length; i++) {
          reservable = orderReservableInitialization(event, i);
-        debugPrint('UI_U_ConfirmOrder => Date: ${reservable.date}');
+        debugPrint('order_reservable_service_epic => Date: ${reservable.date}');
         /// add needed data to the order state
         OrderReservableState orderReservableState = configureOrderReservable(reservable, store);
         if(event.paymentMethod != null && store.state.booking != null && store.state.booking.booking_id != null) {
@@ -754,7 +754,7 @@ class CreateOrderReservableRoomAndPayService implements EpicClass<AppState> {
     return actions.whereType<CreateOrderReservableRoomAndPay>().asyncMap((event) async {
       for (int i = 0; i < event.orderReservableState.itemList.length; i++) {
         reservable = orderReservableInitialization(event, i);
-        debugPrint('UI_U_ConfirmOrder => Date: ${reservable.date}');
+        debugPrint('order_reservable_service_epic => Date: ${reservable.date}');
         /// add needed data to the order state
         OrderReservableState orderReservableState = configureOrderReservable(reservable, store);
         if(store.state.booking != null && store.state.booking.booking_id != null) {
@@ -802,7 +802,7 @@ class CreateOrderReservableOnSiteAndPayService implements EpicClass<AppState> {
     return actions.whereType<CreateOrderReservableOnSiteAndPay>().asyncMap((event) async {
       for (int i = 0; i < event.orderReservableState.itemList.length; i++) {
         reservable = orderReservableInitialization(event, i);
-        debugPrint('UI_U_ConfirmOrder => Date: ${reservable.date}');
+        debugPrint('order_reservable_service_epic => Date: ${reservable.date}');
         /// add needed data to the order state
         OrderReservableState orderReservableState = configureOrderReservable(reservable, store);
           reservable.cardType = Utils.enumToString(PaymentType.onSite);
@@ -855,7 +855,7 @@ class CreateOrderReservablePaypalAndPayService implements EpicClass<AppState> {
     return actions.whereType<CreateOrderReservablePaypalAndPay>().asyncMap((event) async {
       for (int i = 0; i < event.orderReservableState.itemList.length; i++) {
         reservable = orderReservableInitialization(event, i);
-        debugPrint('UI_U_ConfirmOrder => Date: ${reservable.date}');
+        debugPrint('order_reservable_service_epic => Date: ${reservable.date}');
         /// add needed data to the order state
         OrderReservableState orderReservableState = configureOrderReservable(reservable, store);
           reservable.cardType = Utils.enumToString(PaymentType.paypal);
@@ -909,7 +909,7 @@ class CreateOrderReservableRoomPendingService implements EpicClass<AppState> {
     return actions.whereType<CreateOrderReservableRoomPending>().asyncMap((event) async {
       for (int i = 0; i < event.orderReservableState.itemList.length; i++) {
         reservable = orderReservableInitialization(event, i);
-        debugPrint('UI_U_ConfirmOrder => Date: ${reservable.date}');
+        debugPrint('order_reservable_service_epic => Date: ${reservable.date}');
         /// add needed data to the order state
         OrderReservableState orderReservableState = configureOrderReservable(reservable, store);
         if(store.state.booking != null && store.state.booking.booking_id != null) {
@@ -956,7 +956,7 @@ class CreateOrderReservableOnSitePendingService implements EpicClass<AppState> {
     return actions.whereType<CreateOrderReservableOnSitePending>().asyncMap((event) async {
       for (int i = 0; i < event.orderReservableState.itemList.length; i++) {
         reservable = orderReservableInitialization(event, i);
-        debugPrint('UI_U_ConfirmOrder => Date: ${reservable.date}');
+        debugPrint('order_reservable_service_epic => Date: ${reservable.date}');
         /// add needed data to the order state
         OrderReservableState orderReservableState = configureOrderReservable(reservable, store);
           reservable.cardType = Utils.enumToString(PaymentType.onSite);
@@ -1004,7 +1004,7 @@ class CreateOrderReservablePaypalPendingService implements EpicClass<AppState> {
     return actions.whereType<CreateOrderReservablePaypalPending>().asyncMap((event) async {
       for (int i = 0; i < event.orderReservableState.itemList.length; i++) {
         reservable = orderReservableInitialization(event, i);
-        debugPrint('UI_U_ConfirmOrder => Date: ${reservable.date}');
+        debugPrint('order_reservable_service_epic => Date: ${reservable.date}');
         /// add needed data to the order state
         OrderReservableState orderReservableState = configureOrderReservable(reservable, store);
           reservable.cardType = Utils.enumToString(PaymentType.paypal);

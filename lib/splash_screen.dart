@@ -92,7 +92,7 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
   getAppInfo()async{
     await Firebase.initializeApp();
     RemoteMessage initialMessage = await FirebaseMessaging.instance.getInitialMessage();
-    debugPrint('Initial MEssage: ${initialMessage.data}');
+    //debugPrint('splash_screen => Initial MEssage: ${initialMessage.data}');
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     version = packageInfo.version;
     debugPrint('splash_screen => VERSION: $version');
@@ -112,7 +112,7 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
     messagingHelper.messagingManagement(firebaseMessaging, context);
     dynamicLinkHelper.initDynamicLinks(context);
     /*FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      debugPrint('On Message');
+      debugPrint('splash_screen => On Message');
       RemoteNotification notification = message.notification;
       AndroidNotification android = message.notification?.android;
       if (notification != null && android != null) {
@@ -132,7 +132,7 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
       messageDataRetriveNotify(context, notification);
     });
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      debugPrint('messaging_helper: ON MESSAGE OPENED APP');
+      debugPrint('splash_screen => ON MESSAGE OPENED APP');
       RemoteNotification notification = message.notification;
       AndroidNotification android = message.notification?.android;
       if (notification != null && android != null) {
@@ -165,7 +165,7 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
     setState(() {
       token = token;
     });
-    print('DEVICE TOKEN: $token');
+    debugPrint('splash_screen => DEVICE TOKEN: $token');
   }
 
   /*getTopics() async {
@@ -192,7 +192,7 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
     Stripe.instance.isApplePaySupported.addListener(() {
     });
     bool isApplePaySupported = await Stripe.instance.checkApplePaySupport();
-    debugPrint('splash_screen: isApplePaySupported, ' + isApplePaySupported.toString() );
+    debugPrint('splash_screen => isApplePaySupported, ' + isApplePaySupported.toString() );
   }
   static final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
 
@@ -269,7 +269,7 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
     if (auth.FirebaseAuth != null && auth.FirebaseAuth.instance != null && auth.FirebaseAuth.instance.currentUser != null) {
       auth.User user = auth.FirebaseAuth.instance.currentUser;
       if (user != null) {
-        print("USER LOGGED IN IS: " + user.email + ' id: ' + user.uid);
+        debugPrint("splash_screen => USER LOGGED IN IS: " + user.email + ' id: ' + user.uid);
         String deviceId = "web";
         if (!kIsWeb) {
           try {
@@ -281,7 +281,7 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
               deviceId = data.identifierForVendor; //UUID for iOS
             }
           } on PlatformException {
-            print('Failed to get platform version');
+            debugPrint('splash_screen => Failed to get platform version');
           }
         }
         UserState tmpUser = UserState.fromFirebaseUser(user, deviceId, [MessagingHelper.serverToken]);
@@ -292,7 +292,7 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
         StoreProvider.of<AppState>(context).dispatch(new UpdateUserToken(token));
         StoreProvider.of<AppState>(context).dispatch(StripeCardListRequest(user.uid));
         Future.delayed(Duration(seconds: 1), (){
-          print("Device ID : " + deviceId + 'USER ROLE: ${StoreProvider.of<AppState>(context).state.user.getRole()}');
+          debugPrint("splash_screen => Device ID : " + deviceId + 'USER ROLE: ${StoreProvider.of<AppState>(context).state.user.getRole()}');
           if(StoreProvider.of<AppState>(context).state.user.getRole() != Role.user)
             Navigator.push(context, MaterialPageRoute(builder: (context) => RBusinessList()));
           else

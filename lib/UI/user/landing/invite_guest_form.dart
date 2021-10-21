@@ -87,7 +87,7 @@ class _InviteGuestFormState extends State<InviteGuestForm> {
 
   @override
   void dispose() {
-    debugPrint('invite_guest_form: Dispose');
+    debugPrint('invite_guest_form => Dispose');
     super.dispose();
   }
 
@@ -250,7 +250,7 @@ class _InviteGuestFormState extends State<InviteGuestForm> {
                                       letterSpacing: 5.0,
                                     ),
                                     onEditingComplete: (){
-                                      debugPrint('done');
+                                      debugPrint('invite_guest_form => done');
                                       onBookingCode();
                                     },
                                   ),

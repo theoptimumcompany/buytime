@@ -36,12 +36,12 @@ class _PRCardWidgetState extends State<PRCardWidget> {
   @override
   void initState() {
     super.initState();
-    //debugPrint('${widget.imageUrl}');
+    //debugPrint('p_r_card_widget => ${widget.imageUrl}');
   }
 
   @override
   Widget build(BuildContext context) {
-    //debugPrint('BUSINES ID: ${StoreProvider.of<AppState>(context).state.bookingList.bookingListState.first.business_id}');
+    //debugPrint('p_r_card_widget => BUSINES ID: ${StoreProvider.of<AppState>(context).state.bookingList.bookingListState.first.business_id}');
     return  CachedNetworkImage(
       imageUrl: Utils.version200(widget.serviceState.image1),
       imageBuilder: (context, imageProvider) =>

@@ -103,7 +103,7 @@ class _RMyBookingsState extends State<RMyBookings> {
             bookings.add(bookingState);
           });
 
-          debugPrint('RUI_U_MyBookings => bookings length: ${bookings.length}');
+          debugPrint('RUI_U_my_ookings => bookings length: ${bookings.length}');
           List<BookingState> tmpOpened = [];
           List<BookingState> tmpClosed = [];
 
@@ -114,7 +114,7 @@ class _RMyBookingsState extends State<RMyBookings> {
             DateTime endTime = element.end_date;
             endTime = new DateTime(endTime.year, endTime.month, endTime.day, 0, 0, 0, 0, 0);
             if(endTime.isBefore(currentTime) && element.status != 'closed'){
-              debugPrint('RUI_U_MyBookings => ${element.end_date}');
+              debugPrint('RUI_U_my_ookings => ${element.end_date}');
               element.status = Utils.enumToString(BookingStatus.closed);
               StoreProvider.of<AppState>(context).dispatch(UpdateBooking(element));
             }
@@ -322,7 +322,7 @@ class _RMyBookingsState extends State<RMyBookings> {
                                     child: InkWell(
                                       onTap: () async{
                                         String url = BuytimeConfig.ArunasNumber.trim();
-                                        debugPrint('Restaurant phonenumber: ' + url);
+                                        debugPrint('RUI_U_my_ookings => Restaurant phonenumber: ' + url);
                                         if (await canLaunch('tel:$url')) {
                                           await launch('tel:$url');
                                         } else {

@@ -109,11 +109,11 @@ class _SlotManagementState extends State<SlotManagement> {
       onInit: (store) {
         store.state.serviceList.serviceListState.clear();
         List<String> businessIds = [];
-        debugPrint('BUSINESS LIST LENGTH: ${store.state.businessList.businessListState.length}');
+        debugPrint('UI_M_slot_management => BUSINESS LIST LENGTH: ${store.state.businessList.businessListState.length}');
         store.state.businessList.businessListState.forEach((element) {
           businessIds.add(element.id_firestore);
         });
-        debugPrint('BUSINESS IDS LIST LENGTH: ${businessIds.length}');
+        debugPrint('UI_M_slot_management => BUSINESS IDS LIST LENGTH: ${businessIds.length}');
         store.dispatch(ServiceListRequestByBusinessIds(businessIds));
         noActivity = true;
         startRequest = true;
@@ -126,7 +126,7 @@ class _SlotManagementState extends State<SlotManagement> {
         /*if(snapshot.serviceListSnippetState.businessSnippet != null && snapshot.serviceListSnippetState.businessSnippet.isNotEmpty){
           categories = snapshot.serviceListSnippetState.businessSnippet;
         }*/
-        //debugPrint('UI_M_Business => IMPORTED SERVICE LENGTH: ${snapshot.externalServiceImportedListState.externalServiceImported.length}');
+        //debugPrint('UI_M_slot_management => IMPORTED SERVICE LENGTH: ${snapshot.externalServiceImportedListState.externalServiceImported.length}');
         if(snapshot.serviceList.serviceListState.isEmpty && startRequest){
           noActivity = true;
         }else{
@@ -206,7 +206,7 @@ class _SlotManagementState extends State<SlotManagement> {
                                 );
                                 // return InkWell(
                                 //   onTap: () {
-                                //     debugPrint('Category Item: ${categoryItem.name.toUpperCase()} Clicked!');
+                                //     debugPrint('UI_M_slot_management => Category Item: ${categoryItem.name.toUpperCase()} Clicked!');
                                 //   },
                                 //   //child: MenuItemListItemWidget(menuItem),
                                 //   child: CategoryListItemWidget(categoryItem),

@@ -28,7 +28,7 @@ class _FindYourInspirationCardWidgetState extends State<FindYourInspirationCardW
   @override
   void initState() {
     super.initState();
-    //debugPrint('${widget.imageUrl}');
+    //debugPrint('w_find_your_inspiration_Card => ${widget.imageUrl}');
   }
 
   @override

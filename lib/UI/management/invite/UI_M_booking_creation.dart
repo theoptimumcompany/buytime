@@ -81,7 +81,7 @@ class _BookingCreationState extends State<BookingCreation> {
         }
     );
     if (picked != null && picked.start != null && picked.end != null) {
-      print(picked);
+      debugPrint('UI_M_booking_creation => $picked');
       _checkInController.text = DateFormat('dd/MM/yyyy').format(picked.start);
       _checkOutController.text = DateFormat('dd/MM/yyyy').format(picked.end);
       setState(() {
@@ -522,7 +522,7 @@ class _BookingCreationState extends State<BookingCreation> {
                                                                   await _selectDate(context, checkIn, checkOut);
                                                                 },
                                                                 validator: (String value) {
-                                                                  debugPrint('${checkIn.compareTo(checkOut)}');
+                                                                  debugPrint('UI_M_booking_creation => ${checkIn.compareTo(checkOut)}');
                                                                   if (value.isEmpty || checkIn.compareTo(checkOut) > 0) {
                                                                     debugPrint('UI_M_booking_creation => Check Out Is Empty');
                                                                     return AppLocalizations.of(context).pleaseEnterAValidDateInterval;

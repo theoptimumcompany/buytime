@@ -272,10 +272,10 @@ class UI_M_CreateCategoryState extends State<UI_M_CreateCategory> {
                                         bookingRequest = 'send';
                                       });
 
-                                      print("CategoryCreate : Parent non Scelto");
+                                      debugPrint("CategoryCreate : Parent non Scelto");
                                       CategoryState categoryCreate = snapshot.category != null ? snapshot.category : CategoryState().toEmpty();
                                       Parent newCategoryParent = selectedParentDropValue;
-                                      print("Livello prima : " + snapshot.category.level.toString());
+                                      debugPrint("Livello prima : " + snapshot.category.level.toString());
                                       categoryCreate.parent = newCategoryParent;
                                       if (categoryCreate.parent != _dropdownMenuParentCategory.first.value) {
                                         categoryCreate.level = newCategoryParent.level + 1;
@@ -470,7 +470,7 @@ class UI_M_CreateCategoryState extends State<UI_M_CreateCategory> {
                                                     changeParent = true;
                                                     selectedParentDropValue = newValue;
                                                     newParent = newValue;
-                                                    print("Drop Selezionato su onchangedrop : " + selectedParentDropValue.name);
+                                                    debugPrint("Drop Selezionato su onchangedrop : " + selectedParentDropValue.name);
                                                     setNewCategoryParent(selectedParentDropValue);
                                                   });
                                                 }),

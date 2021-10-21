@@ -129,8 +129,8 @@ class _BuytimeMapState extends State<BuytimeMap> with SingleTickerProviderStateM
       _mapStyle = string;
     });
 
-    debugPrint('Location Address: $address');
-    debugPrint('Location Coordinates: $lat, $lng');
+    debugPrint('UI_U_map => Location Address: $address');
+    debugPrint('UI_U_map => Location Coordinates: $lat, $lng');
   }
 
   @override

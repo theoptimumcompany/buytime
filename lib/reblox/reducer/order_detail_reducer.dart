@@ -325,13 +325,13 @@ OrderDetailState orderDetailReducer(OrderDetailState state, action) {
   }
   if (action is AddItemToOrderDetail) {
     if (state.itemList != null) {
-      print("order_reducer: itemList != null");
+      debugPrint("order_reducer: itemList != null");
       orderState.itemList
       = []
         ..addAll(state.itemList)
         ..add(action.orderEntry);
     } else {
-      print("order_reducer: itemList == null");
+      debugPrint("order_reducer: itemList == null");
       orderState.itemList
       = []
         ..add(action.orderEntry);

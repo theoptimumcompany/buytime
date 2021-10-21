@@ -15,7 +15,7 @@ CardState cardReducer(CardState state, action) {
   
   if (action is AddCard) {
     cardState = action.cardState.copyWith();
-    debugPrint('card_reducer: ${cardState.cardOwner}');
+    debugPrint('card_reducer => ${cardState.cardOwner}');
     return cardState;
   }
   

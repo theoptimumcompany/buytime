@@ -376,7 +376,7 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
 
   void checkAuth() async {
     bool didAuthenticate = await localAuth.authenticateWithBiometrics(localizedReason: AppLocalizations.of(context).pleaseAuthenticateShowAccountBalance);
-    debugPrint('UI_U_Login => $didAuthenticate');
+    debugPrint('UI_U_login => $didAuthenticate');
   }
 
   ///Validation
@@ -567,7 +567,7 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
                                   );
                                   // return InkWell(
                                   //   onTap: () {
-                                  //     debugPrint('Category Item: ${categoryItem.name.toUpperCase()} Clicked!');
+                                  //     debugPrint('UI_U_login => Category Item: ${categoryItem.name.toUpperCase()} Clicked!');
                                   //   },
                                   //   //child: MenuItemListItemWidget(menuItem),
                                   //   child: CategoryListItemWidget(categoryItem),
@@ -675,7 +675,7 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
       converter: (store) => store.state,
       builder: (context, snapshot) {
         autoCompleteList = snapshot.autoCompleteListState.autoCompleteListState;
-        debugPrint('UI_U_Login => Auto complete List LENGTH: ${autoCompleteList.length}');
+        debugPrint('UI_U_login => Auto complete List LENGTH: ${autoCompleteList.length}');
         return GestureDetector(
           onTap: () {
             FocusScopeNode currentFocus = FocusScope.of(context);
@@ -1287,7 +1287,7 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
       });
     } else {
       Navigator.of(context).pop();
-      debugPrint('response: $responseMessage');
+      debugPrint('UI_U_login => esponse: $responseMessage');
       if (responseMessage.isEmpty) {
         setState(() {
           _success = false;

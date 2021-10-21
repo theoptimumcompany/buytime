@@ -52,7 +52,7 @@ class CartState extends State<Cart> {
   }
 
   void deleteItem(OrderState snapshot, OrderEntry entry, int index) {
-    debugPrint('UI_U_Cart => Remove Normal Item');
+    debugPrint('UI_U_cart => Remove Normal Item');
     setState(() {
       if (snapshot.itemList.length >= 1) {
         orderState.cartCounter = orderState.cartCounter - entry.number;
@@ -76,7 +76,7 @@ class CartState extends State<Cart> {
   }
 
   void deleteReserveItem(OrderState snapshot, OrderEntry entry, int index) {
-    debugPrint('UI_U_Cart => Remove Normal Item');
+    debugPrint('UI_U_cart => Remove Normal Item');
     setState(() {
       orderState.cartCounter = orderState.cartCounter - entry.number;
       orderState.removeReserveItem(entry,context);
@@ -104,18 +104,18 @@ class CartState extends State<Cart> {
             converter: (store) => store.state,
             onInit: (store) {
               tmp = store.state.serviceState;
-              debugPrint('AREA: ${store.state.business.area} - ${store.state.business.area.length}');
+              debugPrint('UI_U_cart => AREA: ${store.state.business.area} - ${store.state.business.area.length}');
               if (!widget.tourist) {
                 if (store.state.business.area?.isEmpty) {
-                  debugPrint('AREA EMPTY');
+                  debugPrint('UI_U_cart => AREA EMPTY');
                   _locationController.text = 'Reception';
                   store.state.order.location = 'Reception';
                 } else {
-                  debugPrint('AREA NOT EMPTY');
+                  debugPrint('UI_U_cart => AREA NOT EMPTY');
                   _locationController.text = store.state.business.area?.first;
                   store.state.order.location = store.state.business.area?.first;
                 }
-                debugPrint('AREA FRO MCONTROLLER: ${_locationController.text}');
+                debugPrint('UI_U_cart => AREA FRO MCONTROLLER: ${_locationController.text}');
               }
             },
             builder: (context, snapshot) {
@@ -201,7 +201,7 @@ class CartState extends State<Cart> {
                                         rebuildOnChange: true,
                                         builder: (context, snapshot) {
                                           orderState = snapshot;
-                                          print("UI_U_cart => CART COUNT: ${orderState.itemList.length}");
+                                          debugPrint("UI_U_cart => CART COUNT: ${orderState.itemList.length}");
                                           return Column(
                                             children: [
                                               ///Service List
@@ -212,7 +212,7 @@ class CartState extends State<Cart> {
                                                     delegate: SliverChildBuilderDelegate(
                                                       (context, index) {
                                                         //MenuItemModel menuItem = menuItems.elementAt(index);
-                                                        debugPrint('UI_U_Cart => LIST| ${orderState.itemList[index].name} ITEM COUNT: ${orderState.itemList[index].number}');
+                                                        debugPrint('UI_U_cart => LIST| ${orderState.itemList[index].name} ITEM COUNT: ${orderState.itemList[index].number}');
                                                         var item = (index != orderState.itemList.length ? orderState.itemList[index] : null);
                                                         //int itemCount = orderState.itemList[index].number;
                                                         return Dismissible(
@@ -229,7 +229,7 @@ class CartState extends State<Cart> {
                                                             });
                                                             if (direction == DismissDirection.endToStart) {
                                                               orderState.selected == null || orderState.selected.isEmpty ? deleteItem(orderState, item, index) : deleteReserveItem(orderState, item, index);
-                                                              debugPrint('UI_U_SearchPage => DX to DELETE');
+                                                              debugPrint('UI_U_cart => DX to DELETE');
                                                               // Show a snackbar. This snackbar could also contain "Undo" actions.
                                                               Scaffold.of(context).showSnackBar(SnackBar(
                                                                   content: Text(Utils.retriveField(Localizations.localeOf(context).languageCode, item.name) + ' ${AppLocalizations.of(context).spaceRemoved}'),
@@ -636,7 +636,7 @@ class CartState extends State<Cart> {
 
   bool businessIsBar(BuildContext context) {
     bool result = false;
-    debugPrint("UI_U_cart businessIsBar ");
+    debugPrint("UI_U_cart => businessIsBar ");
     if (StoreProvider.of<AppState>(context).state.business != null && StoreProvider.of<AppState>(context).state.business.business_type == "Bar") {
       result =  true;
     }

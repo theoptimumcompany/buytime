@@ -450,7 +450,7 @@ class _TouristSessionRegisterState extends State<TouristSessionRegister> with Si
 
   void checkAuth() async {
     bool didAuthenticate = await localAuth.authenticateWithBiometrics(localizedReason: AppLocalizations.of(context).pleaseAuthenticateShowAccountBalance);
-    debugPrint('UI_U_Login => $didAuthenticate');
+    debugPrint('UI_U_tourist_session_register => $didAuthenticate');
   }
 
   ///Validation
