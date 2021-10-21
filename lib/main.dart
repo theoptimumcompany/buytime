@@ -114,7 +114,7 @@ Future<void> main() async {
         });
     var initializationSettings = InitializationSettings(android: initialzationSettingsAndroid, iOS: initializationSettingsIOS);
     await flutterLocalNotificationsPlugin.initialize(initializationSettings,
-        onSelectNotification: (String? payload) async {
+        onSelectNotification: (String payload) async {
           if (payload != null) {
             debugPrint('notification payload: $payload');
           }
