@@ -747,7 +747,7 @@ class OrderCreatePaypalPendingService implements EpicClass<AppState> {
       actionArray.add(SetOrderOrderId(orderId));
       actionArray.add(UpdateStatistics(statisticsState));
       actionArray.add(SetOrderDetail(OrderDetailState.fromOrderState(orderState)));
-      //actionArray.add(NavigatePushAction(AppRoutes.orderDetailsRealtime));
+      actionArray.add(NavigatePushAction(AppRoutes.orderDetailsRealtime));
       return actionArray;
     });
   }
