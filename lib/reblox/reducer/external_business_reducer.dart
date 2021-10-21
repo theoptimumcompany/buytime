@@ -382,7 +382,7 @@ ExternalBusinessState externalBusinessReducer(ExternalBusinessState state, actio
     return externalBusinessState;
   }
   if (action is SetExternalBusinessLogo) {
-    debugPrint("business_reducer: set business logo is" + action.logo);
+    debugPrint("external_business_reducer => set business logo is" + action.logo);
     externalBusinessState.logo = action.logo;
     return externalBusinessState;
   }
@@ -423,12 +423,12 @@ ExternalBusinessState externalBusinessReducer(ExternalBusinessState state, actio
     return externalBusinessState;
   }
   if (action is AddFileToUploadInExternalBusiness) {
-    debugPrint("business_reducer: addFileInbusiness. business: " + state.name);
+    debugPrint("external_business_reducer => addFileInbusiness. business: " + state.name);
 
     externalBusinessState.fileToUploadList = [];
 
     if (state.fileToUploadList != null) {
-      debugPrint("business_reducer: fileuploadlist != null");
+      debugPrint("external_business_reducer => fileuploadlist != null");
 
       externalBusinessState.fileToUploadList
         ..addAll(state.fileToUploadList);
@@ -439,7 +439,7 @@ ExternalBusinessState externalBusinessReducer(ExternalBusinessState state, actio
 
     externalBusinessState.fileToUploadList.forEach((element) {
       if(element.remoteName != null)
-        debugPrint("business_reducer: " + element.remoteName);
+        debugPrint("external_business_reducer => business_reducer: " + element.remoteName);
     });
     return externalBusinessState;
   }

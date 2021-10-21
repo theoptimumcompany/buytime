@@ -41,16 +41,16 @@ BookingListState bookingListReducer(BookingListState state, action) {
   }
   if (action is BookingListReturned) {
     bookingListState = BookingListState(bookingListState: action.bookingListState).copyWith();
-    debugPrint('booking_list_reducer: bookingListState : ${bookingListState.bookingListState.length}');
-    debugPrint('booking_list_reducer: action: ${action.bookingListState}');
+    debugPrint('booking_list_reducer => bookingListState : ${bookingListState.bookingListState.length}');
+    debugPrint('booking_list_reducer => action: ${action.bookingListState}');
     print("Nel reducer booking List");
     return bookingListState;
   }
   if (action is UserBookingListReturned) {
     bookingListState = BookingListState(bookingListState: action.bookingListState).copyWith();
-    debugPrint('booking_list_reducer: bookingListState : ${bookingListState.bookingListState.length}');
-    debugPrint('booking_list_reducer: action: ${action.bookingListState}');
-    print("Nel reducer booking List");
+    debugPrint('booking_list_reducer => bookingListState : ${bookingListState.bookingListState.length}');
+    debugPrint('booking_list_reducer => action: ${action.bookingListState}');
+    debugPrint("booking_list_reducer => Nel reducer booking List");
     return bookingListState;
   }
   return state;

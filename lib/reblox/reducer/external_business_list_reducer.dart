@@ -55,7 +55,7 @@ ExternalBusinessListState externalBusinessListReducer(ExternalBusinessListState 
   }
   if (action is ExternalBusinessListReturned) {
     externalBusinessListState = ExternalBusinessListState(externalBusinessListState: action.businessListState).copyWith();
-    debugPrint("Nel reducer business List");
+    debugPrint("external_business-list_reducer => Nel reducer business List");
     return externalBusinessListState;
   }
   return state;

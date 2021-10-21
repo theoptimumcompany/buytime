@@ -503,7 +503,7 @@ BusinessState businessReducer(BusinessState state, action) {
     return businessState;
   }
   if (action is SetBusinessLogo) {
-    debugPrint("business_reducer: set business logo is" + action.logo);
+    debugPrint("business_reducer => set business logo is" + action.logo);
     businessState.logo = action.logo;
     return businessState;
   }

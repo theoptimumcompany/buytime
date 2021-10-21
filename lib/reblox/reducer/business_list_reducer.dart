@@ -49,7 +49,7 @@ BusinessListState businessListReducer(BusinessListState state, action) {
   }
   if (action is BusinessListReturned) {
     businessListState = BusinessListState(businessListState: action.businessListState).copyWith();
-    debugPrint("Nel reducer business List");
+    debugPrint("business_list_reducer => Nel reducer business List");
     return businessListState;
   }
   return state;

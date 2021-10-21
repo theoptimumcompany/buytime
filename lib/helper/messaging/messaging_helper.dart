@@ -22,7 +22,7 @@ class MessagingHelper {
     firebaseMessaging.requestPermission(sound: true, badge: true, alert: true, provisional: true);
     firebaseMessaging.getToken().then((String token) {
       assert(token != null);
-      debugPrint("messaging_helper => token " + token);
+      debugPrint("messaging_helper => token: " + token);
       serverToken = token;
     });
     firebaseMessaging.onTokenRefresh.listen((newToken) {
