@@ -274,12 +274,13 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                         try {
                                           await Stripe.instance.presentPaymentSheet();
                                           print("OK");
-                                          if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.card)) {
-                                            print("CARD Confirm Order");
-                                            confirmationCard(context, snapshot, '', '', '', '');
-                                          } else {
-                                            confirmationNative(context, snapshot);
-                                          }
+                                          confirmationCard(context, snapshot, '', '', '', paymentSheetData['paymentIntent'].split('_secret')[0]);
+                                          // if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.card)) {
+                                          //
+                                          // } else {
+                                          //   print("Native Confirm Order");
+                                          //   confirmationNative(context, snapshot);
+                                          // }
                                         } on Exception catch (e) {
                                           if (e is StripeException) {
                                             print("No Stripe Exception");
@@ -756,10 +757,10 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
       debugPrint('UI_U_ConfirmOrder => start reservable payment process with Native Method');
       if (snapshot.orderReservable.isOrderAutoConfirmable()) {
         if (Utils.getTimeInterval(orderReservableState) == OrderTimeInterval.directPayment) {
-          StoreProvider.of<AppState>(context).dispatch(CreateOrderReservableNativeAndPay(snapshot.orderReservable, paymentMethod, PaymentType.native, context, snapshot.business.stripeCustomerId));
+          StoreProvider.of<AppState>(context).dispatch(CreateOrderReservableNativeAndPay(snapshot.orderReservable, paymentMethod, PaymentType.card, context, snapshot.business.stripeCustomerId));
         }
       } else {
-        StoreProvider.of<AppState>(context).dispatch(CreateOrderReservableNativePending(snapshot.orderReservable, paymentMethod, PaymentType.native, context, snapshot.business.stripeCustomerId));
+        StoreProvider.of<AppState>(context).dispatch(CreateOrderReservableNativePending(snapshot.orderReservable, paymentMethod, PaymentType.card, context, snapshot.business.stripeCustomerId));
       }
     } else {
       /// Direct Native Payment
@@ -770,9 +771,9 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
 
         /// 3: now we can create the order on the database and its sub collection
         if (snapshot.order.isOrderAutoConfirmable()) {
-          StoreProvider.of<AppState>(context).dispatch(CreateOrderNativeAndPay(snapshot.order, paymentMethod, PaymentType.native, context, snapshot.business.stripeCustomerId));
+          StoreProvider.of<AppState>(context).dispatch(CreateOrderNativeAndPay(snapshot.order, paymentMethod, PaymentType.card, context, snapshot.business.stripeCustomerId));
         } else {
-          StoreProvider.of<AppState>(context).dispatch(CreateOrderNativePending(snapshot.order, paymentMethod, PaymentType.native));
+          StoreProvider.of<AppState>(context).dispatch(CreateOrderNativePending(snapshot.order, paymentMethod, PaymentType.card));
         }
       }
     }

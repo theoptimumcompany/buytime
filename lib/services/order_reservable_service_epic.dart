@@ -576,7 +576,7 @@ class CreateOrderReservableNativeAndPayService implements EpicClass<AppState> {
             'booking_id': store.state.booking.booking_id
           });
           StripePaymentService stripePaymentService = StripePaymentService();
-          paymentResult = await stripePaymentService.processPaymentAsDirectCharge(orderReservableState.orderId, event.businessStripeAccount );
+          //paymentResult = await stripePaymentService.processPaymentAsDirectCharge(orderReservableState.orderId, event.businessStripeAccount );
         }
       }
       statisticsComputation();
