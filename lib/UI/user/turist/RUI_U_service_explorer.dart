@@ -479,7 +479,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
     SizeConfig().init(context);
     var isManagerOrAbove = false;
     DateTime currentTime = DateTime.now();
-    currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0).toUtc();
+    currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day - 1, 0, 0, 0, 0, 0).toUtc();
     final Stream<QuerySnapshot> _orderStream =  FirebaseFirestore.instance
         .collection("order")
         .where("userId", isEqualTo: StoreProvider.of<AppState>(context).state.user.uid)
@@ -979,7 +979,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                         //debugPrint('RUI_U_service_explorer =>  asdsd');
                                         userOrderList.sort((a,b) => a.itemList.first.date.isBefore(b.itemList.first.date) ? -1 : a.itemList.first.date.isAtSameMomentAs(b.itemList.first.date) ? 0 : 1);
                                         orderList.sort((a,b) => a.date.isBefore(b.date) ? -1 : a.date.isAtSameMomentAs(b.date) ? 0 : 1);
-                                        return userOrderList.isNotEmpty ? Container(
+                                        return userOrderList.isNotEmpty || orderList.isNotEmpty ? Container(
                                           margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
                                           child: Column(
                                             mainAxisAlignment: MainAxisAlignment.start,

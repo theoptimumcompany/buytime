@@ -90,7 +90,7 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
     switch (paymentType) {
       case 'card':
         widget = ListTile(
-          leading: Image(width: SizeConfig.blockSizeHorizontal * 10, image: AssetImage('assets/img/card.png')),
+          leading: Image(width: SizeConfig.blockSizeHorizontal * 10, image: AssetImage('assets/img/mastercard_icon.png')),
           title: Text(AppLocalizations.of(context).creditCard),
           onTap: () {},
         );

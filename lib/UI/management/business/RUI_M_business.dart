@@ -71,7 +71,7 @@ class _RBusinessState extends State<RBusiness> {
       final http.Response responseManager = await http.get(urlManager);
       if(responseManager.statusCode == 200){
         //debugPrint('RUI_M_business => RESPONSE MANAGER: ${responseManager.body}');
-        //debugPrint('RRUI_M_business => RESPONSE FROM JSON MANAGER: ${jsonDecode(responseManager.body)}');
+        //debugPrint('RUI_M_business => RESPONSE FROM JSON MANAGER: ${jsonDecode(responseManager.body)}');
        // debugPrint('RUI_M_business => RESPONSE JSON MANAGER: ${jsonDecode(responseManager.body)['accessTo']}');
         //store.state.user.accessTo = jsonDecode(response.body)['accessTo'];
         var tmpJson = jsonDecode(responseManager.body)['accessTo'];

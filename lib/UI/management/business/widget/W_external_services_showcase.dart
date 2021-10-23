@@ -105,45 +105,6 @@ class ExternalServiceShowcaseState extends State<ExternalServiceShowcase> {
                     ),
                   ),
                 )
-                // widget.categoryRootList.length > 0
-                //     ?
-                //
-                //     ///Categories list
-                //     Positioned.fill(
-                //         child: Align(
-                //           alignment: Alignment.topCenter,
-                //           child: Container(
-                //             color: Colors.blueGrey.withOpacity(0.1),
-                //             // margin: EdgeInsets.only(bottom: 60.0),
-                //             padding: EdgeInsets.only(top: 10.0, bottom: 20.0),
-                //             child: CustomScrollView(shrinkWrap: true, slivers: [
-                //               SliverList(
-                //                 delegate: SliverChildBuilderDelegate(
-                //                   (context, index) {
-                //                     //MenuItemModel menuItem = menuItems.elementAt(index);
-                //                     CategoryState categoryItem = widget.categoryRootList.elementAt(index);
-                //                     return CategoryListItemWidget(categoryItem, BuytimeTheme.Indigo);
-                //                     // return InkWell(
-                //                     //   onTap: () {
-                //                     //     debugPrint('W_external_services_showcase => ${categoryItem.name.toUpperCase()} Clicked!');
-                //                     //   },
-                //                     //   //child: MenuItemListItemWidget(menuItem),
-                //                     //   child: CategoryListItemWidget(categoryItem),
-                //                     // );
-                //                   },
-                //                   childCount: widget.categoryRootList.length,
-                //                 ),
-                //               ),
-                //             ]),
-                //           ),
-                //         ),
-                //       )
-                //     : Container(
-                //         height: SizeConfig.screenHeight * 0.1,
-                //         child: Center(
-                //           child: Text(AppLocalizations.of(context).thereAreNoExternalServicesAttached),
-                //         ),
-                //       ),
               ],
             ),
           ),

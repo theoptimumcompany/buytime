@@ -128,7 +128,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
     switch (paymentType) {
       case 'card':
         widget = ListTile(
-          leading: Image(width: SizeConfig.blockSizeHorizontal * 10, image: AssetImage('assets/img/card.png')),
+          leading: Image(width: SizeConfig.blockSizeHorizontal * 10, image: AssetImage('assets/img/mastercard_icon.png')),
           title: Text(AppLocalizations.of(context).creditCard),
           onTap: () {},
         );

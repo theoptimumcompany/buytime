@@ -124,6 +124,7 @@ class _RActivityManagementState extends State<RActivityManagement> {
     );
     widgetList.addAll(_weekSliverList(list));
 
+    ///Previous version
     /*for(int i = 0; i < list.length; i++){
       if(list[i].isNotEmpty){
         DateTime orderTime = list[i][0][0].date;
@@ -427,14 +428,8 @@ class _RActivityManagementState extends State<RActivityManagement> {
       if(list[i] != null && list[i].isNotEmpty){
         DateTime orderTime = list[i][0][0].date;
         orderTime = new DateTime(orderTime.year, orderTime.month, orderTime.day, 0, 0, 0, 0, 0);
-
-
-
       }
     }
-
-
-
     return widgetList;
   }
 
@@ -450,6 +445,8 @@ class _RActivityManagementState extends State<RActivityManagement> {
           OrderEntry entry =  list[i].elementAt(j)[1];
           tableMap.putIfAbsent('-', () => []);
           tableMap['-'].add([order, entry]);
+
+          ///Other type - table seperation
           // if(order.tableNumber != null && order.tableNumber.isNotEmpty){
           //   tableMap.putIfAbsent('${order.tableNumber}', () => []);
           //   tableMap['${order.tableNumber}'].add([order, entry]);
@@ -708,19 +705,8 @@ class _RActivityManagementState extends State<RActivityManagement> {
           constraints: BoxConstraints(),
           child: StreamBuilder<QuerySnapshot>(
             stream: _orderListRealtime,
-            // )
-            // StoreConnector<AppState, AppState>(
-            //   converter: (store) => store.state,
-            //   onInit: (store) {
-            //     store.state.orderList.orderListState.clear();
-            //     store.dispatch(OrderListRequest(store.state.business.id_firestore));
-            //     startRequest = true;
-            //   },
             builder: (context,AsyncSnapshot<QuerySnapshot>  snapshot) {
               String today = '${AppLocalizations.of(context).today.substring(0,1)}${AppLocalizations.of(context).today.substring(1,AppLocalizations.of(context).today.length-2).toLowerCase()}';
-              // print("UI_M_activity_management : Request: $startRequest - Number of orders is " + snapshot.orderList.orderListState.length.toString());
-
-              // print("UI_M_activity_management : No activity: $noActivity");
               ///Current time
               // DateTime currentTime = DateTime.now();
               // currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0);
@@ -843,9 +829,9 @@ class _RActivityManagementState extends State<RActivityManagement> {
                   //debugPrint('RUI_M_activity_management => VALUE LENGTH: ${value.length}');
                   //DateTime keyTime =  DateFormat("dd/MM/yyyy").parse(key).toUtc();
 
-                  /*value.forEach((element) {
-            debugPrint('RUI_M_activity_management => value booking status: ${element.user.first.surname} ${element.status}');
-          });*/
+                  // value.forEach((element) {
+                  //     debugPrint('RUI_M_activity_management => value booking status: ${element.user.first.surname} ${element.status}');
+                  //   });
                   //value.sort((a,b) => DateFormat('dd').format(a[0].start_date).compareTo(DateFormat('dd').format(b[0].start_date)));
                   //value.sort((a,b) => DateFormat('dd').format(a[0].end_date).compareTo(DateFormat('dd').format(b[0].end_date)));
 
@@ -857,11 +843,11 @@ class _RActivityManagementState extends State<RActivityManagement> {
                     if(allMap.containsKey(tmp)){
                       //debugPrint('RUI_M_activity_management => KEY: $key');
                       allMap[tmp].add(value);
-                      /*if(key.isAtSameMomentAs(currentTime) || (key.isAfter(currentTime) && key.isBefore(sevenDaysFromNow)) ){
-              debugPrint('RUI_M_activity_management => KEY TIME: $key | CURRENT TIME: $currentTime | SEVEN DAYS FROM NOW: $sevenDaysFromNow');
-              debugPrint('RUI_M_activity_management => VALUE LENGTH: ${allMap[tmp].last.length}');
-              weekOrderList.add(value);
-            }*/
+                      // if(key.isAtSameMomentAs(currentTime) || (key.isAfter(currentTime) && key.isBefore(sevenDaysFromNow)) ){
+                      //   debugPrint('RUI_M_activity_management => KEY TIME: $key | CURRENT TIME: $currentTime | SEVEN DAYS FROM NOW: $sevenDaysFromNow');
+                      //   debugPrint('RUI_M_activity_management => VALUE LENGTH: ${allMap[tmp].last.length}');
+                      //   weekOrderList.add(value);
+                      // }
                     }
                   }else{
                     weekOrderList.add(value);
@@ -1105,7 +1091,6 @@ class _RActivityManagementState extends State<RActivityManagement> {
                                     () {
                                   //_dropDownValue = val;
                                   sortBy = val;
-
                                 },
                               );
                             },

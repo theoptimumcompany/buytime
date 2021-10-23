@@ -43,10 +43,6 @@ class _RActivityManagementItemDetailsState extends State<RActivityManagementItem
   }
 
   void undoDeletion(index, OrderEntry item, OrderState orderState) {
-    /*
-  This method accepts the parameters index and item and re-inserts the {item} at
-  index {index}
-  */
     setState(() {
       //orderState.addReserveItem(item., snapshot.business.ownerId, widget.serviceState.serviceSlot.first.startTime[i], widget.serviceState.serviceSlot.first.minDuration.toString(), dates[index]);
       orderState.itemList.insert(index, item);
