@@ -61,7 +61,7 @@ class _RMyBookingsState extends State<RMyBookings> {
     super.dispose();
   }
 
-  List<BookingState> bookings;
+  List<BookingState> bookings = [];
 
   @override
   Widget build(BuildContext context) {
@@ -72,6 +72,7 @@ class _RMyBookingsState extends State<RMyBookings> {
     return StreamBuilder<QuerySnapshot>(
         stream: _bookingStream,
         builder: (context, AsyncSnapshot<QuerySnapshot> bookingSnapshot) {
+          bookings.clear();
           if(bookingSnapshot.hasError || bookingSnapshot.connectionState == ConnectionState.waiting){
             return Container(
                 margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3),
@@ -114,7 +115,7 @@ class _RMyBookingsState extends State<RMyBookings> {
             DateTime endTime = element.end_date;
             endTime = new DateTime(endTime.year, endTime.month, endTime.day, 0, 0, 0, 0, 0);
             if(endTime.isBefore(currentTime) && element.status != 'closed'){
-              debugPrint('RUI_U_my_ookings => ${element.end_date}');
+              debugPrint('RUI_U_my_bookings => ${element.end_date}');
               element.status = Utils.enumToString(BookingStatus.closed);
               StoreProvider.of<AppState>(context).dispatch(UpdateBooking(element));
             }
@@ -125,6 +126,8 @@ class _RMyBookingsState extends State<RMyBookings> {
               tmpClosed.add(element);
             }
           });
+
+          debugPrint('RUI_U_my_bookings => OPENED BOOKINGS: ${tmpOpened.length}');
 
           tmpOpened.sort((a,b) => a.start_date.isBefore(b.start_date) ? -1 : a.start_date.isAtSameMomentAs(b.start_date) ? 0 : 1);
           tmpClosed.sort((a,b) => a.start_date.isBefore(b.start_date) ? -1 : a.start_date.isAtSameMomentAs(b.start_date) ? 0 : 1);
@@ -261,6 +264,7 @@ class _RMyBookingsState extends State<RMyBookings> {
                                                     return Container(
                                                       margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 8, right: SizeConfig.safeBlockHorizontal * 8, bottom: SizeConfig.safeBlockVertical * 3),
                                                       child: BookingCardWidget(
+                                                          number: index,
                                                           bookingState: booking,
                                                           call: (value){
                                                             setState(() {

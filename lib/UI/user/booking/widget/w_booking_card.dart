@@ -20,7 +20,8 @@ class BookingCardWidget extends StatefulWidget {
 
   BookingState bookingState;
   OnBookingCallback call;
-  BookingCardWidget({this.bookingState, this.call});
+  int number;
+  BookingCardWidget({this.bookingState, this.call, this.number});
 
   @override
   _BookingCardWidgetState createState() => _BookingCardWidgetState();
@@ -131,6 +132,7 @@ class _BookingCardWidgetState extends State<BookingCardWidget> {
               )
           ),
           child: Material(
+            key: Key('booking_${widget.number}'),
             color: Colors.transparent,
             child: InkWell(
               splashColor: Colors.black.withOpacity(.3),

@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:Buytime/UI/management/activity/RUI_M_activity_management.dart';
 import 'package:Buytime/UI/management/business/RUI_M_business_list.dart';
 import 'package:Buytime/UI/user/booking/RUI_U_all_bookings.dart';
+import 'package:Buytime/UI/user/booking/RUI_U_my_bookings.dart';
 import 'package:Buytime/UI/user/booking/RUI_notification_bell.dart';
 import 'package:Buytime/UI/user/booking/UI_U_all_bookings.dart';
 import 'package:Buytime/UI/user/booking/UI_U_my_bookings.dart';
@@ -500,7 +501,12 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
       converter: (store) => store.state,
       onInit: (store) async {
         store.dispatch(UserBookingListRequest(store.state.user.email, false));
-
+        dynamicLinkHelper.onSitePaymentFound(context);
+        dynamicLinkHelper.bookingCodeFound(context);
+        dynamicLinkHelper.selfCheckInFound(context);
+        dynamicLinkHelper.categoryInviteFound(context);
+        dynamicLinkHelper.onSitePaymentFound(context);
+        dynamicLinkHelper.searchBusiness();
         store.state.categoryList.categoryListState.clear();
         store.state.serviceList.serviceListState.clear();
         startRequest = true;
@@ -2217,9 +2223,9 @@ class _OpenContainerWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     return OpenContainer<bool>(
       key: index == 0
-          ? StoreProvider.of<AppState>(context).state.bookingList.bookingListState.isEmpty
-          ? Key('invite_key')
-          : Key('my_bookings_key')
+            ? StoreProvider.of<AppState>(context).state.bookingList.bookingListState.isEmpty ?
+                Key('invite_key') :
+              Key('my_bookings_key')
           : Key('discover_key'),
       transitionType: ContainerTransitionType.fadeThrough,
       openBuilder: (BuildContext context, VoidCallback _) {
@@ -2230,7 +2236,7 @@ class _OpenContainerWrapper extends StatelessWidget {
               fromLanding: true,
             );
           else
-            return MyBookings(
+            return RMyBookings(
               fromLanding: true,
             );
         } else {

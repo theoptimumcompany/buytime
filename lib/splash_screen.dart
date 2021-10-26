@@ -111,46 +111,6 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
     final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
     messagingHelper.messagingManagement(firebaseMessaging, context);
     dynamicLinkHelper.initDynamicLinks(context);
-    /*FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      debugPrint('splash_screen => On Message');
-      RemoteNotification notification = message.notification;
-      AndroidNotification android = message.notification?.android;
-      if (notification != null && android != null) {
-        flutterLocalNotificationsPlugin.show(
-            notification.hashCode,
-            notification.title,
-            notification.body,
-            NotificationDetails(
-              android: AndroidNotificationDetails(
-                channel.id,
-                channel.name,
-                channel.description,
-                icon: android?.smallIcon,
-              ),
-            ));
-      }
-      messageDataRetriveNotify(context, notification);
-    });
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      debugPrint('splash_screen => ON MESSAGE OPENED APP');
-      RemoteNotification notification = message.notification;
-      AndroidNotification android = message.notification?.android;
-      if (notification != null && android != null) {
-        flutterLocalNotificationsPlugin.show(
-            notification.hashCode,
-            notification.title,
-            notification.body,
-            NotificationDetails(
-              android: AndroidNotificationDetails(
-                channel.id,
-                channel.name,
-                channel.description,
-                icon: android?.smallIcon,
-              ),
-            ));
-      }
-      messageDataRetriveNotify(context, notification);
-    });*/
     getToken();
     //getTopics();
       readFromStorage();

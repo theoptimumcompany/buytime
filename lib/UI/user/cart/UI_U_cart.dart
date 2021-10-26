@@ -442,6 +442,7 @@ class CartState extends State<Cart> {
                                                           width: 250.0,
                                                           margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
                                                           child: TextFormField(
+                                                            key: Key('table_number_field_key'),
                                                             textAlign: TextAlign.start,
                                                             keyboardType: TextInputType.number,
                                                             onChanged: (value) {
@@ -464,6 +465,7 @@ class CartState extends State<Cart> {
                                                       Container(
                                                         margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
                                                         child: MaterialButton(
+                                                          key: Key('close_table_number_field_key'),
                                                           height: 58.0,
                                                           elevation: 0,
                                                           hoverElevation: 0,
