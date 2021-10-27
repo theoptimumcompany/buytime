@@ -502,7 +502,7 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
                                   return GestureDetector(
                                     onTap: () async {
                                       if(!didAuthenticate){
-                                        didAuthenticate = await localAuth.authenticateWithBiometrics(localizedReason: AppLocalizations.of(context).pleaseAuthenticateUseCredentials);
+                                        didAuthenticate = await localAuth.authenticate(localizedReason: AppLocalizations.of(context).pleaseAuthenticateUseCredentials);
                                         /*if(!didAuthenticate)
                                   didAuthenticate = true;*/
                                       }
@@ -1220,10 +1220,12 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
           await autoComplete.writeToStorage(autoCompleteList);
           StoreProvider.of<AppState>(context).dispatch(AddAutoCompleteToList(autoCompleteList));
         }
+        debugPrint('UI_U_login => AUTOMPLETE LIST ON LOGIN: ${autoCompleteList.length}');
       } else {
         List<AutoCompleteState> list = [];
         list.add(autoComplete);
         await autoComplete.writeToStorage(list);
+        debugPrint('UI_U_login => AUTOMPLETE LIST ON LOGIN: ${list.length}');
         StoreProvider.of<AppState>(context).dispatch(AddAutoCompleteToList(list));
       }
       /*if (remeberMe) {

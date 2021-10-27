@@ -238,9 +238,16 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                           name: 'ok_confirm_order',
                                           parameters: {'user_email': snapshot.user.email, 'date': DateTime.now().toString(), 'payment_method': snapshot.stripe.chosenPaymentMethod});
 
-                                      double totalToSend = snapshot.order.total;
-                                      snapshot.order.total = double.parse(snapshot.order.total.toStringAsFixed(2));
-                                      snapshot.order.totalPromoDiscount = double.parse(snapshot.order.totalPromoDiscount.toStringAsFixed(2));
+                                      double totalToSend = 0.0;
+                                      if (widget.reserve != null && widget.reserve){
+                                        totalToSend = snapshot.orderReservable.total;
+                                        snapshot.orderReservable.total = double.parse(snapshot.orderReservable.total.toStringAsFixed(2));
+                                        snapshot.orderReservable.totalPromoDiscount = double.parse(snapshot.orderReservable.totalPromoDiscount.toStringAsFixed(2));
+                                      }else{
+                                        totalToSend = snapshot.order.total;
+                                        snapshot.order.total = double.parse(snapshot.order.total.toStringAsFixed(2));
+                                        snapshot.order.totalPromoDiscount = double.parse(snapshot.order.totalPromoDiscount.toStringAsFixed(2));
+                                      }
 
                                       if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.applePay) ||
                                           snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.googlePay) ||
@@ -313,12 +320,12 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
 
   Text getCurrentPaymentMethod(BuildContext context, AppState snapshot) {
     if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.card)) {
-      if (snapshot.cardListState != null &&
+      /*if (snapshot.cardListState != null &&
           snapshot.cardListState.cardList != null &&
           snapshot.cardListState.cardList.first.stripeState != null &&
           snapshot.cardListState.cardList.first.stripeState.stripeCard != null) {
         return Text(snapshot.cardListState.cardList.first.stripeState.stripeCard.brand + " " + snapshot.cardListState.cardList.first.stripeState.stripeCard.last4);
-      }
+      }*/
       return Text(AppLocalizations.of(context).creditCard.replaceAll(":", ""));
     } else if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.room)) {
       return Text(AppLocalizations.of(context).room.replaceAll(":", ""));

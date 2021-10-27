@@ -220,8 +220,8 @@ AppState appReducer(AppState state, dynamic action) {
   if (action is SetAppStateToEmpty) {
     newState.area = AreaState().toEmpty();
     newState.areaList = AreaListState().toEmpty();
-    newState.autoCompleteListState = AutoCompleteListState().toEmpty();
-    newState.autoCompleteState = AutoCompleteState().toEmpty();
+    newState.autoCompleteListState = autoCompleteListState;
+    newState.autoCompleteState = autoCompleteState;
     newState.booking = BookingState().toEmpty();
     newState.bookingList = BookingListState().toEmpty();
     newState.business = BusinessState().toEmpty();
