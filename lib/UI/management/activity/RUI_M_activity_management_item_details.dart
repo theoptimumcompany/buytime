@@ -766,7 +766,7 @@ class _RActivityManagementItemDetailsState extends State<RActivityManagementItem
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         ///Re-Open: the order was declined in a first moment but now, before it is canceled, the worker/manager wants to evaluate again.
-                        orderState.progress == Utils.enumToString(OrderStatus.declined) ?
+                        orderState.progress == Utils.enumToString(OrderStatus.declined) || orderState.progress == Utils.enumToString(OrderStatus.canceled) ?
                         Flexible(
                           flex : 1,
                           child: Padding(
@@ -814,7 +814,7 @@ class _RActivityManagementItemDetailsState extends State<RActivityManagementItem
                         ) : Container(),
                         /// Accept: the worker/manager thinks that he can provide the order, so he accepts it.
                         /// A notification to the customer is sent, but the rest of the process depends on the payment method and the order type.
-                        orderState.progress == Utils.enumToString(OrderStatus.pending)?
+                        orderState.progress == Utils.enumToString(OrderStatus.pending) || (orderState.progress == Utils.enumToString(OrderStatus.paid) && orderState.isOrderAutoConfirmable())?
                         Flexible(
                           flex : 1,
                           child: Padding(
@@ -861,7 +861,7 @@ class _RActivityManagementItemDetailsState extends State<RActivityManagementItem
                           ),
                         ) : Container(),
                         /// Decline
-                        orderState.progress == Utils.enumToString(OrderStatus.pending) || orderState.progress == Utils.enumToString(OrderStatus.holding) || orderState.progress == Utils.enumToString(OrderStatus.accepted)?
+                       /* orderState.progress == Utils.enumToString(OrderStatus.pending) || orderState.progress == Utils.enumToString(OrderStatus.holding) || orderState.progress == Utils.enumToString(OrderStatus.accepted)?
                         Flexible(
                           flex : 1,
                           child: Padding(
@@ -905,8 +905,9 @@ class _RActivityManagementItemDetailsState extends State<RActivityManagementItem
                                 )
                             ),
                           ),
-                        ) : Container(),
-                        orderState.progress ==  Utils.enumToString(OrderStatus.paid) || orderState.progress ==  Utils.enumToString(OrderStatus.toBePaidAtCheckout) ?
+                        ) : Container(),*/
+                        ///Cancel
+                        orderState.progress ==  Utils.enumToString(OrderStatus.paid) || orderState.progress == Utils.enumToString(OrderStatus.accepted) || orderState.progress == Utils.enumToString(OrderStatus.pending) /*|| orderState.progress ==  Utils.enumToString(OrderStatus.toBePaidAtCheckout)*/ ?
                         Flexible(
                           flex : 1,
                           child: Padding(

@@ -113,7 +113,7 @@ dependencies:
   palette_generator: ^0.3.0
   http_auth: ^1.0.1
   webview_flutter: ^2.1.1
-
+  responsive_framework: 0.1.4
 
 dependency_overrides:
   intl: ^0.17.0-nullsafety.2

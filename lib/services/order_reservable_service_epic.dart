@@ -352,6 +352,7 @@ class CreateOrderReservableCardAndPayService implements EpicClass<AppState> {
           /// there are really low chances that the rest of the id is also colliding.
           String timeBasedId = Uuid().v1();
           orderReservableState.orderId = timeBasedId;
+          orderReservableState.cardType = Utils.enumToString(event.paymentType);
           /// send document to orders collection
           var addedOrder = await FirebaseFirestore.instance.collection("order").doc(timeBasedId).set(orderReservableState.toJson());
           /// add the payment method to the order sub collection on firebase
