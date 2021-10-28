@@ -409,8 +409,8 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                           );
                         })
                     : Container(),
-                Platform.isIOS && snapshot.serviceState.switchAutoConfirm && snapshot.serviceState.paymentMethodCard ? Divider() : Container(),
-                Platform.isIOS && snapshot.serviceState.switchAutoConfirm && snapshot.serviceState.paymentMethodCard
+                Platform.isIOS && snapshot.serviceState.paymentMethodCard ? Divider() : Container(),
+                Platform.isIOS && snapshot.serviceState.paymentMethodCard
                     ? ListTile(
                         leading: Image(width: SizeConfig.blockSizeHorizontal * 10, image: AssetImage('assets/img/applePay.png')),
                         title: new Text(AppLocalizations.of(context).applePay),
