@@ -973,8 +973,6 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                           if((order.progress == Utils.enumToString(OrderStatus.paid) ||
                                               order.progress == Utils.enumToString(OrderStatus.pending) ||
                                               order.progress == Utils.enumToString(OrderStatus.toBePaidAtCheckout) ||
-                                              order.progress == Utils.enumToString(OrderStatus.holding) ||
-                                              order.progress == Utils.enumToString(OrderStatus.unpaid) ||
                                               order.progress == Utils.enumToString(OrderStatus.accepted))
                                             /*|| ((order.itemList.first.date.isAtSameMomentAs(currentTime) || order.itemList.first.date.isBefore(currentTime)) && order.progress != Utils.enumToString(OrderStatus.paid))*/)
                                               /*(order.itemList.first.date.isAtSameMomentAs(currentTime) || order.itemList.first.date.isAfter(currentTime)) && order.itemList.first.time != null*/

@@ -26,7 +26,7 @@ class OrderDetailState {
   double tax = 0.0;
   double taxPercent = 0.0;
   int amount = 0;
-  String progress = Utils.enumToString(OrderStatus.unpaid);
+  String progress = Utils.enumToString(OrderStatus.pending);
   @JsonKey(ignore: true)
   String addCardProgress = Utils.enumToString(AddCardStatus.notStarted);
   bool navigate = false;
@@ -221,7 +221,7 @@ class OrderDetailState {
       tax: 0.0,
       taxPercent: 0.0,
       amount: 0,
-      progress: Utils.enumToString(OrderStatus.unpaid),
+      progress: Utils.enumToString(OrderStatus.pending),
       addCardProgress: Utils.enumToString(AddCardStatus.notStarted),
       navigate: false,
       businessId: "",

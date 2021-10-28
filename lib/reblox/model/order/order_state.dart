@@ -18,18 +18,11 @@ import '../app_state.dart';
 part 'order_state.g.dart';
 
 enum OrderStatus {
-  progress, /// non lo vedranno mai
-  unpaid, /// non lo vedranno mai
   accepted,
   paid,
   pending,
   toBePaidAtCheckout,
-  canceled, /// Viene cancellato DOPO il pagamento dall'utente o dal business
-  frozen, /// non lo vedranno mai
-  created,
-  declined, /// Viene cancellato PRIMA del pagamento dal business POTREBBE VENIRE RIAPERTO DAL BUSINESS
-  holding,
-  creating /// non lo vedranno mai
+  canceled,
 }
 
 enum AddCardStatus {
@@ -51,7 +44,7 @@ class OrderState {
   double tax = 0.0;
   double taxPercent = 0.0;
   int amount = 0;
-  String progress = Utils.enumToString(OrderStatus.unpaid);
+  String progress = Utils.enumToString(OrderStatus.pending);
   @JsonKey(ignore: true)
   String addCardProgress = Utils.enumToString(AddCardStatus.notStarted);
   bool navigate = false;
@@ -255,7 +248,7 @@ class OrderState {
       tax: 0.0,
       taxPercent: 0.0,
       amount: 0,
-      progress: Utils.enumToString(OrderStatus.unpaid),
+      progress: Utils.enumToString(OrderStatus.pending),
       addCardProgress: Utils.enumToString(AddCardStatus.notStarted),
       navigate: false,
       businessId: "",

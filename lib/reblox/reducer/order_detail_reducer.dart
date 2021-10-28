@@ -151,7 +151,6 @@ class CreateOrderDetailRoomPending {
 }
 
 class CreatedOrderDetail {}
-class CreatingOrderDetail {}
 class ResetOrderDetailIfPaidOrCanceled {}
 class DeleteOrderDetail {
   String _orderId;
@@ -279,12 +278,8 @@ OrderDetailState orderDetailReducer(OrderDetailState state, action) {
     orderState = action.orderState.copyWith();
     return orderState;
   }
-  if (action is CreatingOrderDetail) {
-    orderState.progress = Utils.enumToString(OrderStatus.creating);
-    return orderState;
-  }
   if (action is CreatedOrderDetail) {
-    orderState.progress = Utils.enumToString(OrderStatus.unpaid);
+    orderState.progress = Utils.enumToString(OrderStatus.pending);
     return orderState;
   }
   if (action is SetOrderDetailCartCounter) {

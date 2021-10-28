@@ -1,7 +1,6 @@
 import 'package:Buytime/UI/management/activity/RUI_M_activity_management.dart';
 import 'package:Buytime/UI/management/notification/RUI_M_notification_center.dart';
 import 'package:Buytime/UI/management/slot/UI_M_slot_management.dart';
-import 'package:Buytime/UI/user/landing/UI_U_landing.dart';
 import 'package:Buytime/UI/user/turist/RUI_U_service_explorer.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/reducer/app_reducer.dart';
@@ -397,11 +396,6 @@ class _ManagerDrawerState extends State<ManagerDrawer> {
                                   child: ListTile(
                                     leading: Icon(Icons.emoji_emotions_outlined, color: BuytimeTheme.TextMedium, size: 24),
                                     onTap: () {
-                                      /*StoreProvider.of<AppState>(context)
-                              .dispatch(SetBusinessListToEmpty());
-                          StoreProvider.of<AppState>(context)
-                              .dispatch(SetOrderListToEmpty());*/
-                                      switchToClient = true;
                                       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => RServiceExplorer()));
                                     },
                                     title: Text(AppLocalizations.of(context).clientMode,

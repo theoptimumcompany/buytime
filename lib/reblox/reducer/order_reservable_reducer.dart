@@ -30,26 +30,6 @@ class CreateOrderReservableCardAndPay {
   String get selectedCardPaymentMethodId => _selectedCardPaymentMethodId;
 }
 
-
-class CreateOrderReservableCardAndHold {
-  BuildContext _context;
-  OrderReservableState _orderReservableState;
-  String _last4;
-  String _businessStripeAccount;
-  String _brand;
-  String _country;
-  String _selectedCardPaymentMethodId;
-  PaymentType _paymentType;
-  CreateOrderReservableCardAndHold(this._orderReservableState, this._last4, this._brand, this._country, this._selectedCardPaymentMethodId, this._paymentType, this._context, this._businessStripeAccount);
-  OrderReservableState get orderReservableState => _orderReservableState;
-  PaymentType get paymentType => _paymentType;
-  BuildContext get context => _context;
-  String get last4 => _last4;
-  String get businessStripeAccount => _businessStripeAccount;
-  String get brand => _brand;
-  String get country => _country;
-  String get selectedCardPaymentMethodId => _selectedCardPaymentMethodId;
-}
 class CreateOrderReservableCardAndReminder {
   BuildContext _context;
   OrderReservableState _orderReservableState;
@@ -101,19 +81,7 @@ class CreateOrderReservableNativeAndPay {
   BuildContext get context => _context;
   String get businessStripeAccount => _businessStripeAccount;
 }
-class CreateOrderReservableNativeAndHold {
-  OrderReservableState _orderReservableState;
-  PaymentMethod _paymentMethod;
-  PaymentType _paymentType;
-  String _businessStripeAccount;
-  BuildContext _context;
-  CreateOrderReservableNativeAndHold(this._orderReservableState, this._paymentMethod, this._paymentType, this._context, this._businessStripeAccount);
-  OrderReservableState get orderReservableState => _orderReservableState;
-  PaymentType get paymentType => _paymentType;
-  PaymentMethod get paymentMethod => _paymentMethod;
-  BuildContext get context => _context;
-  String get businessStripeAccount => _businessStripeAccount;
-}
+
 class CreateOrderReservableNativeAndReminder {
   OrderReservableState _orderReservableState;
   PaymentMethod _paymentMethod;

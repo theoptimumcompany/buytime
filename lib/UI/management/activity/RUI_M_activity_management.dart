@@ -465,7 +465,7 @@ class _RActivityManagementState extends State<RActivityManagement> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           ///Re-Open: the order was declined in a first moment but now, before it is canceled, the worker/manager wants to evaluate again.
-          order.progress == Utils.enumToString(OrderStatus.declined) || order.progress == Utils.enumToString(OrderStatus.canceled) ?
+          order.progress == Utils.enumToString(OrderStatus.canceled) ?
           Container(
               margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 1.5, bottom: SizeConfig.safeBlockVertical * .5, top: SizeConfig.safeBlockVertical * .25),
               alignment: Alignment.center,
@@ -497,41 +497,7 @@ class _RActivityManagementState extends State<RActivityManagement> {
                       ),
                     )),
               )) : Container(),
-
-          /// Decline
-          /*order.progress == Utils.enumToString(OrderStatus.pending) || order.progress == Utils.enumToString(OrderStatus.holding) || order.progress == Utils.enumToString(OrderStatus.accepted)?
-          Container(
-              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 1.5, right: SizeConfig.safeBlockHorizontal * 0, bottom: SizeConfig.safeBlockVertical * .5, top: SizeConfig.safeBlockVertical * .25),
-              alignment: Alignment.center,
-              child: Material(
-                color: Colors.transparent,
-                child: InkWell(
-                    onTap: () {
-                      // order.progress = Utils.enumToString(OrderStatus.declined);
-                      if (!managerHasChosenAction) {
-                        StoreProvider.of<AppState>(context).dispatch(UpdateOrderByManager(order, OrderStatus.declined));
-                        managerHasChosenAction = true;
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content:  Text(AppLocalizations.of(context).networkRequestStillInProgress)));
-                      }
-                    },
-                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                    child: Container(
-                      padding: EdgeInsets.all(5.0),
-                      child: Text(
-                        AppLocalizations.of(context).decline.toUpperCase(),
-                        style:  TextStyle(
-                            letterSpacing: 1.25,
-                            fontFamily: BuytimeTheme.FontFamily,
-                            color: BuytimeTheme.TextMalibu,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 14
-                          ///SizeConfig.safeBlockHorizontal * 4
-                        ),
-                      ),
-                    )),
-              )) : Container(),*/
-          /// Accept: the worker/manager thinks that he can provide the order, so he accepts it.
+              /// Accept: the worker/manager thinks that he can provide the order, so he accepts it.
           /// A notification to the customer is sent, but the rest of the process depends on the payment method and the order type.
           order.progress == Utils.enumToString(OrderStatus.pending) || (order.progress == Utils.enumToString(OrderStatus.paid) && order.isOrderAutoConfirmable())?
           Container(
@@ -567,7 +533,7 @@ class _RActivityManagementState extends State<RActivityManagement> {
               )) : Container(),
           ///Cancel the order, in this case it has been paid but for some reason it cannot be provided. The user has to be refunded.
           ///a canceled order cannot be reopened
-          order.progress ==  Utils.enumToString(OrderStatus.paid) || order.progress == Utils.enumToString(OrderStatus.accepted) || order.progress == Utils.enumToString(OrderStatus.pending)/*|| order.progress ==  Utils.enumToString(OrderStatus.toBePaidAtCheckout)*/ ?
+          order.progress ==  Utils.enumToString(OrderStatus.paid) || order.progress == Utils.enumToString(OrderStatus.accepted) || order.progress == Utils.enumToString(OrderStatus.pending) || order.progress ==  Utils.enumToString(OrderStatus.toBePaidAtCheckout) ?
           Container(
               margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 0, right: SizeConfig.safeBlockHorizontal * 1.5, bottom: SizeConfig.safeBlockVertical * .5, top: SizeConfig.safeBlockVertical * .25),
               alignment: Alignment.center,
@@ -772,10 +738,10 @@ class _RActivityManagementState extends State<RActivityManagement> {
                   DateTime orderTime = element.date;
                   orderTime = new DateTime(orderTime.year, orderTime.month, orderTime.day, 0, 0, 0, 0, 0);
 
-                  if(element.progress == Utils.enumToString(OrderStatus.canceled) || element.progress == Utils.enumToString(OrderStatus.declined)){
+                  if(element.progress == Utils.enumToString(OrderStatus.canceled) ){
                     listUp(element, currentTime, sevenDaysFromNow, orderTime, canceledList);
                     //pendingList.add(element);
-                  }else if(element.progress == Utils.enumToString(OrderStatus.pending) || element.progress == Utils.enumToString(OrderStatus.unpaid)){
+                  }else if(element.progress == Utils.enumToString(OrderStatus.pending) ){
                     listUp(element, currentTime, sevenDaysFromNow, orderTime, pendingList);
                     //acceptedList.add(element);
                   }else{

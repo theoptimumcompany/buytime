@@ -333,7 +333,7 @@ OrderState orderReducer(OrderState state, action) {
     return orderState;
   }
   if (action is CreatingOrder) {
-    orderState.progress = Utils.enumToString(OrderStatus.creating);
+    orderState.progress = Utils.enumToString(OrderStatus.pending);
     return orderState;
   }
   if (action is CreatedOrder) {

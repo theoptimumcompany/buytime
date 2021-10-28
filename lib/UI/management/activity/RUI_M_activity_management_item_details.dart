@@ -766,7 +766,7 @@ class _RActivityManagementItemDetailsState extends State<RActivityManagementItem
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         ///Re-Open: the order was declined in a first moment but now, before it is canceled, the worker/manager wants to evaluate again.
-                        orderState.progress == Utils.enumToString(OrderStatus.declined) || orderState.progress == Utils.enumToString(OrderStatus.canceled) ?
+                        orderState.progress == Utils.enumToString(OrderStatus.canceled) ?
                         Flexible(
                           flex : 1,
                           child: Padding(
@@ -907,7 +907,7 @@ class _RActivityManagementItemDetailsState extends State<RActivityManagementItem
                           ),
                         ) : Container(),*/
                         ///Cancel
-                        orderState.progress ==  Utils.enumToString(OrderStatus.paid) || orderState.progress == Utils.enumToString(OrderStatus.accepted) || orderState.progress == Utils.enumToString(OrderStatus.pending) /*|| orderState.progress ==  Utils.enumToString(OrderStatus.toBePaidAtCheckout)*/ ?
+                        orderState.progress ==  Utils.enumToString(OrderStatus.paid) || orderState.progress == Utils.enumToString(OrderStatus.accepted) || orderState.progress == Utils.enumToString(OrderStatus.pending) || orderState.progress ==  Utils.enumToString(OrderStatus.toBePaidAtCheckout) ?
                         Flexible(
                           flex : 1,
                           child: Padding(

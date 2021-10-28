@@ -1,7 +1,4 @@
 import 'package:Buytime/UI/management/activity/RUI_M_activity_management_item_details.dart';
-import 'package:Buytime/UI/management/activity/UI_M_activity_management_item_details.dart';
-import 'package:Buytime/UI/management/invite/UI_M_booking_details.dart';
-import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reblox/model/order/order_entry.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
@@ -11,10 +8,7 @@ import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/utils/utils.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_redux/flutter_redux.dart';
 import 'package:intl/intl.dart';
-import 'package:share/share.dart';
-import 'package:Buytime/reusable/icon/material_design_icons.dart';
 
 class DashboardListItem extends StatefulWidget {
   OrderState orderState;
@@ -61,8 +55,8 @@ class _DashboardListItemState extends State<DashboardListItem> {
                   Container(
                     margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
                     child: Icon(
-                      widget.orderState.progress == Utils.enumToString(OrderStatus.canceled) || widget.orderState.progress == Utils.enumToString(OrderStatus.declined) ? BuytimeIcons.pending_clock : BuytimeIcons.accepted_clock,
-                      color: widget.orderState.progress == Utils.enumToString(OrderStatus.canceled) || widget.orderState.progress == Utils.enumToString(OrderStatus.declined)
+                      widget.orderState.progress == Utils.enumToString(OrderStatus.canceled) ? BuytimeIcons.pending_clock : BuytimeIcons.accepted_clock,
+                      color: widget.orderState.progress == Utils.enumToString(OrderStatus.canceled)
                           ? BuytimeTheme.AccentRed
                           : widget.orderState.progress == Utils.enumToString(OrderStatus.toBePaidAtCheckout)
                               ? BuytimeTheme.Secondary

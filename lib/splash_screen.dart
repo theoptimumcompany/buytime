@@ -249,6 +249,12 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
         Device device = Device(name: "device", id: deviceId, user_uid: user.uid);
         StoreProvider.of<AppState>(context).dispatch(new UpdateUserDevice(device));
         TokenB token = TokenB(name: "token", id: MessagingHelper.serverToken, user_uid: user.uid);
+        /// TODO update user language
+        /// Locale myLocale = Localizations.localeOf(context);
+        /// myLocale.languageCode
+        /// fill the db
+
+
         StoreProvider.of<AppState>(context).dispatch(new UpdateUserToken(token));
         StoreProvider.of<AppState>(context).dispatch(StripeCardListRequest(user.uid));
         Future.delayed(Duration(seconds: 1), (){

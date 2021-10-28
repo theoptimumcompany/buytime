@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 import 'package:Buytime/UI/user/turist/RUI_U_service_explorer.dart';
-import 'package:Buytime/UI/user/turist/UI_U_service_explorer.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:Buytime/UI/user/login/UI_U_t_o_s_terms_conditons.dart';

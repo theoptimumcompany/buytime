@@ -1,11 +1,8 @@
 import 'package:Buytime/UI/management/business/RUI_M_business_list.dart';
-import 'package:Buytime/UI/management/business/UI_M_business_list.dart';
-import 'package:Buytime/UI/user/booking/RUI_U_all_bookings.dart';
 import 'package:Buytime/UI/user/booking/UI_U_all_bookings.dart';
 import 'package:Buytime/UI/user/booking/RUI_notification_bell.dart';
 import 'package:Buytime/UI/user/booking/widget/user_service_card_widget.dart';
 import 'package:Buytime/UI/user/cart/UI_U_cart.dart';
-import 'package:Buytime/UI/user/landing/UI_U_landing.dart';
 import 'package:Buytime/UI/user/search/UI_U_filter_general.dart';
 import 'package:Buytime/UI/user/service/UI_U_service_reserve.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
@@ -45,7 +42,6 @@ import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'RUI_U_notifications.dart';
 
 class BookingPage extends StatefulWidget {
   static String route = '/bookingPage';
@@ -885,7 +881,6 @@ class _BookingPageState extends State<BookingPage> {
                                                       if ((order.progress == Utils.enumToString(OrderStatus.paid) ||
                                                               order.progress == Utils.enumToString(OrderStatus.pending) ||
                                                               order.progress == Utils.enumToString(OrderStatus.toBePaidAtCheckout) ||
-                                                              order.progress == Utils.enumToString(OrderStatus.holding) ||
                                                               order.progress == Utils.enumToString(OrderStatus.accepted)) &&
                                                           (order.itemList.first.date.isAtSameMomentAs(currentTime) || order.itemList.first.date.isAfter(currentTime)) &&
                                                           order.itemList.first.time != null) userOrderList.add(order);
