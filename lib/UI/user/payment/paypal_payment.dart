@@ -9,6 +9,7 @@ import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reservable_reducer.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
+import 'package:Buytime/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -182,7 +183,7 @@ class PaypalPaymentState extends State<PaypalPayment> {
       }
     ] : items = [
       {
-        "name": '${widget.orderState.itemList.first.name}',
+        "name": '${Utils.retriveField(Localizations.localeOf(context).languageCode, widget.orderState.itemList.first.name)}',
         "description" : "",
         "unit_amount": {
           "currency_code": defaultCurrency["currency"],

@@ -70,6 +70,8 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
   bool isExternal = false;
   bool cardOrder = false;
 
+  bool paymentSheetIdLoading = false;
+
   @override
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context).size;
@@ -211,13 +213,27 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                     color: snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.paypal)
                                         ? BuytimeTheme.Secondary
                                         : widget.tourist != null && widget.tourist
-                                            ? BuytimeTheme.BackgroundCerulean
+                                            ? BuytimeTheme.TextWhite
                                             : BuytimeTheme.UserPrimary,
                                     disabledColor: BuytimeTheme.SymbolLightGrey,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: new BorderRadius.circular(5),
                                     ),
-                                    child: Container(
+                                    child: paymentSheetIdLoading ? Container(
+                                      alignment: Alignment.center,
+                                      width: SizeConfig.blockSizeHorizontal * 57,
+                                      height: 44,
+                                      //padding: EdgeInsets.all(2.5),
+                                      child: Container(
+                                        width: 25,
+                                        height: 25,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2,
+                                          valueColor: new AlwaysStoppedAnimation<Color>(Colors.black),
+                                        ),
+                                      )
+                                    ) :
+                                    Container(
                                       alignment: Alignment.center,
                                       width: SizeConfig.blockSizeHorizontal * 57,
                                       height: 44,
@@ -229,7 +245,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                           fontSize: 16,
                                           fontFamily: BuytimeTheme.FontFamily,
                                           fontWeight: FontWeight.bold,
-                                          color: snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.paypal) ? Colors.black : BuytimeTheme.TextWhite,
+                                          color: snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.paypal) ? Colors.black : BuytimeTheme.TextBlack,
                                         ),
                                       ),
                                     ),
@@ -252,6 +268,9 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                       if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.applePay) ||
                                           snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.googlePay) ||
                                           snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.card)) {
+                                        setState(() {
+                                          paymentSheetIdLoading = true;
+                                        });
                                         debugPrint("ui_u_confirmOrder stripe paymentSheet");
 
                                         // Stripe.publishableKey = "pk_live_51HS20eHr13hxRBpCLHzfi0SXeqw8Efu911cWdYEE96BAV0zSOesvE83OiqqzRucKIxgCcKHUvTCJGY6cXRtkDVCm003CmGXYzy";
@@ -281,6 +300,9 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                         try {
                                           await Stripe.instance.presentPaymentSheet();
                                           print("OK");
+                                          setState(() {
+                                            paymentSheetIdLoading = false;
+                                          });
                                           confirmationCard(context, snapshot, '', '', '', paymentSheetData['paymentIntent'].split('_secret')[0]);
                                           // if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.card)) {
                                           //
@@ -294,6 +316,9 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                           } else {
                                             print("No general error Exception");
                                           }
+                                          setState(() {
+                                            paymentSheetIdLoading = false;
+                                          });
                                         }
                                         debugPrint("ui_u_confirmOrder stripe paymentSheet end");
                                       } else if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.room)) {
@@ -303,6 +328,8 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                       } else if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.paypal)) {
                                         confirmationPayPal(context, snapshot);
                                       }
+
+
                                     },
                                   ),
                                 ),
@@ -848,7 +875,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
   Future<void> confirmationPayPal(BuildContext context, AppState snapshot) async {
     if (widget.reserve != null && widget.reserve) {
       /// Reservable payment process starts with Native Method
-      debugPrint('UI_U_ConfirmOrder => start reservable payment process with Onsite Method');
+      debugPrint('UI_U_ConfirmOrder => start reservable payment process with Paypal Method');
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (BuildContext context) => PaypalPayment(
@@ -862,7 +889,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
         ),
       );
     } else {
-      debugPrint('UI_U_ConfirmOrder => start direct payment process with Onsite Method');
+      debugPrint('UI_U_ConfirmOrder => start direct payment process with Paypal Method');
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (BuildContext context) => PaypalPayment(
