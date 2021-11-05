@@ -109,6 +109,7 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
     super.initState();
     getAppInfo();
     final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
+    messagingHelper.init(context);
     messagingHelper.messagingManagement(firebaseMessaging, context);
     dynamicLinkHelper.initDynamicLinks(context);
     getToken();

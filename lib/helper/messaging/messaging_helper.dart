@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:Buytime/UI/user/booking/RUI_U_notifications.dart';
 import 'package:Buytime/utils/size_config.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:http/http.dart' as http;
 import 'package:Buytime/reblox/model/app_state.dart';
@@ -12,11 +13,97 @@ import 'package:another_flushbar/flushbar.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:rxdart/rxdart.dart';
 
 import '../../main.dart';
+import '../../splash_screen.dart';
 
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+  debugPrint('Handling a background message ${message.messageId}');
+  debugPrint('main => ${message.data}');
+  flutterLocalNotificationsPlugin.show(
+      message.data.hashCode,
+      message.data['title'],
+      message.data['body'],
+      NotificationDetails(
+        android: AndroidNotificationDetails(
+          channel.id,
+          channel.name,
+          channel.description,
+        ),
+      ));
+}
+
+const AndroidNotificationChannel channel = AndroidNotificationChannel(
+  'high_importance_channel', // id
+  'High Importance Notifications', // title
+  'This channel is used for important notifications.', // description
+  importance: Importance.high,
+);
+
+
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+final BehaviorSubject<ReceivedNotification> didReceiveLocalNotificationSubject = BehaviorSubject<ReceivedNotification>();
 class MessagingHelper {
   static String serverToken = '';
+
+  void init(BuildContext context) async{
+    final NotificationAppLaunchDetails notificationAppLaunchDetails = await flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
+    NotificationSettings settings = await FirebaseMessaging.instance.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
+    debugPrint('main => User granted permission: ${settings.authorizationStatus}');
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+    await flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+        AndroidFlutterLocalNotificationsPlugin>()
+        ?.createNotificationChannel(channel);
+    await flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+        IOSFlutterLocalNotificationsPlugin>()
+        ?.requestPermissions(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
+    var initialzationSettingsAndroid = AndroidInitializationSettings('@mipmap/ic_launcher');
+    final IOSInitializationSettings initializationSettingsIOS =
+    IOSInitializationSettings(
+        requestAlertPermission: true,
+        requestBadgePermission: true,
+        requestSoundPermission: true,
+        onDidReceiveLocalNotification: (
+            int id,
+            String title,
+            String body,
+            String payload,
+            ) async {
+          didReceiveLocalNotificationSubject.add(
+            ReceivedNotification(
+              id: id,
+              title: title,
+              body: body,
+              payload: payload,
+            ),
+          );
+        });
+    var initializationSettings = InitializationSettings(android: initialzationSettingsAndroid, iOS: initializationSettingsIOS);
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        onSelectNotification: (String payload) async {
+          if (payload != null) {
+            debugPrint('main => notification payload: $payload');
+            Navigator.push(context, MaterialPageRoute(builder: (context) => RNotifications(orderStateList: StoreProvider.of<AppState>(context).state.orderList.orderListState, tourist: false,)));
+          }
+          selectNotificationSubject.add(payload);
+        });
+  }
 
   void _requestPermissions() {
     flutterLocalNotificationsPlugin
@@ -72,7 +159,9 @@ class MessagingHelper {
                   channel.description,
                   icon: android?.smallIcon,
                 ),
-              ));
+              ),
+            payload: 'a'
+          );
           messageDataRetriveNotify(context, notification);
         }
       }

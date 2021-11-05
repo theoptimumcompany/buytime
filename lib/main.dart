@@ -22,6 +22,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:rxdart/rxdart.dart';
 import 'UI/management/service_internal/RUI_M_service_list.dart';
 import 'UI/management/service_internal/UI_M_hub_convention_edit.dart';
+import 'UI/user/booking/RUI_U_notifications.dart';
 import 'UI/user/service/UI_U_service_reserve.dart';
 import 'UI/user/turist/RUI_U_service_explorer.dart';
 import 'app_routes.dart';
@@ -30,33 +31,7 @@ import 'combined_epics.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  await Firebase.initializeApp();
-  debugPrint('Handling a background message ${message.messageId}');
-  debugPrint('main => ${message.data}');
-  flutterLocalNotificationsPlugin.show(
-      message.data.hashCode,
-      message.data['title'],
-      message.data['body'],
-      NotificationDetails(
-        android: AndroidNotificationDetails(
-          channel.id,
-          channel.name,
-          channel.description,
-        ),
-      ));
-}
 
-const AndroidNotificationChannel channel = AndroidNotificationChannel(
-  'high_importance_channel', // id
-  'High Importance Notifications', // title
-  'This channel is used for important notifications.', // description
-  importance: Importance.high,
-);
-
-
-final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-final BehaviorSubject<ReceivedNotification> didReceiveLocalNotificationSubject = BehaviorSubject<ReceivedNotification>();
 Future<void> main() async {
   // runZonedGuarded(() async {
     final epics = combinedEpics;
@@ -67,60 +42,9 @@ Future<void> main() async {
       middleware: createNavigationMiddleware(epics),
     );
     WidgetsFlutterBinding.ensureInitialized();
-    final NotificationAppLaunchDetails notificationAppLaunchDetails = await flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
+
     await Firebase.initializeApp();
-    NotificationSettings settings = await FirebaseMessaging.instance.requestPermission(
-      alert: true,
-      announcement: false,
-      badge: true,
-      carPlay: false,
-      criticalAlert: false,
-      provisional: false,
-      sound: true,
-    );
-    debugPrint('main => User granted permission: ${settings.authorizationStatus}');
-    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-    await flutterLocalNotificationsPlugin
-        .resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin>()
-        ?.createNotificationChannel(channel);
-    await flutterLocalNotificationsPlugin
-        .resolvePlatformSpecificImplementation<
-        IOSFlutterLocalNotificationsPlugin>()
-        ?.requestPermissions(
-      alert: true,
-      badge: true,
-      sound: true,
-    );
-    var initialzationSettingsAndroid = AndroidInitializationSettings('@mipmap/ic_launcher');
-    final IOSInitializationSettings initializationSettingsIOS =
-    IOSInitializationSettings(
-        requestAlertPermission: true,
-        requestBadgePermission: true,
-        requestSoundPermission: true,
-        onDidReceiveLocalNotification: (
-            int id,
-            String title,
-            String body,
-            String payload,
-            ) async {
-          didReceiveLocalNotificationSubject.add(
-            ReceivedNotification(
-              id: id,
-              title: title,
-              body: body,
-              payload: payload,
-            ),
-          );
-        });
-    var initializationSettings = InitializationSettings(android: initialzationSettingsAndroid, iOS: initializationSettingsIOS);
-    await flutterLocalNotificationsPlugin.initialize(initializationSettings,
-        onSelectNotification: (String payload) async {
-          if (payload != null) {
-            debugPrint('notification payload: $payload');
-          }
-          selectNotificationSubject.add(payload);
-        });
+
     const String environment = String.fromEnvironment(
       'ENVIRONMENT',
       defaultValue: Environment.PROD,
