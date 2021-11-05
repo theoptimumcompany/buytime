@@ -12,6 +12,7 @@ import 'package:Buytime/utils/utils.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:intl/intl.dart';
 
 import '../UI_U_order_details.dart';
 
@@ -33,17 +34,27 @@ class _UserNotificationListItemState extends State<UserNotificationListItem> {
   String hours = '';
   String minutes = '';
   String seconds = '';
+  bool can = false;
 
+  List<String> notificationBodyList = [];
+  String customNotificationTime = '';
   @override
   void initState() {
     super.initState();
     DateTime notificationTime = DateTime.now();
-    if(widget.notificationState.timestamp != null)
-      notificationTime = DateTime.fromMillisecondsSinceEpoch(widget.notificationState.timestamp).add(Duration(hours: 2));
+    if(widget.notificationState.timestamp != null){
+      notificationTime = DateTime.fromMillisecondsSinceEpoch(widget.notificationState.timestamp);
+      debugPrint('user_notification_list_item => TIME ZONE OFFSET IN HOURS: ${notificationTime.timeZoneOffset.inHours}');
+      debugPrint('user_notification_list_item => TIME TO LOCAL: ${notificationTime.toLocal()}');
+      debugPrint('user_notification_list_item => TIME TO UTC: ${notificationTime.toUtc()}');
+    }
     debugPrint('user_notification_list_item => NOTIFICATION TIME: $notificationTime');
 
     //notificationTime = DateTime(notificationTime.year, notificationTime.month, notificationTime.day, notificationTime.hour + 2, notificationTime.minute, notificationTime.second, notificationTime.millisecond, notificationTime.microsecond);
     DateTime currentTime = DateTime.now();
+    if(currentTime.timeZoneOffset.inHours != notificationTime.timeZoneOffset.inHours){
+
+    }
     Duration tmpDuration;
     if(currentTime.isAfter(notificationTime))
       tmpDuration = currentTime.difference(notificationTime);
@@ -62,6 +73,11 @@ class _UserNotificationListItemState extends State<UserNotificationListItem> {
       //debugPrint('user_notification_list_item => SECONDS: ${tmpDuration.inSeconds}');
       seconds = tmpDuration.inSeconds.toString();
     }
+
+    notificationBodyList =  widget.notificationState.body.split('|');
+    if(notificationBodyList.isNotEmpty && notificationBodyList.length == 4)
+      can = true;
+    customNotificationTime = DateFormat('E, dd/M/yyyy, HH:mm').format(notificationTime);
   }
 
   @override
@@ -188,7 +204,8 @@ class _UserNotificationListItemState extends State<UserNotificationListItem> {
                                     child: Container(
                                       margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 0, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1),
                                       child: Text(
-                                        widget.notificationState.body,
+                                        can && notificationBodyList[3] == 'orderPaid' ? 'Order for ${notificationBodyList[0]} on $customNotificationTime has been paid, € ${notificationBodyList[2]}'
+                                        : widget.notificationState.body,
                                         overflow: TextOverflow.ellipsis,
                                         maxLines: 3,
                                         style: TextStyle(

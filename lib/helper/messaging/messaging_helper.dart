@@ -14,6 +14,7 @@ import 'package:another_flushbar/flushbar.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:intl/intl.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../main.dart';
@@ -149,6 +150,13 @@ class MessagingHelper {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       debugPrint('mmessaging_helper => ON MESSAGE');
       RemoteNotification notification = message.notification;
+      List<String> notificationBodyList = notification.body.split('|');
+      bool can = false;
+      if(notificationBodyList.isNotEmpty && notificationBodyList.length == 4)
+        can = true;
+      DateTime notificationTime = DateTime.now();
+      notificationTime = DateTime.fromMillisecondsSinceEpoch(int.parse(notificationBodyList[1]));
+      String customNotificationTime = DateFormat('E, dd/M/yyyy, HH:mm').format(notificationTime);
       if(Platform.isAndroid)
       {
         AndroidNotification android = message.notification?.android;
@@ -156,7 +164,8 @@ class MessagingHelper {
           flutterLocalNotificationsPlugin.show(
               notification.hashCode,
               notification.title,
-              notification.body,
+              can && notificationBodyList[3] == 'orderPaid' ? 'Order for ${notificationBodyList[0]} on $customNotificationTime has been paid, € ${notificationBodyList[2]}'
+                  : notification.body,
               NotificationDetails(
                 android: AndroidNotificationDetails(
                   channel.id,
