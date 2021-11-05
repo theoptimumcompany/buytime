@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:Buytime/UI/management/activity/RUI_M_activity_management.dart';
 import 'package:Buytime/UI/user/booking/RUI_U_notifications.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -99,7 +100,11 @@ class MessagingHelper {
         onSelectNotification: (String payload) async {
           if (payload != null) {
             debugPrint('main => notification payload: $payload');
-            Navigator.push(context, MaterialPageRoute(builder: (context) => RNotifications(orderStateList: StoreProvider.of<AppState>(context).state.orderList.orderListState, tourist: false,)));
+            if(payload == 'New booking request!' || payload == 'New order accepted!'){
+              Navigator.push(context, MaterialPageRoute(builder: (context) => RActivityManagement()));
+            }else{
+              Navigator.push(context, MaterialPageRoute(builder: (context) => RNotifications(orderStateList: StoreProvider.of<AppState>(context).state.orderList.orderListState, tourist: false,)));
+            }
           }
           selectNotificationSubject.add(payload);
         });
@@ -160,7 +165,7 @@ class MessagingHelper {
                   icon: android?.smallIcon,
                 ),
               ),
-            payload: 'a'
+            payload: notification.title
           );
           messageDataRetriveNotify(context, notification);
         }
@@ -175,7 +180,8 @@ class MessagingHelper {
               notification.body,
               NotificationDetails(
                 iOS: IOSNotificationDetails(sound: 'slow_spring_board.aiff'),
-              ));
+              ),
+              payload: notification.title);
           messageDataRetriveNotify(context, notification);
         }
       }
