@@ -31,12 +31,14 @@ class CategoryState {
   String customTag;
   @JsonKey(defaultValue: false)
   bool showcase;
+  int serviceCount;
+  List<String> categoryIdList;
 
-  CategoryState({this.name, this.id, this.level, this.parent, this.manager, this.managerMailList, this.businessId, this.worker, this.workerMailList, this.fileToUpload, this.categoryImage, this.customTag, this.showcase});
+  CategoryState({this.name, this.id, this.level, this.parent, this.manager, this.managerMailList, this.businessId, this.worker, this.workerMailList, this.fileToUpload, this.categoryImage, this.customTag, this.showcase,this.serviceCount,this.categoryIdList});
 
   CategoryState toEmpty() {
     return CategoryState(
-        name: "", id: "", level: 0, parent: Parent(name: "No Parent", id: "no_parent"), manager: [], managerMailList: [], businessId: "", worker: [], workerMailList: [], fileToUpload: null, categoryImage: '', customTag: '', showcase: false);
+        name: "", id: "", level: 0, parent: Parent(name: "No Parent", id: "no_parent"), manager: [], managerMailList: [], businessId: "", worker: [], workerMailList: [], fileToUpload: null, categoryImage: '', customTag: '', showcase: false, serviceCount: 0, categoryIdList: []);
   }
 
   CategoryState.fromState(CategoryState category) {
@@ -53,6 +55,8 @@ class CategoryState {
     this.categoryImage = category.categoryImage;
     this.customTag = category.customTag;
     this.showcase = category.showcase;
+    this.serviceCount = category.serviceCount;
+    this.categoryIdList = category.categoryIdList;
   }
 
   CategoryState copyWith(
@@ -68,7 +72,9 @@ class CategoryState {
       OptimumFileToUpload fileToUpload,
       String categoryImage,
       String customTag,
-      String showcase}) {
+      String showcase,
+        int serviceCount,
+      List<String> categoryIdList}) {
     return CategoryState(
         name: name ?? this.name,
         id: id ?? this.id,
@@ -82,7 +88,9 @@ class CategoryState {
         fileToUpload: fileToUpload ?? this.fileToUpload,
         categoryImage: categoryImage ?? this.categoryImage,
         customTag: customTag ?? this.customTag,
-        showcase: showcase ?? this.showcase);
+        showcase: showcase ?? this.showcase,
+        serviceCount: serviceCount ?? this.serviceCount,
+        categoryIdList: categoryIdList ?? this.categoryIdList);
   }
 
   List<dynamic> convertManagerToJson(List<Manager> objectStateList) {
