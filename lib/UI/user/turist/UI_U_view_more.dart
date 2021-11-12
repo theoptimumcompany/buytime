@@ -301,7 +301,7 @@ class ViewMoreState extends State<ViewMore> {
                                         ///Paged service list
                                         Positioned.fill(
                                           child: Align(
-                                            alignment: Alignment.center,
+                                            alignment: Alignment.topCenter,
                                             child: Container(
                                               margin: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 6),
                                               child: CustomScrollView(
