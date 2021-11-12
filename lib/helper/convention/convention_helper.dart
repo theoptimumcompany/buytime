@@ -8,7 +8,7 @@ class ConventionHelper{
 
   bool getConvention(ServiceState service, List<BookingState> bookingList){
     bool isConvention = false;
-    String businessId = checkActiveBooking(bookingList);
+    String businessId = bookingList.isNotEmpty ? checkActiveBooking(bookingList) : '';
     //debugPrint('convention_helper => CONVENTION BUSINESS ID: $businessId');
     if(service.hubConvention && service.conventionSlotList.isNotEmpty){
       if(service.conventionSlotList.first.hubId == 'allHubs'){

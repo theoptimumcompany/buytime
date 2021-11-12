@@ -156,7 +156,7 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
   }
 
   String whichDate(DateTime orderDate) {
-    DateTime orderDateUTC2 = new DateTime(orderDate.year, orderDate.month, orderDate.day, orderDate.hour + 2, orderDate.minute, 0, 0, 0);
+    DateTime orderDateUTC2 = new DateTime(orderDate.year, orderDate.month, orderDate.day, orderDate.toLocal().hour, orderDate.minute, 0, 0, 0);
     if (orderDetails.itemList.first.time != null) {
       return currentDate == date
           ? AppLocalizations.of(context).todayLower + ' ${DateFormat('dd EEE', Localizations.localeOf(context).languageCode).format(orderDate)}, ${orderDetails.itemList.first.time}'

@@ -951,7 +951,7 @@ class Utils {
       return '${AppLocalizations.of(context).accepted}';
     }
     if (progress == Utils.enumToString(OrderStatus.paid)) {
-      return '${AppLocalizations.of(context).paid}';
+      return '${AppLocalizations.of(context).pending}';
     }
     if (progress == Utils.enumToString(OrderStatus.pending)) {
       return '${AppLocalizations.of(context).pending}';
@@ -989,7 +989,7 @@ class Utils {
       return BuytimeTheme.ActionButton;
     }
     if (progress == Utils.enumToString(OrderStatus.paid)) {
-      return BuytimeTheme.ActionButton;
+      return BuytimeTheme.Secondary;
     }
     if (progress == Utils.enumToString(OrderStatus.pending)) {
       return BuytimeTheme.Secondary;

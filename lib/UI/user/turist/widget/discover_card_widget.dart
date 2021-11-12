@@ -35,7 +35,7 @@ class _DiscoverCardWidgetState extends State<DiscoverCardWidget> {
   @override
   Widget build(BuildContext context) {
 
-    return  CachedNetworkImage(
+    return CachedNetworkImage(
       imageUrl: Utils.version200(widget.categoryState.categoryImage),
       imageBuilder: (context, imageProvider) => Container(
         margin: EdgeInsets.all(SizeConfig.safeBlockVertical*.0),

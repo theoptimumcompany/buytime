@@ -100,6 +100,7 @@ class MessagingHelper {
     await flutterLocalNotificationsPlugin.initialize(initializationSettings,
         onSelectNotification: (String payload) async {
           if (payload != null) {
+            ///Write the other cases for redirect user to  the right place
             debugPrint('main => notification payload: $payload');
             if(payload == 'New booking request!' || payload == 'New order accepted!'){
               Navigator.push(context, MaterialPageRoute(builder: (context) => RActivityManagement()));
@@ -164,7 +165,8 @@ class MessagingHelper {
           flutterLocalNotificationsPlugin.show(
               notification.hashCode,
               notification.title,
-              can && notificationBodyList[3] == 'orderPaid' ? 'Order for ${notificationBodyList[0]} on $customNotificationTime has been paid, € ${notificationBodyList[2]}'
+              can && notificationBodyList[3] == 'orderPaid' ?
+                  'Order for ${notificationBodyList[0]} on $customNotificationTime has been paid, € ${notificationBodyList[2]}'
                   : notification.body,
               NotificationDetails(
                 android: AndroidNotificationDetails(
@@ -204,7 +206,6 @@ class MessagingHelper {
     });
   }
   void messageDataRetriveNotify(BuildContext context, RemoteNotification notification) {
-
     StoreProvider.of<AppState>(context).dispatch(UserOrderListRequest());
     StoreProvider.of<AppState>(context).dispatch(RequestNotificationList(StoreProvider.of<AppState>(context).state.user.uid, StoreProvider.of<AppState>(context).state.business.id_firestore));
     // notifyFlushbar(notification.title, context);
