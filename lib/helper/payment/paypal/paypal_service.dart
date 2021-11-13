@@ -8,11 +8,13 @@ class PaypalServices {
 
   //String domain = "api.sandbox.paypal.com"; // for sandbox mode
   String domain = "api-m.sandbox.paypal.com"; // for sandbox mode
-//  String domain = "https://api.paypal.com"; // for production mode
+  //  String domain = "https://api.paypal.com"; // for production mode
 
   // change clientId and secret with your own, provided by paypal
-  String clientId = 'AQ0QCIi2gd_n8bDTEr-S14n8OkVoNLUXWPTftbWzvQxsC2ZvIzlY_rRA6DHivfpQz5F0fCmJnKNJKRWo';
-  String secret = 'EFsg0t2hbmCit8RDkncn43S0LUWsfhDl92cs8koItB7K_EM-VvgOUMhFVy0htbtOw83SBtygzDCn3xDF';
+  String clientId = 'AQCFN-vKDWJTCp88ZT3OsBVgCfuvJ_GX3xENVwTHX2k5PJsVN4xR07TrJwEaqSEcUSBzDfBN0qQ7qIVd';
+  String secret = 'EGZEMRnnql7u8NrwKmLJp97BmHFAyEL7CJe8KJeEBBEDGdOGa6arWXXHO8KasS6inkSwy2dCalPP7xBY';
+  // String clientId = 'AQ0QCIi2gd_n8bDTEr-S14n8OkVoNLUXWPTftbWzvQxsC2ZvIzlY_rRA6DHivfpQz5F0fCmJnKNJKRWo';
+  // String secret = 'EFsg0t2hbmCit8RDkncn43S0LUWsfhDl92cs8koItB7K_EM-VvgOUMhFVy0htbtOw83SBtygzDCn3xDF';
 
   // for getting the access token from Paypal
   Future<String> getAccessToken() async {

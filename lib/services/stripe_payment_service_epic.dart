@@ -136,7 +136,7 @@ class StripePaymentAddPaymentMethod implements EpicClass<AppState> {
           cardToUpload.addAll({
             'paymentMethodId': event.paymentMethodId
           });
-          await FirebaseFirestore.instance.collection("stripeCustomer").doc(userId + Environment().config.stripeSuffix).collection("card")
+          await FirebaseFirestore.instance.collection("stripeCustomer").doc(userId + StripeConfig().suffixToUse).collection("card")
               .doc()
               .set(cardToUpload);
           debugPrint("stripe_payment_service_epic => StripePaymentAddPaymentMethod => card should be added in firestore ");
@@ -156,7 +156,7 @@ class StripePaymentAddPaymentMethod implements EpicClass<AppState> {
         actionArray.add(ErrorAction(error));
       } else {
         //actionArray.add(StripeCardListRequestAndNavigate('${userId}${Environment().config.stripeSuffix}'));
-        actionArray.add(StripeCardListRequestAndPop('${userId}${Environment().config.stripeSuffix}'));
+        actionArray.add(StripeCardListRequestAndPop('${userId}${StripeConfig().suffixToUse}'));
       }
       actionArray.add(UpdateStatistics(statisticsState));
       return actionArray;
@@ -299,7 +299,7 @@ class StripeDetachPaymentMethodRequest implements EpicClass<AppState> {
       userId = event.userId;
       firestoreCardId = event.firestoreCardId;
       await FirebaseFirestore.instance
-          .collection("stripeCustomer").doc(event.userId + Environment().config.stripeSuffix).collection("detach")
+          .collection("stripeCustomer").doc(event.userId + StripeConfig().suffixToUse).collection("detach")
           .doc()
           .set({'firestore_id': event.firestoreCardId});
       debugPrint("stripe_payment_service_epic => StripeDetachPaymentMethodRequest => Detach document created");
@@ -370,7 +370,7 @@ class StripePaymentService {
 
   Future<void> createPaymentMethodNative(OrderState orderState, String businessName) async {
     // Stripe.publishableKey = "pk_live_51HS20eHr13hxRBpCLHzfi0SXeqw8Efu911cWdYEE96BAV0zSOesvE83OiqqzRucKIxgCcKHUvTCJGY6cXRtkDVCm003CmGXYzy";
-    Stripe.publishableKey = "pk_test_51HS20eHr13hxRBpCZl1V0CKFQ7XzJbku7UipKLLIcuNGh3rp4QVsEDCThtV0l2AQ3jMtLsDN2zdC0fQ4JAK6yCOp003FIf3Wjz";
+    Stripe.publishableKey = StripeConfig().keyToUse;
     // Stripe.merchantIdentifier = "merchant.theoptimumcompany.buytime";
     initializePaymentValues(orderState, businessName);
     debugPrint('stripe_payment_service_epic => started NATIVE payment method creation...');

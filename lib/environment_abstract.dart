@@ -1,3 +1,11 @@
+
+class StripeConfig {
+  String keyToUse = 'pk_live_51HS20eHr13hxRBpCLHzfi0SXeqw8Efu911cWdYEE96BAV0zSOesvE83OiqqzRucKIxgCcKHUvTCJGY6cXRtkDVCm003CmGXYzy';
+  // String keyToUse = 'pk_test_51HS20eHr13hxRBpCZl1V0CKFQ7XzJbku7UipKLLIcuNGh3rp4QVsEDCThtV0l2AQ3jMtLsDN2zdC0fQ4JAK6yCOp003FIf3Wjz';
+  String suffixToUse = '';
+  // String suffixToUse = '';
+}
+
  abstract class BaseConfig {
   String stripePublicKey;
   String stripeSuffix;

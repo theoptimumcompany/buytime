@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
+import 'package:Buytime/environment_abstract.dart';
 import 'package:Buytime/reblox/model/autoComplete/auto_complete_state.dart';
 import 'package:Buytime/reblox/model/card/card_state.dart';
 import 'package:Buytime/reblox/model/role/role.dart';
@@ -129,27 +130,10 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
     debugPrint('splash_screen => DEVICE TOKEN: $token');
   }
 
-  /*getTopics() async {
-    await FirebaseFirestore.instance
-        .collection('topics')
-        .get()
-        .then((value) => value.docs.forEach((element) {
-      if (token == element.id) {
-        subscribed = element.data().keys.toList();
-      }
-    }));
-
-    setState(() {
-      subscribed = subscribed;
-    });
-  }*/
-
-
   void checkIfNativePayReady() async {
-    // String stripeKey = "pk_test_51HS20eHr13hxRBpCZl1V0CKFQ7XzJbku7UipKLLIcuNGh3rp4QVsEDCThtV0l2AQ3jMtLsDN2zdC0fQ4JAK6yCOp003FIf3Wjz";
-    // String stripeKey = "pk_live_51HS20eHr13hxRBpCLHzfi0SXeqw8Efu911cWdYEE96BAV0zSOesvE83OiqqzRucKIxgCcKHUvTCJGY6cXRtkDVCm003CmGXYzy";
     // Stripe.publishableKey = "pk_live_51HS20eHr13hxRBpCLHzfi0SXeqw8Efu911cWdYEE96BAV0zSOesvE83OiqqzRucKIxgCcKHUvTCJGY6cXRtkDVCm003CmGXYzy";
-    Stripe.publishableKey = "pk_test_51HS20eHr13hxRBpCZl1V0CKFQ7XzJbku7UipKLLIcuNGh3rp4QVsEDCThtV0l2AQ3jMtLsDN2zdC0fQ4JAK6yCOp003FIf3Wjz";
+    // Stripe.publishableKey = "pk_test_51HS20eHr13hxRBpCZl1V0CKFQ7XzJbku7UipKLLIcuNGh3rp4QVsEDCThtV0l2AQ3jMtLsDN2zdC0fQ4JAK6yCOp003FIf3Wjz";
+    Stripe.publishableKey = StripeConfig().keyToUse;
     Stripe.instance.isApplePaySupported.addListener(() {
     });
     bool isApplePaySupported = await Stripe.instance.checkApplePaySupport();
