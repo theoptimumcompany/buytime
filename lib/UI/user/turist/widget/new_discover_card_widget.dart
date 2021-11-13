@@ -1,6 +1,8 @@
 import 'package:Buytime/UI/user/category/UI_U_filter_by_category.dart';
+import 'package:Buytime/UI/user/category/UI_U_new_filter_by_category.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/category/category_state.dart';
+import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/model/snippet/service_list_snippet_state.dart';
 import 'package:Buytime/reblox/reducer/service_list_snippet_reducer.dart';
 import 'package:Buytime/utils/size_config.dart';
@@ -11,21 +13,22 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
-class DiscoverCardWidget extends StatefulWidget {
+class NewDiscoverCardWidget extends StatefulWidget {
 
   double width;
   double heigth;
   CategoryState categoryState;
-  List<String> categoryListIds;
+  List<CategoryState> categoryList;
   bool fromBookingPage;
   int index;
-  DiscoverCardWidget(this.width, this.heigth,this.categoryState, this.fromBookingPage, this.categoryListIds, this.index);
+  List<OrderState> orderList;
+  NewDiscoverCardWidget(this.width, this.heigth,this.categoryState, this.fromBookingPage, this.categoryList, this.index, this.orderList);
 
   @override
-  _DiscoverCardWidgetState createState() => _DiscoverCardWidgetState();
+  _NewDiscoverCardWidgetState createState() => _NewDiscoverCardWidgetState();
 }
 
-class _DiscoverCardWidgetState extends State<DiscoverCardWidget> {
+class _NewDiscoverCardWidgetState extends State<NewDiscoverCardWidget> {
 
   @override
   void initState() {
@@ -73,8 +76,8 @@ class _DiscoverCardWidgetState extends State<DiscoverCardWidget> {
                   }
               }
               widget.fromBookingPage ?
-              Navigator.push(context, MaterialPageRoute(builder: (context) => FilterByCategory(fromBookingPage: true, categoryState: widget.categoryState, tourist: true, categoryListIds: widget.categoryListIds,))) :
-              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => FilterByCategory(fromBookingPage: false,categoryState: widget.categoryState, tourist: true, categoryListIds: widget.categoryListIds,)));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => NewFilterByCategory(widget.categoryState, widget.categoryList, widget.orderList,))) :
+              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => NewFilterByCategory(widget.categoryState, widget.categoryList, widget.orderList,)));
             },
             borderRadius: BorderRadius.all(Radius.circular(5)),
             child: Container(

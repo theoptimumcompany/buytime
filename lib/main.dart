@@ -23,6 +23,7 @@ import 'package:rxdart/rxdart.dart';
 import 'UI/management/service_internal/RUI_M_service_list.dart';
 import 'UI/management/service_internal/UI_M_hub_convention_edit.dart';
 import 'UI/user/booking/RUI_U_notifications.dart';
+import 'UI/user/category/UI_U_new_filter_by_category.dart';
 import 'UI/user/service/UI_U_service_reserve.dart';
 import 'UI/user/turist/RUI_U_service_explorer.dart';
 import 'app_routes.dart';
@@ -56,7 +57,8 @@ Future<void> main() async {
             //ChangeNotifierProvider(create: (_) => NavigationState()),
             ChangeNotifierProvider(create: (_) => Spinner(true, [], [], [])),
             ChangeNotifierProvider(create: (_) => ReserveList([], OrderReservableState().toEmpty(),[], [], [], [])),
-            ChangeNotifierProvider(create: (_) => Explorer(false, [])),
+            ChangeNotifierProvider(create: (_) => Explorer(false, [], [], [], TextEditingController(), false, [])),
+            ChangeNotifierProvider(create: (_) => CategoryService([], [])),
           ],
           child: Buytime(store: store),
         ));

@@ -32,8 +32,8 @@ class RNotificationBell extends StatelessWidget {
                     child: IconButton(
                       icon: Icon(
                         Icons.notifications_none_outlined,
-                        color: BuytimeTheme.TextWhite,
-                        size: 30.0,
+                        color: BuytimeTheme.TextBlack,
+                        size: 25.0,
                       ),
                       onPressed: () async{
                         if(userNotificationSnapshot.data.get('hasNotification')){

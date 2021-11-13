@@ -1,4 +1,5 @@
 import 'package:Buytime/UI/management/service_internal/RUI_M_service_list.dart';
+import 'package:Buytime/UI/user/category/UI_U_new_filter_by_category.dart';
 import 'package:Buytime/UI/user/service/UI_U_service_reserve.dart';
 import 'package:Buytime/UI/user/turist/RUI_U_service_explorer.dart';
 import 'package:Buytime/app_state.dart';
@@ -127,7 +128,8 @@ class RegressionUtils{
         //ChangeNotifierProvider(create: (_) => NavigationState()),
         ChangeNotifierProvider(create: (_) => Spinner(true,[],[], [])),
         ChangeNotifierProvider(create: (_) => ReserveList([], OrderReservableState().toEmpty(),[], [], [], [])),
-        ChangeNotifierProvider(create: (_) => Explorer(false, [])),
+        ChangeNotifierProvider(create: (_) => Explorer(false, [], [], [], TextEditingController(), false, [])),
+        ChangeNotifierProvider(create: (_) => CategoryService([], [])),
       ],
       child: Buytime(store: store),
     ));

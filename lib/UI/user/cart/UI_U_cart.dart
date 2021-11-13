@@ -646,6 +646,7 @@ class CartState extends State<Cart> {
       BusinessListState businessListState = StoreProvider.of<AppState>(context).state.businessList;
       businessListState.businessListState.forEach((business) {
         if (
+            StoreProvider.of<AppState>(context).state.order.itemList.isNotEmpty &&
             business.id_firestore == StoreProvider.of<AppState>(context).state.order.itemList.first.id_business &&
             business.business_type == "Bar"
         ) {

@@ -32,13 +32,14 @@ class CategoryState {
   @JsonKey(defaultValue: false)
   bool showcase;
   int serviceCount;
+  int activeServiceCount;
   List<String> categoryIdList;
 
-  CategoryState({this.name, this.id, this.level, this.parent, this.manager, this.managerMailList, this.businessId, this.worker, this.workerMailList, this.fileToUpload, this.categoryImage, this.customTag, this.showcase,this.serviceCount,this.categoryIdList});
+  CategoryState({this.name, this.id, this.level, this.parent, this.manager, this.managerMailList, this.businessId, this.worker, this.workerMailList, this.fileToUpload, this.categoryImage, this.customTag, this.showcase,this.serviceCount,this.activeServiceCount,this.categoryIdList});
 
   CategoryState toEmpty() {
     return CategoryState(
-        name: "", id: "", level: 0, parent: Parent(name: "No Parent", id: "no_parent"), manager: [], managerMailList: [], businessId: "", worker: [], workerMailList: [], fileToUpload: null, categoryImage: '', customTag: '', showcase: false, serviceCount: 0, categoryIdList: []);
+        name: "", id: "", level: 0, parent: Parent(name: "No Parent", id: "no_parent"), manager: [], managerMailList: [], businessId: "", worker: [], workerMailList: [], fileToUpload: null, categoryImage: '', customTag: '', showcase: false, serviceCount: 0, activeServiceCount: 0, categoryIdList: []);
   }
 
   CategoryState.fromState(CategoryState category) {
@@ -56,6 +57,7 @@ class CategoryState {
     this.customTag = category.customTag;
     this.showcase = category.showcase;
     this.serviceCount = category.serviceCount;
+    this.activeServiceCount = category.activeServiceCount;
     this.categoryIdList = category.categoryIdList;
   }
 
@@ -74,6 +76,7 @@ class CategoryState {
       String customTag,
       String showcase,
         int serviceCount,
+        int activeServiceCount,
       List<String> categoryIdList}) {
     return CategoryState(
         name: name ?? this.name,
@@ -90,6 +93,7 @@ class CategoryState {
         customTag: customTag ?? this.customTag,
         showcase: showcase ?? this.showcase,
         serviceCount: serviceCount ?? this.serviceCount,
+        activeServiceCount: activeServiceCount ?? this.activeServiceCount,
         categoryIdList: categoryIdList ?? this.categoryIdList);
   }
 
