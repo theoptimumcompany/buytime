@@ -308,11 +308,13 @@ class ViewMoreState extends State<ViewMore> {
                                                   controller: popularScoller,
                                                   shrinkWrap: true, scrollDirection: Axis.vertical, slivers: [
                                                 SliverGrid(
-                                                  gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                                                    maxCrossAxisExtent: SizeConfig.screenWidth/2,
-                                                    mainAxisSpacing: 0.0,
+                                                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                                    //maxCrossAxisExtent: SizeConfig.screenWidth/2,
+                                                    crossAxisCount: 2,
+                                                    mainAxisSpacing: 10.0,
                                                     crossAxisSpacing: 0.0,
-                                                    childAspectRatio: .9,
+                                                    mainAxisExtent: 228
+                                                    //childAspectRatio: .77,
                                                   ),
                                                   delegate: SliverChildBuilderDelegate(
                                                         (context, index) {

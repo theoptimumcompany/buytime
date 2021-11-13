@@ -934,6 +934,12 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                           onPressed: () {
                             setState(() {
                               searching = !searching;
+                              _searchController.clear();
+                              DynamicLinkHelper.discoverBusinessName = '';
+                              //DynamicLinkHelper.discoverBusinessId = '';
+                              first = false;
+                              Provider.of<Explorer>(context, listen: false).searching = false;
+                              //categoryListIds = Map();
                             });
                           },
                         ),
@@ -3223,10 +3229,11 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                   _searchController.text.isNotEmpty ?
                                   Flexible(
                                     child: Container(
-                                        height: SizeConfig.safeBlockVertical * 80,
+                                        height: SizeConfig.safeBlockVertical * 99,
                                         margin: EdgeInsets.only(
                                           top: SizeConfig.safeBlockVertical * 0,
                                           left: SizeConfig.safeBlockHorizontal * 0,
+                                          //bottom: 5
                                         ),
                                         child: Column(
                                           mainAxisAlignment: MainAxisAlignment.start,
@@ -3342,84 +3349,91 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                 ],
                                               ),
                                             ),
-                                            CustomScrollView(shrinkWrap: true, scrollDirection: Axis.vertical, slivers: [
-                                              SliverList(
-                                                delegate: SliverChildBuilderDelegate(
-                                                      (context, index) {
-                                                    //MenuItemModel menuItem = menuItems.elementAt(index);
-                                                        if(Provider.of<Explorer>(context, listen: false).searchedList.length > 1 ||
-                                                            (Provider.of<Explorer>(context, listen: false).searchedList.length == 1 && Provider.of<Explorer>(context, listen: false).searchedList.first.isNotEmpty)){
-                                                          if (index == 0) {
-                                                            return Container(
-                                                              height: Provider.of<Explorer>(context, listen: false).searchedList.elementAt(index).isEmpty ? 0 : 80,
-                                                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 4.5, bottom: SizeConfig.safeBlockVertical * 1, top: SizeConfig.safeBlockVertical * 1),
-                                                              child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
-                                                                SliverList(
-                                                                  delegate: SliverChildBuilderDelegate(
-                                                                        (context, i) {
-                                                                      //MenuItemModel menuItem = menuItems.elementAt(index);
-
-                                                                      CategoryState category = Provider.of<Explorer>(context, listen: false).searchedList.elementAt(index).elementAt(i);
-                                                                      return Container(
-                                                                        width: 80,
-                                                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0, right: SizeConfig.safeBlockHorizontal * 1),
-                                                                        child: DiscoverCardWidget(80, 80, category, true, categoryListIds[category.name], index),
-                                                                      );
-                                                                    },
-                                                                    childCount: Provider.of<Explorer>(context, listen: false).searchedList.elementAt(index).length,
-                                                                  ),
-                                                                ),
-                                                              ]),
-                                                            );
-                                                          }
-                                                          else {
-                                                            List<ServiceState> serviceList = Provider.of<Explorer>(context, listen: false).searchedList.elementAt(index);
-                                                            debugPrint('RUI_U_service_explorer => searched index: $index | service list: ${serviceList.length}');
-                                                            return CustomScrollView(shrinkWrap: true, physics: NeverScrollableScrollPhysics(), scrollDirection: Axis.vertical, slivers: [
-                                                              SliverList(
-                                                                delegate: SliverChildBuilderDelegate(
-                                                                      (context, index) {
-                                                                    //MenuItemModel menuItem = menuItems.elementAt(index);
-                                                                    ServiceState service = serviceList.elementAt(index);
-                                                                    return Column(
-                                                                      children: [
-                                                                        ServiceListItem(service, true, index),
-                                                                        Container(
-                                                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 30),
-                                                                          height: SizeConfig.safeBlockVertical * .2,
-                                                                          color: BuytimeTheme.DividerGrey,
-                                                                        )
-                                                                      ],
-                                                                    );
-                                                                  },
-                                                                  childCount: serviceList.length,
-                                                                ),
-                                                              ),
-                                                            ]);
-                                                            //return Container();
-                                                          }
-                                                        }else{
-                                                          return Container(
-                                                            height: SizeConfig.safeBlockVertical * 8,
-                                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
-                                                            decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
-                                                            child: Center(
-                                                                child: Container(
-                                                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 4),
-                                                                  alignment: Alignment.centerLeft,
-                                                                  child: Text(
-                                                                    AppLocalizations.of(context).noResultsFor + ' \"${_searchController.text}\"',
-                                                                    style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextGrey, fontWeight: FontWeight.w500, fontSize: 16),
-                                                                  ),
-                                                                )),
-                                                          );
-                                                        }
-
-                                                  },
-                                                  childCount: Provider.of<Explorer>(context, listen: false).searchedList.length,
+                                            Flexible(
+                                              child: Container(
+                                                margin: EdgeInsets.only(
+                                                  bottom: 5
                                                 ),
+                                                child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.vertical, slivers: [
+                                                  SliverList(
+                                                    delegate: SliverChildBuilderDelegate(
+                                                          (context, index) {
+                                                        //MenuItemModel menuItem = menuItems.elementAt(index);
+                                                            if(Provider.of<Explorer>(context, listen: false).searchedList.length > 1 ||
+                                                                (Provider.of<Explorer>(context, listen: false).searchedList.length == 1 && Provider.of<Explorer>(context, listen: false).searchedList.first.isNotEmpty)){
+                                                              if (index == 0) {
+                                                                return Container(
+                                                                  height: Provider.of<Explorer>(context, listen: false).searchedList.elementAt(index).isEmpty ? 0 : 80,
+                                                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 4.5, bottom: SizeConfig.safeBlockVertical * 1, top: SizeConfig.safeBlockVertical * 1),
+                                                                  child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
+                                                                    SliverList(
+                                                                      delegate: SliverChildBuilderDelegate(
+                                                                            (context, i) {
+                                                                          //MenuItemModel menuItem = menuItems.elementAt(index);
+
+                                                                          CategoryState category = Provider.of<Explorer>(context, listen: false).searchedList.elementAt(index).elementAt(i);
+                                                                          return Container(
+                                                                            width: 80,
+                                                                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0, right: SizeConfig.safeBlockHorizontal * 1),
+                                                                            child: DiscoverCardWidget(80, 80, category, true, categoryListIds[category.name], index),
+                                                                          );
+                                                                        },
+                                                                        childCount: Provider.of<Explorer>(context, listen: false).searchedList.elementAt(index).length,
+                                                                      ),
+                                                                    ),
+                                                                  ]),
+                                                                );
+                                                              }
+                                                              else {
+                                                                List<ServiceState> serviceList = Provider.of<Explorer>(context, listen: false).searchedList.elementAt(index);
+                                                                debugPrint('RUI_U_service_explorer => searched index: $index | service list: ${serviceList.length}');
+                                                                return CustomScrollView(shrinkWrap: true, physics: NeverScrollableScrollPhysics(), scrollDirection: Axis.vertical, slivers: [
+                                                                  SliverList(
+                                                                    delegate: SliverChildBuilderDelegate(
+                                                                          (context, index) {
+                                                                        //MenuItemModel menuItem = menuItems.elementAt(index);
+                                                                        ServiceState service = serviceList.elementAt(index);
+                                                                        return Column(
+                                                                          children: [
+                                                                            ServiceListItem(service, true, index),
+                                                                            Container(
+                                                                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 30),
+                                                                              height: SizeConfig.safeBlockVertical * .2,
+                                                                              color: BuytimeTheme.DividerGrey,
+                                                                            )
+                                                                          ],
+                                                                        );
+                                                                      },
+                                                                      childCount: serviceList.length,
+                                                                    ),
+                                                                  ),
+                                                                ]);
+                                                                //return Container();
+                                                              }
+                                                            }else{
+                                                              return Container(
+                                                                height: SizeConfig.safeBlockVertical * 8,
+                                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                                                decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
+                                                                child: Center(
+                                                                    child: Container(
+                                                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 4),
+                                                                      alignment: Alignment.centerLeft,
+                                                                      child: Text(
+                                                                        AppLocalizations.of(context).noResultsFor + ' \"${_searchController.text}\"',
+                                                                        style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextGrey, fontWeight: FontWeight.w500, fontSize: 16),
+                                                                      ),
+                                                                    )),
+                                                              );
+                                                            }
+
+                                                      },
+                                                      childCount: Provider.of<Explorer>(context, listen: false).searchedList.length,
+                                                    ),
+                                                  ),
+                                                ]),
                                               ),
-                                            ]),
+                                            ),
                                           ],
                                         )),
                                   ) :

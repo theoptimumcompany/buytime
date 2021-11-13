@@ -48,7 +48,7 @@ class _NewPRCardWidgetState extends State<NewPRCardWidget> {
     //debugPrint('p_r_card_widget => BUSINES ID: ${StoreProvider.of<AppState>(context).state.bookingList.bookingListState.first.business_id}');
     return  Container(
       height: 200,
-      width: 210,
+      width: SizeConfig.screenWidth/2,
       //width: double.infinity,
       child: Stack(
         children: [
@@ -63,7 +63,7 @@ class _NewPRCardWidgetState extends State<NewPRCardWidget> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Container(
-                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 0),
+                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 0, right:  10),
                             width: widget.width, ///SizeConfig.safeBlockVertical * widget.width
                             height: widget.heigth, ///SizeConfig.safeBlockVertical * widget.width
                             decoration: BoxDecoration(
@@ -188,7 +188,7 @@ class _NewPRCardWidgetState extends State<NewPRCardWidget> {
                   placeholder: (context, url) => Column(
                     children: [
                       Container(
-                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 0),
+                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 0, right: 10),
                         child: Utils.imageShimmer(182, 182),
                       ),
                       Container(

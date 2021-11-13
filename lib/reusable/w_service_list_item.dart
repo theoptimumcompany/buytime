@@ -51,7 +51,7 @@ class _ServiceListItemState extends State<ServiceListItem> {
               child: Container(
                 height: 100,
                 ///SizeConfig.safeBlockVertical * 15
-                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 0, top: 1, bottom: 1),
+                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 0, right: SizeConfig.safeBlockHorizontal * 0, top: 1, bottom: 1),
                 child: Row(
                   children: [
                     Container(
