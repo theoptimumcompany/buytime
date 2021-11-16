@@ -627,6 +627,7 @@ class _NewServiceDetailsState extends State<NewServiceDetails> with SingleTicker
                       flex: 5,
                       child: CustomScrollView(
                         controller: _scrollController,
+                        physics: new ClampingScrollPhysics(),
                         slivers: <Widget>[
                           SliverAppBar(
                               centerTitle: true,

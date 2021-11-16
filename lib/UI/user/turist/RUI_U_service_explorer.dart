@@ -743,6 +743,9 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
             Provider.of<Explorer>(context, listen: false).searchedList.last.sort((a, b) => (Utils.retriveField(myLocale.languageCode, b.name)).compareTo(Utils.retriveField(myLocale.languageCode, a.name)));
           }
         }
+        WidgetsBinding.instance.addPostFrameCallback((_) async {
+          Provider.of<Explorer>(context, listen: false).businessState = BusinessState().toEmpty();
+        });
         return GestureDetector(
           onTap: () {
             FocusScopeNode currentFocus = FocusScope.of(context);
@@ -1436,9 +1439,6 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                 debugPrint('RUI_U_my_bookings => ${bookingState.end_date}');
                                                 bookingState.status = Utils.enumToString(BookingStatus.closed);
                                                 StoreProvider.of<AppState>(context).dispatch(UpdateBooking(bookingState));
-                                                WidgetsBinding.instance.addPostFrameCallback((_) async {
-                                                  Provider.of<Explorer>(context, listen: false).businessState = BusinessState().toEmpty();
-                                                });
                                               }
                                               return StreamBuilder<QuerySnapshot>(
                                                   stream: FirebaseFirestore.instance
@@ -1735,9 +1735,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                   }
                                               );
                                             }else{
-                                              WidgetsBinding.instance.addPostFrameCallback((_) async {
-                                                Provider.of<Explorer>(context, listen: false).businessState = BusinessState().toEmpty();
-                                              });
+
                                               return Container(
                                                 margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2.5, bottom: SizeConfig.safeBlockVertical * 1),
                                                 child: _OpenContainerWrapper(
