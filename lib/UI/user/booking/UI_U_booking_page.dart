@@ -632,7 +632,7 @@ class _BookingPageState extends State<BookingPage> {
                                             children: [
                                               ///Greetings
                                               Container(
-                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 3),
+                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * 3),
                                                 child: Text(
                                                   //AppLocalizations.of(context).hi + bookingState.user.first.name,
                                                   '${AppLocalizations.of(context).hi} ${Emojis.wavingHand}',
@@ -645,7 +645,7 @@ class _BookingPageState extends State<BookingPage> {
 
                                               ///Portfolio
                                               Container(
-                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * 2),
                                                 child: Text(
                                                   AppLocalizations.of(context).yourHolidayInSpace + ' ' + (businessState != null ? businessState.municipality : ""),
                                                   style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextMedium, fontWeight: FontWeight.w400, fontSize: 16
@@ -660,7 +660,7 @@ class _BookingPageState extends State<BookingPage> {
                                                 children: [
                                                   ///Date
                                                   Container(
-                                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 0.5),
+                                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * 0.5),
                                                     child: Text(
                                                       sameMonth
                                                           ? '${DateFormat('dd', Localizations.localeOf(context).languageCode).format(bookingState.start_date)} - ${DateFormat('dd MMMM', Localizations.localeOf(context).languageCode).format(bookingState.end_date)}'
@@ -703,7 +703,7 @@ class _BookingPageState extends State<BookingPage> {
                                               ///ECO Label
                                               businessState.business_type == 'ECO'?
                                               Container(
-                                                margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, bottom: SizeConfig.safeBlockVertical * 1),
+                                                margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, bottom: SizeConfig.safeBlockVertical * 1),
                                                 child: Row(
                                                   children: [
                                                     Image( image: AssetImage('assets/img/eco.png')),
@@ -721,7 +721,7 @@ class _BookingPageState extends State<BookingPage> {
 
                                               ///Search
                                               Container(
-                                                margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, bottom: SizeConfig.safeBlockVertical * 4),
+                                                margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, bottom: SizeConfig.safeBlockVertical * 4),
                                                 height: SizeConfig.safeBlockHorizontal * 20,
                                                 child: TextFormField(
                                                   key: Key('guest_search_field_key'),
@@ -805,7 +805,7 @@ class _BookingPageState extends State<BookingPage> {
                                                               children: [
                                                                 ///My bookings
                                                                 Container(
-                                                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 1),
+                                                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 1),
                                                                   child: Text(
                                                                     AppLocalizations.of(context).myReservation,
                                                                     style: TextStyle(
@@ -853,7 +853,7 @@ class _BookingPageState extends State<BookingPage> {
                                                             Container(
                                                               height: 120,
                                                               width: double.infinity,
-                                                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
+                                                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5),
                                                               child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
                                                                 SliverList(
                                                                   delegate: SliverChildBuilderDelegate(
@@ -907,7 +907,7 @@ class _BookingPageState extends State<BookingPage> {
                                                                 children: [
                                                                   ///My bookings
                                                                   Container(
-                                                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 1),
+                                                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 1),
                                                                     child: Text(
                                                                       AppLocalizations.of(context).myReservation,
                                                                       style: TextStyle(
@@ -960,7 +960,7 @@ class _BookingPageState extends State<BookingPage> {
                                                               Container(
                                                                 height: 120,
                                                                 width: double.infinity,
-                                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
+                                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5),
                                                                 child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
                                                                   SliverList(
                                                                     delegate: SliverChildBuilderDelegate(
@@ -1013,7 +1013,7 @@ class _BookingPageState extends State<BookingPage> {
                                             children: [
                                               ///Top Services
                                               Container(
-                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 3, bottom: SizeConfig.safeBlockVertical * 3),
+                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * 3, bottom: SizeConfig.safeBlockVertical * 3),
                                                 child: Text(
                                                   AppLocalizations.of(context).topServices,
                                                   style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w500, fontSize: 18
@@ -1165,7 +1165,7 @@ class _BookingPageState extends State<BookingPage> {
                                                   ///No List
                                                   Container(
                                                       height: SizeConfig.safeBlockVertical * 8,
-                                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                                                       decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
                                                       child: Center(
                                                           child: Container(
@@ -1194,7 +1194,7 @@ class _BookingPageState extends State<BookingPage> {
                                             children: [
                                               ///Inspiration
                                               /*Container(
-                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
+                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * 1),
                                     child: Text(
                                       AppLocalizations.of(context).findYourInspirationHere,
                                       style: TextStyle(
@@ -1285,7 +1285,7 @@ class _BookingPageState extends State<BookingPage> {
                                     ),
                                   )*/
                                               Container(
-                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 3, bottom: SizeConfig.safeBlockVertical * 2),
+                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 3, bottom: SizeConfig.safeBlockVertical * 2),
                                                 child: Row(
                                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                   children: [
@@ -1357,7 +1357,7 @@ class _BookingPageState extends State<BookingPage> {
                                                   ///No Category
                                                   Container(
                                                       height: SizeConfig.safeBlockVertical * 8,
-                                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                                                       decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
                                                       child: Center(
                                                           child: Container(

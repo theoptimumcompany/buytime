@@ -761,7 +761,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                   Container(
                                     margin: EdgeInsets.only(
                                         top: SizeConfig.safeBlockVertical * 2,
-                                        left: SizeConfig.safeBlockHorizontal * 5,
+                                        left: SizeConfig.safeBlockHorizontal * 3.5,
                                         bottom: SizeConfig.safeBlockVertical * 1,
                                         right: _searchController.text.isNotEmpty ? SizeConfig.safeBlockHorizontal * .5 : SizeConfig.safeBlockHorizontal * 5),
                                     child: Row(
@@ -866,7 +866,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                   ///My bookings if user
                                   FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty && _searchController.text.isEmpty /*&& cards.isNotEmpty*/?
                                   Container(
-                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5,right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1),
+                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5,right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1),
                                     child: _OpenContainerWrapper(
                                       index: 0,
                                       closedBuilder: (BuildContext _, VoidCallback openContainer) {
@@ -876,7 +876,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                     ),
                                   ) : Container()
                                   /*Container(
-                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5,right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1),
+                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5,right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1),
                                       child: Utils.imageShimmer(SizeConfig.safeBlockVertical * 80, 100))*/,
                                   ///My bookings & View all
                                   _searchController.text.isEmpty && snapshot.user.getRole() == Role.user && auth.FirebaseAuth.instance.currentUser != null
@@ -897,7 +897,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                   children: [
                                                     ///My bookings
                                                     Container(
-                                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 1),
+                                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 1),
                                                       child: Text(
                                                         AppLocalizations.of(context).myReservation,
                                                         style: TextStyle(
@@ -945,7 +945,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                 Container(
                                                   height: 120,
                                                   width: double.infinity,
-                                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
+                                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5),
                                                   child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
                                                     SliverList(
                                                       delegate: SliverChildBuilderDelegate(
@@ -994,7 +994,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                 children: [
                                                   ///My bookings
                                                   Container(
-                                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 1),
+                                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 1),
                                                     child: Text(
                                                       AppLocalizations.of(context).myReservation,
                                                       style: TextStyle(
@@ -1042,7 +1042,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                               Container(
                                                 height: 120,
                                                 width: double.infinity,
-                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
+                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5),
                                                 child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
                                                   SliverList(
                                                     delegate: SliverChildBuilderDelegate(
@@ -1106,7 +1106,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                   ///Discover
                                                   Flexible(
                                                     child: Container(
-                                                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 5, bottom: SizeConfig.safeBlockVertical * 2),
+                                                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 3.5, bottom: SizeConfig.safeBlockVertical * 2),
                                                       //padding: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 2),
                                                       height: 150,
                                                       width: double.infinity,
@@ -1170,7 +1170,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                         children: [
                                                           ///Popular
                                                           Container(
-                                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: 20, bottom: SizeConfig.safeBlockVertical * 0.5),
+                                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: 20, bottom: SizeConfig.safeBlockVertical * 0.5),
                                                             child: Text(
                                                               AppLocalizations.of(context).popular,
                                                               style: TextStyle(
@@ -1186,7 +1186,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                           ),
                                                           ///Text
                                                           Container(
-                                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * .5, bottom: SizeConfig.safeBlockVertical * .5),
+                                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * .5, bottom: SizeConfig.safeBlockVertical * .5),
                                                             child: Text(
                                                               AppLocalizations.of(context).popularSlogan,
                                                               style: TextStyle(
@@ -1250,7 +1250,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                         children: [
                                                           ///Recommended
                                                           Container(
-                                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: 20, bottom: SizeConfig.safeBlockVertical * 0.5),
+                                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: 20, bottom: SizeConfig.safeBlockVertical * 0.5),
                                                             child: Text(
                                                               AppLocalizations.of(context).recommended,
                                                               style: TextStyle(
@@ -1266,7 +1266,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                           ),
                                                           ///Text
                                                           Container(
-                                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * .5, bottom: SizeConfig.safeBlockVertical * .5),
+                                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * .5, bottom: SizeConfig.safeBlockVertical * .5),
                                                             child: Text(
                                                               AppLocalizations.of(context).recommendedSlogan,
                                                               style: TextStyle(
@@ -1393,7 +1393,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                             ///Discover
                                             childrens.add(Flexible(
                                               child: Container(
-                                                margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 5, bottom: SizeConfig.safeBlockVertical * 2),
+                                                margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 3.5, bottom: SizeConfig.safeBlockVertical * 2),
                                                 //padding: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 2),
                                                 height: 150,
                                                 width: double.infinity,
@@ -1463,7 +1463,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                     ///No List
                                                     Container(
                                                       height: SizeConfig.safeBlockVertical * 8,
-                                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                                                       decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
                                                       child: Center(
                                                           child: Container(
@@ -1492,7 +1492,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                   children: [
                                                     ///Popular
                                                     Container(
-                                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: 20, bottom: SizeConfig.safeBlockVertical * 0.5),
+                                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: 20, bottom: SizeConfig.safeBlockVertical * 0.5),
                                                       child: Text(
                                                         AppLocalizations.of(context).popular,
                                                         style: TextStyle(
@@ -1508,7 +1508,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                     ),
                                                     ///Text
                                                     Container(
-                                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * .5, bottom: SizeConfig.safeBlockVertical * .5),
+                                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * .5, bottom: SizeConfig.safeBlockVertical * .5),
                                                       child: Text(
                                                         AppLocalizations.of(context).popularSlogan,
                                                         style: TextStyle(
@@ -1580,7 +1580,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                     /*_searchController.text.isNotEmpty
                                           ? Container(
                                         height: SizeConfig.safeBlockVertical * 8,
-                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                                         decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
                                         child: Center(
                                             child: Container(
@@ -1595,7 +1595,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                           : popularList.isEmpty
                                           ? Container(
                                         height: SizeConfig.safeBlockVertical * 8,
-                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                                         decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
                                         child: Center(
                                             child: Container(
@@ -1611,7 +1611,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                     ///No List
                                                     Container(
                                                       height: SizeConfig.safeBlockVertical * 8,
-                                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 3),
+                                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 3),
                                                       decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
                                                       child: Center(
                                                           child: Container(
@@ -1640,7 +1640,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                   children: [
                                                     ///Recommended
                                                     Container(
-                                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: 20, bottom: SizeConfig.safeBlockVertical * 0.5),
+                                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: 20, bottom: SizeConfig.safeBlockVertical * 0.5),
                                                       child: Text(
                                                         AppLocalizations.of(context).recommended,
                                                         style: TextStyle(
@@ -1657,7 +1657,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
 
                                                     ///Text
                                                     Container(
-                                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * .5, bottom: SizeConfig.safeBlockVertical * .5),
+                                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * .5, bottom: SizeConfig.safeBlockVertical * .5),
                                                       child: Text(
                                                         AppLocalizations.of(context).recommendedSlogan,
                                                         style: TextStyle(
@@ -1732,7 +1732,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                     ///No List
                                                     Container(
                                                       height: SizeConfig.safeBlockVertical * 8,
-                                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 3),
+                                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 3),
                                                       decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
                                                       child: Center(
                                                           child: Container(
@@ -1784,7 +1784,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                       children: [
                                                         ///Category name
                                                         Container(
-                                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: 20, bottom: SizeConfig.safeBlockVertical * 0.5),
+                                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: 20, bottom: SizeConfig.safeBlockVertical * 0.5),
                                                           child: Text(
                                                             element.name,
                                                             style: TextStyle(
@@ -1799,7 +1799,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                         ),
                                                         ///Text
                                                         Container(
-                                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * .5, bottom: SizeConfig.safeBlockVertical * .5),
+                                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * .5, bottom: SizeConfig.safeBlockVertical * .5),
                                                           child: Text(
                                                             '${AppLocalizations.of(context).discoverStart} ${element.name} ${AppLocalizations.of(context).discoverEnd}',
                                                             style: TextStyle(
@@ -1867,7 +1867,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                         ///No List
                                                         Container(
                                                           height: SizeConfig.safeBlockVertical * 8,
-                                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 3),
+                                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 3),
                                                           decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
                                                           child: Center(
                                                               child: Container(
@@ -1938,7 +1938,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                           },
                                                           child: Container(
                                                             height: 64,
-                                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
+                                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5),
                                                             child: Column(
                                                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                               children: [
@@ -2126,7 +2126,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                   )
                                       : Container(
                                     height: SizeConfig.safeBlockVertical * 8,
-                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                                     decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
                                     child: Center(
                                         child: Container(

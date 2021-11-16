@@ -715,7 +715,7 @@ class _UI_M_BusinessState extends State<UI_M_Business> {
                                     decoration: BoxDecoration(color: Colors.blueGrey.withOpacity(0.1)),
                                     child: Container(
                                       height: SizeConfig.screenHeight * 0.1,
-                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5),
+                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5),
                                       child: Center(
                                         child: Text(
                                           AppLocalizations.of(context).thereAreNoExternalServicesAttached,

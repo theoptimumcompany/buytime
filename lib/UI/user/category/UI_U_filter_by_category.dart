@@ -574,7 +574,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                     children: [
                                       ///Just show me
                                       Container(
-                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1),
+                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1),
                                         child: Text(
                                           AppLocalizations.of(context).justShowMe,
                                           style: TextStyle(
@@ -594,7 +594,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                           Container(
                                               height: SizeConfig.screenWidth / 3,
                                               width: double.infinity,
-                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
+                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5),
                                             child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
                                                 SliverList(
                                                   delegate: SliverChildBuilderDelegate(
@@ -616,7 +616,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                           ///No List
                                           Container(
                                               height: SizeConfig.safeBlockVertical * 8,
-                                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                                               decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
                                               child: Center(
                                                   child: Container(
@@ -654,7 +654,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                               children: [
                                 ///Search
                                 /*Container(
-                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5),
+                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5),
                                   height: SizeConfig.safeBlockHorizontal * 20,
                                   child: TextFormField(
                                     controller: _searchController,
@@ -700,7 +700,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                 Container(
                                   margin: EdgeInsets.only(
                                       top: SizeConfig.safeBlockVertical * 3,
-                                      left: SizeConfig.safeBlockHorizontal * 5,
+                                      left: SizeConfig.safeBlockHorizontal * 3.5,
                                       bottom: SizeConfig.safeBlockVertical * 1,
                                       right: _searchController.text.isNotEmpty ? SizeConfig.safeBlockHorizontal * .5 : SizeConfig.safeBlockHorizontal * 5),
                                   child: Row(
@@ -1047,7 +1047,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                         : _searchController.text.isNotEmpty
                                             ? Container(
                                                 height: SizeConfig.safeBlockVertical * 8,
-                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                                                 decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
                                                 child: Center(
                                                     child: Container(
@@ -1062,7 +1062,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                             : tmpServiceList.isEmpty
                                                 ? Container(
                                                     height: SizeConfig.safeBlockVertical * 8,
-                                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                                                     decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
                                                     child: Center(
                                                         child: Container(
@@ -1102,7 +1102,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                               children: [
                                 ///Inspiration
                                 /*Container(
-                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
+                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * 1),
                                     child: Text(
                                       'Find your inspiration here',
                                       style: TextStyle(
@@ -1193,7 +1193,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                     ),
                                   )*/
                                 Container(
-                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 3, bottom: SizeConfig.safeBlockVertical * 2),
+                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 3, bottom: SizeConfig.safeBlockVertical * 2),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
@@ -1262,7 +1262,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                     ///No Category
                                     Container(
                                         height: SizeConfig.safeBlockVertical * 8,
-                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                                         decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
                                         child: Center(
                                             child: Container(

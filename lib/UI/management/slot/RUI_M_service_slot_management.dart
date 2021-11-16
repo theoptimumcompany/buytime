@@ -145,7 +145,7 @@ class _RServiceSlotManagementState extends State<RServiceSlotManagement> {
                 )
             ),
             alignment: Alignment.centerLeft,
-            padding: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
+            padding: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5),
             child: Text(
                 '${DateFormat('MMM yyyy').format(date).toUpperCase()}',
                 style: TextStyle(
@@ -189,7 +189,7 @@ class _RServiceSlotManagementState extends State<RServiceSlotManagement> {
                                 )
                             ),
                             alignment: Alignment.centerLeft,
-                            padding: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
+                            padding: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5),
                             child: Text(
                                 orderTime.isAtSameMomentAs(currentTime) ? '${AppLocalizations.of(context).today} ${DateFormat('MMM dd',Localizations.localeOf(context).languageCode).format(orderTime).toUpperCase()}' :
                                 orderTime.isAtSameMomentAs(currentTime.add(Duration(days: 1))) ? '${AppLocalizations.of(context).tomorrow} ${DateFormat('MMM dd',Localizations.localeOf(context).languageCode).format(orderTime).toUpperCase()}' :
@@ -639,7 +639,7 @@ class _RServiceSlotManagementState extends State<RServiceSlotManagement> {
               }else{
                 return Container(
                   height: SizeConfig.safeBlockVertical * 8,
-                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 3),
+                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 3),
                   decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
                   child: Center(
                       child: Container(

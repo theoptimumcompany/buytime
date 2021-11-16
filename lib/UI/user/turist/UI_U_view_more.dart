@@ -36,8 +36,9 @@ class ViewMore extends StatefulWidget {
   String title;
   List<OrderState> orderList;
   bool normalServiceList;
+  bool hubServices;
   List<String> categoryIdList;
-  ViewMore(this.title, this.orderList, this.normalServiceList, this.categoryIdList);
+  ViewMore(this.title, this.orderList, this.normalServiceList, this.categoryIdList, this.hubServices);
   @override
   State<StatefulWidget> createState() => ViewMoreState();
 }
@@ -54,7 +55,9 @@ class ViewMoreState extends State<ViewMore> {
     super.initState();
     servicePagingBloc = ServicePagingBloc();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      if(widget.normalServiceList)
+      if(widget.hubServices)
+        servicePagingBloc.requestHubServices(context);
+      else if(widget.normalServiceList)
         servicePagingBloc.requestServices(context);
       else
         servicePagingBloc.requestCategoryServices(context, widget.categoryIdList);

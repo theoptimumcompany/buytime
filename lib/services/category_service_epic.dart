@@ -236,7 +236,7 @@ class AllCategoryListRequestService implements EpicClass<AppState> {
           categoryStateList.add(categoryState);
         });*/
         /// END TODO
-        tmpBusinessIdList.add(businessListFromFirebase.docs[i].id);
+        /*tmpBusinessIdList.add(businessListFromFirebase.docs[i].id);
         var servicesFirebaseShadow = await FirebaseFirestore.instance.collection("business").doc(businessListFromFirebase.docs[i].id).collection('service_list_snippet').get();
         if (servicesFirebaseShadow.docs.isNotEmpty){
           ServiceListSnippetState tmp = ServiceListSnippetState.fromJson(servicesFirebaseShadow.docs.first.data());
@@ -261,7 +261,7 @@ class AllCategoryListRequestService implements EpicClass<AppState> {
               categoryStateList.add(categoryState);
             }
           });
-        }
+        }*/
       }
       debugPrint('category_service_epic => AllCategoryListRequestService => CATEGORY LENGHT: ${categoryStateList.length}');
       debugPrint("category_service_epic => AllCategoryListRequestService => Return list with ${categoryStateList.length}");

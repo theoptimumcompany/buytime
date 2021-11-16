@@ -161,7 +161,7 @@
   "locationCountry": "Location, Country",
   "guestsNumber": "## guests",
   "confirmBooking": "Confirm Booking",
-  "somethingIsNotRight": "SOMETHING ISN'T RIGHT",
+  "somethingIsNotRightUpper": "SOMETHING ISN'T RIGHT",
   "pastBookings": "",
   "yourPastBookingWill": "",
   "contactUs": "Contact Us",
@@ -280,7 +280,7 @@
   "cart": "Cart",
   "buyUpper": "BUY",
   "payUpper": "PAY",
-  "continueShopping": "CONTINUE SHOPPING",
+  "continueShoppingUpper": "CONTINUE SHOPPING",
   "reserveUpper": "RESERVE",
   "hi": "Hi",
   "yourHolidayInSpace": "Your holiday in",
@@ -627,5 +627,13 @@
   "paypal": "Paypal",
   "viewMore": "View More",
   "whatIsIt": "What Is It?",
-  "from": "From"
+  "from": "From",
+  "hubsTopServices": "HUB's top services",
+  "discoverHub": "Discover the top services of your Hotel",
+  "reserve": "Reserve",
+  "addToCart": "Add to cart",
+  "buy": "Buy",
+  "somethingIsNotRight": "Something isn't right",
+  "continueShopping": "Continue Shopping",
+  "reserveATable": "Reserve a table"
 }

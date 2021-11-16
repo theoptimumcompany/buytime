@@ -149,7 +149,7 @@ class _NewPRCardWidgetState extends State<NewPRCardWidget> {
                                     Utils.retriveField(Localizations.localeOf(context).languageCode, widget.serviceState.name),
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 1,
-                                    style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: true ?  BuytimeTheme.TextBlack : BuytimeTheme.TextWhite, fontWeight: FontWeight.w400, fontSize: 12
+                                    style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: true ?  BuytimeTheme.TextBlack : BuytimeTheme.TextWhite, fontWeight: FontWeight.w500, fontSize: 14
                                       ///SizeConfig.safeBlockHorizontal * 4
                                     ),
                                   ),)

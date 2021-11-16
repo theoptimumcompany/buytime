@@ -161,7 +161,7 @@
   "locationCountry": "Emplacement, Pays",
   "guestsNumber": "## clients",
   "confirmBooking": "Confirmer la réservation",
-  "somethingIsNotRight": "QUELQUE CHOSE NE VA PAS",
+  "somethingIsNotRightUpper": "QUELQUE CHOSE NE VA PAS",
   "pastBookings": "Reserves passés",
   "yourPastBookingWill": "",
   "contactUs": "Nous contacter",
@@ -221,7 +221,7 @@
   "emptyCart": "Le panier est vide, ajoutez d'abord un service au panier.",
   "serviceName": "Nom du service",
   "hour": "heure",
-  "addToCart": "AJOUTER AU PANIER",
+  "addToCartUpper": "AJOUTER AU PANIER",
   "createYourAccount": "Créez vostre compte",
   "serviceCategories": "Catégorie de services",
   "checkedOutBookings": "réservations terminées",
@@ -626,5 +626,12 @@
   "paypal": "Paypal",
   "viewMore": "View More",
   "whatIsIt": "What Is It?",
-  "from": "From"
+  "from": "From",
+  "hubsTopServices": "HUB's top services",
+  "discoverHub": "Discover the top services of your Hotel",
+  "reserve": "Reserve",
+  "addToCart": "Add to cart",
+  "buy": "Buy",
+  "somethingIsNotRight": "Something isn't right",
+  "reserveATable": "Reserve a table"
 }

@@ -20,6 +20,7 @@ import 'package:Buytime/helper/algolia_helper.dart';
 import 'package:Buytime/helper/pagination/category_helper.dart';
 import 'package:Buytime/helper/pagination/service_helper.dart';
 import 'package:Buytime/helper/payment/satispay/satispay_service.dart';
+import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reblox/model/role/role.dart';
 import 'package:Buytime/reblox/reducer/app_reducer.dart';
 import 'package:Buytime/reblox/reducer/booking_list_reducer.dart';
@@ -33,7 +34,9 @@ import 'package:Buytime/helper/dynamic_links/dynamic_links_helper.dart';
 import 'package:Buytime/utils/theme/buytime_config.dart';
 import 'package:algolia/algolia.dart';
 import 'package:animations/animations.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:emojis/emojis.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:Buytime/UI/user/booking/widget/user_service_card_widget.dart';
@@ -65,9 +68,11 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:intl/intl.dart';
 import 'package:location/location.dart' as loc;
 import 'package:palette_generator/palette_generator.dart';
 import 'package:provider/provider.dart';
+import 'package:share/share.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -81,7 +86,7 @@ class RServiceExplorer extends StatefulWidget {
   Widget create(BuildContext context) {
     //final pageIndex = context.watch<Spinner>();
     return ChangeNotifierProvider<Explorer>(
-      create: (_) => Explorer(false, [], [], [], TextEditingController(), false, []),
+      create: (_) => Explorer(false, [], [], [], TextEditingController(), false, [], BusinessState().toEmpty()),
       child: RServiceExplorer(),
     );
   }
@@ -126,6 +131,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
   Stream<QuerySnapshot> _categoryStream;
   Stream<QuerySnapshot> _serviceStream;
   Stream<QuerySnapshot> _businessStream;
+  Stream<QuerySnapshot> _bookingStream;
   Algolia algolia = AlgoliaHelper.algolia;
 
   @override
@@ -138,7 +144,9 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
       StoreProvider.of<AppState>(context).dispatch(PromotionListRequest());
       //servicePagingBloc.requestServices(context);
       DateTime currentTime = DateTime.now();
+      DateTime bookingTime = DateTime.now();
       currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0).toUtc();
+      debugPrint('RUI_U_service_explorer => CURRENT TIME: $currentTime');
 
       _orderStream =  FirebaseFirestore.instance
           .collection("order")
@@ -170,6 +178,14 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
       _businessStream =  FirebaseFirestore.instance
           .collection("business")
           .where("draft", isEqualTo: false)
+          .snapshots(includeMetadataChanges: true);
+
+      _bookingStream = FirebaseFirestore.instance
+          .collection("booking")
+          .where("userEmail", arrayContains: StoreProvider.of<AppState>(context).state.user.email)
+          .where("status", isEqualTo: 'opened')
+          .where("end_date", isGreaterThanOrEqualTo: currentTime)
+          .orderBy("end_date", descending: true)
           .snapshots(includeMetadataChanges: true);
     });
 
@@ -662,7 +678,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
     return StoreConnector<AppState, AppState>(
       converter: (store) => store.state,
       onInit: (store) async {
-        store.dispatch(UserBookingListRequest(store.state.user.email, false));
+        //store.dispatch(UserBookingListRequest(store.state.user.email, false));
         dynamicLinkHelper.onSitePaymentFound(context);
         dynamicLinkHelper.bookingCodeFound(context);
         dynamicLinkHelper.selfCheckInFound(context);
@@ -958,13 +974,17 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                             //textCapitalization: TextCapitalization.sentences,
                             decoration: InputDecoration(
                               contentPadding: EdgeInsets.only(bottom: 4, left: 10),
-                              enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                              focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                              errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                              labelText: AppLocalizations.of(context).whatAreYouLookingFor,
+                              enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(20.0))),
+                              focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(20.0))),
+                              errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(20.0))),
+                              //labelText: AppLocalizations.of(context).whatAreYouLookingFor,
                               //helperText: AppLocalizations.of(context).searchForServicesAndIdeasAroundYou,
-                              //hintText: "email *",
-                              //hintStyle: TextStyle(color: Color(0xff666666)),
+                              hintText: AppLocalizations.of(context).whatAreYouLookingFor,
+                              hintStyle: TextStyle(
+                                fontFamily: BuytimeTheme.FontFamily,
+                                color: Color(0xff666666),
+                                fontWeight: FontWeight.w400,
+                              ),
                               labelStyle: TextStyle(
                                 fontFamily: BuytimeTheme.FontFamily,
                                 color: Color(0xff666666),
@@ -991,7 +1011,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                 child: Icon(
                                   // Based on passwordVisible state choose the icon
                                   Icons.search,
-                                  color: Color(0xff666666),
+                                  color: Colors.grey.withOpacity(.8),
                                 ),
                               ),
                             ),
@@ -1049,8 +1069,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                 BuytimeIcons.remove,
                                 color: Colors.white,
                               ),
-                              onPressed: () {
-                              },
+                              onPressed: null,
                             ),
                           )
                         ],
@@ -1249,7 +1268,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                   /*Container(
                                     margin: EdgeInsets.only(
                                         top: SizeConfig.safeBlockVertical * 2,
-                                        left: SizeConfig.safeBlockHorizontal * 5,
+                                        left: SizeConfig.safeBlockHorizontal * 3.5,
                                         bottom: SizeConfig.safeBlockVertical * 1,
                                         right: _searchController.text.isNotEmpty ? SizeConfig.safeBlockHorizontal * .5 : SizeConfig.safeBlockHorizontal * 5),
                                     child: Row(
@@ -1358,6 +1377,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                       ],
                                     ),
                                   ),*/
+
                                   _searchController.text.isEmpty ?
                                   Column(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1365,15 +1385,351 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                     children: [
                                       ///My bookings if user
                                       FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty /*&& cards.isNotEmpty*/?
-                                      Container(
-                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2.5, bottom: SizeConfig.safeBlockVertical * 1),
-                                        child: _OpenContainerWrapper(
-                                          index: 0,
-                                          closedBuilder: (BuildContext _, VoidCallback openContainer) {
-                                            cards[0].callback = openContainer;
-                                            return cards[0];
-                                          },
-                                        ),
+                                      StreamBuilder<QuerySnapshot>(
+                                          stream: _bookingStream,
+                                          builder: (context, AsyncSnapshot<QuerySnapshot> bookingSnapshot) {
+                                            //myList.clear();
+                                            if (bookingSnapshot.hasError || bookingSnapshot.connectionState == ConnectionState.waiting) {
+                                              debugPrint('RUI_U_service_explorer => BOOKING WAITING');
+                                              return Container(
+                                                margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
+                                                child: Column(
+                                                  children: [
+                                                    Row(
+                                                      mainAxisAlignment: MainAxisAlignment.center,
+                                                      children: [
+                                                        CircularProgressIndicator()
+                                                      ],
+                                                    )
+                                                  ],
+                                                ),
+                                              );
+                                            }
+                                            List<BookingState> bookingList = [];
+                                            if(bookingSnapshot.data != null){
+                                              bookingSnapshot.data.docs.forEach((element) {
+                                                BookingState bookingState = BookingState.fromJson(element.data());
+                                                bookingList.add(bookingState);
+                                              });
+                                            }
+
+                                            if(bookingList.isNotEmpty){
+                                              BookingState bookingState = bookingList.first;
+                                              bool sameMonth = false;
+                                              String startMonth = DateFormat('MM').format(bookingState.start_date);
+                                              String endMonth = DateFormat('MM').format(bookingState.end_date);
+
+                                              if (startMonth == endMonth)
+                                                sameMonth = true;
+                                              else
+                                                sameMonth = false;
+                                              return StreamBuilder<QuerySnapshot>(
+                                                  stream: FirebaseFirestore.instance
+                                                      .collection("business")
+                                                      //.where("draft", isEqualTo: false)
+                                                      .where("id_firestore", isEqualTo: bookingState.business_id)
+                                                      .snapshots(includeMetadataChanges: true),
+                                                  builder: (context, AsyncSnapshot<QuerySnapshot> businessSnapshot) {
+                                                    //myList.clear();
+                                                    if (businessSnapshot.hasError || businessSnapshot.connectionState == ConnectionState.waiting) {
+                                                      debugPrint('RUI_U_service_explorer => BOOKING BUSINESS WAITING');
+                                                      return Flexible(
+                                                        child: Container(
+                                                          //height: SizeConfig.safeBlockVertical * 30,
+                                                          width: double.infinity,
+                                                          color: BuytimeTheme.BackgroundWhite,
+                                                          child: Row(
+                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                            children: [
+                                                              ///Greetings & Portfolio & Search
+                                                              Column(
+                                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                children: [
+                                                                  ///Greetings
+                                                                  Container(
+                                                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * 3),
+                                                                    child: Text(
+                                                                      //AppLocalizations.of(context).hi + bookingState.user.first.name,
+                                                                      '${AppLocalizations.of(context).hi} ${Emojis.wavingHand}',
+                                                                      style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w700, fontSize: 24
+
+                                                                        ///SizeConfig.safeBlockHorizontal * 7
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  ///Portfolio
+                                                                  Container(
+                                                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * 2),
+                                                                    child: Row(
+                                                                      children: [
+                                                                        Text(
+                                                                          AppLocalizations.of(context).yourHolidayInSpace + ' ' ,
+                                                                          style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextMedium, fontWeight: FontWeight.w400, fontSize: 16
+
+                                                                            ///SizeConfig.safeBlockHorizontal * 4
+                                                                          ),
+                                                                        ),
+                                                                        Utils.textShimmer(50, 16)
+                                                                      ],
+                                                                    )
+                                                                  ),
+                                                                  ///Date & Share
+                                                                  Row(
+                                                                    children: [
+                                                                      ///Date
+                                                                      Container(
+                                                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * 0.5),
+                                                                        child: Utils.textShimmer(100, 16),
+                                                                      ),
+                                                                      ///Share
+                                                                      Container(
+                                                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 0.5),
+                                                                          alignment: Alignment.center,
+                                                                          child: Material(
+                                                                            color: Colors.transparent,
+                                                                            child: InkWell(
+                                                                                onTap: () {
+                                                                                  //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ServiceList()),);
+                                                                                  //Navigator.of(context).pop();
+                                                                                  final RenderBox box = context.findRenderObject();
+                                                                                  Share.share(AppLocalizations.of(context).share, sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
+                                                                                },
+                                                                                borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                                                                child: Container(
+                                                                                  padding: EdgeInsets.all(5.0),
+                                                                                  child: Text(
+                                                                                    AppLocalizations.of(context).share,
+                                                                                    style: TextStyle(letterSpacing: SizeConfig.safeBlockHorizontal * .2, fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.SymbolMalibu, fontWeight: FontWeight.w400, fontSize: 14
+
+                                                                                      ///SizeConfig.safeBlockHorizontal * 4
+                                                                                    ),
+                                                                                  ),
+                                                                                )),
+                                                                          )),
+                                                                    ],
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                              ///Business Logo
+                                                              Container(
+                                                                //margin: EdgeInsets.only(left: SizeConfig.safeBlockVertical * 1, right: SizeConfig.safeBlockHorizontal * 1),
+                                                                width: 125,
+
+                                                                ///25% SizeConfig.safeBlockVertical * 20
+                                                                height: 125,
+
+                                                                ///25% SizeConfig.safeBlockVertical * 20
+                                                                decoration: BoxDecoration(
+                                                                  color: Color(0xffE6E7E8),
+                                                                  /*gradient: LinearGradient(
+                                        begin: Alignment.topCenter,
+                                        end: Alignment.bottomCenter,
+                                        colors: [
+                                          Colors.orange.withOpacity(.5),
+                                          Colors.white,
+                                        ],
+                                      )*/
+                                                                ),
+                                                                child: Container(
+                                                                  //width: 300,
+                                                                  height: 125,
+                                                                  child: Utils.imageShimmer(125, 125),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      );
+                                                    }
+                                                    BusinessState businessState = BusinessState().toEmpty();
+                                                    businessSnapshot.data.docs.forEach((element) {
+                                                      businessState = BusinessState.fromJson(element.data());
+                                                    });
+                                                    WidgetsBinding.instance.addPostFrameCallback((_) async {
+                                                      Provider.of<Explorer>(context, listen: false).businessState = businessState;
+                                                    });
+
+                                                    return Column(
+                                                      mainAxisSize: MainAxisSize.min,
+                                                      children: [
+                                                        ///Busienss Booking Cover info
+                                                        Flexible(
+                                                          child: Container(
+                                                            //height: SizeConfig.safeBlockVertical * 30,
+                                                            width: double.infinity,
+                                                            color: BuytimeTheme.BackgroundWhite,
+                                                            child: Row(
+                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                              children: [
+                                                                ///Greetings & Portfolio & Search
+                                                                Column(
+                                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                                  children: [
+                                                                    ///Greetings
+                                                                    Container(
+                                                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * 3),
+                                                                      child: Text(
+                                                                        //AppLocalizations.of(context).hi + bookingState.user.first.name,
+                                                                        '${AppLocalizations.of(context).hi} ${Emojis.wavingHand}',
+                                                                        style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w700, fontSize: 24
+
+                                                                          ///SizeConfig.safeBlockHorizontal * 7
+                                                                        ),
+                                                                      ),
+                                                                    ),
+
+                                                                    ///Portfolio
+                                                                    Container(
+                                                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * 2),
+                                                                      child: Text(
+                                                                        AppLocalizations.of(context).yourHolidayInSpace + ' ' + (businessState != null ? businessState.municipality : ""),
+                                                                        style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextMedium, fontWeight: FontWeight.w400, fontSize: 16
+
+                                                                          ///SizeConfig.safeBlockHorizontal * 4
+                                                                        ),
+                                                                      ),
+                                                                    ),
+
+                                                                    ///Date & Share
+                                                                    Row(
+                                                                      children: [
+                                                                        ///Date
+                                                                        Container(
+                                                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * 0.5),
+                                                                          child: Text(
+                                                                            sameMonth
+                                                                                ? '${DateFormat('dd', Localizations.localeOf(context).languageCode).format(bookingState.start_date)} - ${DateFormat('dd MMMM', Localizations.localeOf(context).languageCode).format(bookingState.end_date)}'
+                                                                                : '${DateFormat('dd MMM', Localizations.localeOf(context).languageCode).format(bookingState.start_date)} - ${DateFormat('dd MMM', Localizations.localeOf(context).languageCode).format(bookingState.end_date)}',
+                                                                            style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextMedium, fontWeight: FontWeight.w400, fontSize: 16
+
+                                                                              ///izeConfig.safeBlockHorizontal * 4
+                                                                            ),
+                                                                          ),
+                                                                        ),
+
+                                                                        ///Share
+                                                                        Container(
+                                                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 0.5),
+                                                                            alignment: Alignment.center,
+                                                                            child: Material(
+                                                                              color: Colors.transparent,
+                                                                              child: InkWell(
+                                                                                  onTap: () {
+                                                                                    //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ServiceList()),);
+                                                                                    //Navigator.of(context).pop();
+                                                                                    final RenderBox box = context.findRenderObject();
+                                                                                    Share.share(AppLocalizations.of(context).share, sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
+                                                                                  },
+                                                                                  borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                                                                  child: Container(
+                                                                                    padding: EdgeInsets.all(5.0),
+                                                                                    child: Text(
+                                                                                      AppLocalizations.of(context).share,
+                                                                                      style: TextStyle(letterSpacing: SizeConfig.safeBlockHorizontal * .2, fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.SymbolMalibu, fontWeight: FontWeight.w400, fontSize: 14
+
+                                                                                        ///SizeConfig.safeBlockHorizontal * 4
+                                                                                      ),
+                                                                                    ),
+                                                                                  )),
+                                                                            )),
+                                                                      ],
+                                                                    ),
+
+                                                                    ///ECO Label
+                                                                    businessState.business_type == 'ECO'?
+                                                                    Container(
+                                                                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, bottom: SizeConfig.safeBlockVertical * 1),
+                                                                      child: Row(
+                                                                        children: [
+                                                                          Image( image: AssetImage('assets/img/eco.png')),
+                                                                          Padding(
+                                                                            padding: EdgeInsets.only(left: 10.0,top: 5.0),
+                                                                            child: Text(
+                                                                              '${AppLocalizations.of(context).youAreInAnEcoHotel}',
+                                                                              style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextMedium, fontWeight: FontWeight.w400, fontSize: 16
+                                                                              ),
+                                                                            ),
+                                                                          )
+                                                                        ],
+                                                                      ),
+                                                                    ): Container(),
+                                                                  ],
+                                                                ),
+                                                                ///Business Logo
+                                                                Container(
+                                                                  //margin: EdgeInsets.only(left: SizeConfig.safeBlockVertical * 1, right: SizeConfig.safeBlockHorizontal * 1),
+                                                                  width: 125,
+
+                                                                  ///25% SizeConfig.safeBlockVertical * 20
+                                                                  height: 125,
+
+                                                                  ///25% SizeConfig.safeBlockVertical * 20
+                                                                  decoration: BoxDecoration(
+                                                                    color: Color(0xffE6E7E8),
+                                                                    /*gradient: LinearGradient(
+                                        begin: Alignment.topCenter,
+                                        end: Alignment.bottomCenter,
+                                        colors: [
+                                          Colors.orange.withOpacity(.5),
+                                          Colors.white,
+                                        ],
+                                      )*/
+                                                                  ),
+                                                                  child: Container(
+                                                                    //width: 300,
+                                                                    height: 125,
+                                                                    child: CachedNetworkImage(
+                                                                      //width: 125,
+                                                                      imageUrl: businessState != null && businessState.logo != null
+                                                                          ? businessState.logo
+                                                                          : 'https://firebasestorage.googleapis.com/v0/b/buytime-458a1.appspot.com/o/general%2Fimage_placeholder_200x200_1000x1000.png?alt=media&token=082a1896-32d8-4750-b7cc-141f00bc060c',
+                                                                      imageBuilder: (context, imageProvider) => Container(
+                                                                        //margin: EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 5), ///5%
+                                                                        decoration: BoxDecoration(
+                                                                          //borderRadius: BorderRadius.all(Radius.circular(SizeConfig.blockSizeHorizontal * 5)), ///12.5%
+                                                                            image: DecorationImage(
+                                                                              image: imageProvider,
+                                                                              fit: BoxFit.fitWidth,
+                                                                            )),
+                                                                        child: Container(
+                                                                          decoration: BoxDecoration(
+                                                                            //color: Color(0xffE6E7E8),
+                                                                              /*gradient: LinearGradient(
+                                                                                begin: Alignment.bottomCenter,
+                                                                                end: Alignment.topCenter,
+                                                                                stops: [0.01, 0.3],
+                                                                                colors: [Colors.white.withOpacity(1), Colors.white.withOpacity(0.01)],
+                                                                              )*/),
+                                                                        ),
+                                                                      ),
+                                                                      placeholder: (context, url) => Utils.imageShimmer(125, 125),
+                                                                      errorWidget: (context, url, error) => Icon(Icons.error),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    );
+                                                  }
+                                              );
+                                            }else{
+                                              return Container(
+                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2.5, bottom: SizeConfig.safeBlockVertical * 1),
+                                                child: _OpenContainerWrapper(
+                                                  index: 0,
+                                                  closedBuilder: (BuildContext _, VoidCallback openContainer) {
+                                                    cards[0].callback = openContainer;
+                                                    return cards[0];
+                                                  },
+                                                ),
+                                              );
+                                            }
+                                          }
                                       ) : Container(),
                                       ///My bookings & View all
                                       _searchController.text.isEmpty && snapshot.user.getRole() == Role.user && auth.FirebaseAuth.instance.currentUser != null
@@ -1394,7 +1750,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                       children: [
                                                         ///My bookings
                                                         Container(
-                                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 1),
+                                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 1),
                                                           child: Text(
                                                             AppLocalizations.of(context).myReservation,
                                                             style: TextStyle(
@@ -1442,7 +1798,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                     Container(
                                                       height: 120,
                                                       width: double.infinity,
-                                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
+                                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5),
                                                       child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
                                                         SliverList(
                                                           delegate: SliverChildBuilderDelegate(
@@ -1491,7 +1847,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                     children: [
                                                       ///My bookings
                                                       Container(
-                                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 1),
+                                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 1),
                                                         child: Text(
                                                           AppLocalizations.of(context).myReservation,
                                                           style: TextStyle(
@@ -1539,7 +1895,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                   Container(
                                                     height: 120,
                                                     width: double.infinity,
-                                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
+                                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5),
                                                     child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
                                                       SliverList(
                                                         delegate: SliverChildBuilderDelegate(
@@ -1581,7 +1937,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                           }
                                       ) : Container(),
                                       /*Container(
-                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5,right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1),
+                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5,right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1),
                                       child: Utils.imageShimmer(SizeConfig.safeBlockVertical * 80, 100))*/
                                       ///Discover & Popular & Recommended & Log out
                                       Column(
@@ -1602,7 +1958,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                   ///Discover
                                                   Flexible(
                                                     child: Container(
-                                                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 5, bottom: SizeConfig.safeBlockVertical * 2),
+                                                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 3.5, bottom: SizeConfig.safeBlockVertical * 2),
                                                       //padding: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 2),
                                                       height: 150,
                                                       width: double.infinity,
@@ -1666,7 +2022,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                         children: [
                                                           ///Popular
                                                           Container(
-                                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: 20, bottom: SizeConfig.safeBlockVertical * 0.5),
+                                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: 20, bottom: SizeConfig.safeBlockVertical * 0.5),
                                                             child: Text(
                                                               AppLocalizations.of(context).popular,
                                                               style: TextStyle(
@@ -1682,7 +2038,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                           ),
                                                           ///Text
                                                           Container(
-                                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * .5, bottom: SizeConfig.safeBlockVertical * .5),
+                                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * .5, bottom: SizeConfig.safeBlockVertical * .5),
                                                             child: Text(
                                                               AppLocalizations.of(context).popularSlogan,
                                                               style: TextStyle(
@@ -1746,7 +2102,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                   //       children: [
                                                   //         ///Recommended
                                                   //         Container(
-                                                  //           margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: 20, bottom: SizeConfig.safeBlockVertical * 0.5),
+                                                  //           margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: 20, bottom: SizeConfig.safeBlockVertical * 0.5),
                                                   //           child: Text(
                                                   //             AppLocalizations.of(context).recommended,
                                                   //             style: TextStyle(
@@ -1762,7 +2118,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                   //         ),
                                                   //         ///Text
                                                   //         Container(
-                                                  //           margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * .5, bottom: SizeConfig.safeBlockVertical * .5),
+                                                  //           margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * .5, bottom: SizeConfig.safeBlockVertical * .5),
                                                   //           child: Text(
                                                   //             AppLocalizations.of(context).recommendedSlogan,
                                                   //             style: TextStyle(
@@ -1842,7 +2198,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                       ///Discover
                                                       Flexible(
                                                         child: Container(
-                                                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 5, bottom: SizeConfig.safeBlockVertical * 2),
+                                                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 3.5, bottom: SizeConfig.safeBlockVertical * 2),
                                                           //padding: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 2),
                                                           height: 150,
                                                           width: double.infinity,
@@ -1892,7 +2248,85 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                           ),
                                                         ),
                                                       ),
+                                                      Provider.of<Explorer>(context, listen: false).businessState != null && Provider.of<Explorer>(context, listen: false).businessState.id_firestore.isNotEmpty ?
+                                                      Flexible(
+                                                        child: Container(
+                                                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0),
+                                                          padding: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 2),
+                                                          height: 310,
+                                                          color: BuytimeTheme.BackgroundSoftGrey,
+                                                          child: Column(
+                                                            mainAxisAlignment: MainAxisAlignment.start,
+                                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                                            children: [
+                                                              ///Hub
+                                                              Container(
+                                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: 20, bottom: SizeConfig.safeBlockVertical * 0.5),
+                                                                child: Text(
+                                                                  AppLocalizations.of(context).hubsTopServices,
+                                                                  style: TextStyle(
+                                                                    //letterSpacing: SizeConfig.safeBlockVertical * .4,
+                                                                      fontFamily: BuytimeTheme.FontFamily,
+                                                                      color: BuytimeTheme.TextBlack,
+                                                                      fontWeight: FontWeight.w700,
+                                                                      fontSize: 18
 
+                                                                    ///SizeConfig.safeBlockHorizontal * 4
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              ///Text
+                                                              Container(
+                                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * .5, bottom: SizeConfig.safeBlockVertical * .5),
+                                                                child: Text(
+                                                                  AppLocalizations.of(context).discoverHub,
+                                                                  style: TextStyle(
+                                                                    //letterSpacing: SizeConfig.safeBlockVertical * .4,
+                                                                      fontFamily: BuytimeTheme.FontFamily,
+                                                                      color: BuytimeTheme.TextBlack.withOpacity(.6),
+                                                                      fontWeight: FontWeight.w500,
+                                                                      fontSize: 14
+
+                                                                    ///SizeConfig.safeBlockHorizontal * 4
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              Container(
+                                                                height: 220,
+                                                                width: double.infinity,
+                                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 0, top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 0),
+                                                                child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
+                                                                  SliverList(
+                                                                    delegate: SliverChildBuilderDelegate(
+                                                                          (context, index) {
+                                                                        //MenuItemModel menuItem = menuItems.elementAt(index);
+                                                                        //ServiceState service = popularList.elementAt(index);
+                                                                        return Column(
+                                                                          mainAxisAlignment: MainAxisAlignment.start,
+                                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                                          children: [
+                                                                            Container(
+                                                                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 2),
+                                                                              child: Utils.imageShimmer(182, 182),
+                                                                            ),
+                                                                            Container(
+                                                                              width: 180,
+                                                                              alignment: Alignment.topLeft,
+                                                                              margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 1, left: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1.5),
+                                                                              child: Utils.textShimmer(150, 10),
+                                                                            )
+                                                                          ],
+                                                                        );
+                                                                      },
+                                                                      childCount: 10,
+                                                                    ),
+                                                                  ),
+                                                                ]),
+                                                              )
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ) : Container(),
                                                       ///Popular
                                                       Flexible(
                                                         child: Container(
@@ -1906,13 +2340,13 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                             children: [
                                                               ///Popular
                                                               Container(
-                                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: 20, bottom: SizeConfig.safeBlockVertical * 0.5),
+                                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: 20, bottom: SizeConfig.safeBlockVertical * 0.5),
                                                                 child: Text(
                                                                   AppLocalizations.of(context).popular,
                                                                   style: TextStyle(
                                                                     //letterSpacing: SizeConfig.safeBlockVertical * .4,
                                                                       fontFamily: BuytimeTheme.FontFamily,
-                                                                      color: BuytimeTheme.TextWhite,
+                                                                      color: BuytimeTheme.TextBlack,
                                                                       fontWeight: FontWeight.w700,
                                                                       fontSize: 18
 
@@ -1922,13 +2356,13 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                               ),
                                                               ///Text
                                                               Container(
-                                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * .5, bottom: SizeConfig.safeBlockVertical * .5),
+                                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * .5, bottom: SizeConfig.safeBlockVertical * .5),
                                                                 child: Text(
                                                                   AppLocalizations.of(context).popularSlogan,
                                                                   style: TextStyle(
                                                                     //letterSpacing: SizeConfig.safeBlockVertical * .4,
                                                                       fontFamily: BuytimeTheme.FontFamily,
-                                                                      color: BuytimeTheme.TextWhite,
+                                                                      color: BuytimeTheme.TextBlack,
                                                                       fontWeight: FontWeight.w500,
                                                                       fontSize: 14
 
@@ -1939,7 +2373,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                               Container(
                                                                 height: 220,
                                                                 width: double.infinity,
-                                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 0),
+                                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 0, top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 0),
                                                                 child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
                                                                   SliverList(
                                                                     delegate: SliverChildBuilderDelegate(
@@ -1986,7 +2420,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                             children: [
                                                               ///Recommended
                                                               Container(
-                                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: 20, bottom: SizeConfig.safeBlockVertical * 0.5),
+                                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: 20, bottom: SizeConfig.safeBlockVertical * 0.5),
                                                                 child: Text(
                                                                   AppLocalizations.of(context).recommended,
                                                                   style: TextStyle(
@@ -2002,7 +2436,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                               ),
                                                               ///Text
                                                               Container(
-                                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * .5, bottom: SizeConfig.safeBlockVertical * .5),
+                                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * .5, bottom: SizeConfig.safeBlockVertical * .5),
                                                                 child: Text(
                                                                   AppLocalizations.of(context).recommendedSlogan,
                                                                   style: TextStyle(
@@ -2136,7 +2570,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                 childrens.add(
                                                     Flexible(
                                                       child: Container(
-                                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 5, bottom: SizeConfig.safeBlockVertical * 2),
+                                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 3.5, bottom: SizeConfig.safeBlockVertical * 2),
                                                         //padding: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 2),
                                                         height: 150,
                                                         width: double.infinity,
@@ -2399,7 +2833,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                             ///No List
                                                             Container(
                                                               height: SizeConfig.safeBlockVertical * 8,
-                                                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                                                               decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
                                                               child: Center(
                                                                   child: Container(
@@ -2415,6 +2849,258 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                         ),
                                                       ),
                                                     ));
+                                                ///Hub Services
+                                                if(Provider.of<Explorer>(context, listen: false).businessState != null && Provider.of<Explorer>(context, listen: false).businessState.id_firestore.isNotEmpty){
+                                                  childrens.add(
+                                                      StreamBuilder<QuerySnapshot>(
+                                                          stream: FirebaseFirestore.instance.collection("service")
+                                                              .where("visibility", isEqualTo: 'Active')
+                                                              .where("businessId", isEqualTo: Provider.of<Explorer>(context, listen: false).businessState.id_firestore)
+                                                              //.where('categoryId', arrayContainsAny: category.categoryIdList.length > 10 ? category.categoryIdList.sublist(0, 10) : category.categoryIdList)
+                                                              .limit(5)
+                                                              .snapshots(includeMetadataChanges: true),
+                                                          builder: (context, AsyncSnapshot<QuerySnapshot> categorySnapshot) {
+                                                            if (categorySnapshot.hasError || categorySnapshot.connectionState == ConnectionState.waiting) {
+                                                              debugPrint('RUI_U_service_explorer => SERVICE CATEGORY WAITING');
+                                                              return Flexible(
+                                                                child: Container(
+                                                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0),
+                                                                  padding: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 2),
+                                                                  height: 310,
+                                                                  color: BuytimeTheme.BackgroundSoftGrey,
+                                                                  child: Column(
+                                                                    mainAxisAlignment: MainAxisAlignment.start,
+                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                    children: [
+                                                                      ///Hub top services
+                                                                      Container(
+                                                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: 20, bottom: SizeConfig.safeBlockVertical * 0.5),
+                                                                        child: Text(
+                                                                          AppLocalizations.of(context).hubsTopServices,
+                                                                          style: TextStyle(
+                                                                            //letterSpacing: SizeConfig.safeBlockVertical * .4,
+                                                                              fontFamily: BuytimeTheme.FontFamily,
+                                                                              color: BuytimeTheme.TextBlack,
+                                                                              fontWeight: FontWeight.w700,
+                                                                              fontSize: 18
+
+                                                                            ///SizeConfig.safeBlockHorizontal * 4
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                      ///Text
+                                                                      Container(
+                                                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * .5, bottom: SizeConfig.safeBlockVertical * .5),
+                                                                        child: Text(
+                                                                          '${AppLocalizations.of(context).discoverHub}',
+                                                                          style: TextStyle(
+                                                                            //letterSpacing: SizeConfig.safeBlockVertical * .4,
+                                                                              fontFamily: BuytimeTheme.FontFamily,
+                                                                              color: BuytimeTheme.TextBlack.withOpacity(.6),
+                                                                              fontWeight: FontWeight.w500,
+                                                                              fontSize: 14
+
+                                                                            ///SizeConfig.safeBlockHorizontal * 4
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                      Container(
+                                                                        height: 220,
+                                                                        width: double.infinity,
+                                                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 0, top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 0),
+                                                                        child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
+                                                                          SliverList(
+                                                                            delegate: SliverChildBuilderDelegate(
+                                                                                  (context, index) {
+                                                                                //MenuItemModel menuItem = menuItems.elementAt(index);
+                                                                                //ServiceState service = popularList.elementAt(index);
+                                                                                return Column(
+                                                                                  mainAxisAlignment: MainAxisAlignment.start,
+                                                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                  children: [
+                                                                                    Container(
+                                                                                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 2),
+                                                                                      child: Utils.imageShimmer(182, 182),
+                                                                                    ),
+                                                                                    Container(
+                                                                                      width: 180,
+                                                                                      alignment: Alignment.topLeft,
+                                                                                      margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 1, left: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1.5),
+                                                                                      child: Utils.textShimmer(150, 10),
+                                                                                    )
+                                                                                  ],
+                                                                                );
+                                                                              },
+                                                                              childCount: 10,
+                                                                            ),
+                                                                          ),
+                                                                        ]),
+                                                                      )
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              );
+                                                            }
+                                                            List<ServiceState> tmpHubServices = [];
+                                                            categorySnapshot.data.docs.forEach((service) {
+                                                              ServiceState serviceState = ServiceState.fromJson(service.data());
+                                                              tmpHubServices.add(serviceState);
+                                                            });
+                                                            debugPrint('RUI_U_service_explorer => HUB SERVICE LENGTH: ${tmpHubServices.length}');
+                                                            return tmpHubServices.length >= 4 ?
+                                                            Flexible(
+                                                              child: Container(
+                                                                margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0),
+                                                                height: tmpHubServices.isNotEmpty || noActivity ? 320 : 200,
+                                                                color: BuytimeTheme.BackgroundSoftGrey,
+                                                                child: Column(
+                                                                  mainAxisAlignment: MainAxisAlignment.start,
+                                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                                  children: [
+                                                                    Row(
+                                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                      children: [
+                                                                        ///Hub name
+                                                                        Flexible(
+                                                                          flex: 3,
+                                                                          child: Container(
+                                                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: 20, bottom: SizeConfig.safeBlockVertical * 0.5),
+                                                                            child: Text(
+                                                                              AppLocalizations.of(context).hubsTopServices,
+                                                                              style: TextStyle(
+                                                                                //letterSpacing: SizeConfig.safeBlockVertical * .4,
+                                                                                  fontFamily: BuytimeTheme.FontFamily,
+                                                                                  color: BuytimeTheme.TextBlack,
+                                                                                  fontWeight: FontWeight.w700,
+                                                                                  fontSize: 18
+
+                                                                                ///SizeConfig.safeBlockHorizontal * 4
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                        ///View more
+                                                                        Flexible(
+                                                                          flex: 1,
+                                                                          child: Container(
+                                                                              margin: EdgeInsets.only(top: 20),
+                                                                              alignment: Alignment.center,
+                                                                              child: Material(
+                                                                                color: Colors.transparent,
+                                                                                child: InkWell(
+                                                                                    onTap: () {
+                                                                                      Navigator.push(context, MaterialPageRoute(builder: (context) => ViewMore(AppLocalizations.of(context).hubsTopServices, orderList, false, [], true)),);
+                                                                                    },
+                                                                                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                                                                    child: Container(
+                                                                                      padding: EdgeInsets.all(5.0),
+                                                                                      child: Text(
+                                                                                        AppLocalizations.of(context).viewMore,
+                                                                                        // !showAll ? AppLocalizations.of(context).showAll : AppLocalizations.of(context).showLess,
+                                                                                        style: TextStyle(
+                                                                                            letterSpacing: SizeConfig.safeBlockHorizontal * .2,
+                                                                                            fontFamily: BuytimeTheme.FontFamily,
+                                                                                            color: BuytimeTheme.SymbolMalibu,
+                                                                                            fontWeight: FontWeight.w400,
+                                                                                            fontSize: 14
+
+                                                                                          ///SizeConfig.safeBlockHorizontal * 4
+                                                                                        ),
+                                                                                      ),
+                                                                                    )),
+                                                                              )),
+                                                                        )
+                                                                      ],
+                                                                    ),
+                                                                    ///Text
+                                                                    Container(
+                                                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * .5, bottom: SizeConfig.safeBlockVertical * .5),
+                                                                      child: Text(
+                                                                        '${AppLocalizations.of(context).discoverHub}',
+                                                                        style: TextStyle(
+                                                                            fontFamily: BuytimeTheme.FontFamily,
+                                                                            color: BuytimeTheme.TextBlack.withOpacity(.6),
+                                                                            fontWeight: FontWeight.w500,
+                                                                            fontSize: 14
+
+                                                                          ///SizeConfig.safeBlockHorizontal * 4
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                    tmpHubServices.isNotEmpty ?
+                                                                    ///List
+                                                                    Container(
+                                                                      height: 240,
+                                                                      width: double.infinity,
+                                                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 0, top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 0),
+                                                                      child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
+                                                                        SliverList(
+                                                                          delegate: SliverChildBuilderDelegate(
+                                                                                (context, index) {
+                                                                              ServiceState service = tmpHubServices.elementAt(index);
+                                                                              return Container(
+                                                                                child: NewPRCardWidget(182, 182, service, false, true, index, AppLocalizations.of(context).hubsTopServices),
+                                                                              );
+                                                                            },
+                                                                            childCount: tmpHubServices.length,
+                                                                          ),
+                                                                        ),
+                                                                      ]),
+                                                                    )
+                                                                        : noActivity ?
+                                                                    Container(
+                                                                      height: 220,
+                                                                      width: double.infinity,
+                                                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 0),
+                                                                      child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
+                                                                        SliverList(
+                                                                          delegate: SliverChildBuilderDelegate(
+                                                                                (context, index) {
+                                                                              return Column(
+                                                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                children: [
+                                                                                  Container(
+                                                                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 2),
+                                                                                    child: Utils.imageShimmer(182, 182),
+                                                                                  ),
+                                                                                  Container(
+                                                                                    width: 180,
+                                                                                    alignment: Alignment.topLeft,
+                                                                                    margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 1, left: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1.5),
+                                                                                    child: Utils.textShimmer(150, 10),
+                                                                                  )
+                                                                                ],
+                                                                              );
+                                                                            },
+                                                                            childCount: 10,
+                                                                          ),
+                                                                        ),
+                                                                      ]),
+                                                                    ) :
+                                                                    ///No List
+                                                                    Container(
+                                                                      height: SizeConfig.safeBlockVertical * 8,
+                                                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 3),
+                                                                      decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
+                                                                      child: Center(
+                                                                          child: Container(
+                                                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 4),
+                                                                            alignment: Alignment.centerLeft,
+                                                                            child: Text(
+                                                                              AppLocalizations.of(context).noServiceFound,
+                                                                              style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextWhite, fontWeight: FontWeight.w500, fontSize: 16),
+                                                                            ),
+                                                                          )),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            ) : Container();
+                                                          }
+                                                      )
+                                                  );
+                                                }
                                                 ///Popular
                                                 childrens.add(Flexible(
                                                   child: Container(
@@ -2433,7 +3119,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                             Flexible(
                                                               flex: 3,
                                                               child: Container(
-                                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: 20, bottom: SizeConfig.safeBlockVertical * 0.5),
+                                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: 20, bottom: SizeConfig.safeBlockVertical * 0.5),
                                                                 child: Text(
                                                                   AppLocalizations.of(context).popular,
                                                                   style: TextStyle(
@@ -2458,7 +3144,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                                     color: Colors.transparent,
                                                                     child: InkWell(
                                                                         onTap: () {
-                                                                          Navigator.push(context, MaterialPageRoute(builder: (context) => ViewMore(AppLocalizations.of(context).popular, orderList, true, [])),);
+                                                                          Navigator.push(context, MaterialPageRoute(builder: (context) => ViewMore(AppLocalizations.of(context).popular, orderList, true, [], false)),);
                                                                         },
                                                                         borderRadius: BorderRadius.all(Radius.circular(5.0)),
                                                                         child: Container(
@@ -2483,7 +3169,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                         ),
                                                         ///Text
                                                         Container(
-                                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * .5, bottom: SizeConfig.safeBlockVertical * .5),
+                                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * .5, bottom: SizeConfig.safeBlockVertical * .5),
                                                           child: Text(
                                                             AppLocalizations.of(context).popularSlogan,
                                                             style: TextStyle(
@@ -2502,7 +3188,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                         Container(
                                                             height: 240,
                                                             width: double.infinity,
-                                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 0),
+                                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 0, top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 0),
                                                             child: Stack(
                                                               children: [
                                                                 ///Paged service list
@@ -2601,7 +3287,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                         /*_searchController.text.isNotEmpty
                                           ? Container(
                                         height: SizeConfig.safeBlockVertical * 8,
-                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                                         decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
                                         child: Center(
                                             child: Container(
@@ -2616,7 +3302,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                           : popularList.isEmpty
                                           ? Container(
                                         height: SizeConfig.safeBlockVertical * 8,
-                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                                         decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
                                         child: Center(
                                             child: Container(
@@ -2631,7 +3317,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                         ///No List
                                                         Container(
                                                           height: SizeConfig.safeBlockVertical * 8,
-                                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 3),
+                                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 3),
                                                           decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
                                                           child: Center(
                                                               child: Container(
@@ -2661,7 +3347,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                   children: [
                                                     ///Recommended
                                                     Container(
-                                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: 20, bottom: SizeConfig.safeBlockVertical * 0.5),
+                                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: 20, bottom: SizeConfig.safeBlockVertical * 0.5),
                                                       child: Text(
                                                         AppLocalizations.of(context).recommended,
                                                         style: TextStyle(
@@ -2678,7 +3364,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
 
                                                     ///Text
                                                     Container(
-                                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * .5, bottom: SizeConfig.safeBlockVertical * .5),
+                                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * .5, bottom: SizeConfig.safeBlockVertical * .5),
                                                       child: Text(
                                                         AppLocalizations.of(context).recommendedSlogan,
                                                         style: TextStyle(
@@ -2753,7 +3439,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                     ///No List
                                                     Container(
                                                       height: SizeConfig.safeBlockVertical * 8,
-                                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 3),
+                                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 3),
                                                       decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
                                                       child: Center(
                                                           child: Container(
@@ -2822,13 +3508,13 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                                       children: [
                                                                         ///Category
                                                                         Container(
-                                                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: 20, bottom: SizeConfig.safeBlockVertical * 0.5),
+                                                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: 20, bottom: SizeConfig.safeBlockVertical * 0.5),
                                                                           child: Text(
                                                                             category.name,
                                                                             style: TextStyle(
                                                                               //letterSpacing: SizeConfig.safeBlockVertical * .4,
                                                                                 fontFamily: BuytimeTheme.FontFamily,
-                                                                                color: BuytimeTheme.TextWhite,
+                                                                                color: BuytimeTheme.TextBlack,
                                                                                 fontWeight: FontWeight.w700,
                                                                                 fontSize: 18
 
@@ -2838,13 +3524,13 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                                         ),
                                                                         ///Text
                                                                         Container(
-                                                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * .5, bottom: SizeConfig.safeBlockVertical * .5),
+                                                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * .5, bottom: SizeConfig.safeBlockVertical * .5),
                                                                           child: Text(
                                                                             '${AppLocalizations.of(context).discoverStart} ${category.name} ${AppLocalizations.of(context).discoverEnd}',
                                                                             style: TextStyle(
                                                                               //letterSpacing: SizeConfig.safeBlockVertical * .4,
                                                                                 fontFamily: BuytimeTheme.FontFamily,
-                                                                                color: BuytimeTheme.TextWhite,
+                                                                                color: BuytimeTheme.TextBlack.withOpacity(.6),
                                                                                 fontWeight: FontWeight.w500,
                                                                                 fontSize: 14
 
@@ -2855,7 +3541,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                                         Container(
                                                                           height: 220,
                                                                           width: double.infinity,
-                                                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 0),
+                                                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 0, top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 0),
                                                                           child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
                                                                             SliverList(
                                                                               delegate: SliverChildBuilderDelegate(
@@ -2912,7 +3598,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                                           Flexible(
                                                                             flex: 3,
                                                                             child: Container(
-                                                                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: 20, bottom: SizeConfig.safeBlockVertical * 0.5),
+                                                                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: 20, bottom: SizeConfig.safeBlockVertical * 0.5),
                                                                               child: Text(
                                                                                 category.name,
                                                                                 style: TextStyle(
@@ -2937,7 +3623,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                                                   color: Colors.transparent,
                                                                                   child: InkWell(
                                                                                       onTap: () {
-                                                                                        Navigator.push(context, MaterialPageRoute(builder: (context) => ViewMore(category.name, orderList, false, category.categoryIdList)),);
+                                                                                        Navigator.push(context, MaterialPageRoute(builder: (context) => ViewMore(category.name, orderList, false, category.categoryIdList, false)),);
                                                                                       },
                                                                                       borderRadius: BorderRadius.all(Radius.circular(5.0)),
                                                                                       child: Container(
@@ -2962,7 +3648,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                                       ),
                                                                       ///Text
                                                                       Container(
-                                                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * .5, bottom: SizeConfig.safeBlockVertical * .5),
+                                                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * .5, bottom: SizeConfig.safeBlockVertical * .5),
                                                                         child: Text(
                                                                           '${AppLocalizations.of(context).discoverStart} ${category.name} ${AppLocalizations.of(context).discoverEnd}',
                                                                           style: TextStyle(
@@ -2980,7 +3666,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                                       Container(
                                                                         height: 240,
                                                                         width: double.infinity,
-                                                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 0),
+                                                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 0, top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 0),
                                                                         child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
                                                                           SliverList(
                                                                             delegate: SliverChildBuilderDelegate(
@@ -3029,7 +3715,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                                       ///No List
                                                                       Container(
                                                                         height: SizeConfig.safeBlockVertical * 8,
-                                                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 3),
+                                                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 3),
                                                                         decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
                                                                         child: Center(
                                                                             child: Container(
@@ -3104,7 +3790,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                               },
                                                               child: Container(
                                                                 height: 64,
-                                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
+                                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5),
                                                                 child: Column(
                                                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                                   children: [
@@ -3142,7 +3828,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                                               margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1.5),
                                                                               child: Icon(
                                                                                 Icons.call,
-                                                                                color: BuytimeTheme.SymbolGrey,
+                                                                                color: BuytimeTheme.TextBlack,
                                                                               ),
                                                                             )),
                                                                         Expanded(
@@ -3178,40 +3864,40 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                 childrens.add(
                                                     FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty /*&& cards.isNotEmpty*/?
                                                     Container(
-                                            color: Colors.white,
-                                            height: 64,
-                                            child: Material(
-                                              color: Colors.transparent,
-                                              child: InkWell(
-                                                  key: Key('log_out_key'),
-                                                  onTap: () async {
-                                                    SharedPreferences prefs = await SharedPreferences.getInstance();
-                                                    dynamicLinkHelper.clearBooking();
-                                                    FirebaseAuth.instance.signOut().then((_) {
-                                                      googleSignIn.signOut();
-                                                      StoreProvider.of<AppState>(context).dispatch(SetAppStateToEmpty());
-                                                      drawerSelection = DrawerSelection.BusinessList;
-                                                      Navigator.of(context).pushReplacementNamed(Home.route);
-                                                    });
-                                                  },
-                                                  child: CustomBottomButtonWidget(
-                                                      Container(
-                                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5),
-                                                        child: Text(
-                                                          AppLocalizations.of(context).logOut,
-                                                          style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w400, fontSize: 16),
-                                                        ),
+                                                      color: Colors.white,
+                                                      height: 64,
+                                                      child: Material(
+                                                        color: Colors.transparent,
+                                                        child: InkWell(
+                                                            key: Key('log_out_key'),
+                                                            onTap: () async {
+                                                              SharedPreferences prefs = await SharedPreferences.getInstance();
+                                                              dynamicLinkHelper.clearBooking();
+                                                              FirebaseAuth.instance.signOut().then((_) {
+                                                                googleSignIn.signOut();
+                                                                StoreProvider.of<AppState>(context).dispatch(SetAppStateToEmpty());
+                                                                drawerSelection = DrawerSelection.BusinessList;
+                                                                Navigator.of(context).pushReplacementNamed(Home.route);
+                                                              });
+                                                            },
+                                                            child: CustomBottomButtonWidget(
+                                                                Container(
+                                                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5),
+                                                                  child: Text(
+                                                                    AppLocalizations.of(context).logOut,
+                                                                    style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w400, fontSize: 16),
+                                                                  ),
+                                                                ),
+                                                                '',
+                                                                Container(
+                                                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5),
+                                                                  child: Icon(
+                                                                    MaterialDesignIcons.exit_to_app,
+                                                                    color: BuytimeTheme.SymbolGrey,
+                                                                  ),
+                                                                ))),
                                                       ),
-                                                      '',
-                                                      Container(
-                                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5),
-                                                        child: Icon(
-                                                          MaterialDesignIcons.exit_to_app,
-                                                          color: BuytimeTheme.SymbolGrey,
-                                                        ),
-                                                      ))),
-                                            ),
-                                          ) : Container()
+                                                    ) : Container()
                                                 );
 
                                                 return Column(
@@ -3352,80 +4038,80 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                             Flexible(
                                               child: Container(
                                                 margin: EdgeInsets.only(
-                                                  bottom: 5
+                                                    bottom: 5
                                                 ),
                                                 child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.vertical, slivers: [
                                                   SliverList(
                                                     delegate: SliverChildBuilderDelegate(
                                                           (context, index) {
                                                         //MenuItemModel menuItem = menuItems.elementAt(index);
-                                                            if(Provider.of<Explorer>(context, listen: false).searchedList.length > 1 ||
-                                                                (Provider.of<Explorer>(context, listen: false).searchedList.length == 1 && Provider.of<Explorer>(context, listen: false).searchedList.first.isNotEmpty)){
-                                                              if (index == 0) {
-                                                                return Container(
-                                                                  height: Provider.of<Explorer>(context, listen: false).searchedList.elementAt(index).isEmpty ? 0 : 80,
-                                                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 4.5, bottom: SizeConfig.safeBlockVertical * 1, top: SizeConfig.safeBlockVertical * 1),
-                                                                  child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
-                                                                    SliverList(
-                                                                      delegate: SliverChildBuilderDelegate(
-                                                                            (context, i) {
-                                                                          //MenuItemModel menuItem = menuItems.elementAt(index);
+                                                        if(Provider.of<Explorer>(context, listen: false).searchedList.length > 1 ||
+                                                            (Provider.of<Explorer>(context, listen: false).searchedList.length == 1 && Provider.of<Explorer>(context, listen: false).searchedList.first.isNotEmpty)){
+                                                          if (index == 0) {
+                                                            return Container(
+                                                              height: Provider.of<Explorer>(context, listen: false).searchedList.elementAt(index).isEmpty ? 0 : 80,
+                                                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 4.5, bottom: SizeConfig.safeBlockVertical * 1, top: SizeConfig.safeBlockVertical * 1),
+                                                              child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
+                                                                SliverList(
+                                                                  delegate: SliverChildBuilderDelegate(
+                                                                        (context, i) {
+                                                                      //MenuItemModel menuItem = menuItems.elementAt(index);
 
-                                                                          CategoryState category = Provider.of<Explorer>(context, listen: false).searchedList.elementAt(index).elementAt(i);
-                                                                          return Container(
-                                                                            width: 80,
-                                                                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0, right: SizeConfig.safeBlockHorizontal * 1),
-                                                                            child: DiscoverCardWidget(80, 80, category, true, categoryListIds[category.name], index),
-                                                                          );
-                                                                        },
-                                                                        childCount: Provider.of<Explorer>(context, listen: false).searchedList.elementAt(index).length,
-                                                                      ),
-                                                                    ),
-                                                                  ]),
-                                                                );
-                                                              }
-                                                              else {
-                                                                List<ServiceState> serviceList = Provider.of<Explorer>(context, listen: false).searchedList.elementAt(index);
-                                                                debugPrint('RUI_U_service_explorer => searched index: $index | service list: ${serviceList.length}');
-                                                                return CustomScrollView(shrinkWrap: true, physics: NeverScrollableScrollPhysics(), scrollDirection: Axis.vertical, slivers: [
-                                                                  SliverList(
-                                                                    delegate: SliverChildBuilderDelegate(
-                                                                          (context, index) {
-                                                                        //MenuItemModel menuItem = menuItems.elementAt(index);
-                                                                        ServiceState service = serviceList.elementAt(index);
-                                                                        return Column(
-                                                                          children: [
-                                                                            ServiceListItem(service, true, index),
-                                                                            Container(
-                                                                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 30),
-                                                                              height: SizeConfig.safeBlockVertical * .2,
-                                                                              color: BuytimeTheme.DividerGrey,
-                                                                            )
-                                                                          ],
-                                                                        );
-                                                                      },
-                                                                      childCount: serviceList.length,
-                                                                    ),
+                                                                      CategoryState category = Provider.of<Explorer>(context, listen: false).searchedList.elementAt(index).elementAt(i);
+                                                                      return Container(
+                                                                        width: 80,
+                                                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0, right: SizeConfig.safeBlockHorizontal * 1),
+                                                                        child: DiscoverCardWidget(80, 80, category, true, categoryListIds[category.name], index),
+                                                                      );
+                                                                    },
+                                                                    childCount: Provider.of<Explorer>(context, listen: false).searchedList.elementAt(index).length,
                                                                   ),
-                                                                ]);
-                                                                //return Container();
-                                                              }
-                                                            }else{
-                                                              return Container(
-                                                                height: SizeConfig.safeBlockVertical * 8,
-                                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
-                                                                decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
-                                                                child: Center(
-                                                                    child: Container(
-                                                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 4),
-                                                                      alignment: Alignment.centerLeft,
-                                                                      child: Text(
-                                                                        AppLocalizations.of(context).noResultsFor + ' \"${_searchController.text}\"',
-                                                                        style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextGrey, fontWeight: FontWeight.w500, fontSize: 16),
-                                                                      ),
-                                                                    )),
-                                                              );
-                                                            }
+                                                                ),
+                                                              ]),
+                                                            );
+                                                          }
+                                                          else {
+                                                            List<ServiceState> serviceList = Provider.of<Explorer>(context, listen: false).searchedList.elementAt(index);
+                                                            debugPrint('RUI_U_service_explorer => searched index: $index | service list: ${serviceList.length}');
+                                                            return CustomScrollView(shrinkWrap: true, physics: NeverScrollableScrollPhysics(), scrollDirection: Axis.vertical, slivers: [
+                                                              SliverList(
+                                                                delegate: SliverChildBuilderDelegate(
+                                                                      (context, index) {
+                                                                    //MenuItemModel menuItem = menuItems.elementAt(index);
+                                                                    ServiceState service = serviceList.elementAt(index);
+                                                                    return Column(
+                                                                      children: [
+                                                                        ServiceListItem(service, true, index),
+                                                                        Container(
+                                                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 30),
+                                                                          height: SizeConfig.safeBlockVertical * .2,
+                                                                          color: BuytimeTheme.DividerGrey,
+                                                                        )
+                                                                      ],
+                                                                    );
+                                                                  },
+                                                                  childCount: serviceList.length,
+                                                                ),
+                                                              ),
+                                                            ]);
+                                                            //return Container();
+                                                          }
+                                                        }else{
+                                                          return Container(
+                                                            height: SizeConfig.safeBlockVertical * 8,
+                                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                                            decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
+                                                            child: Center(
+                                                                child: Container(
+                                                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 4),
+                                                                  alignment: Alignment.centerLeft,
+                                                                  child: Text(
+                                                                    AppLocalizations.of(context).noResultsFor + ' \"${_searchController.text}\"',
+                                                                    style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextGrey, fontWeight: FontWeight.w500, fontSize: 16),
+                                                                  ),
+                                                                )),
+                                                          );
+                                                        }
 
                                                       },
                                                       childCount: Provider.of<Explorer>(context, listen: false).searchedList.length,
@@ -3448,7 +4134,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                       ?
                                       : Container(
                                     height: SizeConfig.safeBlockVertical * 8,
-                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                                     decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
                                     child: Center(
                                         child: Container(
@@ -3516,7 +4202,8 @@ class Explorer with ChangeNotifier{
   List<CategoryState> allCategoryList;
   List<dynamic> searchedList;
   TextEditingController searchController;
-  Explorer(this.searching, this.serviceList, this.rootCategoryList, this.searchedList, this.searchController, this.first, this.allCategoryList);
+  BusinessState businessState;
+  Explorer(this.searching, this.serviceList, this.rootCategoryList, this.searchedList, this.searchController, this.first, this.allCategoryList, this.businessState);
 
   initSearching(bool searching){
     this.searching = searching;

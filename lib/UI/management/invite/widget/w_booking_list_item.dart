@@ -64,7 +64,7 @@ class _BookingListItemState extends State<BookingListItem> {
                           children: [
                             ///Full Name
                             Container(
-                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
+                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * 1),
                               child: FittedBox(
                                 fit: BoxFit.scaleDown,
                                 child: Text(
@@ -80,7 +80,7 @@ class _BookingListItemState extends State<BookingListItem> {
                             ),
                             ///Date
                             Container(
-                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
+                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * 1),
                               child: Text(
                                 '${DateFormat('dd/MM',Localizations.localeOf(context).languageCode).format(widget.booking.start_date.toUtc())} - ${DateFormat('dd/MM').format(widget.booking.end_date.toUtc())}',
                                 style: TextStyle(
@@ -133,7 +133,7 @@ class _BookingListItemState extends State<BookingListItem> {
               ),
               ///Divider
               Container(
-                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5),
+                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5),
                 height: 2,
                 color: BuytimeTheme.DividerGrey,
               )

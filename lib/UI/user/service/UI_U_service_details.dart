@@ -346,7 +346,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                                         children: [
                                                           ///Service Name Text
                                                           Container(
-                                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 0.5),
+                                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * 0.5),
                                                             child: Text(
                                                               widget.serviceState.name != null ? Utils.retriveField(Localizations.localeOf(context).languageCode, widget.serviceState.name) : AppLocalizations.of(context).serviceName,
                                                               style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextWhite, fontWeight: FontWeight.w700, fontSize: 18
@@ -371,7 +371,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                                           Row(
                                                             children: [
                                                               Container(
-                                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1),
+                                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1),
                                                                 child: Text(
                                                                   price,
                                                                   style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextWhite, fontWeight: FontWeight.w400, fontSize: 14
@@ -452,7 +452,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                               children: [
                                                 ///Service Name Text
                                                 Container(
-                                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2.5),
+                                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * 2.5),
                                                   child: Text(
                                                     widget.serviceState.name != null ? Utils.retriveField(Localizations.localeOf(context).languageCode, widget.serviceState.name) : AppLocalizations.of(context).serviceName,
                                                     style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextWhite, fontWeight: FontWeight.w700, fontSize: 18
@@ -475,7 +475,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
 
                                                 ///Amount
                                                 Container(
-                                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1),
+                                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1),
                                                   child: Text(
                                                     price,
                                                     style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextWhite, fontWeight: FontWeight.w400, fontSize: 14
@@ -504,7 +504,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                         children: [
                                           ///Supplied by
                                           Container(
-                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                                             child: FittedBox(
                                               fit: BoxFit.scaleDown,
                                               child: Text(
@@ -519,7 +519,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
 
                                           ///Supplied Value
                                           Container(
-                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
+                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
                                             child: FittedBox(
                                               fit: BoxFit.scaleDown,
                                               child: Text(
@@ -534,7 +534,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
 
                                           ///Address text
                                           Container(
-                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                                             child: FittedBox(
                                               fit: BoxFit.scaleDown,
                                               child: Text(
@@ -549,7 +549,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
 
                                           ///Address value
                                           Container(
-                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
+                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
                                             child: FittedBox(
                                               fit: BoxFit.scaleDown,
                                               child: Text(
@@ -565,7 +565,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                               ? Container()
                                               :///Directions
                                               Container(
-                                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 0.5),
+                                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 0.5),
                                                   child: Row(
                                                     children: [
                                                       Icon(
@@ -633,7 +633,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                             children: [
                                               ///Supplied by
                                               Container(
-                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                                                 child: FittedBox(
                                                   fit: BoxFit.scaleDown,
                                                   child: Text(
@@ -648,7 +648,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
 
                                               ///Supplied Value
                                               Container(
-                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
+                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
                                                 child: FittedBox(
                                                   fit: BoxFit.scaleDown,
                                                   child: Text(
@@ -663,7 +663,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
 
                                               ///Address text
                                               Container(
-                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                                                 child: FittedBox(
                                                   fit: BoxFit.scaleDown,
                                                   child: Text(
@@ -678,7 +678,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
 
                                               ///Address value
                                               Container(
-                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
+                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
                                                 child: FittedBox(
                                                   fit: BoxFit.scaleDown,
                                                   child: Text(
@@ -693,7 +693,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
 
                                               ///Directions
                                               Container(
-                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 0.5),
+                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 0.5),
                                                 child: Row(
                                                   children: [
                                                     Icon(
@@ -757,7 +757,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                 ///Condition Text
                                 widget.serviceState.condition != null &&  widget.serviceState.condition.isNotEmpty ?
                                 Container(
-                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                                   child: FittedBox(
                                     fit: BoxFit.scaleDown,
                                     child: Text(
@@ -772,7 +772,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                 ///Condition Value
                                 widget.serviceState.condition != null &&  widget.serviceState.condition.isNotEmpty ?
                                 Container(
-                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
+                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
                                   child: FittedBox(
                                     fit: BoxFit.scaleDown,
                                     child: Text(
@@ -786,7 +786,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                 ) : Container(),
                                 ///Description text
                                 Container(
-                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                                   child: FittedBox(
                                     fit: BoxFit.scaleDown,
                                     child: Text(
@@ -802,7 +802,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                 Flexible(
                                   child: Container(
                                     width: double.infinity,
-                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, bottom: SizeConfig.safeBlockVertical * 0, top: SizeConfig.safeBlockVertical * .5),
+                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, bottom: SizeConfig.safeBlockVertical * 0, top: SizeConfig.safeBlockVertical * .5),
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
@@ -836,7 +836,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                 ///Original & Translate
                                 serviceState.originalLanguage.isNotEmpty && myLocale.languageCode != serviceState.originalLanguage && (serviceState.description.split('|').length > 1 || translatedDescription.isNotEmpty) ?
                                 Container(
-                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, bottom: SizeConfig.safeBlockVertical * 1, top: SizeConfig.safeBlockVertical * .5),
+                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, bottom: SizeConfig.safeBlockVertical * 1, top: SizeConfig.safeBlockVertical * .5),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
@@ -889,7 +889,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                     ],
                                   ),
                                 ) : serviceState.originalLanguage.isNotEmpty && (serviceState.description.split('|').length == 1 || translatedDescription.isEmpty) ? Container(
-                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, bottom: SizeConfig.safeBlockVertical * 1, top: SizeConfig.safeBlockVertical * .5),
+                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, bottom: SizeConfig.safeBlockVertical * 1, top: SizeConfig.safeBlockVertical * .5),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [

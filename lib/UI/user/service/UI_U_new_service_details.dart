@@ -56,6 +56,7 @@ class _NewServiceDetailsState extends State<NewServiceDetails> with SingleTicker
   Color _bgTheme;
   double height = 30;
   ScrollController _scrollController;
+  bool isRestaurant = false;
 
   @override
   void initState() {
@@ -210,6 +211,412 @@ class _NewServiceDetailsState extends State<NewServiceDetails> with SingleTicker
         return WillPopScope(
           onWillPop: () async => false,
           child: Scaffold(
+            floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+            floatingActionButton: Container(
+              width: double.infinity,
+              color: Colors.white,
+              child: !widget.serviceState.switchSlots ?
+              ///Add a cart & Buy
+              Container(
+                width: 198,
+                height: 120,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    ///Buy
+                    Container(
+                        width: 198,  ///SizeConfig.safeBlockHorizontal * 40
+                        height: 44,
+                        margin: EdgeInsets.only(top: 5, bottom: 0),
+                        child: MaterialButton(
+                          key: Key('service_details_buy_key'),
+                          elevation: 0,
+                          hoverElevation: 0,
+                          focusElevation: 0,
+                          highlightElevation: 0,
+                          onPressed: StoreProvider.of<AppState>(context).state.user.getRole() == Role.user
+                              ? () {
+                            if (isExternal) {
+                              order.business.name = externalBusinessState.name;
+                              order.business.id = externalBusinessState.id_firestore;
+                            } else {
+                              order.business.name = snapshot.business.name;
+                              order.business.id = snapshot.business.id_firestore;
+                            }
+                            order.user.name = snapshot.user.name;
+                            order.user.id = snapshot.user.uid;
+                            order.user.email = snapshot.user.email;
+                            // order.addItem(widget.serviceState, snapshot.business.ownerId, context);
+                            if (!order.addingFromAnotherBusiness(widget.serviceState.businessId)) {
+                              order.addItem(widget.serviceState, snapshot.business.ownerId, context);
+                              order.cartCounter++;
+                              StoreProvider.of<AppState>(context).dispatch(SetOrder(order));
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => Cart(tourist: widget.tourist,)),);
+                            } else {
+                              /// TODO ask if they want the cart to be flushed empty
+                              showDialog(
+                                  context: context,
+                                  builder: (_) => AlertDialog(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: new BorderRadius.circular(22)),
+                                    title: Text(
+                                      AppLocalizations.of(context).doYouWantToPerformAnotherOrder,
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontFamily: BuytimeTheme.FontFamily,
+                                        //color: BuytimeTheme.SymbolMalibu
+                                      ),),
+                                    content: Text(
+                                      AppLocalizations.of(context).youAreAboutToPerformAnotherOrder,
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontFamily: BuytimeTheme.FontFamily,
+                                          color: BuytimeTheme.TextGrey
+                                      ),
+                                    ),
+                                    actions: <Widget>[
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          ///Cancel
+                                          Container(
+                                            width: 136, ///SizeConfig.safeBlockHorizontal * 40
+                                            height: 44,
+                                            margin: EdgeInsets.only(top: 5, bottom: 0, right: 8),
+                                            decoration: BoxDecoration(
+                                                borderRadius: new BorderRadius.circular(22),
+                                                border: Border.all(color: BuytimeTheme.ActionBlackPurple)
+                                            ),
+                                            child: MaterialButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              elevation: 0,
+                                              hoverElevation: 0,
+                                              focusElevation: 0,
+                                              highlightElevation: 0,
+                                              textColor: BuytimeTheme.ActionBlackPurple,
+                                              disabledTextColor: BuytimeTheme.TextWhite,
+                                              color: BuytimeTheme.TextWhite,
+                                              disabledColor: BuytimeTheme.SymbolGrey,
+                                              //padding: EdgeInsets.all(15),
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius: new BorderRadius.circular(22),
+                                              ),
+                                              child: Container(
+                                                  child: Text(
+                                                    AppLocalizations.of(context).cancel,
+                                                    style: TextStyle(fontSize: 14, fontFamily: BuytimeTheme.FontFamily, fontWeight: FontWeight.w800, letterSpacing: 1.25),
+                                                  )),
+                                            ),
+                                          ),
+                                          ///OK
+                                          Container(
+                                            width: 136, ///SizeConfig.safeBlockHorizontal * 40
+                                            height: 44,
+                                            margin: EdgeInsets.only(top: 5, bottom: 0, right: SizeConfig.safeBlockHorizontal * 0),
+                                            decoration: BoxDecoration(
+                                              borderRadius: new BorderRadius.circular(22),
+                                            ),
+                                            child: MaterialButton(
+                                              onPressed: () {
+                                                setState(() {
+                                                  /// svuotare il carrello
+                                                  // StoreProvider.of<AppState>(context).dispatch(());
+                                                  /// fare la nuova add
+                                                  for (int i = 0; i < order.itemList.length; i++) {
+                                                    order.removeItem(order.itemList[i],context);
+                                                  }
+                                                  order.itemList = [];
+                                                  order.cartCounter = 0;
+                                                  order.addItem(widget.serviceState, snapshot.business.ownerId, context);
+                                                  order.cartCounter = 1;
+                                                  Navigator.of(context).pop();
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) => Cart(
+                                                          tourist: widget.tourist,
+                                                        )),
+                                                  );
+                                                });
+                                              },
+                                              elevation: 0,
+                                              hoverElevation: 0,
+                                              focusElevation: 0,
+                                              highlightElevation: 0,
+                                              textColor: BuytimeTheme.TextWhite,
+                                              disabledTextColor: BuytimeTheme.TextWhite,
+                                              color: BuytimeTheme.ActionBlackPurple,
+                                              disabledColor: BuytimeTheme.SymbolGrey,
+                                              //padding: EdgeInsets.all(15),
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius: new BorderRadius.circular(22),
+                                              ),
+                                              child: Container(
+                                                  child: Text(
+                                                    AppLocalizations.of(context).ok,
+                                                    style: TextStyle(fontSize: 14, fontFamily: BuytimeTheme.FontFamily, fontWeight: FontWeight.w800, letterSpacing: 1.25),
+                                                  )),
+                                            ),
+                                          )
+                                        ],
+                                      )
+
+                                    ],
+                                  )
+                                      );
+                            }
+                            // order.cartCounter++;
+                            // //StoreProvider.of<AppState>(context).dispatch(SetOrderCartCounter(order.cartCounter));
+                            // StoreProvider.of<AppState>(context).dispatch(SetOrder(order));
+                            //StoreProvider.of<AppState>(context).dispatch(SetOrder(order));
+
+                            /* Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => ConfirmOrder(reserve: false, tourist: widget.tourist,)),
+                                  );*/
+
+                            ///Discriminare se è un turista o un utente loggato a premere BUY
+                            ///Controllare se c'è utente loggato con firebase
+                            //     if (auth.FirebaseAuth != null && auth.FirebaseAuth.instance != null && auth.FirebaseAuth.instance.currentUser != null)
+                          }
+                              : null,
+                          textColor: BuytimeTheme.TextWhite,
+                          disabledTextColor: BuytimeTheme.TextWhite,
+                          color: BuytimeTheme.ActionBlackPurple,
+                          disabledColor: BuytimeTheme.SymbolGrey,
+                          //padding: EdgeInsets.all(15),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: new BorderRadius.circular(22),
+                          ),
+                          child: Text(
+                            AppLocalizations.of(context).buy,
+                            style: TextStyle(fontSize: 14, fontFamily: BuytimeTheme.FontFamily, fontWeight: FontWeight.w800, letterSpacing: 1.25),
+                          ),
+                        )),
+                    ///Add to cart
+                    Container(
+                        width: 198, ///SizeConfig.safeBlockHorizontal * 40
+                        height: 44,
+                        margin: EdgeInsets.only(top: 10, bottom: SizeConfig.safeBlockVertical * 0, right: SizeConfig.safeBlockHorizontal * 0),
+                        decoration: BoxDecoration(
+                            borderRadius: new BorderRadius.circular(22),
+                            border: Border.all(color: BuytimeTheme.ActionBlackPurple)),
+                        child: MaterialButton(
+                          key: Key('service_details_add_to_cart_key'),
+                          elevation: 0,
+                          hoverElevation: 0,
+                          focusElevation: 0,
+                          highlightElevation: 0,
+                          onPressed: StoreProvider.of<AppState>(context).state.user.getRole() == Role.user
+                              ? () {
+                            if (isExternal) {
+                              order.business.name = externalBusinessState.name;
+                              order.business.id = externalBusinessState.id_firestore;
+                            } else {
+                              order.business.name = snapshot.business.name;
+                              order.business.id = snapshot.business.id_firestore;
+                            }
+                            order.user.name = snapshot.user.name;
+                            order.user.id = snapshot.user.uid;
+                            order.user.email = snapshot.user.email;
+                            if (!order.addingFromAnotherBusiness(widget.serviceState.businessId)) {
+                              order.addItem(widget.serviceState, snapshot.business.ownerId, context);
+                              order.cartCounter++;
+                              StoreProvider.of<AppState>(context).dispatch(SetOrder(order));
+                            } else {
+                              /// TODO ask if they want the cart to be flushed empty
+                              showDialog(
+                                  context: context,
+                                  builder: (_) => AlertDialog(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: new BorderRadius.circular(22)),
+                                    title: Text(
+                                      AppLocalizations.of(context).doYouWantToPerformAnotherOrder,
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                      fontSize: 18,
+                                      fontFamily: BuytimeTheme.FontFamily,
+                                      //color: BuytimeTheme.SymbolMalibu
+                                    ),),
+                                    content: Text(
+                                        AppLocalizations.of(context).youAreAboutToPerformAnotherOrder,
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontFamily: BuytimeTheme.FontFamily,
+                                        color: BuytimeTheme.TextGrey
+                                      ),
+                                    ),
+                                    actions: <Widget>[
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          ///Cancel
+                                          Container(
+                                            width: 136, ///SizeConfig.safeBlockHorizontal * 40
+                                            height: 44,
+                                            margin: EdgeInsets.only(top: 5, bottom: 0, right: 8),
+                                            decoration: BoxDecoration(
+                                              borderRadius: new BorderRadius.circular(22),
+                                                border: Border.all(color: BuytimeTheme.ActionBlackPurple)
+                                            ),
+                                            child: MaterialButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              elevation: 0,
+                                              hoverElevation: 0,
+                                              focusElevation: 0,
+                                              highlightElevation: 0,
+                                              textColor: BuytimeTheme.ActionBlackPurple,
+                                              disabledTextColor: BuytimeTheme.TextWhite,
+                                              color: BuytimeTheme.TextWhite,
+                                              disabledColor: BuytimeTheme.SymbolGrey,
+                                              //padding: EdgeInsets.all(15),
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius: new BorderRadius.circular(22),
+                                              ),
+                                              child: Container(
+                                                  child: Text(
+                                                    AppLocalizations.of(context).cancel,
+                                                    style: TextStyle(fontSize: 14, fontFamily: BuytimeTheme.FontFamily, fontWeight: FontWeight.w800, letterSpacing: 1.25),
+                                                  )),
+                                            ),
+                                          ),
+                                          ///OK
+                                          Container(
+                                            width: 136, ///SizeConfig.safeBlockHorizontal * 40
+                                            height: 44,
+                                            margin: EdgeInsets.only(top: 5, bottom: 0, right: SizeConfig.safeBlockHorizontal * 0),
+                                            decoration: BoxDecoration(
+                                              borderRadius: new BorderRadius.circular(22),
+                                            ),
+                                            child: MaterialButton(
+                                              onPressed: () {
+                                                setState(() {
+                                                  /// svuotare il carrello
+                                                  // StoreProvider.of<AppState>(context).dispatch(());
+                                                  /// fare la nuova add
+                                                  for (int i = 0; i < order.itemList.length; i++) {
+                                                    order.removeItem(order.itemList[i],context);
+                                                  }
+                                                  order.itemList = [];
+                                                  order.cartCounter = 0;
+                                                  order.addItem(widget.serviceState, snapshot.business.ownerId, context);
+                                                  order.cartCounter = 1;
+                                                  Navigator.of(context).pop();
+                                                });
+                                              },
+                                              elevation: 0,
+                                              hoverElevation: 0,
+                                              focusElevation: 0,
+                                              highlightElevation: 0,
+                                              textColor: BuytimeTheme.TextWhite,
+                                              disabledTextColor: BuytimeTheme.TextWhite,
+                                              color: BuytimeTheme.ActionBlackPurple,
+                                              disabledColor: BuytimeTheme.SymbolGrey,
+                                              //padding: EdgeInsets.all(15),
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius: new BorderRadius.circular(22),
+                                              ),
+                                              child: Container(
+                                                  child: Text(
+                                                    AppLocalizations.of(context).ok,
+                                                    style: TextStyle(fontSize: 14, fontFamily: BuytimeTheme.FontFamily, fontWeight: FontWeight.w800, letterSpacing: 1.25),
+                                                  )),
+                                            ),
+                                          )
+                                        ],
+                                      )
+
+                                    ],
+                                  )
+                              );
+                            }
+                            // order.cartCounter++;
+                            // //StoreProvider.of<AppState>(context).dispatch(SetOrderCartCounter(order.cartCounter));
+                            // StoreProvider.of<AppState>(context).dispatch(SetOrder(order));
+                          }
+                              : null,
+                          textColor: BuytimeTheme.ActionBlackPurple,
+                          disabledTextColor: BuytimeTheme.SymbolGrey,
+                          color: BuytimeTheme.BackgroundWhite,
+                          //padding: EdgeInsets.all(15),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: new BorderRadius.circular(22),
+                          ),
+                          child: Container(
+                            alignment: Alignment.center,
+                            child: Text(
+                              AppLocalizations.of(context).addToCart,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontFamily: BuytimeTheme.FontFamily,
+                                fontWeight: FontWeight.w500,
+                                letterSpacing: 1.25,
+                              ),
+                            ),
+                          ),
+                        )),
+                  ],
+                ),
+              ) :
+              ///Reserve
+              Container(
+                width: 198,
+                height: 60,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Container(
+                      width: 198, ///SizeConfig.safeBlockHorizontal * 40
+                      height: 44,
+                      margin: EdgeInsets.only(top: 5, bottom: 0, right: SizeConfig.safeBlockHorizontal * 0),
+                      decoration: BoxDecoration(
+                        borderRadius: new BorderRadius.circular(22),
+                        /*border: Border.all(
+                                color: BuytimeTheme.UserPrimary
+                            )*/
+                      ),
+                      child: MaterialButton(
+                        key: Key('service_reserve_buy_key'),
+                        onPressed: StoreProvider.of<AppState>(context).state.user.getRole() == Role.user
+                            ? () {
+                          StoreProvider.of<AppState>(context).dispatch(SetOrderReservableToEmpty('ok'));
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => ServiceReserve(serviceState: widget.serviceState, tourist: widget.tourist)),
+                          );
+                        }
+                            : null,
+                        elevation: 0,
+                        hoverElevation: 0,
+                        focusElevation: 0,
+                        highlightElevation: 0,
+                        textColor: BuytimeTheme.TextWhite,
+                        disabledTextColor: BuytimeTheme.TextWhite,
+                        color: BuytimeTheme.ActionBlackPurple,
+                        disabledColor: BuytimeTheme.SymbolGrey,
+                        //padding: EdgeInsets.all(15),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: new BorderRadius.circular(22),
+                        ),
+                        child: Container(
+                            child: Text(
+                              !isRestaurant ? AppLocalizations.of(context).reserve : AppLocalizations.of(context).reserveATable,
+                              style: TextStyle(fontSize: 14, fontFamily: BuytimeTheme.FontFamily, fontWeight: FontWeight.w800, letterSpacing: 1.25),
+                            )),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
               body: Container(
                 height: SizeConfig.safeBlockVertical * 100,
                 child: Column(
@@ -430,13 +837,13 @@ class _NewServiceDetailsState extends State<NewServiceDetails> with SingleTicker
                                           ///Promotion
                                           _theme == Colors.black ? Container() : Utils.checkPromoDiscount('general_1', context, widget.serviceState.businessId).promotionId != 'empty' ?
                                           Container(
-                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 3.5),
+                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * 3.5),
                                             child: NewDiscount(widget.serviceState, StoreProvider.of<AppState>(context).state.bookingList.bookingListState.isNotEmpty ?
                                             StoreProvider.of<AppState>(context).state.bookingList.bookingListState.first.business_id : '', true, true),
                                           ) : Container(),
                                           ///Service Name Text
                                           Container(
-                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 0.5),
+                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * 0.5),
                                             child: Text(
                                               widget.serviceState.name != null ? Utils.retriveField(Localizations.localeOf(context).languageCode, widget.serviceState.name) : AppLocalizations.of(context).serviceName,
                                               style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextWhite, fontWeight: FontWeight.w600, fontSize: 24
@@ -449,7 +856,7 @@ class _NewServiceDetailsState extends State<NewServiceDetails> with SingleTicker
                                             children: [
                                               widget.serviceState.switchSlots ?
                                               Container(
-                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 0.5, bottom:  SizeConfig.safeBlockVertical * 0.5),
+                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * 0.5, bottom:  SizeConfig.safeBlockVertical * 0.5),
                                                 child: Text(
                                                   AppLocalizations.of(context).from,
                                                   style: TextStyle(
@@ -495,7 +902,7 @@ class _NewServiceDetailsState extends State<NewServiceDetails> with SingleTicker
                                           ),
                                           Container(
                                             height: 20,
-                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 0.5),
+                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * 0.5),
                                           ),
                                         ],
                                       )),
@@ -516,7 +923,7 @@ class _NewServiceDetailsState extends State<NewServiceDetails> with SingleTicker
                                             height: 2.5,
                                             width: 75,
                                             decoration: BoxDecoration(
-                                              color: BuytimeTheme.SymbolMalibu,
+                                              color: BuytimeTheme.TextWhite,
                                               borderRadius: BorderRadius.all(Radius.circular(20)),
                                             ),
                                           ),
@@ -531,7 +938,7 @@ class _NewServiceDetailsState extends State<NewServiceDetails> with SingleTicker
                               )
                           ),
                           SliverFixedExtentList(
-                            itemExtent: !widget.serviceState.switchSlots ? (SizeConfig.screenHeight - 202) : (SizeConfig.screenHeight - 166),
+                            itemExtent: !widget.serviceState.switchSlots ? (SizeConfig.screenHeight - 100) : (SizeConfig.screenHeight - 98),
                             delegate: SliverChildListDelegate(
                               [
                                 ///Service Name & The rest
@@ -546,7 +953,7 @@ class _NewServiceDetailsState extends State<NewServiceDetails> with SingleTicker
                                       children: [
                                         ///Supplied by
                                         Container(
-                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                                           child: FittedBox(
                                             fit: BoxFit.scaleDown,
                                             child: Text(
@@ -559,7 +966,7 @@ class _NewServiceDetailsState extends State<NewServiceDetails> with SingleTicker
                                         ),
                                         ///Supplied Value
                                         Container(
-                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
+                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
                                           child: FittedBox(
                                             fit: BoxFit.scaleDown,
                                             child: Text(
@@ -572,7 +979,7 @@ class _NewServiceDetailsState extends State<NewServiceDetails> with SingleTicker
                                         ),
                                         ///Address text
                                         Container(
-                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                                           child: FittedBox(
                                             fit: BoxFit.scaleDown,
                                             child: Text(
@@ -585,7 +992,7 @@ class _NewServiceDetailsState extends State<NewServiceDetails> with SingleTicker
                                         ),
                                         ///Address value
                                         Container(
-                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
+                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
                                           child: FittedBox(
                                             fit: BoxFit.scaleDown,
                                             child: Text(
@@ -599,7 +1006,7 @@ class _NewServiceDetailsState extends State<NewServiceDetails> with SingleTicker
                                         address.endsWith('.') ? Container() :
                                         ///Directions
                                         Container(
-                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 0.5),
+                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 0.5),
                                           child: Row(
                                             children: [
                                               Icon(
@@ -667,7 +1074,7 @@ class _NewServiceDetailsState extends State<NewServiceDetails> with SingleTicker
                                       children: [
                                         ///Supplied by
                                         Container(
-                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                                           child: FittedBox(
                                             fit: BoxFit.scaleDown,
                                             child: Text(
@@ -680,7 +1087,7 @@ class _NewServiceDetailsState extends State<NewServiceDetails> with SingleTicker
                                         ),
                                         ///Supplied Value
                                         Container(
-                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
+                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
                                           child: FittedBox(
                                             fit: BoxFit.scaleDown,
                                             child: Text(
@@ -693,7 +1100,7 @@ class _NewServiceDetailsState extends State<NewServiceDetails> with SingleTicker
                                         ),
                                         ///Address text
                                         Container(
-                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                                           child: FittedBox(
                                             fit: BoxFit.scaleDown,
                                             child: Text(
@@ -707,7 +1114,7 @@ class _NewServiceDetailsState extends State<NewServiceDetails> with SingleTicker
 
                                         ///Address value
                                         Container(
-                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
+                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
                                           child: FittedBox(
                                             fit: BoxFit.scaleDown,
                                             child: Text(
@@ -720,7 +1127,7 @@ class _NewServiceDetailsState extends State<NewServiceDetails> with SingleTicker
                                         ),
                                         ///Directions
                                         Container(
-                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 0.5),
+                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 0.5),
                                           child: Row(
                                             children: [
                                               Icon(
@@ -781,7 +1188,7 @@ class _NewServiceDetailsState extends State<NewServiceDetails> with SingleTicker
                                     ///Condition Text
                                     widget.serviceState.condition != null &&  widget.serviceState.condition.isNotEmpty ?
                                     Container(
-                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                                       child: FittedBox(
                                         fit: BoxFit.scaleDown,
                                         child: Text(
@@ -796,7 +1203,7 @@ class _NewServiceDetailsState extends State<NewServiceDetails> with SingleTicker
                                     ///Condition Value
                                     widget.serviceState.condition != null &&  widget.serviceState.condition.isNotEmpty ?
                                     Container(
-                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
+                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
                                       child: FittedBox(
                                         fit: BoxFit.scaleDown,
                                         child: Text(
@@ -810,7 +1217,7 @@ class _NewServiceDetailsState extends State<NewServiceDetails> with SingleTicker
                                     ) : Container(),
                                     ///Description text
                                     Container(
-                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                                       child: FittedBox(
                                         fit: BoxFit.scaleDown,
                                         child: Text(
@@ -825,7 +1232,7 @@ class _NewServiceDetailsState extends State<NewServiceDetails> with SingleTicker
                                     ///Description
                                     Container(
                                       width: double.infinity,
-                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, bottom: SizeConfig.safeBlockVertical * 0, top: SizeConfig.safeBlockVertical * .5),
+                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, bottom: SizeConfig.safeBlockVertical * 0, top: SizeConfig.safeBlockVertical * .5),
                                       child: Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
@@ -859,7 +1266,7 @@ class _NewServiceDetailsState extends State<NewServiceDetails> with SingleTicker
                                         myLocale.languageCode != serviceState.originalLanguage &&
                                         (serviceState.description.split('|').length > 1 || translatedDescription.isNotEmpty) ?
                                     Container(
-                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, bottom: SizeConfig.safeBlockVertical * 1, top: SizeConfig.safeBlockVertical * .5),
+                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, bottom: SizeConfig.safeBlockVertical * 1, top: SizeConfig.safeBlockVertical * .5),
                                       child: Row(
                                         mainAxisAlignment: MainAxisAlignment.start,
                                         children: [
@@ -916,7 +1323,7 @@ class _NewServiceDetailsState extends State<NewServiceDetails> with SingleTicker
                                         myLocale.languageCode != serviceState.originalLanguage &&
                                         (serviceState.description.split('|').length == 1 || translatedDescription.isEmpty) ?
                                     Container(
-                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, bottom: SizeConfig.safeBlockVertical * 1, top: SizeConfig.safeBlockVertical * .5),
+                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, bottom: SizeConfig.safeBlockVertical * 1, top: SizeConfig.safeBlockVertical * .5),
                                       child: Row(
                                         mainAxisAlignment: MainAxisAlignment.start,
                                         children: [
@@ -964,256 +1371,7 @@ class _NewServiceDetailsState extends State<NewServiceDetails> with SingleTicker
                         ],
                       ),
                     ),
-                    !widget.serviceState.switchSlots ?
-                    ///Add a cart & Buy
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        ///Buy
-                        Container(
-                            width: 198,  ///SizeConfig.safeBlockHorizontal * 40
-                            height: 44,
-                            margin: EdgeInsets.only(top: 5, bottom: 0),
-                            child: MaterialButton(
-                              key: Key('service_details_buy_key'),
-                              elevation: 0,
-                              hoverElevation: 0,
-                              focusElevation: 0,
-                              highlightElevation: 0,
-                              onPressed: StoreProvider.of<AppState>(context).state.user.getRole() == Role.user
-                                  ? () {
-                                if (isExternal) {
-                                  order.business.name = externalBusinessState.name;
-                                  order.business.id = externalBusinessState.id_firestore;
-                                } else {
-                                  order.business.name = snapshot.business.name;
-                                  order.business.id = snapshot.business.id_firestore;
-                                }
-                                order.user.name = snapshot.user.name;
-                                order.user.id = snapshot.user.uid;
-                                order.user.email = snapshot.user.email;
-                                // order.addItem(widget.serviceState, snapshot.business.ownerId, context);
-                                if (!order.addingFromAnotherBusiness(widget.serviceState.businessId)) {
-                                  order.addItem(widget.serviceState, snapshot.business.ownerId, context);
-                                  order.cartCounter++;
-                                  StoreProvider.of<AppState>(context).dispatch(SetOrder(order));
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => Cart(tourist: widget.tourist,)),);
-                                } else {
-                                  /// TODO ask if they want the cart to be flushed empty
-                                  showDialog(
-                                      context: context,
-                                      builder: (_) => AlertDialog(
-                                        title: Text(AppLocalizations.of(context).doYouWantToPerformAnotherOrder),
-                                        content: Text(AppLocalizations.of(context).youAreAboutToPerformAnotherOrder),
-                                        actions: <Widget>[
-                                          MaterialButton(
-                                            elevation: 0,
-                                            hoverElevation: 0,
-                                            focusElevation: 0,
-                                            highlightElevation: 0,
-                                            child: Text(AppLocalizations.of(context).cancel),
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                          ),
-                                          MaterialButton(
-                                            elevation: 0,
-                                            hoverElevation: 0,
-                                            focusElevation: 0,
-                                            highlightElevation: 0,
-                                            child: Text(AppLocalizations.of(context).ok),
-                                            onPressed: () {
-                                              /// svuotare il carrello
-                                              // StoreProvider.of<AppState>(context).dispatch(());
-                                              /// fare la nuova add
-                                              for (int i = 0; i < order.itemList.length; i++) {
-                                                order.removeItem(order.itemList[i],context);
-                                              }
-                                              order.itemList = [];
-                                              order.cartCounter = 0;
-                                              order.addItem(widget.serviceState, snapshot.business.ownerId, context);
-                                              order.cartCounter = 1;
-                                              Navigator.of(context).pop();
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) => Cart(
-                                                      tourist: widget.tourist,
-                                                    )),
-                                              );
-                                            },
-                                          )
-                                        ],
-                                      ));
-                                }
-                                // order.cartCounter++;
-                                // //StoreProvider.of<AppState>(context).dispatch(SetOrderCartCounter(order.cartCounter));
-                                // StoreProvider.of<AppState>(context).dispatch(SetOrder(order));
-                                //StoreProvider.of<AppState>(context).dispatch(SetOrder(order));
 
-                                /* Navigator.push(
-                                    context,
-                                    MaterialPageRoute(builder: (context) => ConfirmOrder(reserve: false, tourist: widget.tourist,)),
-                                  );*/
-
-                                ///Discriminare se è un turista o un utente loggato a premere BUY
-                                ///Controllare se c'è utente loggato con firebase
-                                //     if (auth.FirebaseAuth != null && auth.FirebaseAuth.instance != null && auth.FirebaseAuth.instance.currentUser != null)
-                              }
-                                  : null,
-                              textColor: BuytimeTheme.TextWhite,
-                              disabledTextColor: BuytimeTheme.TextWhite,
-                              color: BuytimeTheme.ActionBlackPurple,
-                              disabledColor: BuytimeTheme.SymbolGrey,
-                              //padding: EdgeInsets.all(15),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: new BorderRadius.circular(22),
-                              ),
-                              child: Text(
-                                AppLocalizations.of(context).buyUpper,
-                                style: TextStyle(fontSize: 14, fontFamily: BuytimeTheme.FontFamily, fontWeight: FontWeight.w800, letterSpacing: 1.25),
-                              ),
-                            )),
-                        ///Add to cart
-                        Container(
-                            width: 198, ///SizeConfig.safeBlockHorizontal * 40
-                            height: 44,
-                            margin: EdgeInsets.only(top: 10, bottom: 0, right: SizeConfig.safeBlockHorizontal * 0),
-                            decoration: BoxDecoration(
-                                borderRadius: new BorderRadius.circular(22),
-                                border: Border.all(color: BuytimeTheme.ActionBlackPurple)),
-                            child: MaterialButton(
-                              key: Key('service_details_add_to_cart_key'),
-                              elevation: 0,
-                              hoverElevation: 0,
-                              focusElevation: 0,
-                              highlightElevation: 0,
-                              onPressed: StoreProvider.of<AppState>(context).state.user.getRole() == Role.user
-                                  ? () {
-                                if (isExternal) {
-                                  order.business.name = externalBusinessState.name;
-                                  order.business.id = externalBusinessState.id_firestore;
-                                } else {
-                                  order.business.name = snapshot.business.name;
-                                  order.business.id = snapshot.business.id_firestore;
-                                }
-                                order.user.name = snapshot.user.name;
-                                order.user.id = snapshot.user.uid;
-                                order.user.email = snapshot.user.email;
-                                if (!order.addingFromAnotherBusiness(widget.serviceState.businessId)) {
-                                  order.addItem(widget.serviceState, snapshot.business.ownerId, context);
-                                  order.cartCounter++;
-                                  StoreProvider.of<AppState>(context).dispatch(SetOrder(order));
-                                } else {
-                                  /// TODO ask if they want the cart to be flushed empty
-                                  showDialog(
-                                      context: context,
-                                      builder: (_) => AlertDialog(
-                                        title: Text(AppLocalizations.of(context).doYouWantToPerformAnotherOrder),
-                                        content: Text(AppLocalizations.of(context).youAreAboutToPerformAnotherOrder),
-                                        actions: <Widget>[
-                                          MaterialButton(
-                                            elevation: 0,
-                                            hoverElevation: 0,
-                                            focusElevation: 0,
-                                            highlightElevation: 0,
-                                            child: Text(AppLocalizations.of(context).cancel),
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                          ),
-                                          MaterialButton(
-                                            elevation: 0,
-                                            hoverElevation: 0,
-                                            focusElevation: 0,
-                                            highlightElevation: 0,
-                                            child: Text(AppLocalizations.of(context).ok),
-                                            onPressed: () {
-                                              /// svuotare il carrello
-                                              // StoreProvider.of<AppState>(context).dispatch(());
-                                              /// fare la nuova add
-                                              for (int i = 0; i < order.itemList.length; i++) {
-                                                order.removeItem(order.itemList[i],context);
-                                              }
-                                              order.itemList = [];
-                                              order.cartCounter = 0;
-                                              order.addItem(widget.serviceState, snapshot.business.ownerId, context);
-                                              order.cartCounter = 1;
-                                              Navigator.of(context).pop();
-                                            },
-                                          )
-                                        ],
-                                      ));
-                                }
-                                // order.cartCounter++;
-                                // //StoreProvider.of<AppState>(context).dispatch(SetOrderCartCounter(order.cartCounter));
-                                // StoreProvider.of<AppState>(context).dispatch(SetOrder(order));
-                              }
-                                  : null,
-                              textColor: BuytimeTheme.ActionBlackPurple,
-                              disabledTextColor: BuytimeTheme.SymbolGrey,
-                              color: BuytimeTheme.BackgroundWhite,
-                              //padding: EdgeInsets.all(15),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: new BorderRadius.circular(22),
-                              ),
-                              child: Container(
-                                alignment: Alignment.center,
-                                child: Text(
-                                  AppLocalizations.of(context).addToCart,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontFamily: BuytimeTheme.FontFamily,
-                                    fontWeight: FontWeight.w500,
-                                    letterSpacing: 1.25,
-                                  ),
-                                ),
-                              ),
-                            )),
-                      ],
-                    ) :
-                    ///Reserve
-                    Container(
-                      width: 198, ///SizeConfig.safeBlockHorizontal * 40
-                      height: 44,
-                      margin: EdgeInsets.only(top: 22, bottom: 0, right: SizeConfig.safeBlockHorizontal * 0),
-                      decoration: BoxDecoration(
-                        borderRadius: new BorderRadius.circular(22),
-                        /*border: Border.all(
-                                color: BuytimeTheme.UserPrimary
-                            )*/
-                      ),
-                      child: MaterialButton(
-                        key: Key('service_reserve_buy_key'),
-                        onPressed: StoreProvider.of<AppState>(context).state.user.getRole() == Role.user
-                            ? () {
-                          StoreProvider.of<AppState>(context).dispatch(SetOrderReservableToEmpty('ok'));
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => ServiceReserve(serviceState: widget.serviceState, tourist: widget.tourist)),
-                          );
-                        }
-                            : null,
-                        elevation: 0,
-                        hoverElevation: 0,
-                        focusElevation: 0,
-                        highlightElevation: 0,
-                        textColor: BuytimeTheme.TextWhite,
-                        disabledTextColor: BuytimeTheme.TextWhite,
-                        color: BuytimeTheme.ActionBlackPurple,
-                        disabledColor: BuytimeTheme.SymbolGrey,
-                        //padding: EdgeInsets.all(15),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: new BorderRadius.circular(22),
-                        ),
-                        child: Container(
-                            child: Text(
-                              AppLocalizations.of(context).reserveUpper,
-                              style: TextStyle(fontSize: 14, fontFamily: BuytimeTheme.FontFamily, fontWeight: FontWeight.w800, letterSpacing: 1.25),
-                            )),
-                      ),
-                    ),
                   ],
                 ),
               )

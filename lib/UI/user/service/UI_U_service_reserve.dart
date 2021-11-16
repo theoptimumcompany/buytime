@@ -384,6 +384,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
   SlotListSnippetState slotSnippetListState = SlotListSnippetState(slotListSnippet: []);
 
   bool reserve = false;
+  bool isRestaurant = false;
 
   @override
   Widget build(BuildContext context) {
@@ -418,68 +419,44 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
       child: WillPopScope(
         onWillPop: () async => false,
         child: Scaffold(
-          appBar: BuytimeAppbar(
-            background: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
-            width: media.width,
-            children: [
-              ///Back Button
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
-                    child: IconButton(
-                      key: Key('back_from_service_reserve_key'),
-                      icon: const Icon(
-                        Icons.keyboard_arrow_left,
-                        color: Colors.white,
-                        size: 25.0,
-                      ),
-                      tooltip: AppLocalizations.of(context).comeBack,
-                      onPressed: () {
-                        FirebaseAnalytics().logEvent(
-                            name: 'back_time_slots',
-                            parameters: {
-                              'user_email': StoreProvider.of<AppState>(context).state.user.email,
-                              'date': DateTime.now().toString(),
-                            });
-                        //StoreProvider.of<AppState>(context).dispatch(SetOrderCartCounter(0));
-                        setState(() {
-                          startRequest = true;
-                        });
-                        Provider.of<ReserveList>(context, listen: false).clear();
-                        StoreProvider.of<AppState>(context).dispatch(SetOrderReservable(OrderReservableState().toEmpty()));
-                        //widget.fromConfirm != null ? Navigator.of(context).pop() : Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Landing()),);
-                        Future.delayed(Duration.zero, () {
-                          Navigator.of(context).pop();
-                        });
-                      },
-                    ),
-                  ),
-                ],
+          appBar: AppBar(
+            backgroundColor: Colors.white,
+            brightness: Brightness.dark,
+            elevation: 0,
+            title: Text(
+              AppLocalizations.of(context).reserveSpace + ' ' + Utils.retriveField(Localizations.localeOf(context).languageCode, widget.serviceState.name),
+              style: TextStyle(
+                  fontFamily: BuytimeTheme.FontFamily,
+                  color: BuytimeTheme.TextBlack,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16 ///SizeConfig.safeBlockHorizontal * 7
               ),
-
-              ///Title
-              Container(
-                width: SizeConfig.safeBlockHorizontal * 60,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 10.0),
-                  child: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Text(
-                      AppLocalizations.of(context).reserveSpace + ' ' + Utils.retriveField(Localizations.localeOf(context).languageCode, widget.serviceState.name),
-                      textAlign: TextAlign.start,
-                      style: BuytimeTheme.appbarTitle,
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                    ),
-                  ),
-                ),
+            ),
+            centerTitle: true,
+            leading: IconButton(
+              icon: Icon(
+                Icons.keyboard_arrow_left,
+                color: Colors.black,
               ),
-              SizedBox(
-                width: 56.0,
-              )
-            ],
+              onPressed: () async{
+                FirebaseAnalytics().logEvent(
+                    name: 'back_time_slots',
+                    parameters: {
+                      'user_email': StoreProvider.of<AppState>(context).state.user.email,
+                      'date': DateTime.now().toString(),
+                    });
+                //StoreProvider.of<AppState>(context).dispatch(SetOrderCartCounter(0));
+                setState(() {
+                  startRequest = true;
+                });
+                Provider.of<ReserveList>(context, listen: false).clear();
+                StoreProvider.of<AppState>(context).dispatch(SetOrderReservable(OrderReservableState().toEmpty()));
+                //widget.fromConfirm != null ? Navigator.of(context).pop() : Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Landing()),);
+                Future.delayed(Duration.zero, () {
+                  Navigator.of(context).pop();
+                });
+              },
+            ),
           ),
           body: SafeArea(
             child: ConstrainedBox(
@@ -785,6 +762,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                   debugPrint('UI_U_service_reserve => PICKED: ${picked.length} - $picked');
                   debugPrint('UI_U_service_reserve => SELECTED: ${selectedSlot}');
                   debugPrint('UI_U_service_reserve => SELECT QUANTITY: ${selectQuantity}');
+                  //isRestaurant = true;
                   //debugPrint('UI_U_service_reserve => INTERVAL SLOTS LENGTH: ${widget.serviceState.serviceSlot.first.startTime.length}');
                   return Consumer<ReserveList>(
                     builder: (_, reserveState, child) {
@@ -794,12 +772,12 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                         mainAxisAlignment: MainAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          ///Service subtitle
+                          /*///Service subtitle
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Container(
-                                margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 4),
+                                margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
                                 child: Text(
                                   Utils.retriveField(Localizations.localeOf(context).languageCode, widget.serviceState.name) ?? AppLocalizations.of(context).serviceName,
                                   style: TextStyle(letterSpacing: 0.25, fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w500, fontSize: 14
@@ -836,10 +814,10 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                 ),
                               )
                             ],
-                          ),
+                          ),*/
 
                           ///Availability text
-                          Row(
+                          /*Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Container(
@@ -853,7 +831,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                 ),
                               )
                             ],
-                          ),
+                          ),*/
 
                           ///Next available time
                           /*Row(
@@ -934,7 +912,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                       style: TextStyle(
                                         //letterSpacing: 1.25,
                                           fontFamily: BuytimeTheme.FontFamily,
-                                          color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
+                                          color: widget.tourist ? BuytimeTheme.SymbolMalibu : BuytimeTheme.UserPrimary,
                                           fontWeight: FontWeight.w400,
                                           fontSize: 16
 
@@ -1003,7 +981,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                       style: TextStyle(
                                         //letterSpacing: 1.25,
                                           fontFamily: BuytimeTheme.FontFamily,
-                                          color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
+                                          color: widget.tourist ? BuytimeTheme.SymbolMalibu : BuytimeTheme.UserPrimary,
                                           fontWeight: FontWeight.w400,
                                           fontSize: 16
 
@@ -1030,7 +1008,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                           Expanded(
                               flex: 5,
                               child: Padding(
-                                padding: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 4),
+                                padding: EdgeInsets.only(top: SizeConfig.safeBlockVertical * .5),
                                 child: CustomScrollView(shrinkWrap: true, slivers: [
                                   /*SliverPersistentHeader(
                                 pinned: true,
@@ -1045,7 +1023,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                       mainAxisAlignment: MainAxisAlignment.start,
                                       children: [
                                         Container(
-                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
+                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5),
                                           child: Text(
                                             '0',//index == 0 ? AppLocalizations.of(context).today + date : index == 1 ? AppLocalizations.of(context).tomorrow + date : '${DateFormat('EEEE').format(i).toUpperCase()}, $date',
                                             textAlign: TextAlign.start,
@@ -1076,17 +1054,26 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
 
                                         debugPrint('UI_U_service_reserve => DATES: $i - $currentDate - $nextDate');
                                         List<bool> select = picked.elementAt(index);
+                                        //isRestaurant = true;
                                         return Column(
                                           children: [
                                             ///Blue part
                                             Container(
-                                              color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
                                               height: 20,
+                                              decoration: BoxDecoration(
+                                                color: BuytimeTheme.TextWhite,
+                                                border: Border(
+                                                  bottom: BorderSide(
+                                                    color: BuytimeTheme.SymbolMalibu,
+                                                    width: 2
+                                                  )
+                                                )
+                                              ),
                                               child: Row(
                                                 mainAxisAlignment: MainAxisAlignment.start,
                                                 children: [
                                                   Container(
-                                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
+                                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5),
                                                     child: Text(
                                                       index == 0 && currentDate == date
                                                           ? AppLocalizations.of(context).today + ' ' + date
@@ -1097,7 +1084,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                       style: TextStyle(
                                                         letterSpacing: 1.25,
                                                         fontFamily: BuytimeTheme.FontFamily,
-                                                        color: BuytimeTheme.TextWhite,
+                                                        color: BuytimeTheme.SymbolMalibu,
                                                         fontSize: 14,
 
                                                         /// SizeConfig.safeBlockHorizontal * 4
@@ -1141,7 +1128,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                             color:  BuytimeTheme.BackgroundWhite,
                                                             borderRadius: BorderRadius.all(Radius.circular(5)),
                                                             border: Border.all(
-                                                                color: select[i] ? ( widget.tourist ? BuytimeTheme.BackgroundCerulean.withOpacity(0.5) : BuytimeTheme.UserPrimary.withOpacity(0.5)) : BuytimeTheme.BackgroundWhite
+                                                                color: select[i] ? ( widget.tourist ? BuytimeTheme.SymbolMalibu.withOpacity(0.5) : BuytimeTheme.UserPrimary.withOpacity(0.5)) : BuytimeTheme.BackgroundWhite
                                                             ),
                                                             boxShadow: [
                                                               BoxShadow(
@@ -1254,8 +1241,8 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                           ]),
                                         ),*/
                                             Container(
-                                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1.5, bottom: SizeConfig.safeBlockVertical * 1.5),
-                                              height: 110,
+                                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1.5, bottom: SizeConfig.safeBlockVertical * 0),
+                                              height: !isRestaurant ? 110 : 80,
                                               width: SizeConfig.safeBlockHorizontal * 100,
                                               child: ScrollablePositionedList.builder(
                                                   itemCount: reserveState.slots[index].length,
@@ -1276,14 +1263,14 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                       children: [
                                                         ///Slot
                                                         Container(
-                                                          margin: EdgeInsets.only(top: 2, bottom: 2, right: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockVertical * 2),
+                                                          margin: EdgeInsets.only(top: 0, bottom: 0, right: SizeConfig.safeBlockVertical * 0, left: SizeConfig.safeBlockVertical * 2),
                                                           child: Container(
                                                               width: 100,
-                                                              height: 100,
+                                                              height: !isRestaurant ? 100 : 70,
                                                               decoration: BoxDecoration(
                                                                 color: BuytimeTheme.BackgroundWhite,
                                                                 borderRadius: BorderRadius.all(Radius.circular(5)),
-                                                                border: Border.all(color: select[i] ? (widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary) : BuytimeTheme.BackgroundWhite, width: 1.5),
+                                                                border: Border.all(color: select[i] ? (BuytimeTheme.SymbolMalibu) : BuytimeTheme.BackgroundWhite, width: 1.5),
                                                                 boxShadow: [
                                                                   BoxShadow(
                                                                     color: select[i] ? BuytimeTheme.BackgroundWhite : BuytimeTheme.BackgroundBlack.withOpacity(0.3),
@@ -1432,14 +1419,14 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                                       debugPrint('UI_U_service_reserve => SELECTED INDEXES: ${reserveState.order.selected}');
                                                                     }
                                                                         : null,
-                                                                    child: TimeSlotWidget(serviceSlot[1], serviceSlot[2], serviceSlot[0], select[i]),
+                                                                    child: TimeSlotWidget(serviceSlot[1], serviceSlot[2], serviceSlot[0], select[i], isRestaurant),
                                                                   ))),
                                                         ),
                                                         Container(
-                                                          margin: EdgeInsets.only(top: 5),
+                                                          margin: EdgeInsets.only(top: 5, left: SizeConfig.safeBlockVertical * 2),
                                                           height: 1,
                                                           width: 80,
-                                                          color: reserveState.slotIndex.isNotEmpty && reserveState.slotIndex[index] == i ? BuytimeTheme.UserPrimary : BuytimeTheme.BackgroundWhite,
+                                                          color: reserveState.slotIndex.isNotEmpty && reserveState.slotIndex[index] == i ? BuytimeTheme.SymbolMalibu : BuytimeTheme.BackgroundWhite,
                                                         )
                                                       ],
                                                     );
@@ -1450,7 +1437,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                             //selectQuantity[index]
                                             reserveState.selectedSquareSlotList.isNotEmpty ?
                                             Container(
-                                              margin: EdgeInsets.only(bottom: 5, left: 5, right: 5),
+                                              margin: EdgeInsets.only(bottom: 5, left: 5, right: 5, top: 5),
                                               height: reserveState.selectedSquareSlotList[index].isNotEmpty ? 100 : 0,
                                               width: SizeConfig.safeBlockHorizontal * 100,
                                               child: ScrollablePositionedList.builder(
@@ -1481,7 +1468,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                             width: 24,
                                                             decoration: BoxDecoration(
                                                               //borderRadius: BorderRadius.all(Radius.circular(12)),
-                                                              color: widget.tourist ? BuytimeTheme.BackgroundCerulean.withOpacity(.2) : BuytimeTheme.UserPrimary.shade50,
+                                                              color: BuytimeTheme.SymbolMalibu.withOpacity(.1),
                                                             ),
                                                             child: Material(
                                                               color: Colors.transparent,
@@ -1507,7 +1494,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                                   width: 24,
                                                                   child: Icon(
                                                                     Icons.keyboard_arrow_left,
-                                                                    color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
+                                                                    color: BuytimeTheme.SymbolMalibu,
                                                                   ),
                                                                 ),
                                                               ),
@@ -1520,7 +1507,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                             child: Container(
                                                               //color: Colors.black,
                                                               alignment: Alignment.center,
-                                                              margin: EdgeInsets.only(left: 20, top: 25, right: 20),
+                                                              margin: EdgeInsets.only(left: 20, top: 24, right: 20),
                                                               height: 100,
                                                               width: i != 0 && i != reserveState.selectedSquareSlotList[index].length - 1
                                                                   ? SizeConfig.screenWidth - 40 - 24 - 24 - 10
@@ -1551,7 +1538,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                                           Container(
                                                                             height: 24,
                                                                             width: 24,
-                                                                            decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(12)), color: widget.tourist ? BuytimeTheme.BackgroundCerulean.withOpacity(.2) : BuytimeTheme.UserPrimary.shade50),
+                                                                            decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(12)), color:  BuytimeTheme.SymbolMalibu.withOpacity(.1)),
                                                                             child: Material(
                                                                               color: Colors.transparent,
                                                                               child: InkWell(
@@ -1589,7 +1576,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                                                   width: 24,
                                                                                   child: Icon(
                                                                                     Icons.remove,
-                                                                                    color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
+                                                                                    color: BuytimeTheme.SymbolMalibu,
                                                                                   ),
                                                                                 ),
                                                                               ),
@@ -1601,7 +1588,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                                             margin: EdgeInsets.only(top: 0, left: 10, right: 10),
                                                                             child: Text(
                                                                               '${reserveState.selectedSquareSlotList[index].elementAt(i)[0]}',
-                                                                              style: TextStyle(fontFamily: BuytimeTheme.FontFamily, fontSize: 16, fontWeight: FontWeight.w500),
+                                                                              style: TextStyle(fontFamily: BuytimeTheme.FontFamily, fontSize: 16, fontWeight: FontWeight.w500, color: BuytimeTheme.SymbolMalibu),
                                                                             ),
                                                                           ),
 
@@ -1609,7 +1596,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                                           Container(
                                                                             height: 24,
                                                                             width: 24,
-                                                                            decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(12)), color: widget.tourist ? BuytimeTheme.BackgroundCerulean.withOpacity(.2) : BuytimeTheme.UserPrimary.shade50),
+                                                                            decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(12)), color: BuytimeTheme.SymbolMalibu.withOpacity(.1)),
                                                                             child: Material(
                                                                               color: Colors.transparent,
                                                                               child: InkWell(
@@ -1646,7 +1633,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                                                   width: 24,
                                                                                   child: Icon(
                                                                                     Icons.add,
-                                                                                    color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
+                                                                                    color: BuytimeTheme.SymbolMalibu,
                                                                                   ),
                                                                                 ),
                                                                               ),
@@ -1677,7 +1664,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                             width: 24,
                                                             decoration: BoxDecoration(
                                                               //borderRadius: BorderRadius.all(Radius.circular(12)),
-                                                              color: widget.tourist ? BuytimeTheme.BackgroundCerulean.withOpacity(.2) : BuytimeTheme.UserPrimary.shade50,
+                                                              color: BuytimeTheme.SymbolMalibu.withOpacity(.1),
                                                             ),
                                                             child: Material(
                                                               color: Colors.transparent,
@@ -1701,7 +1688,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                                   width: 24,
                                                                   child: Icon(
                                                                     Icons.keyboard_arrow_right,
-                                                                    color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
+                                                                    color: BuytimeTheme.SymbolMalibu,
                                                                   ),
                                                                 ),
                                                               ),
@@ -1731,7 +1718,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                             children: [
                               Container(
                                 height: SizeConfig.safeBlockVertical * 8,
-                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                                 decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
                                 child: Center(
                                     child: Container(
@@ -1760,8 +1747,8 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                 children: [
                                   ///Confirm button
                                   Container(
-                                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5, bottom: SizeConfig.safeBlockVertical * 4),
-                                      width: 158,
+                                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5, bottom: SizeConfig.safeBlockVertical * 2),
+                                      width: 198,
 
                                       ///media.width * .4
                                       height: 44,
@@ -1813,13 +1800,13 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                           }
                                         },
                                         textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
-                                        color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
+                                        color: BuytimeTheme.ActionBlackPurple,
                                         padding: EdgeInsets.all(media.width * 0.03),
                                         shape: RoundedRectangleBorder(
-                                          borderRadius: new BorderRadius.circular(5),
+                                          borderRadius: new BorderRadius.circular(20),
                                         ),
                                         child: Text(
-                                          AppLocalizations.of(context).reserveUpper,
+                                          AppLocalizations.of(context).reserve,
                                           style: TextStyle(
                                             letterSpacing: 1.25,
                                             fontSize: 14,
@@ -1848,7 +1835,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                   //         );
                                   //       },
                                   //       textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
-                                  //       color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
+                                  //       color: BuytimeTheme.SymbolMalibu,
                                   //       padding: EdgeInsets.all(media.width * 0.03),
                                   //       shape: RoundedRectangleBorder(
                                   //         borderRadius: new BorderRadius.circular(5),

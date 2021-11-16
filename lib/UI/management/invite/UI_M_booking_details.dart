@@ -202,7 +202,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                                   children: [
                                     ///Booking code
                                     Container(
-                                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 4, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.blockSizeHorizontal * 5),
+                                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 4, left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.blockSizeHorizontal * 5),
                                       child: Row(
                                         crossAxisAlignment: CrossAxisAlignment.end,
                                         children: [
@@ -236,7 +236,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                                     ///Full Name
                                     Expanded(
                                       child: Container(
-                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 4, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.blockSizeHorizontal * 5),
+                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 4, left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.blockSizeHorizontal * 5),
                                         child: Row(
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
@@ -268,7 +268,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                                     ///Email
                                     Expanded(
                                       child: Container(
-                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 4, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.blockSizeHorizontal * 5),
+                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 4, left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.blockSizeHorizontal * 5),
                                         child: Row(
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
@@ -299,7 +299,7 @@ class _BookingDetailsState extends State<BookingDetails> {
 
                                     ///Check In & Check Out
                                     Container(
-                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.blockSizeHorizontal * 5),
+                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.blockSizeHorizontal * 5),
                                         child: Row(
                                           mainAxisAlignment: MainAxisAlignment.start,
                                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -394,7 +394,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                                     Container(
                                         //width: 327,
                                         height: 56,
-                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.blockSizeHorizontal * 5),
+                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.blockSizeHorizontal * 5),
                                         child: TextFormField(
                                           enabled: false,
                                           controller: _numberOfGuestsController,
@@ -427,7 +427,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                                         );
                                       },
                                       child: Container(
-                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.blockSizeHorizontal * 5),
+                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.blockSizeHorizontal * 5),
                                         decoration: BoxDecoration(
                                           borderRadius: BorderRadius.circular(5),
                                           color: Colors.white,

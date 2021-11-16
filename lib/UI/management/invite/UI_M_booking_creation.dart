@@ -201,7 +201,7 @@ class _BookingCreationState extends State<BookingCreation> {
                                             children: [
                                               ///Booking code
                                               /*Container(
-                                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 4, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.blockSizeHorizontal * 5),
+                                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 4, left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.blockSizeHorizontal * 5),
                                               child:  Row(
                                                 crossAxisAlignment: CrossAxisAlignment.end,
                                                 children: [
@@ -244,7 +244,7 @@ class _BookingCreationState extends State<BookingCreation> {
                                               ///Email address
                                               Expanded(
                                                 child: Container(
-                                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.blockSizeHorizontal * 5),
+                                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.blockSizeHorizontal * 5),
                                                     child: TextFormField(
                                                       key: Key('create_email_key'),
                                                       controller: _emailToInviteController,
@@ -305,7 +305,7 @@ class _BookingCreationState extends State<BookingCreation> {
                                               ///Name
                                               Expanded(
                                                 child: Container(
-                                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.blockSizeHorizontal * 5),
+                                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.blockSizeHorizontal * 5),
                                                     child: TextFormField(
                                                       key: Key('create_name_key'),
                                                       controller: _nameController,
@@ -354,7 +354,7 @@ class _BookingCreationState extends State<BookingCreation> {
                                               ///Surname
                                               Expanded(
                                                 child: Container(
-                                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.blockSizeHorizontal * 5),
+                                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.blockSizeHorizontal * 5),
                                                     child: TextFormField(
                                                       key: Key('create_surname_key'),
                                                       controller: _surnameController,
@@ -403,7 +403,7 @@ class _BookingCreationState extends State<BookingCreation> {
                                               ///Check In & Check Out
                                               Expanded(
                                                 child: Container(
-                                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.blockSizeHorizontal * 5),
+                                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.blockSizeHorizontal * 5),
                                                     child: Row(
                                                       mainAxisAlignment: MainAxisAlignment.start,
                                                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -539,7 +539,7 @@ class _BookingCreationState extends State<BookingCreation> {
                                               ///Number of guests
                                               Expanded(
                                                 child: Container(
-                                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.blockSizeHorizontal * 5),
+                                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.blockSizeHorizontal * 5),
                                                     child: TextFormField(
                                                       key: Key('create_guests_key'),
                                                       controller: _numberOfGuestsController,

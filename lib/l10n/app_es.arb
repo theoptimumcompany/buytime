@@ -161,7 +161,7 @@
   "locationCountry": "Ubicación, País",
   "guestsNumber": "## Huéspedes",
   "confirmBooking": "Confirma Reserva",
-  "somethingIsNotRight": "ALGO NO ES CORRECTO",
+  "somethingIsNotRightUpper": "ALGO NO ES CORRECTO",
   "pastBookings": "Reservas Pasadas",
   "yourPastBookingWill": "Tus reservas pasadas aparecerán aquí. ¿Quieres saber más de la red de Buytime?",
   "contactUs": "Contacta con nosotros",
@@ -221,7 +221,7 @@
   "emptyCart": "El carrito está vacío, primero agregue un servicio.",
   "serviceName": "Nombre del Servicio",
   "hour": "hora",
-  "addToCart": "AÑADE AL CARRITO",
+  "addToCartUpper": "AÑADE AL CARRITO",
   "createYourAccount": "Crea tu cuenta:",
   "serviceCategories": "Categorías de Servicios",
   "checkedOutBookings": "Reservas comprobadas",
@@ -626,5 +626,12 @@
   "paypal": "Paypal",
   "viewMore": "View More",
   "whatIsIt": "What Is It?",
-  "from": "From"
+  "from": "From",
+  "hubsTopServices": "HUB's top services",
+  "discoverHub": "Discover the top services of your Hotel",
+  "reserve": "Reserve",
+  "addToCart": "Add to cart",
+  "buy": "Buy",
+  "somethingIsNotRight": "Something isn't right",
+  "reserveATable": "Reserve a table"
 }

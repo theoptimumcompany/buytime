@@ -108,7 +108,7 @@ class _RActivityManagementState extends State<RActivityManagement> {
                 )
             ),
             alignment: Alignment.centerLeft,
-            padding: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
+            padding: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5),
             child: Text(
                 '${DateFormat('MMM yyyy').format(key).toUpperCase()}',
                 style: TextStyle(
@@ -151,7 +151,7 @@ class _RActivityManagementState extends State<RActivityManagement> {
                                   )
                               ),
                               alignment: Alignment.centerLeft,
-                              padding: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
+                              padding: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5),
                               child: Text(
                                   orderTime.isAtSameMomentAs(currentTime) ? '${AppLocalizations.of(context).today} ${DateFormat('MMM dd',Localizations.localeOf(context).languageCode).format(orderTime).toUpperCase()}' :
                                   orderTime.isAtSameMomentAs(currentTime.add(Duration(days: 1))) ? '${AppLocalizations.of(context).tomorrow} ${DateFormat('MMM dd',Localizations.localeOf(context).languageCode).format(orderTime).toUpperCase()}' :
@@ -269,7 +269,7 @@ class _RActivityManagementState extends State<RActivityManagement> {
               )
           ),
           alignment: Alignment.centerLeft,
-          padding: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
+          padding: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5),
           child: Text(
               orderTime.isAtSameMomentAs(currentTime) ? '${AppLocalizations.of(context).today} ${DateFormat('MMM dd',Localizations.localeOf(context).languageCode).format(orderTime).toUpperCase()}' :
               orderTime.isAtSameMomentAs(currentTime.add(Duration(days: 1))) ? '${AppLocalizations.of(context).tomorrow} ${DateFormat('MMM dd',Localizations.localeOf(context).languageCode).format(orderTime).toUpperCase()}' :
@@ -347,7 +347,7 @@ class _RActivityManagementState extends State<RActivityManagement> {
                             )
                         ),
                         alignment: Alignment.centerLeft,
-                        padding: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
+                        padding: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5),
                         child: Text(
                             '${AppLocalizations.of(context).table.toUpperCase()} ${key}',
                             style: TextStyle(
@@ -833,7 +833,7 @@ class _RActivityManagementState extends State<RActivityManagement> {
                 children: [
                   ///Week & See all
                   Container(
-                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5),
+                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -1104,14 +1104,14 @@ class _RActivityManagementState extends State<RActivityManagement> {
                   ///No List
                   Container(
                     //height: SizeConfig.safeBlockVertical * 8,
-                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 5),
+                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 5),
                     //decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         ///Icon
                         Container(
-                          //margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
+                          //margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5),
                           child: Icon(
                             BuytimeIcons.sad,
                             color: BuytimeTheme.SymbolBlack,

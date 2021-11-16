@@ -48,14 +48,14 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
 
         return  Scaffold(
           appBar: AppBar(
-            backgroundColor: BuytimeTheme.BackgroundCerulean,
+            backgroundColor: Colors.white,
             brightness: Brightness.dark,
             elevation: 0,
             actions: [
               IconButton(
                 icon: Icon(
                   Icons.help_outline,
-                  color: Colors.white,
+                  color: Colors.black,
                 ),
                 onPressed: (){
 
@@ -66,16 +66,16 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
               AppLocalizations.of(context).confirmNewBooking,
               style: TextStyle(
                   fontFamily: BuytimeTheme.FontFamily,
-                  color: BuytimeTheme.TextWhite,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 20 ///SizeConfig.safeBlockHorizontal * 7
+                  color: BuytimeTheme.TextBlack,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16 ///SizeConfig.safeBlockHorizontal * 7
               ),
             ),
             centerTitle: true,
             leading: IconButton(
               icon: Icon(
                 Icons.keyboard_arrow_left,
-                color: Colors.white,
+                color: Colors.black,
               ),
               onPressed: () async{
                 await storage.write(key: 'bookingCodeRead', value: 'false');
@@ -95,13 +95,13 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
                   flex: 1,
                   child: Container(
                     height: 20,
-                    color: BuytimeTheme.BackgroundCerulean,
+                    color: Colors.white,
                     //height: SizeConfig.safeBlockVertical * 15,
                     /*child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Container(
-                            //margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
+                            //margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5),
                             margin: EdgeInsets.only(left: 25.0),
                             child: Text(
                               AppLocalizations.of(context).confirmNewBooking,
@@ -245,8 +245,11 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
                                         bookingState.status = Utils.enumToString(BookingStatus.opened);
                                         StoreProvider.of<AppState>(context).dispatch(UpdateBookingOnConfirm(bookingState));
                                         //StoreProvider.of<AppState>(context).dispatch(BusinessAndNavigateOnConfirmRequest(bookingState.business_id));
-                                        StoreProvider.of<AppState>(context).dispatch(UserBookingListRequest(snapshot.user.email, true));
-
+                                        //StoreProvider.of<AppState>(context).dispatch(UserBookingListRequest(snapshot.user.email, true));
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(builder: (context) => RServiceExplorer()),
+                                        );
                                         /*Timer(Duration(milliseconds: 5000), (){
                                         Navigator.of(context).pop();
                                         Navigator.push(
@@ -256,13 +259,13 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
                                       });*/
                                       },
                                       textColor: BuytimeTheme.TextWhite,
-                                      color: BuytimeTheme.ButtonMalibu,
-                                      padding: EdgeInsets.all(15),
+                                      color: BuytimeTheme.ActionBlackPurple,
+                                      //padding: EdgeInsets.all(15),
                                       shape: RoundedRectangleBorder(
-                                        borderRadius: new BorderRadius.circular(5),
+                                        borderRadius: new BorderRadius.circular(20),
                                       ),
                                       child: Text(
-                                        AppLocalizations.of(context).confirmBooking.toUpperCase(),
+                                        AppLocalizations.of(context).confirmBooking,
                                         style: TextStyle(
                                             fontSize: 14,
                                             fontFamily: BuytimeTheme.FontFamily,
@@ -278,9 +281,9 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
                                     height: 44,
                                     margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * .5, bottom: SizeConfig.safeBlockVertical * 2, right: SizeConfig.safeBlockHorizontal * 0),
                                     decoration: BoxDecoration(
-                                        borderRadius: new BorderRadius.circular(5),
+                                        borderRadius: new BorderRadius.circular(20),
                                         border: Border.all(
-                                            color: BuytimeTheme.ButtonMalibu
+                                            color: BuytimeTheme.ActionBlackPurple
                                         )
                                     ),
                                     child: MaterialButton(
@@ -294,11 +297,11 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
                                         Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => RServiceExplorer()), (Route<dynamic> route) => false);
                                         //Navigator.of(context).pushNamedAndRemoveUntil(Landing.route, (Route<dynamic> route) => false);
                                       },
-                                      textColor: BuytimeTheme.ButtonMalibu,
+                                      textColor: BuytimeTheme.ActionBlackPurple,
                                       color: BuytimeTheme.BackgroundWhite,
                                       //padding: EdgeInsets.all(15),
                                       shape: RoundedRectangleBorder(
-                                        borderRadius: new BorderRadius.circular(5),
+                                        borderRadius: new BorderRadius.circular(20),
                                       ),
                                       child: Text(
                                         AppLocalizations.of(context).somethingIsNotRight,

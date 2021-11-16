@@ -6,6 +6,7 @@ import 'package:Buytime/app_state.dart';
 import 'package:Buytime/combined_epics.dart';
 import 'package:Buytime/environment_abstract.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
+import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:Buytime/reblox/model/order/order_reservable_state.dart';
 import 'package:Buytime/reblox/navigation/navigation_middleware.dart';
 import 'package:Buytime/reblox/reducer/app_reducer.dart';
@@ -128,7 +129,7 @@ class RegressionUtils{
         //ChangeNotifierProvider(create: (_) => NavigationState()),
         ChangeNotifierProvider(create: (_) => Spinner(true,[],[], [])),
         ChangeNotifierProvider(create: (_) => ReserveList([], OrderReservableState().toEmpty(),[], [], [], [])),
-        ChangeNotifierProvider(create: (_) => Explorer(false, [], [], [], TextEditingController(), false, [])),
+        ChangeNotifierProvider(create: (_) => Explorer(false, [], [], [], TextEditingController(), false, [], BusinessState().toEmpty())),
         ChangeNotifierProvider(create: (_) => CategoryService([], [])),
       ],
       child: Buytime(store: store),

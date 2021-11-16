@@ -37,6 +37,7 @@ class BuytimeTheme {
   static const Color AccentRed = Color.fromARGB(255, 255, 99, 99);
   static const Color BackgroundCerulean = Color.fromARGB(255, 119, 148, 170);
   static const Color BackgroundLightGrey = Color.fromARGB(255, 237, 237, 237);
+  static const Color BackgroundSoftGrey = Color.fromARGB(255, 243, 243, 243);
   static const Color BackgroundLightBlue = Color.fromARGB(255, 118, 216, 237);
   static const Color DividerGrey = Color.fromARGB(255, 237, 237, 237);
   static const Color BackgroundWhite = Color.fromARGB(255, 255, 255, 255);
@@ -67,7 +68,7 @@ class BuytimeTheme {
 
 
 
-  static const String FontFamily = 'Roboto';
+  static const String FontFamily = 'Inter';
 
   static const TextTheme themeText =  TextTheme(
     headline1: TextStyle(fontSize: 72.0, fontWeight: FontWeight.normal),

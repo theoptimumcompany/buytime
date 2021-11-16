@@ -72,8 +72,7 @@ class TestState extends State<Test> {
           myList.forEach((element) {
             debugPrint('SERVICE NAME: ${element.name}');
           });
-          return ///List
-          Container(
+          return Container(
             height: 240,
             width: double.infinity,
             margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 0),

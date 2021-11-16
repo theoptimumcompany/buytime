@@ -147,7 +147,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                             children: [
                               Container(
                                 width: SizeConfig.blockSizeHorizontal * 100,
-                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 3, bottom: SizeConfig.safeBlockVertical * 3),
+                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * 3, bottom: SizeConfig.safeBlockVertical * 3),
                                 child: Text(
                                   AppLocalizations.of(context).paymentMethod,
                                   textAlign: TextAlign.left,
@@ -213,12 +213,10 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                   child: MaterialButton(
                                     color: snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.paypal)
                                         ? BuytimeTheme.Secondary
-                                        : widget.tourist != null && widget.tourist
-                                            ? BuytimeTheme.TextWhite
-                                            : BuytimeTheme.UserPrimary,
+                                        : BuytimeTheme.ActionBlackPurple,
                                     disabledColor: BuytimeTheme.SymbolLightGrey,
                                     shape: RoundedRectangleBorder(
-                                      borderRadius: new BorderRadius.circular(5),
+                                      borderRadius: new BorderRadius.circular(20),
                                     ),
                                     child: paymentSheetIdLoading ? Container(
                                       alignment: Alignment.center,
@@ -230,7 +228,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                         height: 25,
                                         child: CircularProgressIndicator(
                                           strokeWidth: 2,
-                                          valueColor: new AlwaysStoppedAnimation<Color>(Colors.black),
+                                          valueColor: new AlwaysStoppedAnimation<Color>(Colors.white),
                                         ),
                                       )
                                     ) :
@@ -239,14 +237,14 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                                       width: SizeConfig.blockSizeHorizontal * 57,
                                       height: 44,
                                       child: Text(
-                                        !(widget.reserve != null && widget.reserve) ? AppLocalizations.of(context).confirmPayment : '${AppLocalizations.of(context).completeBooking.toUpperCase()}',
+                                        AppLocalizations.of(context).confirmPayment,
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                           letterSpacing: 1,
                                           fontSize: 16,
                                           fontFamily: BuytimeTheme.FontFamily,
                                           fontWeight: FontWeight.bold,
-                                          color: snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.paypal) ? Colors.black : BuytimeTheme.TextBlack,
+                                          color: snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.paypal) ? Colors.black : BuytimeTheme.TextWhite,
                                         ),
                                       ),
                                     ),
@@ -907,42 +905,30 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
   }
 
   ///App bar
-  BuytimeAppbar buildBuytimeAppbar(Size media, BuildContext context) {
-    return BuytimeAppbar(
-      background: widget.tourist != null && widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
-      width: media.width,
-      children: [
-        ///Back Button
-        IconButton(
-          key: Key('back_cart_from_confirm_order_key'),
-          icon: Icon(Icons.chevron_left, color: BuytimeTheme.TextWhite),
-          onPressed: () => Future.delayed(Duration.zero, () {
-            /// if the order is paid we empty the order status before leaving
-            String orderProgress = StoreProvider.of<AppState>(context).state.order.progress;
-            if (orderProgress == Utils.enumToString(OrderStatus.paid) || orderProgress == Utils.enumToString(OrderStatus.toBePaidAtCheckout)) {
-              StoreProvider.of<AppState>(context).dispatch(SetOrder(OrderState().toEmpty()));
-              Navigator.of(context).popUntil(ModalRoute.withName('/bookingPage'));
-            } else {
-              Navigator.of(context).pop();
-            }
-          }),
+  AppBar buildBuytimeAppbar(Size media, BuildContext context) {
+    return AppBar(
+      backgroundColor: Colors.white,
+      brightness: Brightness.dark,
+      elevation: 0,
+      title: Text(
+        AppLocalizations.of(context).confirmOrder,
+        style: TextStyle(
+            fontFamily: BuytimeTheme.FontFamily,
+            color: BuytimeTheme.TextBlack,
+            fontWeight: FontWeight.w500,
+            fontSize: 16 ///SizeConfig.safeBlockHorizontal * 7
         ),
-
-        ///Order Title
-        Container(
-          child: Padding(
-            padding: const EdgeInsets.only(left: 0.0),
-            child: Text(
-              AppLocalizations.of(context).confirmOrder,
-              textAlign: TextAlign.start,
-              style: BuytimeTheme.appbarTitle,
-            ),
-          ),
+      ),
+      centerTitle: true,
+      leading: IconButton(
+        icon: Icon(
+          Icons.keyboard_arrow_left,
+          color: Colors.black,
         ),
-        SizedBox(
-          width: 40.0,
-        ),
-      ],
+        onPressed: () async{
+          Navigator.of(context).pop();
+        },
+      ),
     );
   }
 

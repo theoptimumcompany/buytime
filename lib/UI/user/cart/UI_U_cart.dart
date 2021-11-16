@@ -129,47 +129,29 @@ class CartState extends State<Cart> {
                 onTap: () => FocusScope.of(context).unfocus(),
                 child: Scaffold(
                     resizeToAvoidBottomInset: false,
-                    appBar: BuytimeAppbar(
-                      background: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
-                      width: media.width,
-                      children: [
-                        ///Back Button
-                        IconButton(
-                            key: Key('back_from_cart_key'),
-                            icon: Icon(Icons.chevron_left, color: BuytimeTheme.TextWhite),
-                            onPressed: () {
-                              /*Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(builder: (context) => ServiceList()),
-                            );*/
-                              /*StoreProvider.of<AppState>(context).dispatch(UpdateOrder(OrderState(
-                                itemList: orderState.itemList, date: orderState.date, position: orderState.position, total: orderState.total, business: orderState.business, user: orderState.user, businessId: orderState.businessId, userId: orderState.userId)));*/
-
-                              Navigator.of(context).pop();
-                            }),
-
-                        ///Cart Title
-                        Container(
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 0.0),
-                            child: Text(
-                              AppLocalizations.of(context).cart,
-                              textAlign: TextAlign.start,
-                              style: BuytimeTheme.appbarTitle,
-                            ),
-                          ),
+                    appBar: AppBar(
+                      backgroundColor: Colors.white,
+                      brightness: Brightness.dark,
+                      elevation: 0,
+                      title: Text(
+                        AppLocalizations.of(context).cart,
+                        style: TextStyle(
+                            fontFamily: BuytimeTheme.FontFamily,
+                            color: BuytimeTheme.TextBlack,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 16 ///SizeConfig.safeBlockHorizontal * 7
                         ),
-                        /*ColorFiltered(
-                          colorFilter: ColorFilter.linearToSrgbGamma(),
-                          child: Image.network(
-                            StoreProvider.of<AppState>(context).state.business.logo,
-                            height: media.height * 0.05,
-                          ),
-                        ),*/
-                        SizedBox(
-                          width: 40.0,
-                        )
-                      ],
+                      ),
+                      centerTitle: true,
+                      leading: IconButton(
+                        icon: Icon(
+                          Icons.keyboard_arrow_left,
+                          color: Colors.black,
+                        ),
+                        onPressed: () async{
+                          Navigator.of(context).pop();
+                        },
+                      ),
                     ),
                     body: SafeArea(
                       child: Center(
@@ -506,93 +488,93 @@ class CartState extends State<Cart> {
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
+                                    ///Buy button
+                                    Container(
+                                        margin: EdgeInsets.only(top: 10, bottom: SizeConfig.safeBlockVertical * 0),
+                                        width: 198,
+
+                                        /// media.width * .4
+                                        height: 46,
+                                        child: MaterialButton(
+                                          key: Key('cart_buy_key'),
+                                          elevation: 0,
+                                          hoverElevation: 0,
+                                          focusElevation: 0,
+                                          highlightElevation: 0,
+                                          onPressed:
+                                          (orderState.tableNumber != null && orderState.tableNumber != '' && businessIsBar(context)) ||
+                                              !businessIsBar(context)
+                                              ?  () {
+                                            auth.User user = auth.FirebaseAuth.instance.currentUser;
+                                            if (user == null) {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(builder: (context) => TouristSessionRegister()),
+                                              );
+                                            } else {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(builder: (context) => ConfirmOrder(reserve: false, tourist: widget.tourist)),
+                                              );
+                                            }
+                                          } : null,
+                                          textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
+                                          disabledTextColor: BuytimeTheme.TextWhite,
+                                          disabledColor: BuytimeTheme.SymbolGrey,
+                                          color: BuytimeTheme.ActionBlackPurple,
+                                          //padding: EdgeInsets.all(media.width * 0.03),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: new BorderRadius.circular(20),
+                                          ),
+                                          child: Text(
+                                            AppLocalizations.of(context).buy,
+                                            style: TextStyle(fontSize: 14, fontFamily: BuytimeTheme.FontFamily, fontWeight: FontWeight.w500, color: BuytimeTheme.TextWhite, letterSpacing: 1.25),
+                                          ),
+                                        )),
+                                    ///Continue Shopping
+                                    Container(
+                                        width: 198,
+
+                                        ///SizeConfig.safeBlockHorizontal * 40
+                                        height: 44,
+                                        margin: EdgeInsets.only(top: 10, bottom: SizeConfig.safeBlockVertical * 2, right: SizeConfig.safeBlockHorizontal * 0),
+                                        decoration: BoxDecoration(
+                                            borderRadius: new BorderRadius.circular(20),
+                                            border: Border.all(color: StoreProvider.of<AppState>(context).state.user.getRole() == Role.user ? (BuytimeTheme.ActionBlackPurple) : BuytimeTheme.SymbolGrey)),
+                                        child: MaterialButton(
+                                          elevation: 0,
+                                          hoverElevation: 0,
+                                          focusElevation: 0,
+                                          highlightElevation: 0,
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          textColor: BuytimeTheme.ActionBlackPurple,
+                                          disabledTextColor: BuytimeTheme.SymbolGrey,
+                                          color: BuytimeTheme.BackgroundWhite,
+                                          //padding: EdgeInsets.all(15),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: new BorderRadius.circular(20),
+                                          ),
+                                          child: Text(
+                                            '${AppLocalizations.of(context).continueShopping.split(' ').first}\n${AppLocalizations.of(context).continueShopping.split(' ').last}',
+                                            style: TextStyle(
+                                                letterSpacing: 1.25,
+
+                                                ///SizeConfig.safeBlockHorizontal * .2
+                                                fontFamily: BuytimeTheme.FontFamily,
+                                                color: BuytimeTheme.ActionBlackPurple,
+                                                fontWeight: FontWeight.w600,
+                                                fontSize: 14
+
+                                              ///SizeConfig.safeBlockHorizontal * 4
+                                            ),
+                                          ),
+                                        )),
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
-                                        ///Continue Shopping
-                                        Container(
-                                            width: 158,
 
-                                            ///SizeConfig.safeBlockHorizontal * 40
-                                            height: 44,
-                                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, bottom: SizeConfig.safeBlockVertical * 2, right: SizeConfig.safeBlockHorizontal * 2.5),
-                                            decoration: BoxDecoration(
-                                                borderRadius: new BorderRadius.circular(5),
-                                                border: Border.all(color: StoreProvider.of<AppState>(context).state.user.getRole() == Role.user ? (widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary) : BuytimeTheme.SymbolGrey)),
-                                            child: MaterialButton(
-                                              elevation: 0,
-                                              hoverElevation: 0,
-                                              focusElevation: 0,
-                                              highlightElevation: 0,
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                              },
-                                              textColor: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
-                                              disabledTextColor: BuytimeTheme.SymbolGrey,
-                                              color: BuytimeTheme.BackgroundWhite,
-                                              //padding: EdgeInsets.all(15),
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius: new BorderRadius.circular(5),
-                                              ),
-                                              child: Text(
-                                                '${AppLocalizations.of(context).continueShopping.split(' ').first}\n${AppLocalizations.of(context).continueShopping.split(' ').last}',
-                                                style: TextStyle(
-                                                    letterSpacing: 1.25,
-
-                                                    ///SizeConfig.safeBlockHorizontal * .2
-                                                    fontFamily: BuytimeTheme.FontFamily,
-                                                    color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
-                                                    fontWeight: FontWeight.w600,
-                                                    fontSize: 14
-
-                                                    ///SizeConfig.safeBlockHorizontal * 4
-                                                    ),
-                                              ),
-                                            )),
-
-                                        ///Buy button
-                                        Container(
-                                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, bottom: SizeConfig.safeBlockVertical * 2),
-                                            width: 158,
-
-                                            /// media.width * .4
-                                            height: 46,
-                                            child: MaterialButton(
-                                              key: Key('cart_buy_key'),
-                                              elevation: 0,
-                                              hoverElevation: 0,
-                                              focusElevation: 0,
-                                              highlightElevation: 0,
-                                              onPressed:
-                                                  (orderState.tableNumber != null && orderState.tableNumber != '' && businessIsBar(context)) ||
-                                                  !businessIsBar(context)
-                                                  ?  () {
-                                                auth.User user = auth.FirebaseAuth.instance.currentUser;
-                                                if (user == null) {
-                                                  Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(builder: (context) => TouristSessionRegister()),
-                                                  );
-                                                } else {
-                                                  Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(builder: (context) => ConfirmOrder(reserve: false, tourist: widget.tourist)),
-                                                  );
-                                                }
-                                              } : null,
-                                              textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
-                                              disabledTextColor: BuytimeTheme.TextWhite,
-                                              disabledColor: BuytimeTheme.SymbolGrey,
-                                              color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
-                                              //padding: EdgeInsets.all(media.width * 0.03),
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius: new BorderRadius.circular(5),
-                                              ),
-                                              child: Text(
-                                                AppLocalizations.of(context).buyUpper,
-                                                style: TextStyle(fontSize: 14, fontFamily: BuytimeTheme.FontFamily, fontWeight: FontWeight.w500, color: BuytimeTheme.TextWhite, letterSpacing: 1.25),
-                                              ),
-                                            )),
                                       ],
                                     )
                                     /*Container(

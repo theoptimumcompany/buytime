@@ -123,7 +123,7 @@ class _BuytimeMapState extends State<BuytimeMap> with SingleTickerProviderStateM
         title: '${widget.businessState.name}',
         //snippet: '5 Star Rating',
       ),
-      icon:  BitmapDescriptor.defaultMarkerWithHue(197),
+      icon:  BitmapDescriptor.defaultMarkerWithHue(210),
     ));
     rootBundle.loadString('assets/json/grey_map.txt').then((string) {
       _mapStyle = string;
@@ -146,32 +146,29 @@ class _BuytimeMapState extends State<BuytimeMap> with SingleTickerProviderStateM
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
     return Scaffold(
-      appBar: BuytimeAppbar(
-        background: widget.tourist ? BuytimeTheme.BackgroundCerulean : !widget.user ? BuytimeTheme.ManagerPrimary : BuytimeTheme.UserPrimary,
-        width: media.width,
-        children: [
-          ///Back Button
-          IconButton(
-            icon: Icon(Icons.chevron_left, color: BuytimeTheme.TextWhite),
-            onPressed: () => Future.delayed(Duration.zero, () {
-              Navigator.of(context).pop();
-            }),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        brightness: Brightness.dark,
+        elevation: 0,
+        title: Text(
+          Utils.retriveField(Localizations.localeOf(context).languageCode, widget.title),
+          style: TextStyle(
+              fontFamily: BuytimeTheme.FontFamily,
+              color: BuytimeTheme.TextBlack,
+              fontWeight: FontWeight.w500,
+              fontSize: 16 ///SizeConfig.safeBlockHorizontal * 7
           ),
-          ///Order ConfirmedTitle
-          Container(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 0.0),
-              child: Text(
-                Utils.retriveField(Localizations.localeOf(context).languageCode, widget.title),
-                textAlign: TextAlign.start,
-                style: BuytimeTheme.appbarTitle,
-              ),
-            ),
+        ),
+        centerTitle: true,
+        leading: IconButton(
+          icon: Icon(
+            Icons.keyboard_arrow_left,
+            color: Colors.black,
           ),
-          SizedBox(
-            width: 50.0,
-          )
-        ],
+          onPressed: () async{
+            Navigator.of(context).pop();
+          },
+        ),
       ),
       body: SafeArea(
         child: Center(
@@ -244,7 +241,7 @@ class _BuytimeMapState extends State<BuytimeMap> with SingleTickerProviderStateM
                                           },
                                         );
                                       },
-                                      textColor: BuytimeTheme.UserPrimary.withOpacity(0.3),
+                                      textColor: BuytimeTheme.SymbolMalibu.withOpacity(0.3),
                                       color: Colors.white.withOpacity(0.9),
                                       //padding: EdgeInsets.all(media.width * 0.03),
                                       shape: RoundedRectangleBorder(
@@ -261,7 +258,7 @@ class _BuytimeMapState extends State<BuytimeMap> with SingleTickerProviderStateM
                                             ///18 | SizeConfig.safeBlockHorizontal * 5
                                             fontFamily: BuytimeTheme.FontFamily,
                                             fontWeight: FontWeight.w500,
-                                            color: widget.tourist ? BuytimeTheme.BackgroundCerulean : widget.user? BuytimeTheme.UserPrimary :  BuytimeTheme.ButtonMalibu
+                                            color: BuytimeTheme.ButtonMalibu
                                         ),
                                       ),
                                     )
@@ -314,7 +311,7 @@ class _BuytimeMapState extends State<BuytimeMap> with SingleTickerProviderStateM
                                           ),
                                         )..show(context);
                                       },
-                                      textColor: BuytimeTheme.UserPrimary,
+                                      textColor: BuytimeTheme.SymbolMalibu,
                                       color: Colors.white.withOpacity(0.9),
                                       //padding: EdgeInsets.all(media.width * 0.03),
                                       shape: RoundedRectangleBorder(
@@ -331,7 +328,7 @@ class _BuytimeMapState extends State<BuytimeMap> with SingleTickerProviderStateM
                                             ///18 | SizeConfig.safeBlockHorizontal * 5
                                             fontFamily: BuytimeTheme.FontFamily,
                                             fontWeight: FontWeight.w500,
-                                            color: widget.tourist ? BuytimeTheme.BackgroundCerulean : widget.user? BuytimeTheme.UserPrimary :  BuytimeTheme.ButtonMalibu
+                                            color: BuytimeTheme.ButtonMalibu
                                         ),
                                       ),
                                     )
@@ -366,8 +363,8 @@ class _BuytimeMapState extends State<BuytimeMap> with SingleTickerProviderStateM
                                           },
                                         );
                                       },
-                                      textColor: BuytimeTheme.UserPrimary.withOpacity(0.3),
-                                      color: widget.tourist ? BuytimeTheme.BackgroundCerulean : widget.user ? BuytimeTheme.UserPrimary : BuytimeTheme.ManagerPrimary,
+                                      textColor: BuytimeTheme.SymbolMalibu.withOpacity(0.3),
+                                      color: BuytimeTheme.SymbolMalibu,
                                       //padding: EdgeInsets.all(media.width * 0.03),
                                       shape: RoundedRectangleBorder(
                                         borderRadius: new BorderRadius.circular(5),

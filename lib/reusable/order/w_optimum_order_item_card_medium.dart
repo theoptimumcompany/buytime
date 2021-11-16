@@ -216,7 +216,7 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
                                       margin: EdgeInsets.all(SizeConfig.safeBlockVertical * 1),
                                       child: Icon(
                                         Icons.remove,
-                                        color: BuytimeTheme.UserPrimary,
+                                        color: BuytimeTheme.SymbolMalibu,
                                         //size: 22,
                                         //size: SizeConfig.safeBlockHorizontal * 15,
                                       ),
@@ -243,7 +243,7 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
                                       margin: EdgeInsets.all(SizeConfig.safeBlockVertical * 1),
                                       child: Icon(
                                         Icons.add,
-                                        color: BuytimeTheme.UserPrimary,
+                                        color: BuytimeTheme.SymbolMalibu,
                                         //size: 22,
                                         //size: SizeConfig.safeBlockHorizontal * 15,
                                       ),
@@ -430,7 +430,7 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
              Expanded(
                flex: 1,
                child: Container(
-                 //margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
+                 //margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5),
                  alignment: Alignment.center,
                  decoration: BoxDecoration(
                    //color: Colors.blue,

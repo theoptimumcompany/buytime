@@ -147,13 +147,13 @@ class TestDetailsState extends State<TestDetails> {
                                       ///Promotion
                                       Utils.checkPromoDiscount('general_1', context, widget.serviceState.businessId).promotionId == 'empty' ?
                                       Container(
-                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 0.5),
+                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * 0.5),
                                         child: NewDiscount(widget.serviceState, StoreProvider.of<AppState>(context).state.bookingList.bookingListState.isNotEmpty ?
                                         StoreProvider.of<AppState>(context).state.bookingList.bookingListState.first.business_id : '', true, true),
                                       ) : Container(),
                                       ///Service Name Text
                                       Container(
-                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 0.5),
+                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * 0.5),
                                         child: Text(
                                           widget.serviceState.name != null ? Utils.retriveField(Localizations.localeOf(context).languageCode, widget.serviceState.name) : AppLocalizations.of(context).serviceName,
                                           style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextWhite, fontWeight: FontWeight.w600, fontSize: 24
@@ -163,7 +163,7 @@ class TestDetailsState extends State<TestDetails> {
                                       ),
                                       ///Price
                                       Container(
-                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 0.5, bottom:  SizeConfig.safeBlockVertical * 0.5),
+                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * 0.5, bottom:  SizeConfig.safeBlockVertical * 0.5),
                                         child: Text(
                                           '${AppLocalizations.of(context).currencySpace} ${widget.serviceState.price.toStringAsFixed(2)}',
                                           style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextWhite, fontWeight: FontWeight.w600, fontSize: 16
@@ -173,7 +173,7 @@ class TestDetailsState extends State<TestDetails> {
                                       ),
                                       Container(
                                         height: 20,
-                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 0.5),
+                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * 0.5),
                                       ),
 
                                       /*///Service Name Text
@@ -192,7 +192,7 @@ class TestDetailsState extends State<TestDetails> {
                                       /*Row(
                           children: [
                             Container(
-                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1),
+                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1),
                               child: Text(
                                 '',
                                 style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextWhite, fontWeight: FontWeight.w400, fontSize: 14

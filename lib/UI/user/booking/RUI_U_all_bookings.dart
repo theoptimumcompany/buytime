@@ -14,6 +14,7 @@ import 'package:Buytime/reusable/icon/buytime_icons.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -106,123 +107,134 @@ class _RAllBookingsState extends State<RAllBookings> {
           child: WillPopScope(
             onWillPop: () async => false,
             child: Scaffold(
-              appBar: BuytimeAppbar(
-                background: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
-                width: media.width,
-                children: [
-                  ///Back Button
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
-                        child: IconButton(
-                          icon: const Icon(
-                            Icons.keyboard_arrow_left,
-                            color: Colors.white,
-                            size: 25.0,
-                          ),
-                          tooltip: AppLocalizations.of(context).comeBack,
-                          onPressed: () {
-                            //widget.fromConfirm != null ? Navigator.of(context).pop() : Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Landing()),);
-                            Future.delayed(Duration.zero, () {
-
-                              //Navigator.of(context).pop();
-                              Navigator.of(context).pop();
-                            });
-
-                            //StoreProvider.of<AppState>(context).dispatch(NavigatePopAction());
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                  ///Title
-                  Container(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 10.0),
-                      child: Text(
-                        AppLocalizations.of(context).allBookings,
-                        textAlign: TextAlign.start,
-                        style: BuytimeTheme.appbarTitle,
-                      ),
+              appBar: AppBar(
+                backgroundColor: Colors.white,
+                leading: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
+                  child: IconButton(
+                    key: Key('action_button_discover'),
+                    icon: Icon(
+                      Icons.keyboard_arrow_left,
+                      color: Colors.black,
+                      size: 25.0,
                     ),
+                    tooltip: AppLocalizations.of(context).comeBack,
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
                   ),
-                  ///Cart
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 10.0),
-                    child: Container(
-                      width: 50,
-                      height: 50,
-                      child: Stack(
-                        children: [
-                          Positioned.fill(
-                            child: Align(
-                              alignment: Alignment.center,
-                              child: IconButton(
-                                key: Key('cart_key'),
-                                icon: Icon(
-                                  BuytimeIcons.shopping_cart,
-                                  color: BuytimeTheme.TextWhite,
-                                  size: 24.0,
-                                ),
-                                onPressed: () {
-                                  if (order.cartCounter > 0) {
-                                    // dispatch the order
-                                    StoreProvider.of<AppState>(context).dispatch(SetOrder(order));
-                                    // go to the cart page
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(builder: (context) => Cart(tourist: false,)),
-                                    );
-                                  } else {
-                                    showDialog(
-                                        context: context,
-                                        builder: (_) => new AlertDialog(
-                                          title: new Text(AppLocalizations.of(context).warning),
-                                          content: new Text(AppLocalizations.of(context).emptyCart),
-                                          actions: <Widget>[
-                                            MaterialButton(
-                                              elevation: 0,
-                                              hoverElevation: 0,
-                                              focusElevation: 0,
-                                              highlightElevation: 0,
-                                              child: Text(AppLocalizations.of(context).ok),
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                              },
-                                            )
-                                          ],
-                                        )
-                                    );
-                                  }
-                                },
-                              ),
-                            ),
+                ),
+                centerTitle: true,
+                title: Container(
+                  width: SizeConfig.safeBlockHorizontal * 60,
+                  child: Padding(
+                      padding: const EdgeInsets.only(left: 0.0),
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          AppLocalizations.of(context).allBookings,
+                          textAlign: TextAlign.start,
+                          style: TextStyle(
+                              fontFamily: BuytimeTheme.FontFamily,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                              //letterSpacing: 0.15,
+                              color: BuytimeTheme.TextBlack
                           ),
-                          order.cartCounter > 0
-                              ? Positioned.fill(
-                            top: 5,
-                            left: 2.5,
-                            child: Align(
-                              alignment: Alignment.topCenter,
-                              child: Text(
-                                '${order.cartCounter}',
-                                textAlign: TextAlign.start,
-                                style: TextStyle(
-                                  fontSize: SizeConfig.safeBlockHorizontal * 3,
-                                  color: BuytimeTheme.TextWhite,
-                                  fontWeight: FontWeight.w400,
-                                ),
+                        ),
+                      )),
+                ),
+                actions: [
+                  Container(
+                    width: 56,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        ///Cart
+                        Flexible(
+                            child: Container(
+                              margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 0),
+                              child: Stack(
+                                children: [
+                                  Positioned.fill(
+                                    child: Align(
+                                      alignment: Alignment.center,
+                                      child: IconButton(
+                                        key: Key('cart_key'),
+                                        icon: Icon(
+                                          BuytimeIcons.shopping_cart,
+                                          color: BuytimeTheme.TextBlack,
+                                          size: 19.0,
+                                        ),
+                                        onPressed: () {
+                                          debugPrint("RUI_U_service_explorer => + cart_discover");
+                                          FirebaseAnalytics().logEvent(
+                                              name: 'cart_discover',
+                                              parameters: {
+                                                'user_email': StoreProvider.of<AppState>(context).state.user.email,
+                                                'date': DateTime.now().toString(),
+                                              });
+                                          if (order.cartCounter > 0) {
+                                            // dispatch the order
+                                            StoreProvider.of<AppState>(context).dispatch(SetOrder(order));
+                                            // go to the cart page
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) => Cart(
+                                                    tourist: true,
+                                                  )),
+                                            );
+                                          } else {
+                                            showDialog(
+                                                context: context,
+                                                builder: (_) => new AlertDialog(
+                                                  title: new Text(AppLocalizations.of(context).warning),
+                                                  content: new Text(AppLocalizations.of(context).emptyCart),
+                                                  actions: <Widget>[
+                                                    MaterialButton(
+                                                      elevation: 0,
+                                                      hoverElevation: 0,
+                                                      focusElevation: 0,
+                                                      highlightElevation: 0,
+                                                      child: Text(AppLocalizations.of(context).ok),
+                                                      onPressed: () {
+                                                        Navigator.of(context).pop();
+                                                      },
+                                                    )
+                                                  ],
+                                                ));
+                                          }
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                  order.cartCounter > 0
+                                      ? Positioned.fill(
+                                    bottom: 20,
+                                    left: 3,
+                                    child: Align(
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                        '${order.cartCounter}',
+                                        textAlign: TextAlign.start,
+                                        style: TextStyle(
+                                          fontSize: SizeConfig.safeBlockHorizontal * 3,
+                                          color: BuytimeTheme.TextBlack,
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                      : Container(),
+                                ],
                               ),
-                            ),
-                          )
-                              : Container(),
-                        ],
-                      ),
+                            ))
+                      ],
                     ),
                   )
                 ],
+                elevation: 1,
               ),
               body: SafeArea(
                 child: StreamBuilder<QuerySnapshot>(

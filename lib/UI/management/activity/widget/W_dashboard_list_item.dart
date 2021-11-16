@@ -53,7 +53,7 @@ class _DashboardListItemState extends State<DashboardListItem> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
-                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
+                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * 1),
                     child: Icon(
                       widget.orderState.progress == Utils.enumToString(OrderStatus.canceled) ? BuytimeIcons.pending_clock : BuytimeIcons.accepted_clock,
                       color: widget.orderState.progress == Utils.enumToString(OrderStatus.canceled)
@@ -76,7 +76,7 @@ class _DashboardListItemState extends State<DashboardListItem> {
                     children: [
                       ///Name ecc.
                       Container(
-                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
+                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * 1),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -99,7 +99,7 @@ class _DashboardListItemState extends State<DashboardListItem> {
 
                       ///Table & email
                       Container(
-                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * .5),
+                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * .5),
                         child: Row(
                           children: [
                             Container(
@@ -115,7 +115,7 @@ class _DashboardListItemState extends State<DashboardListItem> {
                       ),
                       ///Price
                       Container(
-                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * .5),
+                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * .5),
                         child: Row(
                           children: [
                             Container(
@@ -130,7 +130,7 @@ class _DashboardListItemState extends State<DashboardListItem> {
 
                       ///Order Creation Time
                       /*Container(
-                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 0.4),
+                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * 0.4),
                         child: Row(
                           children: [
                             Container(
@@ -145,7 +145,7 @@ class _DashboardListItemState extends State<DashboardListItem> {
 
                       ///Status
                       Container(
-                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * .2),
+                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * .2),
                         child: Row(
                           children: [
                             Container(

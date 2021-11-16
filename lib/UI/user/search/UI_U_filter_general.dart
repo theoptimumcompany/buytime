@@ -237,7 +237,7 @@ class _FilterGeneralState extends State<FilterGeneral> {
                           Container(
                             margin: EdgeInsets.only(
                                 top: SizeConfig.safeBlockVertical * 3,
-                                left: SizeConfig.safeBlockHorizontal * 5,
+                                left: SizeConfig.safeBlockHorizontal * 3.5,
                                 bottom: SizeConfig.safeBlockVertical * 1,
                                 right: _searchController.text.isNotEmpty ? SizeConfig.safeBlockHorizontal * .5 : SizeConfig.safeBlockHorizontal * 5),
                             child: Row(
@@ -668,7 +668,7 @@ class _FilterGeneralState extends State<FilterGeneral> {
                                   : _searchController.text.isNotEmpty
                                       ? Container(
                                           height: SizeConfig.safeBlockVertical * 8,
-                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                                           decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
                                           child: Center(
                                               child: Container(
@@ -683,7 +683,7 @@ class _FilterGeneralState extends State<FilterGeneral> {
                                       : tmpServiceList.isEmpty
                                           ? Container(
                                               height: SizeConfig.safeBlockVertical * 8,
-                                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                                               decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
                                               child: Center(
                                                   child: Container(

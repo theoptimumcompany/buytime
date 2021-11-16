@@ -161,7 +161,7 @@
   "locationCountry": "Ubicació, País",
   "guestsNumber": "## hostes",
   "confirmBooking": "Confirma Reserva",
-  "somethingIsNotRight": "ALGUNA COSA NO ÉS CORRECTE",
+  "somethingIsNotRightUpper": "ALGUNA COSA NO ÉS CORRECTE",
   "pastBookings": "Reserves passades",
   "yourPastBookingWill": "Les teves reserves passades apareixeran aquí. Vols saber més de la xarxa de Buytime?",
   "contactUs": "Contacta amb nosaltres",
@@ -626,5 +626,11 @@
   "paypal": "Paypal",
   "viewMore": "View More",
   "whatIsIt": "What Is It?",
-  "from": "From"
+  "from": "From",
+  "hubsTopServices": "HUB's top services",
+  "discoverHub": "Discover the top services of your Hotel",
+  "reserve": "Reserve",
+  "buy": "Buy",
+  "somethingIsNotRight": "Something isn't right",
+  "reserveATable": "Reserve a table"
 }

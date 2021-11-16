@@ -104,7 +104,7 @@ class _CreditCardSimpleListElementState extends State<CreditCardSimpleListElemen
                   children: [
                     ///Card Name & Ending **** ....
                     Container(
-                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
+                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.center,

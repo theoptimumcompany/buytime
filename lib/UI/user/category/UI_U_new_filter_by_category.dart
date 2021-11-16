@@ -503,7 +503,7 @@ class _NewFilterByCategoryState extends State<NewFilterByCategory> {
                                     children: [
                                       ///Just show me
                                       Container(
-                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1),
+                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1),
                                         child: Text(
                                           AppLocalizations.of(context).justShowMe,
                                           style: TextStyle(
@@ -523,7 +523,7 @@ class _NewFilterByCategoryState extends State<NewFilterByCategory> {
                                           Container(
                                               height: SizeConfig.screenWidth / 3,
                                               width: double.infinity,
-                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
+                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5),
                                             child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
                                                 SliverList(
                                                   delegate: SliverChildBuilderDelegate(
@@ -546,7 +546,7 @@ class _NewFilterByCategoryState extends State<NewFilterByCategory> {
                                           ///No List
                                           Container(
                                               height: SizeConfig.safeBlockVertical * 8,
-                                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                                               decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
                                               child: Center(
                                                   child: Container(
@@ -584,7 +584,7 @@ class _NewFilterByCategoryState extends State<NewFilterByCategory> {
                               children: [
                                 ///Search
                                 /*Container(
-                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5),
+                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5),
                                   height: SizeConfig.safeBlockHorizontal * 20,
                                   child: TextFormField(
                                     controller: _searchController,
@@ -630,7 +630,7 @@ class _NewFilterByCategoryState extends State<NewFilterByCategory> {
                                 Container(
                                   margin: EdgeInsets.only(
                                       top: SizeConfig.safeBlockVertical * 3,
-                                      left: SizeConfig.safeBlockHorizontal * 5,
+                                      left: SizeConfig.safeBlockHorizontal * 3.5,
                                       bottom: SizeConfig.safeBlockVertical * 1,
                                       right: _searchController.text.isNotEmpty ? SizeConfig.safeBlockHorizontal * .5 : SizeConfig.safeBlockHorizontal * 5),
                                   child: Row(
@@ -826,7 +826,7 @@ class _NewFilterByCategoryState extends State<NewFilterByCategory> {
                                                   ///Discover
                                                   Flexible(
                                                     child: Container(
-                                                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 5, bottom: SizeConfig.safeBlockVertical * 2),
+                                                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 3.5, bottom: SizeConfig.safeBlockVertical * 2),
                                                       //padding: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 2),
                                                       height: 150,
                                                       width: double.infinity,
@@ -890,7 +890,7 @@ class _NewFilterByCategoryState extends State<NewFilterByCategory> {
                                                         children: [
                                                           ///Popular
                                                           Container(
-                                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: 20, bottom: SizeConfig.safeBlockVertical * 0.5),
+                                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: 20, bottom: SizeConfig.safeBlockVertical * 0.5),
                                                             child: Text(
                                                               AppLocalizations.of(context).popular,
                                                               style: TextStyle(
@@ -906,7 +906,7 @@ class _NewFilterByCategoryState extends State<NewFilterByCategory> {
                                                           ),
                                                           ///Text
                                                           Container(
-                                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * .5, bottom: SizeConfig.safeBlockVertical * .5),
+                                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * .5, bottom: SizeConfig.safeBlockVertical * .5),
                                                             child: Text(
                                                               AppLocalizations.of(context).popularSlogan,
                                                               style: TextStyle(
@@ -970,7 +970,7 @@ class _NewFilterByCategoryState extends State<NewFilterByCategory> {
                                                   //       children: [
                                                   //         ///Recommended
                                                   //         Container(
-                                                  //           margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: 20, bottom: SizeConfig.safeBlockVertical * 0.5),
+                                                  //           margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: 20, bottom: SizeConfig.safeBlockVertical * 0.5),
                                                   //           child: Text(
                                                   //             AppLocalizations.of(context).recommended,
                                                   //             style: TextStyle(
@@ -986,7 +986,7 @@ class _NewFilterByCategoryState extends State<NewFilterByCategory> {
                                                   //         ),
                                                   //         ///Text
                                                   //         Container(
-                                                  //           margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * .5, bottom: SizeConfig.safeBlockVertical * .5),
+                                                  //           margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * .5, bottom: SizeConfig.safeBlockVertical * .5),
                                                   //           child: Text(
                                                   //             AppLocalizations.of(context).recommendedSlogan,
                                                   //             style: TextStyle(
@@ -1214,7 +1214,7 @@ class _NewFilterByCategoryState extends State<NewFilterByCategory> {
                                             )
                                                 : _searchController.text.isNotEmpty ? Container(
                                               height: SizeConfig.safeBlockVertical * 8,
-                                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                                               decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
                                               child: Center(
                                                   child: Container(
@@ -1229,7 +1229,7 @@ class _NewFilterByCategoryState extends State<NewFilterByCategory> {
                                                 : Provider.of<CategoryService>(context, listen: false).serviceList.isEmpty
                                                 ? Container(
                                               height: SizeConfig.safeBlockVertical * 8,
-                                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                                               decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
                                               child: Center(
                                                   child: Container(
@@ -1405,7 +1405,7 @@ class _NewFilterByCategoryState extends State<NewFilterByCategory> {
                                 //         : _searchController.text.isNotEmpty
                                 //             ? Container(
                                 //                 height: SizeConfig.safeBlockVertical * 8,
-                                //                 margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                //                 margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                                 //                 decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
                                 //                 child: Center(
                                 //                     child: Container(
@@ -1420,7 +1420,7 @@ class _NewFilterByCategoryState extends State<NewFilterByCategory> {
                                 //             : tmpServiceList.isEmpty
                                 //                 ? Container(
                                 //                     height: SizeConfig.safeBlockVertical * 8,
-                                //                     margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                //                     margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                                 //                     decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
                                 //                     child: Center(
                                 //                         child: Container(
@@ -1460,7 +1460,7 @@ class _NewFilterByCategoryState extends State<NewFilterByCategory> {
                               children: [
                                 ///Inspiration
                                 /*Container(
-                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
+                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * 1),
                                     child: Text(
                                       'Find your inspiration here',
                                       style: TextStyle(
@@ -1551,7 +1551,7 @@ class _NewFilterByCategoryState extends State<NewFilterByCategory> {
                                     ),
                                   )*/
                                 Container(
-                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 3, bottom: SizeConfig.safeBlockVertical * 2),
+                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 3, bottom: SizeConfig.safeBlockVertical * 2),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
@@ -1620,7 +1620,7 @@ class _NewFilterByCategoryState extends State<NewFilterByCategory> {
                                     ///No Category
                                     Container(
                                         height: SizeConfig.safeBlockVertical * 8,
-                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                                         decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
                                         child: Center(
                                             child: Container(

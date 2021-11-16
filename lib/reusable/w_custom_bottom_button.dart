@@ -19,7 +19,7 @@ class _CustomBottomButtonWidgetState extends State<CustomBottomButtonWidget> {
     return Container(
       //width: 375,
       height: 64,
-      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
+      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

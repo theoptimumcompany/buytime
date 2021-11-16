@@ -119,47 +119,29 @@ class CartReservableState extends State<CartReservable> {
               orderReservableState = snapshot.orderReservable;
               return Scaffold(
                   resizeToAvoidBottomInset: false,
-                  appBar: BuytimeAppbar(
-                    background: widget.tourist ? BuytimeTheme.BackgroundCerulean :BuytimeTheme.UserPrimary,
-                    width: media.width,
-                    children: [
-                      ///Back Button
-                      IconButton(
-                          key: Key('back_from_cart_reserve_key'),
-                          icon: Icon(Icons.chevron_left, color: BuytimeTheme.TextWhite),
-                          onPressed: () {
-                            /*Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (context) => ServiceList()),
-                          );*/
-                            /*StoreProvider.of<AppState>(context).dispatch(UpdateOrder(OrderState(
-                              itemList: orderState.itemList, date: orderState.date, position: orderState.position, total: orderState.total, business: orderState.business, user: orderState.user, businessId: orderState.businessId, userId: orderState.userId)));*/
-
-                            Navigator.of(context).pop();
-                          }),
-
-                      ///Cart Title
-                      Container(
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 0.0),
-                          child: Text(
-                            AppLocalizations.of(context).confirmBooking,
-                            textAlign: TextAlign.start,
-                            style: BuytimeTheme.appbarTitle,
-                          ),
-                        ),
+                  appBar: AppBar(
+                    backgroundColor: Colors.white,
+                    brightness: Brightness.dark,
+                    elevation: 0,
+                    title: Text(
+                      AppLocalizations.of(context).confirmBooking,
+                      style: TextStyle(
+                          fontFamily: BuytimeTheme.FontFamily,
+                          color: BuytimeTheme.TextBlack,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 16 ///SizeConfig.safeBlockHorizontal * 7
                       ),
-                      /*ColorFiltered(
-                        colorFilter: ColorFilter.linearToSrgbGamma(),
-                        child: Image.network(
-                          StoreProvider.of<AppState>(context).state.business.logo,
-                          height: media.height * 0.05,
-                        ),
-                      ),*/
-                      SizedBox(
-                        width: 40.0,
-                      )
-                    ],
+                    ),
+                    centerTitle: true,
+                    leading: IconButton(
+                      icon: Icon(
+                        Icons.keyboard_arrow_left,
+                        color: Colors.black,
+                      ),
+                      onPressed: () async{
+                        Navigator.of(context).pop();
+                      },
+                    ),
                   ),
                   body: SafeArea(
                     child: Center(
@@ -378,8 +360,8 @@ class CartReservableState extends State<CartReservable> {
                                   children: [
                                     ///Reserve button
                                     Container(
-                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5, bottom: SizeConfig.safeBlockVertical * 5),
-                                        width: 158,
+                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5, bottom: SizeConfig.safeBlockVertical * 2),
+                                        width: 198,
 
                                         /// media.width * .4
                                         height: 46,
@@ -419,12 +401,12 @@ class CartReservableState extends State<CartReservable> {
 
                                           },
                                           textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
-                                          color:  widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
+                                          color: BuytimeTheme.ActionBlackPurple,
                                           shape: RoundedRectangleBorder(
-                                            borderRadius: new BorderRadius.circular(5),
+                                            borderRadius: new BorderRadius.circular(20),
                                           ),
                                           child: Text(
-                                            AppLocalizations.of(context).reserveUpper,
+                                            AppLocalizations.of(context).reserve,
                                             style: TextStyle(fontSize: 14, fontFamily: BuytimeTheme.FontFamily, fontWeight: FontWeight.w500, color: BuytimeTheme.TextWhite, letterSpacing: 1.25),
                                           ),
                                         )),
