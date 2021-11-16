@@ -593,7 +593,7 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
                                     )
                                 ),
                                 SliverFixedExtentList(
-                                  itemExtent: SizeConfig.screenHeight - 75,
+                                  itemExtent: (Platform.isIOS?  SizeConfig.screenHeight - 177 :   SizeConfig.screenHeight - 75),
                                   delegate: SliverChildListDelegate(
                                     [
                                       Column(
