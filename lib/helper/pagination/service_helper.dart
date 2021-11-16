@@ -128,7 +128,7 @@ class ServicePagingBloc {
     Query pageServicesQuery;
     if (StoreProvider.of<AppState>(context).state.area != null && StoreProvider.of<AppState>(context).state.area.areaId != null && StoreProvider.of<AppState>(context).state.area.areaId.isNotEmpty) {
       pageServicesQuery = FirebaseFirestore.instance.collection("service")
-          .where("tag", arrayContains: StoreProvider.of<AppState>(context).state.area.areaId)
+          .where("tag", arrayContainsAny: [StoreProvider.of<AppState>(context).state.area.areaId])
           .where("visibility", isEqualTo: 'Active')
           .where('categoryId', arrayContainsAny: categoryIdList.length > 10 ? categoryIdList.sublist(0, 10) : categoryIdList)
           .limit(ServicesLimit);

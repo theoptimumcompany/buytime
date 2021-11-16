@@ -27,6 +27,7 @@ import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reblox/model/role/role.dart';
 import 'package:Buytime/reblox/reducer/app_reducer.dart';
 import 'package:Buytime/reblox/reducer/booking_list_reducer.dart';
+import 'package:Buytime/reblox/reducer/booking_reducer.dart';
 import 'package:Buytime/reblox/reducer/promotion/promotion_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/service_list_reducer.dart';
 import 'package:Buytime/reusable/w_custom_bottom_button.dart';
@@ -147,7 +148,6 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
       StoreProvider.of<AppState>(context).dispatch(PromotionListRequest());
       //servicePagingBloc.requestServices(context);
       DateTime currentTime = DateTime.now();
-      DateTime bookingTime = DateTime.now();
       currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0).toUtc();
       debugPrint('RUI_U_service_explorer => CURRENT TIME: $currentTime');
 
@@ -1418,6 +1418,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
 
                                             if(bookingList.isNotEmpty){
                                               BookingState bookingState = bookingList.first;
+
                                               bool sameMonth = false;
                                               String startMonth = DateFormat('MM').format(bookingState.start_date);
                                               String endMonth = DateFormat('MM').format(bookingState.end_date);
@@ -1426,6 +1427,19 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                 sameMonth = true;
                                               else
                                                 sameMonth = false;
+
+                                              DateTime endTime = bookingState.end_date;
+                                              endTime = new DateTime(endTime.year, endTime.month, endTime.day, 0, 0, 0, 0, 0);
+                                              DateTime currentTime = DateTime.now();
+                                              currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0).toUtc();
+                                              if(endTime.isBefore(currentTime) && bookingState.status != 'closed'){
+                                                debugPrint('RUI_U_my_bookings => ${bookingState.end_date}');
+                                                bookingState.status = Utils.enumToString(BookingStatus.closed);
+                                                StoreProvider.of<AppState>(context).dispatch(UpdateBooking(bookingState));
+                                                WidgetsBinding.instance.addPostFrameCallback((_) async {
+                                                  Provider.of<Explorer>(context, listen: false).businessState = BusinessState().toEmpty();
+                                                });
+                                              }
                                               return StreamBuilder<QuerySnapshot>(
                                                   stream: FirebaseFirestore.instance
                                                       .collection("business")
@@ -1721,6 +1735,9 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                   }
                                               );
                                             }else{
+                                              WidgetsBinding.instance.addPostFrameCallback((_) async {
+                                                Provider.of<Explorer>(context, listen: false).businessState = BusinessState().toEmpty();
+                                              });
                                               return Container(
                                                 margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2.5, bottom: SizeConfig.safeBlockVertical * 1),
                                                 child: _OpenContainerWrapper(
@@ -1760,7 +1777,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                               //letterSpacing: SizeConfig.safeBlockVertical * .4,
                                                                 fontFamily: BuytimeTheme.FontFamily,
                                                                 color: BuytimeTheme.TextBlack,
-                                                                fontWeight: FontWeight.w400,
+                                                                fontWeight: FontWeight.w700,
                                                                 fontSize: 18
 
                                                               ///SizeConfig.safeBlockHorizontal * 4
@@ -1857,7 +1874,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                             //letterSpacing: SizeConfig.safeBlockVertical * .4,
                                                               fontFamily: BuytimeTheme.FontFamily,
                                                               color: BuytimeTheme.TextBlack,
-                                                              fontWeight: FontWeight.w400,
+                                                              fontWeight: FontWeight.w700,
                                                               fontSize: 18
 
                                                             ///SizeConfig.safeBlockHorizontal * 4
@@ -3480,7 +3497,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                     Stream<QuerySnapshot> thisCategory;
                                                     if (StoreProvider.of<AppState>(context).state.area != null && StoreProvider.of<AppState>(context).state.area.areaId != null && StoreProvider.of<AppState>(context).state.area.areaId.isNotEmpty) {
                                                       thisCategory = FirebaseFirestore.instance.collection("service")
-                                                          .where("tag", arrayContains: StoreProvider.of<AppState>(context).state.area.areaId)
+                                                          .where("tag", arrayContainsAny: [StoreProvider.of<AppState>(context).state.area.areaId])
                                                           .where("visibility", isEqualTo: 'Active')
                                                           .where('categoryId', arrayContainsAny: category.categoryIdList.length > 10 ? category.categoryIdList.sublist(0, 10) : category.categoryIdList)
                                                           .limit(4)
