@@ -231,7 +231,7 @@ class _NotificationsState extends State<Notifications> {
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         CustomScrollView(
-                                            physics: new ClampingScrollPhysics(),
+
                                             shrinkWrap: true,
                                             physics: NeverScrollableScrollPhysics(),
                                             slivers: [

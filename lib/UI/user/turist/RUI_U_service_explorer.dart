@@ -2401,8 +2401,8 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                                 width: double.infinity,
                                                                 margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 0, top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 0),
                                                                 child: CustomScrollView
-                                                physics: new ClampingScrollPhysics(),
-                                                                  (shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
+                                                                  (physics: new ClampingScrollPhysics(),
+                                                                    shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
                                                                   SliverList(
                                                                     delegate: SliverChildBuilderDelegate(
                                                                           (context, index) {
