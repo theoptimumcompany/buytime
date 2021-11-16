@@ -444,7 +444,9 @@ class _RActivityManagementItemDetailsState extends State<RActivityManagementItem
                               orderState.itemList != null && orderState.itemList.length > 1 ?
                               Flexible(
                                 flex: 1,
-                                child: CustomScrollView(shrinkWrap: true, slivers: [
+                                child: CustomScrollView(
+                                    physics: new ClampingScrollPhysics(),
+                                    shrinkWrap: true, slivers: [
                                   SliverList(
                                     delegate: SliverChildBuilderDelegate(
                                           (context, index) {
@@ -520,7 +522,9 @@ class _RActivityManagementItemDetailsState extends State<RActivityManagementItem
                               orderState.itemList.length == 1 ?
                               Flexible(
                                 flex: 1,
-                                child: CustomScrollView(shrinkWrap: true, slivers: [
+                                child: CustomScrollView(
+                                    physics: new ClampingScrollPhysics(),
+                                    shrinkWrap: true, slivers: [
                                   SliverList(
                                     delegate: SliverChildBuilderDelegate(
                                           (context, index) {

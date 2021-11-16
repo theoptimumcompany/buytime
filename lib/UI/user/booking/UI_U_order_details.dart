@@ -474,6 +474,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                             }
 
                             return  CustomScrollView(
+                              physics: new ClampingScrollPhysics(),
                               controller: _scrollController,
                               slivers: <Widget>[
                                 SliverAppBar(

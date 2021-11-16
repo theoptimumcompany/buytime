@@ -1071,6 +1071,7 @@ class _RActivityManagementState extends State<RActivityManagement> {
                     child: Container(
                       margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 0, right: SizeConfig.safeBlockHorizontal * 0, top: SizeConfig.safeBlockVertical * 1),
                       child: CustomScrollView(
+                        physics: new ClampingScrollPhysics(),
                         shrinkWrap: true,
                         slivers: !seeAll ?
                         _weekSliverList(weekOrderList) :

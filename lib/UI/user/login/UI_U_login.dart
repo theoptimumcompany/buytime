@@ -491,7 +491,7 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
                         ),
                       ),
                       child: CustomScrollView(
-                        //physics: ClampingScrollPhysics(),
+                          physics: ClampingScrollPhysics(),
                           shrinkWrap: true,
                           slivers: [
                             SliverList(

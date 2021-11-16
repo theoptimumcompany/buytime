@@ -595,7 +595,7 @@ class _TouristSessionState extends State<TouristSession> with SingleTickerProvid
                           ),
                         ),
                         child: CustomScrollView(
-                            //physics: ClampingScrollPhysics(),
+                            physics: ClampingScrollPhysics(),
                             shrinkWrap: true,
                             slivers: [
                               SliverList(

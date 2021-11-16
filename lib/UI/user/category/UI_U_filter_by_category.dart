@@ -595,7 +595,9 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                               height: SizeConfig.screenWidth / 3,
                                               width: double.infinity,
                                             margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5),
-                                            child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
+                                            child: CustomScrollView(
+                                                physics: new ClampingScrollPhysics(),
+                                                shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
                                                 SliverList(
                                                   delegate: SliverChildBuilderDelegate(
                                                     (context, index) {

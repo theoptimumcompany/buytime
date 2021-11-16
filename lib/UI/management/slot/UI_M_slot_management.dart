@@ -188,6 +188,7 @@ class _SlotManagementState extends State<SlotManagement> {
                         child: Container(
                           margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
                           child: CustomScrollView(
+                              physics: new ClampingScrollPhysics(),
                               shrinkWrap: true, slivers: [
                           SliverList(
                             delegate: SliverChildBuilderDelegate(
@@ -221,6 +222,7 @@ class _SlotManagementState extends State<SlotManagement> {
                         child: Container(
                           margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
                           child: CustomScrollView(
+                            physics: new ClampingScrollPhysics(),
                             shrinkWrap: true,
                             slivers: [
                               SliverList(

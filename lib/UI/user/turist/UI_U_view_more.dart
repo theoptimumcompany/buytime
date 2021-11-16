@@ -308,6 +308,7 @@ class ViewMoreState extends State<ViewMore> {
                                             child: Container(
                                               margin: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 6),
                                               child: CustomScrollView(
+                                                  physics: new ClampingScrollPhysics(),
                                                   controller: popularScoller,
                                                   shrinkWrap: true, scrollDirection: Axis.vertical, slivers: [
                                                 SliverGrid(

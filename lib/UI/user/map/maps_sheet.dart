@@ -31,7 +31,9 @@ class MapsSheet {
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 Flexible(
-                  child: CustomScrollView(shrinkWrap: true, slivers: [
+                  child: CustomScrollView(
+                      physics: new ClampingScrollPhysics(),
+                      shrinkWrap: true, slivers: [
                     SliverList(
                       delegate: SliverChildBuilderDelegate(
                             (context, index) {

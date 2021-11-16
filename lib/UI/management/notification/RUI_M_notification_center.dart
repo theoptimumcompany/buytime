@@ -212,6 +212,7 @@ class _RNotificationCenterState extends State<RNotificationCenter> {
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         CustomScrollView(
+                                            physics: new ClampingScrollPhysics(),
                                             controller: _scrollController
                                               ..addListener(() {
                                                 var triggerFetchMoreSize =

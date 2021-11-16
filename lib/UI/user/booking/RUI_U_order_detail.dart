@@ -452,6 +452,7 @@ class _RUI_U_OrderDetailState extends State<RUI_U_OrderDetail> with SingleTicker
                             }
 
                             return  CustomScrollView(
+                              physics: new ClampingScrollPhysics(),
                               controller: _scrollController,
                               slivers: <Widget>[
                                 SliverAppBar(

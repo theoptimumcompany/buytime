@@ -524,7 +524,9 @@ class _NewFilterByCategoryState extends State<NewFilterByCategory> {
                                               height: SizeConfig.screenWidth / 3,
                                               width: double.infinity,
                                             margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5),
-                                            child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
+                                            child: CustomScrollView(
+                                                physics: new ClampingScrollPhysics(),
+                                                shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
                                                 SliverList(
                                                   delegate: SliverChildBuilderDelegate(
                                                     (context, index) {
@@ -853,7 +855,9 @@ class _NewFilterByCategoryState extends State<NewFilterByCategory> {
                                                           ),
                                                           ///List
                                                           Flexible(
-                                                            child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
+                                                            child: CustomScrollView(
+                                                                physics: new ClampingScrollPhysics(),
+                                                                shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
                                                               SliverList(
                                                                 delegate: SliverChildBuilderDelegate(
                                                                       (context, index) {
@@ -924,7 +928,9 @@ class _NewFilterByCategoryState extends State<NewFilterByCategory> {
                                                             height: 220,
                                                             width: double.infinity,
                                                             margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 0),
-                                                            child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
+                                                            child: CustomScrollView(
+                                                                physics: new ClampingScrollPhysics(),
+                                                                shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
                                                               SliverList(
                                                                 delegate: SliverChildBuilderDelegate(
                                                                       (context, index) {

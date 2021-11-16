@@ -89,7 +89,9 @@ class _CheckedOutBookingListState extends State<CheckedOutBookingList> {
                               //color: Colors.blueGrey.withOpacity(0.1),
                               //margin: EdgeInsets.only(bottom: 60.0),
                               padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
-                              child: CustomScrollView(shrinkWrap: true, slivers: [
+                              child: CustomScrollView(
+                                  physics: new ClampingScrollPhysics(),
+                                  shrinkWrap: true, slivers: [
                                 SliverList(
                                   delegate: SliverChildBuilderDelegate((context, index) {
                                     //MenuItemModel menuItem = menuItems.elementAt(index);

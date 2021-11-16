@@ -633,6 +633,7 @@ class _RServiceSlotManagementState extends State<RServiceSlotManagement> {
               debugPrint('RUI_M_service_slot_management => ALL MAP SIZE: ${allMap.length}');
               if(allMap.isNotEmpty){
                 return CustomScrollView(
+                    physics: new ClampingScrollPhysics(),
                     shrinkWrap: true, slivers: [MultiSliver(
                   children: orderHistory(allMap),
                 )]);

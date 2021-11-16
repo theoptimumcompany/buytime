@@ -236,6 +236,7 @@ class PAServiceListState extends State<PAServiceList> {
                         child: Container(
                           margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
                           child: CustomScrollView(
+                            physics: new ClampingScrollPhysics(),
                             shrinkWrap: true,
                             slivers: [
                               SliverList(

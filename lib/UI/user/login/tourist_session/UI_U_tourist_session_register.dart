@@ -558,7 +558,7 @@ class _TouristSessionRegisterState extends State<TouristSessionRegister> with Si
                           ),
                         ),
                         child: CustomScrollView(
-                            //physics: ClampingScrollPhysics(),
+                            physics: ClampingScrollPhysics(),
                             shrinkWrap: true,
                             slivers: [
                               SliverList(

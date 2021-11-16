@@ -77,6 +77,7 @@ class TestState extends State<Test> {
             width: double.infinity,
             margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 0),
             child: CustomScrollView(
+                physics: new ClampingScrollPhysics(),
                 controller: popularScoller,
                 shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
               SliverList(

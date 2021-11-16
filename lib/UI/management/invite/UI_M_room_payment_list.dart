@@ -126,7 +126,9 @@ class UI_M_RoomPaymentListState extends State<UI_M_RoomPaymentList> {
                                   ),
                                 ),
                                 Flexible(
-                                  child: CustomScrollView(shrinkWrap: true, slivers: [
+                                  child: CustomScrollView(
+                                      physics: new ClampingScrollPhysics(),
+                                      shrinkWrap: true, slivers: [
                                     SliverList(
                                       delegate: SliverChildBuilderDelegate(
                                         (context, index) {

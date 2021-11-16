@@ -222,6 +222,7 @@ class _MyBookingsState extends State<MyBookings> {
                                         removeTop: true,
                                         context: context,
                                         child: CustomScrollView(
+                                          physics: new ClampingScrollPhysics(),
                                           shrinkWrap: true,
                                           slivers: [
                                             SliverList(

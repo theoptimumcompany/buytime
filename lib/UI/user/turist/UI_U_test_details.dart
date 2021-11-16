@@ -85,6 +85,7 @@ class TestDetailsState extends State<TestDetails> {
             Flexible(
               flex: 5,
               child: CustomScrollView(
+                physics: new ClampingScrollPhysics(),
                 controller: _scrollController,
                 slivers: <Widget>[
                   SliverAppBar(

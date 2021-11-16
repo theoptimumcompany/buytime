@@ -249,6 +249,7 @@ class _RMyBookingsState extends State<RMyBookings> {
                                           removeTop: true,
                                           context: context,
                                           child: CustomScrollView(
+                                            physics: new ClampingScrollPhysics(),
                                             shrinkWrap: true,
                                             slivers: [
                                               SliverList(

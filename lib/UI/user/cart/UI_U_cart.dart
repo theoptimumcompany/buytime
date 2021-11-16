@@ -189,7 +189,9 @@ class CartState extends State<Cart> {
                                               ///Service List
                                               Flexible(
                                                 flex: 1,
-                                                child: CustomScrollView(shrinkWrap: true, slivers: [
+                                                child: CustomScrollView(
+                                                    physics: new ClampingScrollPhysics(),
+                                                    shrinkWrap: true, slivers: [
                                                   SliverList(
                                                     delegate: SliverChildBuilderDelegate(
                                                       (context, index) {

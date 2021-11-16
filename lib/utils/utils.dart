@@ -641,6 +641,7 @@ class Utils {
                         height: SizeConfig.safeBlockVertical * 50,
                         margin: EdgeInsets.only(bottom: 10),
                         child: CustomScrollView(
+                            physics: new ClampingScrollPhysics(),
                             //physics: NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
                             slivers: [

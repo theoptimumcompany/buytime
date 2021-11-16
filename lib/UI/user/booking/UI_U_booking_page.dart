@@ -854,7 +854,9 @@ class _BookingPageState extends State<BookingPage> {
                                                               height: 120,
                                                               width: double.infinity,
                                                               margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5),
-                                                              child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
+                                                              child: CustomScrollView(
+                                                                  physics: new ClampingScrollPhysics(),
+                                                                  shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
                                                                 SliverList(
                                                                   delegate: SliverChildBuilderDelegate(
                                                                         (context, index) {
@@ -961,7 +963,9 @@ class _BookingPageState extends State<BookingPage> {
                                                                 height: 120,
                                                                 width: double.infinity,
                                                                 margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5),
-                                                                child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
+                                                                child: CustomScrollView(
+                                                                    physics: new ClampingScrollPhysics(),
+                                                                    shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
                                                                   SliverList(
                                                                     delegate: SliverChildBuilderDelegate(
                                                                       (context, index) {

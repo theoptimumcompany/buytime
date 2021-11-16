@@ -1817,7 +1817,9 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                       height: 120,
                                                       width: double.infinity,
                                                       margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5),
-                                                      child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
+                                                      child: CustomScrollView(
+                                                          physics: new ClampingScrollPhysics(),
+                                                          shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
                                                         SliverList(
                                                           delegate: SliverChildBuilderDelegate(
                                                                 (context, index) {
@@ -1914,7 +1916,9 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                     height: 120,
                                                     width: double.infinity,
                                                     margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5),
-                                                    child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
+                                                    child: CustomScrollView(
+                                                        physics: new ClampingScrollPhysics(),
+                                                        shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
                                                       SliverList(
                                                         delegate: SliverChildBuilderDelegate(
                                                               (context, index) {
@@ -2243,7 +2247,9 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                               ),
                                                               ///List
                                                               Flexible(
-                                                                child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
+                                                                child: CustomScrollView(
+                                                                    physics: new ClampingScrollPhysics(),
+                                                                    shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
                                                                   SliverList(
                                                                     delegate: SliverChildBuilderDelegate(
                                                                           (context, index) {
@@ -2313,7 +2319,9 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                                 height: 220,
                                                                 width: double.infinity,
                                                                 margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 0, top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 0),
-                                                                child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
+                                                                child: CustomScrollView(
+                                                                    physics: new ClampingScrollPhysics(),
+                                                                    shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
                                                                   SliverList(
                                                                     delegate: SliverChildBuilderDelegate(
                                                                           (context, index) {
@@ -2392,7 +2400,9 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                                 height: 220,
                                                                 width: double.infinity,
                                                                 margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 0, top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 0),
-                                                                child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
+                                                                child: CustomScrollView
+                                                physics: new ClampingScrollPhysics(),
+                                                                  (shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
                                                                   SliverList(
                                                                     delegate: SliverChildBuilderDelegate(
                                                                           (context, index) {
@@ -2688,7 +2698,9 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                                     debugPrint('RUI_U_service_explorer => CATEGORY SNAPSHOT ERROR => ${categorySnaphot.hasError}');
                                                                     debugPrint('RUI_U_service_explorer => CATEGORY CONNECTION STATE => ${categorySnaphot.connectionState}');
                                                                     return Flexible(
-                                                                      child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
+                                                                      child: CustomScrollView(
+                                                physics: new ClampingScrollPhysics(),
+                                                shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
                                                                         SliverList(
                                                                           delegate: SliverChildBuilderDelegate(
                                                                                 (context, index) {
@@ -2785,7 +2797,9 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                                   Provider.of<Explorer>(context, listen: false).rootCategoryList.sort((a,b) => (a.name).compareTo((b.name)));
                                                                   debugPrint('----------');
                                                                   return Flexible(
-                                                                    child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
+                                                                    child: CustomScrollView(
+                                                physics: new ClampingScrollPhysics(),
+                                                shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
                                                                       SliverList(
                                                                         delegate: SliverChildBuilderDelegate(
                                                                               (context, index) {
@@ -2926,7 +2940,9 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                                         height: 220,
                                                                         width: double.infinity,
                                                                         margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 0, top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 0),
-                                                                        child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
+                                                                        child: CustomScrollView(
+                                                physics: new ClampingScrollPhysics(),
+                                                shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
                                                                           SliverList(
                                                                             delegate: SliverChildBuilderDelegate(
                                                                                   (context, index) {
@@ -3051,7 +3067,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                                       height: 240,
                                                                       width: double.infinity,
                                                                       margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 0, top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 0),
-                                                                      child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
+                                                                      child: CustomScrollView(physics: new ClampingScrollPhysics(),shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
                                                                         SliverList(
                                                                           delegate: SliverChildBuilderDelegate(
                                                                                 (context, index) {
@@ -3070,7 +3086,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                                       height: 220,
                                                                       width: double.infinity,
                                                                       margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 0),
-                                                                      child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
+                                                                      child: CustomScrollView(physics: new ClampingScrollPhysics(),shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
                                                                         SliverList(
                                                                           delegate: SliverChildBuilderDelegate(
                                                                                 (context, index) {
@@ -3214,6 +3230,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                                   child: Align(
                                                                     alignment: Alignment.center,
                                                                     child: CustomScrollView(
+                                                physics: new ClampingScrollPhysics(),
                                                                       //controller: popularServiceScroller,
                                                                         shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
                                                                       SliverList(
@@ -3274,7 +3291,8 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                           height: 220,
                                                           width: double.infinity,
                                                           margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 0),
-                                                          child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
+                                                          child: CustomScrollView(physics: new ClampingScrollPhysics(),
+                                                shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
                                                             SliverList(
                                                               delegate: SliverChildBuilderDelegate(
                                                                     (context, index) {
@@ -3560,7 +3578,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                                           height: 220,
                                                                           width: double.infinity,
                                                                           margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 0, top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 0),
-                                                                          child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
+                                                                          child: CustomScrollView(physics: new ClampingScrollPhysics(),shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
                                                                             SliverList(
                                                                               delegate: SliverChildBuilderDelegate(
                                                                                     (context, index) {
@@ -3685,7 +3703,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                                         height: 240,
                                                                         width: double.infinity,
                                                                         margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 0, top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 0),
-                                                                        child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
+                                                                        child: CustomScrollView(physics: new ClampingScrollPhysics(),shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
                                                                           SliverList(
                                                                             delegate: SliverChildBuilderDelegate(
                                                                                   (context, index) {
@@ -3704,7 +3722,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                                         height: 220,
                                                                         width: double.infinity,
                                                                         margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 0),
-                                                                        child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
+                                                                        child: CustomScrollView(physics: new ClampingScrollPhysics(),shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
                                                                           SliverList(
                                                                             delegate: SliverChildBuilderDelegate(
                                                                                   (context, index) {
@@ -4062,7 +4080,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                 margin: EdgeInsets.only(
                                                     bottom: 5
                                                 ),
-                                                child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.vertical, slivers: [
+                                                child: CustomScrollView(physics: new ClampingScrollPhysics(),shrinkWrap: true, scrollDirection: Axis.vertical, slivers: [
                                                   SliverList(
                                                     delegate: SliverChildBuilderDelegate(
                                                           (context, index) {
@@ -4073,7 +4091,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                             return Container(
                                                               height: Provider.of<Explorer>(context, listen: false).searchedList.elementAt(index).isEmpty ? 0 : 80,
                                                               margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 4.5, bottom: SizeConfig.safeBlockVertical * 1, top: SizeConfig.safeBlockVertical * 1),
-                                                              child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
+                                                              child: CustomScrollView(physics: new ClampingScrollPhysics(),shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
                                                                 SliverList(
                                                                   delegate: SliverChildBuilderDelegate(
                                                                         (context, i) {

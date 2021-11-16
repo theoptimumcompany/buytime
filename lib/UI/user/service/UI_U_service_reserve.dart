@@ -1009,7 +1009,9 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                               flex: 5,
                               child: Padding(
                                 padding: EdgeInsets.only(top: SizeConfig.safeBlockVertical * .5),
-                                child: CustomScrollView(shrinkWrap: true, slivers: [
+                                child: CustomScrollView(
+                                    physics: new ClampingScrollPhysics(),
+                                    shrinkWrap: true, slivers: [
                                   /*SliverPersistentHeader(
                                 pinned: true,
                                 delegate: CustomSliverAppBarDelegate(

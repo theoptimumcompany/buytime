@@ -230,6 +230,7 @@ class ExternalServiceListState extends State<ExternalServiceList> {
                        externalBusinessList.isNotEmpty ?
                       Expanded(
                         child: CustomScrollView(
+                          physics: new ClampingScrollPhysics(),
                           shrinkWrap: true,
                           slivers: [
                             SliverList(
@@ -310,6 +311,7 @@ class ExternalServiceListState extends State<ExternalServiceList> {
                       )  : noActivity ?
                        Expanded(
                          child: CustomScrollView(
+                           physics: new ClampingScrollPhysics(),
                            shrinkWrap: true,
                            slivers: [
                              SliverList(
