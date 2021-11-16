@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:math';
 import 'package:Buytime/UI/user/cart/UI_U_cart.dart';
 import 'package:Buytime/UI/user/login/tourist_session/UI_U_tourist_session.dart';
@@ -939,7 +940,7 @@ class _NewServiceDetailsState extends State<NewServiceDetails> with SingleTicker
                               )
                           ),
                           SliverFixedExtentList(
-                            itemExtent: !widget.serviceState.switchSlots ? (SizeConfig.screenHeight - 100) : (SizeConfig.screenHeight - 98),
+                            itemExtent: !widget.serviceState.switchSlots ? (Platform.isIOS?  SizeConfig.screenHeight - 177 :   SizeConfig.screenHeight - 100) : (Platform.isIOS?  SizeConfig.screenHeight - 179 :   SizeConfig.screenHeight - 98),
                             delegate: SliverChildListDelegate(
                               [
                                 ///Service Name & The rest

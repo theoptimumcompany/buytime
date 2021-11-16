@@ -614,7 +614,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                                     )
                                 ),
                                 SliverFixedExtentList(
-                                  itemExtent: SizeConfig.screenHeight - 75,
+                                  itemExtent: (Platform.isIOS?  SizeConfig.screenHeight - 177 :   SizeConfig.screenHeight - 75),
                                   delegate: SliverChildListDelegate(
                                     [
                                       Column(
