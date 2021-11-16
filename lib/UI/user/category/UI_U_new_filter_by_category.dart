@@ -306,7 +306,7 @@ class _NewFilterByCategoryState extends State<NewFilterByCategory> {
         });
         if (StoreProvider.of<AppState>(context).state.area != null && StoreProvider.of<AppState>(context).state.area.areaId != null && StoreProvider.of<AppState>(context).state.area.areaId.isNotEmpty) {
           categoryServices = FirebaseFirestore.instance.collection("service")
-              .where("tag", arrayContainsAny: [StoreProvider.of<AppState>(context).state.area.areaId])
+            //  .where("tag", arrayContainsAny: [StoreProvider.of<AppState>(context).state.area.areaId])
               .where("visibility", isEqualTo: 'Active')
               //.where('categoryId', arrayContainsAny: tmpCategoryIdList.length > 10 ? tmpCategoryIdList.sublist(0, 10) : tmpCategoryIdList)
               .where('categoryId', arrayContainsAny: widget.categoryState.categoryIdList)

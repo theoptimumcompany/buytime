@@ -3497,7 +3497,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                     Stream<QuerySnapshot> thisCategory;
                                                     if (StoreProvider.of<AppState>(context).state.area != null && StoreProvider.of<AppState>(context).state.area.areaId != null && StoreProvider.of<AppState>(context).state.area.areaId.isNotEmpty) {
                                                       thisCategory = FirebaseFirestore.instance.collection("service")
-                                                          .where("tag", arrayContainsAny: [StoreProvider.of<AppState>(context).state.area.areaId])
+                                                         // .where("tag", arrayContainsAny: [StoreProvider.of<AppState>(context).state.area.areaId])
                                                           .where("visibility", isEqualTo: 'Active')
                                                           .where('categoryId', arrayContainsAny: category.categoryIdList.length > 10 ? category.categoryIdList.sublist(0, 10) : category.categoryIdList)
                                                           .limit(4)

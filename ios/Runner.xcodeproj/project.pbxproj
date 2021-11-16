@@ -12,7 +12,7 @@
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
 		532765B62690BCD700039E22 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 532765B52690BCD700039E22 /* GoogleService-Info.plist */; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
-		8B00A72525163A3600F56E82 /* BuildFile in Embed Frameworks */ = {isa = PBXBuildFile; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		8B00A72525163A3600F56E82 /* (null) in Embed Frameworks */ = {isa = PBXBuildFile; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
@@ -25,7 +25,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				8B00A72525163A3600F56E82 /* BuildFile in Embed Frameworks */,
+				8B00A72525163A3600F56E82 /* (null) in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -416,7 +416,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2.9.19;
+				CURRENT_PROJECT_VERSION = 2.9.20;
 				DEVELOPMENT_TEAM = GJL2PR3KKZ;
 				ENABLE_BITCODE = NO;
 				FLUTTER_ROOT = /Users/riccardo/Development/flutter;
@@ -434,7 +434,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 2.9.19;
+				MARKETING_VERSION = 2.9.20;
 				PRODUCT_BUNDLE_IDENTIFIER = com.theoptimumcompany.buytime;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -566,7 +566,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2.9.19;
+				CURRENT_PROJECT_VERSION = 2.9.20;
 				DEVELOPMENT_TEAM = GJL2PR3KKZ;
 				ENABLE_BITCODE = NO;
 				FLUTTER_ROOT = /Users/riccardo/Development/flutter;
@@ -584,7 +584,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 2.9.19;
+				MARKETING_VERSION = 2.9.20;
 				PRODUCT_BUNDLE_IDENTIFIER = com.theoptimumcompany.buytime;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -606,7 +606,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2.9.19;
+				CURRENT_PROJECT_VERSION = 2.9.20;
 				DEVELOPMENT_TEAM = GJL2PR3KKZ;
 				ENABLE_BITCODE = NO;
 				FLUTTER_ROOT = /Users/riccardo/Development/flutter;
@@ -624,7 +624,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 2.9.19;
+				MARKETING_VERSION = 2.9.20;
 				PRODUCT_BUNDLE_IDENTIFIER = com.theoptimumcompany.buytime;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
