@@ -3828,7 +3828,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                                               margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1.5),
                                                                               child: Icon(
                                                                                 Icons.call,
-                                                                                color: BuytimeTheme.TextBlack,
+                                                                                color: BuytimeTheme.SymbolGrey,
                                                                               ),
                                                                             )),
                                                                         Expanded(
