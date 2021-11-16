@@ -1663,6 +1663,8 @@ class CategoryService with ChangeNotifier{
 
   clear(){
     this.serviceList.clear();
+    this.searchedList.clear();
+    notifyListeners();
   }
 
 }

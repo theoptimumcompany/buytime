@@ -1115,6 +1115,7 @@ class Spinner with ChangeNotifier{
     this.add = [];
     this.spinners = [];
     this.duplicateSpinners = [];
+    notifyListeners();
   }
 
 }

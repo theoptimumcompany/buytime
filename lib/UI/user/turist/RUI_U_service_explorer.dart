@@ -4,15 +4,18 @@ import 'dart:io';
 
 import 'package:Buytime/UI/management/activity/RUI_M_activity_management.dart';
 import 'package:Buytime/UI/management/business/RUI_M_business_list.dart';
+import 'package:Buytime/UI/management/service_internal/RUI_M_service_list.dart';
 import 'package:Buytime/UI/user/booking/RUI_U_all_bookings.dart';
 import 'package:Buytime/UI/user/booking/RUI_U_my_bookings.dart';
 import 'package:Buytime/UI/user/booking/RUI_notification_bell.dart';
 import 'package:Buytime/UI/user/booking/UI_U_all_bookings.dart';
 import 'package:Buytime/UI/user/booking/UI_U_my_bookings.dart';
+import 'package:Buytime/UI/user/category/UI_U_new_filter_by_category.dart';
 import 'package:Buytime/UI/user/landing/invite_guest_form.dart';
 import 'package:Buytime/UI/user/login/UI_U_home.dart';
 import 'package:Buytime/UI/user/login/UI_U_registration.dart';
 import 'package:Buytime/UI/user/payment/paypal_payment.dart';
+import 'package:Buytime/UI/user/service/UI_U_service_reserve.dart';
 import 'package:Buytime/UI/user/turist/UI_U_test.dart';
 import 'package:Buytime/UI/user/turist/widget/new_discover_card_widget.dart';
 import 'package:Buytime/UI/user/turist/widget/new_p_r_card_widget.dart';
@@ -3875,6 +3878,10 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                               dynamicLinkHelper.clearBooking();
                                                               FirebaseAuth.instance.signOut().then((_) {
                                                                 googleSignIn.signOut();
+                                                                Provider.of<Explorer>(context, listen: false).clear();
+                                                                Provider.of<Spinner>(context, listen: false).clear();
+                                                                Provider.of<ReserveList>(context, listen: false).clear();
+                                                                Provider.of<CategoryService>(context, listen: false).clear();
                                                                 StoreProvider.of<AppState>(context).dispatch(SetAppStateToEmpty());
                                                                 drawerSelection = DrawerSelection.BusinessList;
                                                                 Navigator.of(context).pushReplacementNamed(Home.route);
@@ -4243,8 +4250,14 @@ class Explorer with ChangeNotifier{
 
   clear(){
     this.searching = false;
+    this.first = false;
     this.serviceList.clear();
     this.rootCategoryList.clear();
+    this.allCategoryList.clear();
+    this.searchedList.clear();
+    this.searchController = TextEditingController();
+    this.businessState = BusinessState().toEmpty();
+    notifyListeners();
   }
 
 }

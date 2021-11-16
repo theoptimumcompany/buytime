@@ -88,7 +88,7 @@ class Utils {
 
   ///Check Promo Discount (gestisce principalmente le label rosse)
   static PromotionState checkPromoDiscount(String promoName, context, String businessId) {
-    if(
+    /*if(
         StoreProvider.of<AppState>(context).state.promotionState != null &&
         (StoreProvider.of<AppState>(context).state.promotionState.timesUsed < StoreProvider.of<AppState>(context).state.promotionState.limit) &&
         StoreProvider.of<AppState>(context).state.promotionState.businessIdList != null &&
@@ -101,13 +101,13 @@ class Utils {
       (StoreProvider.of<AppState>(context).state.promotionState.businessIdList == null || StoreProvider.of<AppState>(context).state.promotionState.businessIdList.isEmpty)
     ) {
       return StoreProvider.of<AppState>(context).state.promotionState;
-    }
+    }*/
     return PromotionState(promotionId: 'empty');
   }
 
   ///Check Promo Discount (gestisce principalmente le label rosse)
   static PromotionState checkPromoDiscountTotal(String promoName, context, String businessId) {
-    if(
+    /*if(
         StoreProvider.of<AppState>(context).state.promotionState != null &&
         StoreProvider.of<AppState>(context).state.promotionState.businessIdList != null &&
         StoreProvider.of<AppState>(context).state.promotionState.businessIdList.isNotEmpty &&
@@ -118,7 +118,7 @@ class Utils {
       (StoreProvider.of<AppState>(context).state.promotionState.businessIdList == null || StoreProvider.of<AppState>(context).state.promotionState.businessIdList.isEmpty)
     ) {
       return StoreProvider.of<AppState>(context).state.promotionState;
-    }
+    }*/
     return PromotionState(promotionId: 'empty');
   }
 

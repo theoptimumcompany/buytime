@@ -32,7 +32,7 @@ class PromotionListRequestService implements EpicClass<AppState> {
           if (store.state.user.uid != null && store.state.user.uid.isNotEmpty) {
             var promotionCounterCollection= await FirebaseFirestore.instance.collection('user').doc(store.state.user.uid).collection('promotionUsage').limit(1).get();
             if (promotionCounterCollection.docs.length > 0) {
-              var promotionCounterRef = await FirebaseFirestore.instance.collection('user').doc(store.state.user.uid).collection('promotionUsage').doc('general_1').get();
+              var promotionCounterRef = await FirebaseFirestore.instance.collection('user').doc(store.state.user.uid).collection('promotionUsage').doc('off').get();
               if (promotionCounterRef.exists) {
                 var promotionCounterData = promotionCounterRef.data();
                 if (promotionCounterData['CxrTzUICSR30XvCBJDpQ'] != null) {

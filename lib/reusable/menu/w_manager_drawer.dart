@@ -1,6 +1,9 @@
 import 'package:Buytime/UI/management/activity/RUI_M_activity_management.dart';
 import 'package:Buytime/UI/management/notification/RUI_M_notification_center.dart';
+import 'package:Buytime/UI/management/service_internal/RUI_M_service_list.dart';
 import 'package:Buytime/UI/management/slot/UI_M_slot_management.dart';
+import 'package:Buytime/UI/user/category/UI_U_new_filter_by_category.dart';
+import 'package:Buytime/UI/user/service/UI_U_service_reserve.dart';
 import 'package:Buytime/UI/user/turist/RUI_U_service_explorer.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/reducer/app_reducer.dart';
@@ -9,6 +12,7 @@ import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:Buytime/UI/user/login/UI_U_home.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -432,6 +436,10 @@ class _ManagerDrawerState extends State<ManagerDrawer> {
                                     await storage.write(key: 'bookingCode', value: '');
                                     FirebaseAuth.instance.signOut().then((_) {
                                       googleSignIn.signOut();
+                                      Provider.of<Explorer>(context, listen: false).clear();
+                                      Provider.of<Spinner>(context, listen: false).clear();
+                                      Provider.of<ReserveList>(context, listen: false).clear();
+                                      Provider.of<CategoryService>(context, listen: false).clear();
                                       //Resetto il carrello
                                       //cartCounter = 0;
                                       //Svuotare lo Store sul Logout
