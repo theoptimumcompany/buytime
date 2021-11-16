@@ -234,7 +234,8 @@ class _NewPRCardWidgetState extends State<NewPRCardWidget> {
             top: Utils.checkPromoDiscount('general_1', context, widget.serviceState.businessId).promotionId != 'empty' ? 40 : 5,
             child: Align(
                 alignment: Alignment.topRight,
-                child: NewDiscount(widget.serviceState,StoreProvider.of<AppState>(context).state.bookingList.bookingListState.first.business_id, false, false)
+                child: NewDiscount(widget.serviceState, StoreProvider.of<AppState>(context).state.bookingList.bookingListState.isNotEmpty ?
+                StoreProvider.of<AppState>(context).state.bookingList.bookingListState.first.business_id : '', false, false)
             ),
           ) : Container()
         ],
