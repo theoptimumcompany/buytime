@@ -923,7 +923,7 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
                                                 style: TextStyle(
                                                   fontFamily: BuytimeTheme.FontFamily,
                                                   color: Color(0xff666666),
-                                                  fontWeight: FontWeight.bold,
+                                                  fontWeight: FontWeight.w800,
                                                 ),
                                                 validator: (String value) {
                                                   setState(() {
