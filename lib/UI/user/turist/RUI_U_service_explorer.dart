@@ -743,9 +743,9 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
             Provider.of<Explorer>(context, listen: false).searchedList.last.sort((a, b) => (Utils.retriveField(myLocale.languageCode, b.name)).compareTo(Utils.retriveField(myLocale.languageCode, a.name)));
           }
         }
-        WidgetsBinding.instance.addPostFrameCallback((_) async {
+        /*WidgetsBinding.instance.addPostFrameCallback((_) async {
           Provider.of<Explorer>(context, listen: false).businessState = BusinessState().toEmpty();
-        });
+        });*/
         return GestureDetector(
           onTap: () {
             FocusScopeNode currentFocus = FocusScope.of(context);
@@ -1434,12 +1434,8 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                               DateTime endTime = bookingState.end_date;
                                               endTime = new DateTime(endTime.year, endTime.month, endTime.day, 0, 0, 0, 0, 0);
                                               DateTime currentTime = DateTime.now();
-                                              currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0).toUtc();
-                                              if(endTime.isBefore(currentTime) && bookingState.status != 'closed'){
-                                                debugPrint('RUI_U_my_bookings => ${bookingState.end_date}');
-                                                bookingState.status = Utils.enumToString(BookingStatus.closed);
-                                                StoreProvider.of<AppState>(context).dispatch(UpdateBooking(bookingState));
-                                              }
+                                              currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0);
+
                                               return StreamBuilder<QuerySnapshot>(
                                                   stream: FirebaseFirestore.instance
                                                       .collection("business")
