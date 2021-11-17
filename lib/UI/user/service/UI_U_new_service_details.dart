@@ -1233,22 +1233,17 @@ class _NewServiceDetailsState extends State<NewServiceDetails> with SingleTicker
                                     ),
                                     ///Description
                                     Container(
+                                      height: SizeConfig.screenHeight / 2,
                                       width: double.infinity,
                                       margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, bottom: SizeConfig.safeBlockVertical * 0, top: SizeConfig.safeBlockVertical * .5),
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          /*Container(
-                                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3),
-                                          child: Text(
-                                            AppLocalizations.of(context).serviceDescription,
-                                            style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w600, fontSize: 18
-
-                                                ///SizeConfig.safeBlockHorizontal * 5
-                                                ),
-                                          ),
-                                        ),*/
-                                          Container(
+                                      child: MediaQuery.removePadding(
+                                        context: context,
+                                        removeTop: true,
+                                        removeBottom: true,
+                                        child: ListView(
+                                          physics: ClampingScrollPhysics(),
+                                          shrinkWrap: true,
+                                          children: [Container(
                                             margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 2),
                                             child: Text(
                                               translatedDescription.isNotEmpty && useOriginal ? translatedDescription : widget.serviceState.description.isNotEmpty ? Utils.retriveField(useOriginal ?
@@ -1259,8 +1254,8 @@ class _NewServiceDetailsState extends State<NewServiceDetails> with SingleTicker
                                                 ///SizeConfig.safeBlockHorizontal * 4
                                               ),
                                             ),
-                                          )
-                                        ],
+                                          ),]
+                                        ),
                                       ),
                                     ),
                                     ///Original & Translate
