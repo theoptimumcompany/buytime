@@ -2314,7 +2314,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                               Container(
                                                                 height: 220,
                                                                 width: double.infinity,
-                                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 0, top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 0),
+                                                                margin: EdgeInsets.only(left: Platform.isIOS ? SizeConfig.safeBlockHorizontal * 3.5: SizeConfig.safeBlockHorizontal * 0, top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 0),
                                                                 child: CustomScrollView(
                                                                     physics: new ClampingScrollPhysics(),
                                                                     shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
@@ -2395,7 +2395,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                               Container(
                                                                 height: 220,
                                                                 width: double.infinity,
-                                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 0, top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 0),
+                                                                margin: EdgeInsets.only(left: Platform.isIOS ? SizeConfig.safeBlockHorizontal * 3.5: SizeConfig.safeBlockHorizontal * 0, top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 0),
                                                                 child: CustomScrollView
                                                                   (physics: new ClampingScrollPhysics(),
                                                                     shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
@@ -3062,7 +3062,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                                     Container(
                                                                       height: 240,
                                                                       width: double.infinity,
-                                                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 0, top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 0),
+                                                                      margin: EdgeInsets.only(left: Platform.isIOS ? SizeConfig.safeBlockHorizontal * 3.5: SizeConfig.safeBlockHorizontal * 0, top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 0),
                                                                       child: CustomScrollView(physics: new ClampingScrollPhysics(),shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
                                                                         SliverList(
                                                                           delegate: SliverChildBuilderDelegate(
@@ -3218,7 +3218,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                         Container(
                                                             height: 240,
                                                             width: double.infinity,
-                                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 0, top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 0),
+                                                            margin: EdgeInsets.only(left: Platform.isIOS ? SizeConfig.safeBlockHorizontal * 3.5: SizeConfig.safeBlockHorizontal * 0, top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 0),
                                                             child: Stack(
                                                               children: [
                                                                 ///Paged service list
@@ -3698,7 +3698,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                                       Container(
                                                                         height: 240,
                                                                         width: double.infinity,
-                                                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 0, top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 0),
+                                                                        margin: EdgeInsets.only(left: Platform.isIOS ? SizeConfig.safeBlockHorizontal * 3.5: SizeConfig.safeBlockHorizontal * 0, top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 0),
                                                                         child: CustomScrollView(physics: new ClampingScrollPhysics(),shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
                                                                           SliverList(
                                                                             delegate: SliverChildBuilderDelegate(
