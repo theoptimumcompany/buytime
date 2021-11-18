@@ -641,5 +641,6 @@
   "subtotal": "Subtotal",
   "included": "Included",
   "justVAT": "Vat",
-  "promotionalCode": "Promotional code"
+  "promotionalCode": "Promotional code",
+  "invalidPromocode": "Invalid Promo Code"
 }
