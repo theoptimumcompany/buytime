@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:Buytime/UI/management/service_internal/UI_M_service_list.dart';
 import 'package:Buytime/UI/management/service_internal/UI_M_service_slot.dart';
 import 'package:Buytime/UI/management/service_internal/widget/W_service_photo.dart';
@@ -71,6 +73,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
   TextEditingController vatController = TextEditingController();
   TextEditingController addressController = TextEditingController();
   TextEditingController conditionController = TextEditingController();
+  ScrollController scrollController = ScrollController();
 
   @override
   void initState() {
@@ -489,6 +492,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                 body: SafeArea(
                                   child: Center(
                                     child: SingleChildScrollView(
+                                      controller: scrollController,
                                       child: ConstrainedBox(
                                         constraints: BoxConstraints(),
                                         child: Form(
@@ -1643,6 +1647,12 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                           onChanged:  (value) {
                                                             setState(() {
                                                               StoreProvider.of<AppState>(context).dispatch(SetServiceHubConvention(value));
+                                                              ///Open Hub Convection Block with animation and scrolling
+                                                              Timer(
+                                                                Duration(milliseconds: 100),
+                                                                    () => scrollController.animateTo(scrollController.position.maxScrollExtent,
+                                                                        duration: Duration(milliseconds: 1000), curve: Curves.ease),
+                                                              );
                                                             });
                                                           }
                                                           ),
