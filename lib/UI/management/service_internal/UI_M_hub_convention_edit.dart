@@ -127,6 +127,12 @@ class HubConventionEditState extends State<HubConventionEdit> {
                                                       backgroundColor: BuytimeTheme.ManagerPrimary,
                                                     ),
                                                     onPressed: () {
+                                                      if(discountController.text.isEmpty)
+                                                      {
+                                                        setState(() {
+                                                          discountController.text = '0';
+                                                        });
+                                                      }
                                                       StoreProvider.of<AppState>(context).state.serviceState.conventionSlotList.forEach((element) {
                                                         debugPrint('UI_M_hub_convention_edit => THIS SERVICE CONVENTIONS BEFORE: ${element.hubId} | ${element.hubName} | ${element.discount}');
                                                         if(element.hubId == widget.conventionSlot.hubId){
@@ -139,6 +145,7 @@ class HubConventionEditState extends State<HubConventionEdit> {
                                                         }
                                                         debugPrint('UI_M_hub_convention_edit => THIS SERVICE CONVENTIONS AFTER: ${element.hubId} | ${element.hubName} | ${element.discount}');
                                                       });
+                                                      Navigator.pop(context);
                                                     },
                                                     child: Padding(
                                                       padding: const EdgeInsets.all(0.0),
@@ -219,6 +226,7 @@ class HubConventionEditState extends State<HubConventionEdit> {
               child: ButtonTheme(
                 alignedDropdown: true,
                 child: DropdownButton(
+                  isExpanded: true,
                   disabledHint: Container(
                     child: Padding(
                       padding: const EdgeInsets.only(left: 10.0),

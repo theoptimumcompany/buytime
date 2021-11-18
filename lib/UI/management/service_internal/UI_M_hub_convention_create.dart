@@ -14,7 +14,6 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HubConventionCreate extends StatefulWidget {
-
   HubConventionCreate();
 
   @override
@@ -29,20 +28,22 @@ class HubConventionCreateState extends State<HubConventionCreate> {
   List<BusinessState> hubsList = [];
   bool allHubs = true;
 
-  ConventionSlot conventionSlotAllHubs = ConventionSlot(hubName: "allHubs", hubId: "allHubs", discount: 0);
+  ConventionSlot conventionSlotAllHubs =
+      ConventionSlot(hubName: "allHubs", hubId: "allHubs", discount: 0);
   List<ConventionSlot> conventionSlotList = [];
   TextEditingController discountController = TextEditingController();
   Stream<QuerySnapshot> businessStream;
+
   @override
   initState() {
     businessStream = FirebaseFirestore.instance
         .collection("business")
-        .where("hub", isEqualTo: true).snapshots(includeMetadataChanges: true);
+        .where("hub", isEqualTo: true)
+        .snapshots(includeMetadataChanges: true);
     super.initState();
     discountController.text = '';
-    _hubController.text =  '';
+    _hubController.text = '';
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -59,13 +60,19 @@ class HubConventionCreateState extends State<HubConventionCreate> {
             stream: businessStream,
             builder: (context, AsyncSnapshot<QuerySnapshot> hubSnapshot) {
               hubsList.clear();
-              if (hubSnapshot.hasError || hubSnapshot.connectionState == ConnectionState.waiting && hubsList.isEmpty) {
+              if (hubSnapshot.hasError ||
+                  hubSnapshot.connectionState == ConnectionState.waiting &&
+                      hubsList.isEmpty) {
                 return CircularProgressIndicator();
               }
               hubSnapshot.data.docs.forEach((element) {
-                BusinessState businessState = BusinessState.fromJson(element.data());
+                BusinessState businessState =
+                    BusinessState.fromJson(element.data());
                 hubsList.add(businessState);
               });
+              if (_hubController.text == '') {
+                _hubController.text = hubsList.first.name;
+              }
 
               return Stack(
                 children: [
@@ -78,11 +85,15 @@ class HubConventionCreateState extends State<HubConventionCreate> {
                             children: [
                               Container(
                                 child: IconButton(
-                                  icon: Icon(Icons.keyboard_arrow_left, color: BuytimeTheme.SymbolWhite,),
+                                  icon: Icon(
+                                    Icons.keyboard_arrow_left,
+                                    color: BuytimeTheme.SymbolWhite,
+                                  ),
                                   onPressed: () => Navigator.pop(context),
                                 ),
                               ),
-                              Utils.barTitle(AppLocalizations.of(context).slotManagement),
+                              Utils.barTitle(
+                                  AppLocalizations.of(context).slotManagement),
                               SizedBox(
                                 width: 30.0,
                               ),
@@ -90,8 +101,7 @@ class HubConventionCreateState extends State<HubConventionCreate> {
                           ),
                           body: Theme(
                             data: ThemeData(
-                                primaryColor: BuytimeTheme.ManagerPrimary
-                            ),
+                                primaryColor: BuytimeTheme.ManagerPrimary),
                             child: SafeArea(
                               child: SingleChildScrollView(
                                 child: ConstrainedBox(
@@ -104,28 +114,39 @@ class HubConventionCreateState extends State<HubConventionCreate> {
                                         children: [
                                           ///All hub switch
                                           Padding(
-                                            padding: const EdgeInsets.only(top: 0.0, bottom: 10.0, left: 20.0, right: 20.0),
+                                            padding: const EdgeInsets.only(
+                                                top: 0.0,
+                                                bottom: 10.0,
+                                                left: 20.0,
+                                                right: 20.0),
                                             child: Container(
                                               child: Row(
                                                 children: [
                                                   Switch(
-                                                      activeColor: BuytimeTheme.ManagerPrimary,
+                                                      activeColor: BuytimeTheme
+                                                          .ManagerPrimary,
                                                       value: allHubs,
-                                                      onChanged:  (value) {
+                                                      onChanged: (value) {
                                                         setState(() {
                                                           allHubs = value;
                                                         });
-                                                      }
-                                                  ),
+                                                      }),
                                                   Expanded(
                                                     child: Text(
-                                                      AppLocalizations.of(context).sameDiscountOnAllHubs,
-                                                      textAlign: TextAlign.start,
-                                                      overflow: TextOverflow.clip,
+                                                      AppLocalizations.of(
+                                                              context)
+                                                          .sameDiscountOnAllHubs,
+                                                      textAlign:
+                                                          TextAlign.start,
+                                                      overflow:
+                                                          TextOverflow.clip,
                                                       style: TextStyle(
-                                                        fontSize: media.height * 0.018,
-                                                        color: BuytimeTheme.TextGrey,
-                                                        fontWeight: FontWeight.w500,
+                                                        fontSize: media.height *
+                                                            0.018,
+                                                        color: BuytimeTheme
+                                                            .TextGrey,
+                                                        fontWeight:
+                                                            FontWeight.w500,
                                                       ),
                                                     ),
                                                   ),
@@ -133,47 +154,104 @@ class HubConventionCreateState extends State<HubConventionCreate> {
                                               ),
                                             ),
                                           ),
+
                                           ///Hub List
                                           buildListConventionElement(context),
 
                                           ///Save
                                           Row(
                                             mainAxisSize: MainAxisSize.max,
-                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
                                             children: <Widget>[
                                               Padding(
-                                                padding: const EdgeInsets.only(top: 20.0,),
+                                                padding: const EdgeInsets.only(
+                                                  top: 20.0,
+                                                ),
                                                 child: Container(
                                                   width: 208,
                                                   height: 44,
                                                   child: OutlinedButton(
-                                                    style: OutlinedButton.styleFrom(
-                                                      backgroundColor: BuytimeTheme.ManagerPrimary,
+                                                    style: OutlinedButton
+                                                        .styleFrom(
+                                                      backgroundColor:
+                                                          BuytimeTheme
+                                                              .ManagerPrimary,
                                                     ),
                                                     onPressed: () {
                                                       String hubId = '';
-                                                      hubsList.forEach((hub) {
-                                                        if(hub.name == _hubController.text)
-                                                          hubId = hub.id_firestore;
-                                                      });
-                                                      ConventionSlot conventionSlot = ConventionSlot(hubId: hubId, hubName: _hubController.text, discount: int.parse(discountController.text));
-                                                      if(allHubs) {
-                                                        StoreProvider.of<AppState>(context).state.serviceState.conventionSlotList.clear();
-                                                        conventionSlotAllHubs.discount = int.parse(discountController.text);
-                                                        StoreProvider.of<AppState>(context).state.serviceState.conventionSlotList.add(conventionSlotAllHubs);
-                                                      } else {
-                                                        StoreProvider.of<AppState>(context).state.serviceState.conventionSlotList.add(conventionSlot);
+                                                      if (discountController
+                                                          .text.isEmpty) {
+                                                        setState(() {
+                                                          discountController
+                                                              .text = '0';
+                                                        });
                                                       }
+                                                      hubsList.forEach((hub) {
+                                                        if (hub.name ==
+                                                            _hubController.text)
+                                                          hubId =
+                                                              hub.id_firestore;
+                                                      });
+                                                      ConventionSlot
+                                                          conventionSlot =
+                                                          ConventionSlot(
+                                                              hubId: hubId,
+                                                              hubName:
+                                                                  _hubController
+                                                                      .text,
+                                                              discount: int.parse(
+                                                                  discountController
+                                                                      .text));
+                                                      if (allHubs) {
+                                                        StoreProvider.of<
+                                                                    AppState>(
+                                                                context)
+                                                            .state
+                                                            .serviceState
+                                                            .conventionSlotList
+                                                            .clear();
+                                                        conventionSlotAllHubs
+                                                                .discount =
+                                                            int.parse(
+                                                                discountController
+                                                                    .text);
+                                                        StoreProvider.of<
+                                                                    AppState>(
+                                                                context)
+                                                            .state
+                                                            .serviceState
+                                                            .conventionSlotList
+                                                            .add(
+                                                                conventionSlotAllHubs);
+                                                      } else {
+                                                        StoreProvider.of<
+                                                                    AppState>(
+                                                                context)
+                                                            .state
+                                                            .serviceState
+                                                            .conventionSlotList
+                                                            .add(
+                                                                conventionSlot);
+                                                      }
+                                                      Navigator.pop(context);
                                                     },
                                                     child: Padding(
-                                                      padding: const EdgeInsets.all(0.0),
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              0.0),
                                                       child: Text(
-                                                        AppLocalizations.of(context).saveUpper,
-                                                        textAlign: TextAlign.start,
+                                                        AppLocalizations.of(
+                                                                context)
+                                                            .saveUpper,
+                                                        textAlign:
+                                                            TextAlign.start,
                                                         style: TextStyle(
                                                           fontSize: 18,
-                                                          color: BuytimeTheme.TextWhite,
-                                                          fontWeight: FontWeight.w500,
+                                                          color: BuytimeTheme
+                                                              .TextWhite,
+                                                          fontWeight:
+                                                              FontWeight.w500,
                                                         ),
                                                       ),
                                                     ),
@@ -183,53 +261,53 @@ class HubConventionCreateState extends State<HubConventionCreate> {
                                             ],
                                           )
                                         ],
-                                      )
-
-                                  ),
+                                      )),
                                 ),
                               ),
                             ),
-                          )
-                      ),
+                          )),
                     ),
                   ),
 
                   ///Ripple Effect
                   rippleLoading
                       ? Positioned.fill(
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Container(
-                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3),
-                          height: double.infinity,
-                          decoration: BoxDecoration(
-                            color: BuytimeTheme.BackgroundCerulean.withOpacity(.8),
-                          ),
-                          child: Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                Container(
-                                  width: SizeConfig.safeBlockVertical * 20,
-                                  height: SizeConfig.safeBlockVertical * 20,
-                                  child: Center(
-                                    child: SpinKitRipple(
-                                      color: Colors.white,
-                                      size: SizeConfig.safeBlockVertical * 18,
-                                    ),
-                                  ),
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: Container(
+                                margin: EdgeInsets.only(
+                                    top: SizeConfig.safeBlockVertical * 3),
+                                height: double.infinity,
+                                decoration: BoxDecoration(
+                                  color: BuytimeTheme.BackgroundCerulean
+                                      .withOpacity(.8),
                                 ),
-                              ],
-                            ),
-                          )),
-                    ),
-                  )
+                                child: Center(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      Container(
+                                        width:
+                                            SizeConfig.safeBlockVertical * 20,
+                                        height:
+                                            SizeConfig.safeBlockVertical * 20,
+                                        child: Center(
+                                          child: SpinKitRipple(
+                                            color: Colors.white,
+                                            size: SizeConfig.safeBlockVertical *
+                                                18,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )),
+                          ),
+                        )
                       : Container()
                 ],
               );
-            }
-        )
-    );
+            }));
   }
 
   Column buildListConventionElement(BuildContext context) {
@@ -239,7 +317,9 @@ class HubConventionCreateState extends State<HubConventionCreate> {
         Container(
             width: 335.0,
             margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
-            decoration: BoxDecoration(border: Border.all(color: BuytimeTheme.SymbolLightGrey), borderRadius: BorderRadius.all(Radius.circular(5))),
+            decoration: BoxDecoration(
+                border: Border.all(color: BuytimeTheme.SymbolLightGrey),
+                borderRadius: BorderRadius.all(Radius.circular(5))),
             child: DropdownButtonHideUnderline(
               child: ButtonTheme(
                 alignedDropdown: true,
@@ -263,7 +343,9 @@ class HubConventionCreateState extends State<HubConventionCreate> {
                     child: Padding(
                       padding: const EdgeInsets.only(left: 10.0),
                       child: Text(
-                        _hubController.text != null ? _hubController.text : AppLocalizations.of(context).select,
+                        _hubController.text != null
+                            ? _hubController.text
+                            : AppLocalizations.of(context).select,
                         textAlign: TextAlign.start,
                         style: TextStyle(
                           fontSize: 16,
@@ -273,35 +355,36 @@ class HubConventionCreateState extends State<HubConventionCreate> {
                       ),
                     ),
                   ),
-                  items: allHubs ?
-                  null :
-                  hubsList.map(
-                        (val) {
-                      return DropdownMenuItem<String>(
-                        value: val.name,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Container(
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 5.0),
-                                child: Text(
-                                  val.name,
-                                  textAlign: TextAlign.start,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: BuytimeTheme.TextMedium,
-                                    fontWeight: FontWeight.w400,
+                  items: allHubs
+                      ? null
+                      : hubsList.map(
+                          (val) {
+                            return DropdownMenuItem<String>(
+                              value: val.name,
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Container(
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(left: 5.0),
+                                      child: Text(
+                                        val.name,
+                                        textAlign: TextAlign.start,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: BuytimeTheme.TextMedium,
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                      ),
+                                    ),
                                   ),
-                                ),
+                                ],
                               ),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  )?.toList(),
+                            );
+                          },
+                        )?.toList(),
                   onChanged: (value) {
                     setState(() {
                       _hubController.text = value;
@@ -312,18 +395,16 @@ class HubConventionCreateState extends State<HubConventionCreate> {
                   style: Theme.of(context).textTheme.headline1,
                 ),
               ),
-            )
-
-        ),
+            )),
         Container(
           padding: EdgeInsets.all(20.0),
           child: TextFormField(
-              controller: discountController,
-              keyboardType: TextInputType.number,
-              inputFormatters: <TextInputFormatter>[
-                FilteringTextInputFormatter.digitsOnly
-              ],
-              decoration: const InputDecoration(labelText: '%'),
+            controller: discountController,
+            keyboardType: TextInputType.number,
+            inputFormatters: <TextInputFormatter>[
+              FilteringTextInputFormatter.digitsOnly
+            ],
+            decoration: const InputDecoration(labelText: '%'),
           ),
         ),
       ],
