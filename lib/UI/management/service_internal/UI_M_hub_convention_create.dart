@@ -244,6 +244,7 @@ class HubConventionCreateState extends State<HubConventionCreate> {
               child: ButtonTheme(
                 alignedDropdown: true,
                 child: DropdownButton(
+                  isExpanded: true,
                   disabledHint: Container(
                     child: Padding(
                       padding: const EdgeInsets.only(left: 10.0),
@@ -283,10 +284,11 @@ class HubConventionCreateState extends State<HubConventionCreate> {
                           children: [
                             Container(
                               child: Padding(
-                                padding: const EdgeInsets.only(left: 10.0),
+                                padding: const EdgeInsets.only(left: 5.0),
                                 child: Text(
                                   val.name,
                                   textAlign: TextAlign.start,
+                                  overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                     fontSize: 16,
                                     color: BuytimeTheme.TextMedium,
