@@ -18,7 +18,7 @@
   "userMode": "Switch to user mode",
   "userModeShort": "Switch to user",
   "userSettings": "User settings",
-  "total": "Total:",
+  "total": "Total",
   "tax": "TAX: €",
   "euroSpace": "€",
   "unavailable": "- Unavailable",
@@ -635,5 +635,11 @@
   "buy": "Buy",
   "somethingIsNotRight": "Something isn't right",
   "continueShopping": "Continue Shopping",
-  "reserveATable": "Reserve a table"
+  "reserveATable": "Reserve a table",
+  "doYouHaveAPromotionalCode": "Do you have a promotional code?",
+  "apply": "Apply",
+  "subtotal": "Subtotal",
+  "included": "Included",
+  "justVAT": "Vat",
+  "promotionalCode": "Promotional code"
 }

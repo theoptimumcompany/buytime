@@ -18,7 +18,7 @@
   "userMode": "Passa alla modalità utente",
   "userModeShort": "Passa a utente",
   "userSettings": "Impostazioni utente",
-  "total": "Totale:",
+  "total": "Totale",
   "tax": "TASSE: €",
   "euroSpace": "€",
   "unavailable": "- Non disponibile",
@@ -633,5 +633,11 @@
   "addToCart": "Add to cart",
   "somethingIsNotRight": "Something isn't right",
   "continueShopping": "Continue Shopping",
-  "reserveATable": "Reserve a table"
+  "reserveATable": "Reserve a table",
+  "doYouHaveAPromotionalCode": "Do you have a promotional code?",
+  "apply": "Apply",
+  "subtotal": "Subtotal",
+  "included": "Included",
+  "justVAT": "Vat",
+  "promotionalCode": "Promotional code"
 }

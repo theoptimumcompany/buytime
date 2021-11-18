@@ -18,7 +18,7 @@
   "userMode": "Canviar a la manera d'usuari",
   "userModeShort": "Canviar a usuari",
   "userSettings": "Ajustos d'usuari",
-  "total": "Preu total:",
+  "total": "Preu total",
   "tax": "Impostos: €",
   "euroSpace": "€",
   "unavailable": "- No disponible",
@@ -632,5 +632,11 @@
   "reserve": "Reserve",
   "buy": "Buy",
   "somethingIsNotRight": "Something isn't right",
-  "reserveATable": "Reserve a table"
+  "reserveATable": "Reserve a table",
+  "doYouHaveAPromotionalCode": "Do you have a promotional code?",
+  "apply": "Apply",
+  "subtotal": "Subtotal",
+  "included": "Included",
+  "justVAT": "Vat",
+  "promotionalCode": "Promotional code"
 }
