@@ -146,34 +146,31 @@ class _SlotManagementState extends State<SlotManagement> {
               drawerEnableOpenDragGesture: false,
               key: _drawerKey,
               ///Appbar
-              appBar: BuytimeAppbar(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
-                        child: IconButton(
-                          icon: const Icon(
-                            Icons.menu,
-                            color: Colors.white,
-                            size: 30.0,
-                          ),
-                          tooltip: AppLocalizations.of(context).openMenu,
-                          onPressed: () {
-                            _drawerKey.currentState.openDrawer();
-                          },
-                        ),
-                      ),
-                    ],
+              appBar: AppBar(
+                backgroundColor: Colors.white,
+                brightness: Brightness.dark,
+                elevation: 0,
+                title: Text(
+                  AppLocalizations.of(context).slotManagement,
+                  style: TextStyle(
+                      fontFamily: BuytimeTheme.FontFamily,
+                      color: BuytimeTheme.TextBlack,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 16 ///SizeConfig.safeBlockHorizontal * 7
                   ),
-                  ///Title
-                  //Utils.barTitle(AppLocalizations.of(context).dashboard),
-                  Utils.barTitle('${AppLocalizations.of(context).slotManagement}'),
-                  SizedBox(
-                    width: 50.0,
+                ),
+                centerTitle: true,
+                leading: IconButton(
+                  icon: const Icon(
+                    Icons.menu,
+                    color: Colors.black,
+                    //size: 30.0,
                   ),
-                ],
+                  tooltip: AppLocalizations.of(context).openMenu,
+                  onPressed: () {
+                    _drawerKey.currentState.openDrawer();
+                  },
+                ),
               ),
               drawer: ManagerDrawer(),
               body: ConstrainedBox(
@@ -186,7 +183,7 @@ class _SlotManagementState extends State<SlotManagement> {
                       serviceList.isNotEmpty ?
                       Expanded(
                         child: Container(
-                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
+                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0),
                           child: CustomScrollView(
                               physics: new ClampingScrollPhysics(),
                               shrinkWrap: true, slivers: [

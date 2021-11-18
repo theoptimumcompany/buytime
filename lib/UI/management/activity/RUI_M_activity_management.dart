@@ -628,43 +628,32 @@ class _RActivityManagementState extends State<RActivityManagement> {
         drawerEnableOpenDragGesture: false,
         key: _drawerKey,
         ///Appbar
-        appBar: BuytimeAppbar(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
-                  child: IconButton(
-                    key: Key('business_drawer_key'),
-                    icon: const Icon(
-                      Icons.menu,
-                      color: Colors.white,
-                      size: 30.0,
-                    ),
-                    tooltip: AppLocalizations.of(context).openMenu,
-                    onPressed: () {
-                      _drawerKey.currentState.openDrawer();
-                    },
-                  ),
-                ),
-              ],
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          brightness: Brightness.dark,
+          elevation: 0,
+          title: Text(
+            AppLocalizations.of(context).activityManagement,
+            style: TextStyle(
+                fontFamily: BuytimeTheme.FontFamily,
+                color: BuytimeTheme.TextBlack,
+                fontWeight: FontWeight.w500,
+                fontSize: 16 ///SizeConfig.safeBlockHorizontal * 7
             ),
-            ///Title
-            Container(
-              child: Padding(
-                padding: const EdgeInsets.only(left: 20.0),
-                child: Text(
-                  AppLocalizations.of(context).activityManagement,
-                  textAlign: TextAlign.start,
-                  style: BuytimeTheme.appbarTitle,
-                ),
-              ),
+          ),
+          centerTitle: true,
+          leading: IconButton(
+            key: Key('business_drawer_key'),
+            icon: const Icon(
+              Icons.menu,
+              color: Colors.black,
+              //size: 30.0,
             ),
-            SizedBox(
-              width: 56.0,
-            )
-          ],
+            tooltip: AppLocalizations.of(context).openMenu,
+            onPressed: () {
+              _drawerKey.currentState.openDrawer();
+            },
+          ),
         ),
         drawer: ManagerDrawer(),
         body: ConstrainedBox(
@@ -833,7 +822,7 @@ class _RActivityManagementState extends State<RActivityManagement> {
                 children: [
                   ///Week & See all
                   Container(
-                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5),
+                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [

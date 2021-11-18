@@ -278,60 +278,66 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                     alignment: Alignment.topCenter,
                     child: Scaffold(
                       //resizeToAvoidBottomInset: false,
-                        appBar: BuytimeAppbar(
-                          width: media.width,
-                          children: [
-                            Container(
-                                child: IconButton(
-                                    icon: Icon(Icons.keyboard_arrow_left, color: Colors.white, size: 24),
-                                    onPressed: () {
-                                      Provider.of<Spinner>(context, listen: false).add.forEach((element) {
-                                        element[0] = false;
-                                      });
-                                      Provider.of<Spinner>(context, listen: false).initAdd( Provider.of<Spinner>(context, listen: false).add);
-                                      //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_ServiceList()),);
-                                      Navigator.of(context).pop();
-                                      //Navigator.pushReplacement(context, EnterExitRoute(enterPage: UI_M_ServiceList(), exitPage: UI_CreateService(), from: false));
-                                    })),
-                            Flexible(
-                              child: Utils.barTitle(AppLocalizations.of(context).createService),
+                        appBar: AppBar(
+                          backgroundColor: Colors.white,
+                          brightness: Brightness.dark,
+                          elevation: 0,
+                          title: Text(
+                            AppLocalizations.of(context).createService,
+                            style: TextStyle(
+                                fontFamily: BuytimeTheme.FontFamily,
+                                color: BuytimeTheme.TextBlack,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 16 ///SizeConfig.safeBlockHorizontal * 7
                             ),
-                            Container(
-                              child: IconButton(
-                                  icon: Icon(Icons.check, color: Colors.white),
-                                  onPressed: () {
-                                    if(nameController.text.isNotEmpty)
-                                      StoreProvider.of<AppState>(context).dispatch(SetServiceName(Utils.saveField(myLocale.languageCode, nameController.text, snapshot.serviceState.name)));
-                                    if(descriptionController.text.isNotEmpty)
-                                      StoreProvider.of<AppState>(context).dispatch(SetServiceDescription(Utils.saveField(myLocale.languageCode, descriptionController.text, snapshot.serviceState.description)));
-                                    if (validateChosenCategories() && validateAndSave() && validatePrice(priceController.text)) {
-                                      setState(() {
-                                        rippleLoading = true;
-                                      });
-                                      ServiceState tmpService = ServiceState.fromState(snapshot.serviceState);
-                                      tmpService.name = Utils.saveField(myLocale.languageCode, nameController.text, snapshot.serviceState.name);
-                                      tmpService.description = Utils.saveField(myLocale.languageCode, descriptionController.text, snapshot.serviceState.description);
-                                      tmpService.serviceAddress = addressController.text;
-                                      tmpService.serviceBusinessAddress = _serviceBusinessAddress;
-                                      tmpService.price = _servicePrice;
-                                      if(conditionController.text.isNotEmpty)
-                                        tmpService.condition =  Utils.saveField(myLocale.languageCode, conditionController.text, snapshot.serviceState.condition);
-                                      if(_serviceVAT == 0)
-                                        tmpService.vat = 22;
-                                      else
-                                        tmpService.vat = _serviceVAT;
-                                      tmpService.price = _servicePrice;
+                          ),
+                          centerTitle: true,
+                          leading: IconButton(
+                              icon: Icon(Icons.keyboard_arrow_left, color: Colors.black,),
+                              onPressed: () {
+                                Provider.of<Spinner>(context, listen: false).add.forEach((element) {
+                                  element[0] = false;
+                                });
+                                Provider.of<Spinner>(context, listen: false).initAdd( Provider.of<Spinner>(context, listen: false).add);
+                                //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_ServiceList()),);
+                                Navigator.of(context).pop();
+                                //Navigator.pushReplacement(context, EnterExitRoute(enterPage: UI_M_ServiceList(), exitPage: UI_CreateService(), from: false));
+                              }),
+                          actions: [
+                            IconButton(
+                                icon: Icon(Icons.check, color: Colors.black),
+                                onPressed: () {
+                                  if(nameController.text.isNotEmpty)
+                                    StoreProvider.of<AppState>(context).dispatch(SetServiceName(Utils.saveField(myLocale.languageCode, nameController.text, snapshot.serviceState.name)));
+                                  if(descriptionController.text.isNotEmpty)
+                                    StoreProvider.of<AppState>(context).dispatch(SetServiceDescription(Utils.saveField(myLocale.languageCode, descriptionController.text, snapshot.serviceState.description)));
+                                  if (validateChosenCategories() && validateAndSave() && validatePrice(priceController.text)) {
+                                    setState(() {
+                                      rippleLoading = true;
+                                    });
+                                    ServiceState tmpService = ServiceState.fromState(snapshot.serviceState);
+                                    tmpService.name = Utils.saveField(myLocale.languageCode, nameController.text, snapshot.serviceState.name);
+                                    tmpService.description = Utils.saveField(myLocale.languageCode, descriptionController.text, snapshot.serviceState.description);
+                                    tmpService.serviceAddress = addressController.text;
+                                    tmpService.serviceBusinessAddress = _serviceBusinessAddress;
+                                    tmpService.price = _servicePrice;
+                                    if(conditionController.text.isNotEmpty)
+                                      tmpService.condition =  Utils.saveField(myLocale.languageCode, conditionController.text, snapshot.serviceState.condition);
+                                    if(_serviceVAT == 0)
+                                      tmpService.vat = 22;
+                                    else
+                                      tmpService.vat = _serviceVAT;
+                                    tmpService.price = _servicePrice;
                                     //  debugPrint('UI_M_create_service => Service Name: ${tmpService.name}');
                                     //  debugPrint('UI_M_create_service => Service Description: ${tmpService.description}');
                                     //  debugPrint('UI_M_create_service => Service Address: ${tmpService.serviceBusinessAddress}');
-                                      Provider.of<Spinner>(context, listen: false).initLoad(true);
-                                      if(tmpService.originalLanguage.isEmpty)
-                                        tmpService.originalLanguage = myLocale.languageCode;
-                                      StoreProvider.of<AppState>(context).dispatch(CreateService(tmpService));
+                                    Provider.of<Spinner>(context, listen: false).initLoad(true);
+                                    if(tmpService.originalLanguage.isEmpty)
+                                      tmpService.originalLanguage = myLocale.languageCode;
+                                    StoreProvider.of<AppState>(context).dispatch(CreateService(tmpService));
 
-                                    }
-                                  }),
-                            ),
+                                  }
+                                })
                           ],
                         ),
                         body: SingleChildScrollView(
@@ -398,7 +404,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                 ),*/
                                   ///Name
                                   Container(
-                                    margin: EdgeInsets.only(top: 40.0, bottom: 5.0, left: 32.0, right: 28.0),
+                                    margin: EdgeInsets.only(top: 25.0, bottom: 5.0, left: 32.0, right: 28.0),
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       children: [

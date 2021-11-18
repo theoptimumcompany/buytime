@@ -115,6 +115,7 @@ dependencies:
   webview_flutter: ^2.1.1
   responsive_framework: 0.1.4
   algolia: ^1.0.1
+  card_swiper: ^1.0.4
 
 dependency_overrides:
   intl: ^0.17.0-nullsafety.2

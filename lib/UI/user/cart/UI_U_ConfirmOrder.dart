@@ -2,10 +2,13 @@ import 'dart:io';
 import 'package:Buytime/UI/user/payment/paypal_payment.dart';
 import 'package:Buytime/helper/payment/util.dart';
 import 'package:Buytime/reblox/enum/order_time_intervals.dart';
+import 'package:Buytime/reblox/model/promotion/promo_code_state.dart';
 import 'package:Buytime/reblox/model/stripe/stripe_card_response.dart';
 import 'package:Buytime/reblox/reducer/order_detail_reducer.dart';
 import 'package:Buytime/reblox/reducer/stripe_payment_reducer.dart';
 import 'package:Buytime/reusable/w_green_choice.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:card_swiper/card_swiper.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:Buytime/reblox/model/order/order_reservable_state.dart';
@@ -90,6 +93,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
           distinct: true,
           converter: (store) => store.state,
           builder: (context, snapshot) {
+            debugPrint('UI_U_ConfirmOrder builder | ORDER TOTAL: ${snapshot.order.total}');
             ///Check if order is reservable or not
             if (widget.reserve != null && widget.reserve) {
               orderReservableState = snapshot.orderReservable;
@@ -103,6 +107,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                 disableRoomPayment = false;
               }
               partialECO = (orderReservableState.total * 2.5) / 100;
+              carbonCompensation = snapshot.orderReservable.carbonCompensation;
             } else {
               orderState = snapshot.order;
               if ((widget != null && widget.tourist != null && widget.tourist) ||
@@ -113,6 +118,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                 disableRoomPayment = false;
               }
               partialECO = (orderState.total * 2.5) / 100;
+              carbonCompensation = snapshot.order.carbonCompensation;
             }
 
             ///Check If External Service
@@ -125,217 +131,241 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
             _email = snapshot.user.email;
             _userId = snapshot.user.uid;
             state = snapshot;
+
+
+
             return Scaffold(
                 appBar: buildBuytimeAppbar(media, context),
-                body: SafeArea(
-                  child: Center(
-                    child: ConstrainedBox(
-                      constraints: BoxConstraints(),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              ///Recap
-                              buildOrderRecap(context, snapshot, media),
-                            ],
-                          ),
-
-                          /// bottom block, confirm button and payment method
-                          Column(
-                            children: [
-                              Container(
-                                width: SizeConfig.blockSizeHorizontal * 100,
-                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * 3, bottom: SizeConfig.safeBlockVertical * 3),
-                                child: Text(
-                                  AppLocalizations.of(context).paymentMethod,
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w500, fontSize: 18),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 20.0, bottom: 0.0, right: 20),
-                                child: Column(
-                                  children: [
-                                    ListTile(
-                                      trailing: const Icon(
-                                        Icons.keyboard_arrow_right,
-                                        color: Colors.black54,
-                                        size: 25.0,
-                                      ),
-                                      leading: getCurrentLeadingImage(context, snapshot),
-                                      title: getCurrentPaymentMethod(context, snapshot),
-                                      onTap: () {
-                                        String serviceNameFromOrder = "";
-                                        if (widget.reserve != null && widget.reserve && snapshot.orderReservable != null && snapshot.orderReservable.itemList.isNotEmpty) {
-                                          serviceNameFromOrder = snapshot.orderReservable.itemList.first.name;
-                                        } else {
-                                          serviceNameFromOrder = snapshot.order.itemList.first.name;
-                                        }
-                                        FirebaseAnalytics().logEvent(
-                                            name: 'open_payment_method_confirm_order',
-                                            parameters: {'user_email': snapshot.user.email, 'date': DateTime.now().toString(), 'service_name': serviceNameFromOrder});
-                                        _modalChoosePaymentMethod(context, snapshot);
-                                      },
-                                    ),
-                                    Divider(),
-                                  ],
-                                ),
-                              ),
-                              snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.applePay) ||
-                                      snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.googlePay) ||
-                                      snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.card)
-                                  ? Container(
-                                      height: 26,
-                                      width: double.infinity,
-                                      margin: EdgeInsets.only(right: 15, bottom: 20),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.end,
-                                        children: [
-                                          Container(
-                                            height: 26,
-                                            width: 119,
-                                            decoration: BoxDecoration(image: DecorationImage(image: AssetImage('assets/img/brand/p_stripe.png'))),
-                                          )
-                                        ],
-                                      ),
-                                    )
-                                  : Container(),
-                              // snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.applePay) || snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.googlePay) || snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.card)
-                              //     ?
-                              //
-                              //     /// TODO: CASO STRIPE
-                              //     Container()
-                              Center(
+                floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+                ///Reserve
+                floatingActionButton: showPaymentButton ?
+                Container(
+                  width: double.infinity,
+                  //height: 100,
+                  color: Colors.white,
+                  child: Container(
+                    width: 198,
+                    height: 60 + SizeConfig.safeBlockVertical * 2,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(top: 10, bottom: SizeConfig.safeBlockVertical * 2),
+                          child: MaterialButton(
+                            color: snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.paypal)
+                                ? BuytimeTheme.Secondary
+                                : BuytimeTheme.ActionBlackPurple,
+                            disabledColor: BuytimeTheme.SymbolLightGrey,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: new BorderRadius.circular(20),
+                            ),
+                            child: paymentSheetIdLoading ? Container(
+                                alignment: Alignment.center,
+                                width: SizeConfig.blockSizeHorizontal * 57,
+                                height: 44,
+                                //padding: EdgeInsets.all(2.5),
                                 child: Container(
-                                  margin: EdgeInsets.only(bottom: 10),
-                                  child: MaterialButton(
-                                    color: snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.paypal)
-                                        ? BuytimeTheme.Secondary
-                                        : BuytimeTheme.ActionBlackPurple,
-                                    disabledColor: BuytimeTheme.SymbolLightGrey,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: new BorderRadius.circular(20),
-                                    ),
-                                    child: paymentSheetIdLoading ? Container(
-                                      alignment: Alignment.center,
-                                      width: SizeConfig.blockSizeHorizontal * 57,
-                                      height: 44,
-                                      //padding: EdgeInsets.all(2.5),
-                                      child: Container(
-                                        width: 25,
-                                        height: 25,
-                                        child: CircularProgressIndicator(
-                                          strokeWidth: 2,
-                                          valueColor: new AlwaysStoppedAnimation<Color>(Colors.white),
-                                        ),
-                                      )
-                                    ) :
-                                    Container(
-                                      alignment: Alignment.center,
-                                      width: SizeConfig.blockSizeHorizontal * 57,
-                                      height: 44,
-                                      child: Text(
-                                        AppLocalizations.of(context).confirmPayment,
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          letterSpacing: 1,
-                                          fontSize: 16,
-                                          fontFamily: BuytimeTheme.FontFamily,
-                                          fontWeight: FontWeight.bold,
-                                          color: snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.paypal) ? Colors.black : BuytimeTheme.TextWhite,
-                                        ),
-                                      ),
-                                    ),
-                                    onPressed: () async {
-                                      FirebaseAnalytics().logEvent(
-                                          name: 'ok_confirm_order',
-                                          parameters: {'user_email': snapshot.user.email, 'date': DateTime.now().toString(), 'payment_method': snapshot.stripe.chosenPaymentMethod});
+                                  width: 25,
+                                  height: 25,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    valueColor: new AlwaysStoppedAnimation<Color>(Colors.white),
+                                  ),
+                                )
+                            ) :
+                            Container(
+                              alignment: Alignment.center,
+                              width: SizeConfig.blockSizeHorizontal * 57,
+                              height: 44,
+                              child: Text(
+                                AppLocalizations.of(context).confirmPayment,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  letterSpacing: 1,
+                                  fontSize: 16,
+                                  fontFamily: BuytimeTheme.FontFamily,
+                                  fontWeight: FontWeight.bold,
+                                  color: snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.paypal) ? Colors.black : BuytimeTheme.TextWhite,
+                                ),
+                              ),
+                            ),
+                            onPressed: snapshot.stripe.chosenPaymentMethod != Utils.enumToString(PaymentType.noPaymentMethod) ? () async {
+                              FirebaseAnalytics().logEvent(
+                                  name: 'ok_confirm_order',
+                                  parameters: {'user_email': snapshot.user.email, 'date': DateTime.now().toString(), 'payment_method': snapshot.stripe.chosenPaymentMethod});
 
-                                      double totalToSend = 0.0;
-                                      if (widget.reserve != null && widget.reserve){
-                                        totalToSend = snapshot.orderReservable.total;
-                                        snapshot.orderReservable.total = double.parse(snapshot.orderReservable.total.toStringAsFixed(2));
-                                        snapshot.orderReservable.totalPromoDiscount = double.parse(snapshot.orderReservable.totalPromoDiscount.toStringAsFixed(2));
-                                      }else{
-                                        totalToSend = snapshot.order.total;
-                                        snapshot.order.total = double.parse(snapshot.order.total.toStringAsFixed(2));
-                                        snapshot.order.totalPromoDiscount = double.parse(snapshot.order.totalPromoDiscount.toStringAsFixed(2));
-                                      }
+                              double totalToSend = 0.0;
+                              if (widget.reserve != null && widget.reserve){
+                                totalToSend = snapshot.orderReservable.total;
+                                snapshot.orderReservable.total = double.parse(snapshot.orderReservable.total.toStringAsFixed(2));
+                                snapshot.orderReservable.totalPromoDiscount = double.parse(snapshot.orderReservable.totalPromoDiscount.toStringAsFixed(2));
+                              }else{
+                                totalToSend = snapshot.order.total;
+                                snapshot.order.total = double.parse(snapshot.order.total.toStringAsFixed(2));
+                                snapshot.order.totalPromoDiscount = double.parse(snapshot.order.totalPromoDiscount.toStringAsFixed(2));
+                              }
 
-                                      if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.applePay) ||
-                                          snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.googlePay) ||
-                                          snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.card)) {
-                                        setState(() {
-                                          paymentSheetIdLoading = true;
-                                        });
-                                        debugPrint("ui_u_confirmOrder stripe paymentSheet");
+                              if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.applePay) ||
+                                  snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.googlePay) ||
+                                  snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.card)) {
+                                setState(() {
+                                  paymentSheetIdLoading = true;
+                                });
+                                debugPrint("ui_u_confirmOrder stripe paymentSheet");
 
-                                        // Stripe.publishableKey = "pk_live_51HS20eHr13hxRBpCLHzfi0SXeqw8Efu911cWdYEE96BAV0zSOesvE83OiqqzRucKIxgCcKHUvTCJGY6cXRtkDVCm003CmGXYzy";
-                                        Stripe.publishableKey = StripeConfig().keyToUse;
-                                        final paymentSheetData = await requestPaymentSheet(snapshot.user.uid, totalToSend);
-                                        Stripe.merchantIdentifier = 'merchant.theoptimumcompany.buytime';
-                                        // Stripe.merchantIdentifier = 'com.theoptimumcompany.buytime';
-                                        await Stripe.instance.applySettings();
+                                // Stripe.publishableKey = "pk_live_51HS20eHr13hxRBpCLHzfi0SXeqw8Efu911cWdYEE96BAV0zSOesvE83OiqqzRucKIxgCcKHUvTCJGY6cXRtkDVCm003CmGXYzy";
+                                Stripe.publishableKey = StripeConfig().keyToUse;
+                                final paymentSheetData = await requestPaymentSheet(snapshot.user.uid, totalToSend);
+                                Stripe.merchantIdentifier = 'merchant.theoptimumcompany.buytime';
+                                // Stripe.merchantIdentifier = 'com.theoptimumcompany.buytime';
+                                await Stripe.instance.applySettings();
 
-                                        debugPrint(
-                                            "ui_u_confirmOrder stripe paymentSheet parameters + ${paymentSheetData['customer']} + ${paymentSheetData['paymentIntent']} + ${paymentSheetData['ephemeralKey']}");
-                                        debugPrint("ui_u_confirmOrder stripe paymentSheet parameters json + $paymentSheetData");
+                                debugPrint(
+                                    "ui_u_confirmOrder stripe paymentSheet parameters + ${paymentSheetData['customer']} + ${paymentSheetData['paymentIntent']} + ${paymentSheetData['ephemeralKey']}");
+                                debugPrint("ui_u_confirmOrder stripe paymentSheet parameters json + $paymentSheetData");
 
-                                        await Stripe.instance.initPaymentSheet(
-                                            paymentSheetParameters: SetupPaymentSheetParameters(
-                                          applePay: Stripe.instance.isApplePaySupported.value,
-                                          googlePay: true,
-                                          style: ThemeMode.light,
-                                          testEnv: true,
-                                          merchantCountryCode: 'DE',
-                                          merchantDisplayName: 'Buytime | The Optimum Company S.R.L.i.',
-                                          customerId: paymentSheetData['customer'],
-                                          paymentIntentClientSecret: paymentSheetData['paymentIntent'],
-                                          customerEphemeralKeySecret: paymentSheetData['ephemeralKey'],
-                                        ));
+                                await Stripe.instance.initPaymentSheet(
+                                    paymentSheetParameters: SetupPaymentSheetParameters(
+                                      applePay: Stripe.instance.isApplePaySupported.value,
+                                      googlePay: true,
+                                      style: ThemeMode.light,
+                                      testEnv: true,
+                                      merchantCountryCode: 'DE',
+                                      merchantDisplayName: 'Buytime | The Optimum Company S.R.L.i.',
+                                      customerId: paymentSheetData['customer'],
+                                      paymentIntentClientSecret: paymentSheetData['paymentIntent'],
+                                      customerEphemeralKeySecret: paymentSheetData['ephemeralKey'],
+                                    ));
 
-                                        try {
-                                          await Stripe.instance.presentPaymentSheet();
-                                          print("OK");
-                                          setState(() {
-                                            paymentSheetIdLoading = false;
-                                          });
-                                          confirmationCard(context, snapshot, '', '', '', paymentSheetData['paymentIntent'].split('_secret')[0]);
-                                          // if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.card)) {
-                                          //
-                                          // } else {
-                                          //   print("Native Confirm Order");
-                                          //   confirmationNative(context, snapshot);
-                                          // }
-                                        } on Exception catch (e) {
-                                          if (e is StripeException) {
-                                            print("No Stripe Exception");
-                                          } else {
-                                            print("No general error Exception");
-                                          }
-                                          setState(() {
-                                            paymentSheetIdLoading = false;
-                                          });
-                                        }
-                                        debugPrint("ui_u_confirmOrder stripe paymentSheet end");
-                                      } else if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.room)) {
-                                        confirmationRoom(context, snapshot);
-                                      } else if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.onSite)) {
-                                        confirmationOnSite(context, snapshot);
-                                      } else if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.paypal)) {
-                                        confirmationPayPal(context, snapshot);
-                                      }
+                                try {
+                                  await Stripe.instance.presentPaymentSheet();
+                                  print("OK");
+                                  setState(() {
+                                    paymentSheetIdLoading = false;
+                                  });
+                                  confirmationCard(context, snapshot, '', '', '', paymentSheetData['paymentIntent'].split('_secret')[0]);
+                                  // if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.card)) {
+                                  //
+                                  // } else {
+                                  //   print("Native Confirm Order");
+                                  //   confirmationNative(context, snapshot);
+                                  // }
+                                } on Exception catch (e) {
+                                  if (e is StripeException) {
+                                    print("No Stripe Exception");
+                                  } else {
+                                    print("No general error Exception");
+                                  }
+                                  setState(() {
+                                    paymentSheetIdLoading = false;
+                                  });
+                                }
+                                debugPrint("ui_u_confirmOrder stripe paymentSheet end");
+                              } else if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.room)) {
+                                confirmationRoom(context, snapshot);
+                              } else if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.onSite)) {
+                                confirmationOnSite(context, snapshot);
+                              } else if (snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.paypal)) {
+                                confirmationPayPal(context, snapshot);
+                              }
 
 
-                                    },
+                            } : null,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ) : Container(),
+                body: SafeArea(
+                  child: SingleChildScrollView(
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minHeight: SizeConfig.screenHeight - (66 + SizeConfig.safeBlockVertical * 2)
+                      ),
+                      child: Container(
+                        margin: EdgeInsets.only(bottom: 60),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          //mainAxisSize: MainAxisSize.min,
+                          children: [
+                            ///Recap list
+                            Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                buildOrderRecap(context, snapshot, media),
+                              ],
+                            ),
+                            /// bottom block, confirm button and payment method
+                            Column(
+                              children: [
+                                Container(
+                                  width: SizeConfig.blockSizeHorizontal * 100,
+                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * 3, bottom: SizeConfig.safeBlockVertical * 3),
+                                  child: Text(
+                                    AppLocalizations.of(context).paymentMethod,
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w500, fontSize: 18),
                                   ),
                                 ),
-                              )
-                            ],
-                          )
-                        ],
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 20.0, bottom: 0.0, right: 20),
+                                  child: Column(
+                                    children: [
+                                      ListTile(
+                                        trailing: const Icon(
+                                          Icons.keyboard_arrow_right,
+                                          color: Colors.black54,
+                                          size: 25.0,
+                                        ),
+                                        leading: getCurrentLeadingImage(context, snapshot),
+                                        title: getCurrentPaymentMethod(context, snapshot),
+                                        onTap: () {
+                                          String serviceNameFromOrder = "";
+                                          if (widget.reserve != null && widget.reserve && snapshot.orderReservable != null && snapshot.orderReservable.itemList.isNotEmpty) {
+                                            serviceNameFromOrder = snapshot.orderReservable.itemList.first.name;
+                                          } else {
+                                            serviceNameFromOrder = snapshot.order.itemList.first.name;
+                                          }
+                                          FirebaseAnalytics().logEvent(
+                                              name: 'open_payment_method_confirm_order',
+                                              parameters: {'user_email': snapshot.user.email, 'date': DateTime.now().toString(), 'service_name': serviceNameFromOrder});
+                                          _modalChoosePaymentMethod(context, snapshot);
+                                        },
+                                      ),
+                                      Divider(),
+                                    ],
+                                  ),
+                                ),
+                                snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.applePay) ||
+                                    snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.googlePay) ||
+                                    snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.card) ?
+                                Container(
+                                  height: 26,
+                                  width: double.infinity,
+                                  margin: EdgeInsets.only(right: 15, bottom: 20),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      Container(
+                                        height: 26,
+                                        width: 119,
+                                        decoration: BoxDecoration(image: DecorationImage(image: AssetImage('assets/img/brand/p_stripe.png'))),
+                                      )
+                                    ],
+                                  ),
+                                )
+                                    : Container(),
+                                // snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.applePay) || snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.googlePay) || snapshot.stripe.chosenPaymentMethod == Utils.enumToString(PaymentType.card)
+                                //     ?
+                                //
+                                //     /// TODO: CASO STRIPE
+                                //     Container()
+
+                              ],
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -526,60 +556,287 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
     return Text(AppLocalizations.of(context).creditCard.replaceAll(":", ""));
   }
 
+  bool addPromotion = false;
+  bool showPaymentButton = true;
+  bool promotion = false;
+  bool requestPromo = false;
+  bool invalidPromoCode = false;
+  TextEditingController promotionController = TextEditingController();
+
   ///Recap
   Container buildOrderRecap(BuildContext context, AppState snapshot, Size media) {
+    List<String> imgUrl = [];
+    List<String> quantity = [];
+    List<String> names = [];
+    if (widget.reserve != null && widget.reserve) {
+      snapshot.orderReservable.itemList.forEach((element) {
+        imgUrl.add(element.thumbnail);
+        quantity.add('${element.number} x ${element.price.toStringAsFixed(2)}${AppLocalizations.of(context).currency}');
+        names.add(Utils.retriveField(Localizations.localeOf(context).languageCode, element.name));
+      });
+    } else {
+      snapshot.order.itemList.forEach((element) {
+        imgUrl.add(element.thumbnail);
+        quantity.add('${element.number} x ${element.price.toStringAsFixed(2)}${AppLocalizations.of(context).currency}');
+        names.add(Utils.retriveField(Localizations.localeOf(context).languageCode, element.name));
+      });
+    }
+    int i = -1;
+    debugPrint('UI_U_ConfirmOrder buildOrderRecap | ORDER TOTAL: ${snapshot.order.total}');
     return Container(
       child: Column(
         children: [
-          ///Top Text
-          Container(
-            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 4),
-            child: Padding(
-              padding: const EdgeInsets.only(left: 0.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    () {
-                      if (widget.reserve != null && widget.reserve) {
-                        return snapshot.orderReservable.itemList.length > 1
-                            ? AppLocalizations.of(context).multipleOrders
-                            : snapshot.orderReservable != null && snapshot.orderReservable.itemList.isNotEmpty
-                                ? Utils.retriveField(Localizations.localeOf(context).languageCode, snapshot.orderReservable.itemList.first.name)
-                                : 'test';
-                      } else {
-                        return snapshot.order.itemList.length > 1
-                            ? AppLocalizations.of(context).multipleOrders
-                            : snapshot.order != null && snapshot.order.itemList.isNotEmpty
-                                ? Utils.retriveField(Localizations.localeOf(context).languageCode, snapshot.order.itemList.first.name)
-                                : 'test';
-                      }
-                    }(),
-                    textAlign: TextAlign.start,
-                    style: TextStyle(
-                      fontFamily: BuytimeTheme.FontFamily,
-                      color: BuytimeTheme.TextBlack,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  )
-                ],
-              ),
-            ),
+          ///Order List
+          Column(
+            children: imgUrl.map((e) {
+              i++;
+              return Container(
+                margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 0.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      ///Image
+                      Container(
+                        margin: EdgeInsets.only(left: 16, right: 16),
+                        child: CachedNetworkImage(
+                          imageUrl: Utils.version200(imgUrl.elementAt(i)),
+                          imageBuilder: (context, imageProvider) => Container(
+                            //width: double.infinity,
+                            //height: double.infinity,
+                            width: 100, ///SizeConfig.safeBlockVertical * widget.width
+                            height: 100, ///SizeConfig.safeBlockVertical * widget.width
+                            decoration: BoxDecoration(
+                                color: BuytimeTheme.BackgroundWhite,
+                                borderRadius: BorderRadius.all(Radius.circular(5)),
+                                image: DecorationImage(
+                                  image: imageProvider,
+                                  fit: BoxFit.cover,
+                                )
+                            ),
+                          ),
+                          placeholder: (context, url) => Utils.imageShimmer(100, 100),
+                          errorWidget: (context, url, error) => Icon(Icons.error),
+                        ),
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            child: Text(
+                                 names.elementAt(i),
+                              textAlign: TextAlign.start,
+                              style: TextStyle(
+                                fontFamily: BuytimeTheme.FontFamily,
+                                color: BuytimeTheme.TextBlack,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(top: 8),
+                            child: Text(
+                              quantity.elementAt(i),
+                              style: TextStyle(
+                                fontFamily: BuytimeTheme.FontFamily,
+                                color: BuytimeTheme.TextBlack,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                          )
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              );
+            }).toList(),
           ),
-
-          ///Total Price
-          Container(child: () {
-            if (widget.reserve != null && widget.reserve) {
-              return OrderTotal(media: media, orderState: OrderState.fromReservableState(snapshot.orderReservable));
-            } else {
-              return OrderTotal(media: media, orderState: snapshot.order);
-            }
-          }()),
-
           ///Divider
           Container(
-            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 10, right: SizeConfig.safeBlockHorizontal * 10),
+            margin: EdgeInsets.only(left: 16, right: 16, top: 17),
+            color: BuytimeTheme.BackgroundLightGrey,
+            height: SizeConfig.safeBlockVertical * .2,
+          ),
+          ///Do you have ...
+          Container(
+            margin: EdgeInsets.only(left: 16, top: 17, bottom: 15),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    ///Do you have ...
+                    Container(
+                      child: Text(
+                        AppLocalizations.of(context).doYouHaveAPromotionalCode,
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                          fontFamily: BuytimeTheme.FontFamily,
+                          color: BuytimeTheme.TextBlack,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                    ///Icon
+                    Container(
+                      child: IconButton(
+                        onPressed: (){
+                          setState(() {
+                            addPromotion = !addPromotion;
+                          });
+                        },
+                        icon: Icon(
+                          !addPromotion ? Icons.add : Icons.remove,
+                          color: Colors.black,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+                ///Promotion insert
+                addPromotion ?
+                Container(
+                  margin: EdgeInsets.only(left: 0, right: 16),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Flexible(
+                        child: Container(
+                          height: 38.0,
+                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, right: 18),
+                          child: TextFormField(
+                            controller: promotionController,
+                            key: Key('table_number_field_key'),
+                            textAlign: TextAlign.start,
+                            textAlignVertical: TextAlignVertical.center,
+                            //textCapitalization: TextCapitalization.words,
+                            //keyboardType: TextInputType.,
+                            onChanged: (value) {
+
+                            },
+                            decoration: InputDecoration(
+                              contentPadding: EdgeInsets.only(bottom: 10, left: 10),
+                              enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: invalidPromoCode ? BuytimeTheme.AccentRed : Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(5.0))),
+                              focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(5.0))),
+                              errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(5.0))),
+                              //errorText: invalidPromoCode ? AppLocalizations.of(context).table : null,
+                              //labelText: AppLocalizations.of(context).table,
+                              labelStyle: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: Color(0xff666666), fontWeight: FontWeight.w400, fontSize: 16),
+                              //errorStyle: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: Color(0xff666666), fontWeight: FontWeight.w400, fontSize: 0),
+                            ),
+                            style: TextStyle(
+                              fontFamily: BuytimeTheme.FontFamily,
+                              color: Color(0xff666666),
+                              fontWeight: FontWeight.w800,
+                            ),
+                            onTap: (){
+                              setState(() {
+                                showPaymentButton = false;
+                              });
+                            },
+                          ),
+                        ),
+                      ),
+                      ///apply
+                      Container(
+                        height: 38.0,
+                        width: 83,
+                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
+                        child: MaterialButton(
+                          //key: Key('close_table_number_field_key'),
+                          elevation: 0,
+                          hoverElevation: 0,
+                          focusElevation: 0,
+                          highlightElevation: 0,
+                          onPressed: (widget.reserve != null && widget.reserve ? orderReservableState.totalPromoDiscount > 0 : orderState.totalPromoDiscount > 0) ? null : () async {
+                            FocusScope.of(context).unfocus();
+                            if(promotionController.text.isNotEmpty){
+                              setState(() {
+                                requestPromo = true;
+                              });
+                              DocumentSnapshot promoCode = await FirebaseFirestore.instance.collection('promoCode').doc(promotionController.text.toUpperCase()).get();
+                              if(promoCode != null && promoCode.data() != null){
+                                PromoCodeState promoCodeState = PromoCodeState.fromJson(promoCode.data());
+                                if (widget.reserve != null && widget.reserve) {
+                                  if(promoCodeState.amount != 0){
+                                    snapshot.orderReservable.totalPromoDiscount = promoCodeState.amount.toDouble();
+                                  }else{
+                                    snapshot.orderReservable.totalPromoDiscount = double.parse((snapshot.orderReservable.total * promoCodeState.percentage).toStringAsFixed(2));
+                                  }
+                                } else {
+                                  if(promoCodeState.amount != 0){
+                                    snapshot.order.totalPromoDiscount = promoCodeState.amount.toDouble();
+                                  }else{
+                                    snapshot.order.totalPromoDiscount = double.parse((snapshot.order.total * promoCodeState.percentage).toStringAsFixed(2));
+                                  }
+                                }
+                                setState(() {
+                                  invalidPromoCode = false;
+                                });
+                              }else{
+                                setState(() {
+                                  requestPromo = false;
+                                  invalidPromoCode = true;
+                                });
+                              }
+                            }
+                            setState(() {
+                              showPaymentButton = true;
+                              if(promotionController.text.isNotEmpty){
+                                promotion = true;
+                                requestPromo = false;
+                              }
+                            });
+                          },
+                          textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
+                          color: BuytimeTheme.ActionBlackPurple,
+                          disabledColor: BuytimeTheme.SymbolLightGrey,
+                          //padding: EdgeInsets.all(media.width * 0.03),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: new BorderRadius.circular(5),
+                          ),
+                          child: requestPromo ? Container(
+                            width: 25,
+                            height: 25,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              valueColor: new AlwaysStoppedAnimation<Color>(Colors.white),
+                            ),
+                          ): Text(
+                            AppLocalizations.of(context).apply,
+                            style: TextStyle(fontSize: 14, fontFamily: BuytimeTheme.FontFamily, fontWeight: FontWeight.w500, color: BuytimeTheme.TextWhite, letterSpacing: 1.25),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ) : Container(),
+                // invalidPromoCode ?
+                // Container(
+                //   margin: EdgeInsets.only(top: 5),
+                //   child: Text(
+                //     AppLocalizations.of(context).invalidPromocode,
+                //     textAlign: TextAlign.start,
+                //     style: TextStyle(
+                //       fontFamily: BuytimeTheme.FontFamily,
+                //       color: BuytimeTheme.AccentRed,
+                //       fontSize: 16,
+                //       fontWeight: FontWeight.w500,
+                //     ),
+                //   ),
+                // ) : Container(),
+              ],
+            ),
+          ),
+          ///Divider
+          Container(
+            margin: EdgeInsets.only(left: 16, right: 16),
             color: BuytimeTheme.BackgroundLightGrey,
             height: SizeConfig.safeBlockVertical * .2,
           ),
@@ -587,47 +844,47 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
           ///ECO Section
           snapshot.business.business_type == 'ECO'
               ? Padding(
-                  padding: const EdgeInsets.only(top: 10.0),
-                  child: Container(
-                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 10, right: SizeConfig.safeBlockHorizontal * 10),
-                    child: Column(
+            padding: const EdgeInsets.only(top: 10.0),
+            child: Container(
+              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 10, right: SizeConfig.safeBlockHorizontal * 10),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      W_GreenChoice(false),
+                    ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 5.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            W_GreenChoice(false),
-                          ],
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 5.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Flexible(
-                                child: Container(
-                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * .5, bottom: SizeConfig.safeBlockVertical * 1, right: SizeConfig.safeBlockHorizontal * 2.5),
-                                  child: Text(
-                                    AppLocalizations.of(context).carbonFootprintExplanation,
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 3,
-                                    style: TextStyle(fontFamily: BuytimeTheme.FontFamily, height: 1.5, fontWeight: FontWeight.w500, color: BuytimeTheme.TextGrey, fontSize: 14),
-                                  ),
-                                ),
-                              ),
-                            ],
+                        Flexible(
+                          child: Container(
+                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * .5, bottom: SizeConfig.safeBlockVertical * 1, right: SizeConfig.safeBlockHorizontal * 2.5),
+                            child: Text(
+                              AppLocalizations.of(context).carbonFootprintExplanation,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 3,
+                              style: TextStyle(fontFamily: BuytimeTheme.FontFamily, height: 1.5, fontWeight: FontWeight.w500, color: BuytimeTheme.TextGrey, fontSize: 14),
+                            ),
                           ),
                         ),
                       ],
                     ),
                   ),
-                )
+                ],
+              ),
+            ),
+          )
               : Container(),
 
           ///ECO Switch
           Padding(
             padding: const EdgeInsets.only(top: 5.0),
             child: Container(
-              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 10, right: SizeConfig.safeBlockHorizontal * 10),
+              margin: EdgeInsets.only(left: 16, right: 16),
               child: Column(
                 children: [
                   ///Switch Add On Environment
@@ -670,6 +927,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
                             margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * .5, bottom: SizeConfig.safeBlockVertical * 1, right: SizeConfig.safeBlockHorizontal * 2.5),
                             child: Text(
                               '${AppLocalizations.of(context).addA} 2,5% ${AppLocalizations.of(context).reduceEnvironmentalImpact}',
+                              textAlign: TextAlign.center,
                               overflow: TextOverflow.ellipsis,
                               maxLines: 3,
                               style: TextStyle(fontFamily: BuytimeTheme.FontFamily, height: 1.5, fontWeight: FontWeight.w500, color: BuytimeTheme.TextGrey, fontSize: 14),
@@ -683,6 +941,27 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
               ),
             ),
           ),
+          Container(
+            margin: EdgeInsets.only(left: 16, right: 16),
+            color: BuytimeTheme.BackgroundLightGrey,
+            height: SizeConfig.safeBlockVertical * .2,
+          ),
+          ///Total Price
+          Container(child: () {
+            if (widget.reserve != null && widget.reserve) {
+              return OrderTotal(media: media, orderState: OrderState.fromReservableState(snapshot.orderReservable), promotion: promotion,);
+            } else {
+              return OrderTotal(media: media, orderState: snapshot.order, promotion: promotion);
+            }
+          }()),
+
+          ///Divider
+          // Container(
+          //   margin: EdgeInsets.only(left: 16, right: 16),
+          //   color: BuytimeTheme.BackgroundLightGrey,
+          //   height: SizeConfig.safeBlockVertical * .2,
+          // ),
+
 
           ///Location
           widget.reserve != null && !widget.reserve && !widget.tourist && !isExternal

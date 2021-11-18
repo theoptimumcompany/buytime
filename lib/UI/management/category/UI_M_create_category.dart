@@ -228,75 +228,76 @@ class UI_M_CreateCategoryState extends State<UI_M_CreateCategory> {
                       alignment: Alignment.topCenter,
                       child: Scaffold(
                         resizeToAvoidBottomInset: false,
-                        appBar: BuytimeAppbar(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
-                                  child: IconButton(
-                                    icon: const Icon(
-                                      Icons.keyboard_arrow_left,
-                                      color: Colors.white,
-                                      size: 25.0,
-                                    ),
-                                    tooltip: AppLocalizations.of(context).comeBack,
-                                    onPressed: () {
-                                      //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ManageCategory()),);
-                                      Navigator.of(context).pop();
-                                      //Navigator.pushReplacement(context, EnterExitRoute(enterPage: ManageCategory(), exitPage: UI_M_CreateCategory(empty: true,), from: false));
-                                    },
-                                  ),
-                                ),
-                              ],
+                        appBar: AppBar(
+                          backgroundColor: Colors.white,
+                          brightness: Brightness.dark,
+                          elevation: 0,
+                          title: Text(
+                            AppLocalizations.of(context).createCategory,
+                            style: TextStyle(
+                                fontFamily: BuytimeTheme.FontFamily,
+                                color: BuytimeTheme.TextBlack,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 16 ///SizeConfig.safeBlockHorizontal * 7
                             ),
-                            Utils.barTitle(AppLocalizations.of(context).createCategory),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
-                              child: IconButton(
-                                icon: const Icon(
-                                  Icons.check,
-                                  color: BuytimeTheme.SymbolWhite,
-                                  size: 24.0,
-                                ),
-                                tooltip: AppLocalizations.of(context).submitNewCategory,
-                                onPressed: !create ? () {
-                                  if (validateAndSave() && validateCategoryImage()) {
+                          ),
+                          centerTitle: true,
+                          leading: IconButton(
+                            icon: const Icon(
+                              Icons.keyboard_arrow_left,
+                              color: Colors.black,
+                              //size: 25.0,
+                            ),
+                            tooltip: AppLocalizations.of(context).comeBack,
+                            onPressed: () {
+                              //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ManageCategory()),);
+                              Navigator.of(context).pop();
+                              //Navigator.pushReplacement(context, EnterExitRoute(enterPage: ManageCategory(), exitPage: UI_M_CreateCategory(empty: true,), from: false));
+                            },
+                          ),
+                          actions: [
+                            IconButton(
+                              icon: const Icon(
+                                Icons.check,
+                                color: BuytimeTheme.TextBlack,
+                                size: 24.0,
+                              ),
+                              tooltip: AppLocalizations.of(context).submitNewCategory,
+                              onPressed: !create ? () {
+                                if (validateAndSave() && validateCategoryImage()) {
+                                  setState(() {
+                                    create = true;
+                                  });
+                                  if (changeParent == false) {
+
                                     setState(() {
-                                      create = true;
+                                      bookingRequest = 'send';
                                     });
-                                    if (changeParent == false) {
 
-                                      setState(() {
-                                        bookingRequest = 'send';
-                                      });
-
-                                      debugPrint("CategoryCreate : Parent non Scelto");
-                                      CategoryState categoryCreate = snapshot.category != null ? snapshot.category : CategoryState().toEmpty();
-                                      Parent newCategoryParent = selectedParentDropValue;
-                                      debugPrint("Livello prima : " + snapshot.category.level.toString());
-                                      categoryCreate.parent = newCategoryParent;
-                                      if (categoryCreate.parent != _dropdownMenuParentCategory.first.value) {
-                                        categoryCreate.level = newCategoryParent.level + 1;
-                                      } else {
-                                        categoryCreate.level = 0;
-                                      }
-
-                                      StoreProvider.of<AppState>(context).dispatch(new CreateCategory(categoryCreate));
+                                    debugPrint("CategoryCreate : Parent non Scelto");
+                                    CategoryState categoryCreate = snapshot.category != null ? snapshot.category : CategoryState().toEmpty();
+                                    Parent newCategoryParent = selectedParentDropValue;
+                                    debugPrint("Livello prima : " + snapshot.category.level.toString());
+                                    categoryCreate.parent = newCategoryParent;
+                                    if (categoryCreate.parent != _dropdownMenuParentCategory.first.value) {
+                                      categoryCreate.level = newCategoryParent.level + 1;
                                     } else {
-                                      CategoryState categoryCreate = snapshot.category != null ? snapshot.category : CategoryState().toEmpty();
-
-                                      if(categoryCreate.parent.id == 'no_parent'){
-                                        categoryCreate.level = 0;
-                                      }
-                                      StoreProvider.of<AppState>(context).dispatch(CreateCategory(categoryCreate));
+                                      categoryCreate.level = 0;
                                     }
 
+                                    StoreProvider.of<AppState>(context).dispatch(new CreateCategory(categoryCreate));
+                                  } else {
+                                    CategoryState categoryCreate = snapshot.category != null ? snapshot.category : CategoryState().toEmpty();
+
+                                    if(categoryCreate.parent.id == 'no_parent'){
+                                      categoryCreate.level = 0;
+                                    }
+                                    StoreProvider.of<AppState>(context).dispatch(CreateCategory(categoryCreate));
                                   }
-                                } : null,
-                              ),
-                            ),
+
+                                }
+                              } : null,
+                            )
                           ],
                         ),
                         body: Column(

@@ -537,81 +537,80 @@ class UI_M_EditCategoryState extends State<UI_M_EditCategory> {
                         onWillPop: _onWillPop,
                         child: Scaffold(
                           resizeToAvoidBottomInset: false,
-                          appBar: BuytimeAppbar(
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  ///Back button
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
-                                    child: IconButton(
-                                      icon: const Icon(
-                                        Icons.keyboard_arrow_left,
-                                        color: Colors.white,
-                                        size: 25.0,
-                                      ),
-                                      tooltip: AppLocalizations.of(context).comeBack,
-                                      onPressed: () {
-                                        //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ManageCategory()),);
-                                        Navigator.of(context).pop();
-                                        //Navigator.pushReplacement(context, EnterExitRoute(enterPage: ManageCategory(), exitPage: UI_M_EditCategory(), from: false));
-                                      },
-                                    ),
-                                  ),
-                                ],
+                          appBar: AppBar(
+                            backgroundColor: Colors.white,
+                            brightness: Brightness.dark,
+                            elevation: 0,
+                            title: Text(
+                              AppLocalizations.of(context).editSpace + ' ' + snapshot.category.name,
+                              style: TextStyle(
+                                  fontFamily: BuytimeTheme.FontFamily,
+                                  color: BuytimeTheme.TextBlack,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 16 ///SizeConfig.safeBlockHorizontal * 7
                               ),
-
-                              ///Title
-                              Utils.barTitle(AppLocalizations.of(context).editSpace + ' ' + snapshot.category.name),
+                            ),
+                            centerTitle: true,
+                            leading: IconButton(
+                              icon: const Icon(
+                                Icons.keyboard_arrow_left,
+                                color: Colors.black,
+                                size: 25.0,
+                              ),
+                              tooltip: AppLocalizations.of(context).comeBack,
+                              onPressed: () {
+                                //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ManageCategory()),);
+                                Navigator.of(context).pop();
+                                //Navigator.pushReplacement(context, EnterExitRoute(enterPage: ManageCategory(), exitPage: UI_M_EditCategory(), from: false));
+                              },
+                            ),
+                            actions: [
                               canEditCategory
                                   ? Padding(
-                                      padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
-                                      child: IconButton(
-                                          icon: const Icon(
-                                            Icons.check,
-                                            color: Colors.white,
-                                            size: 25.0,
-                                          ),
-                                          tooltip: AppLocalizations.of(context).submitNewCategory,
-                                          onPressed: !edit
-                                              ? () {
-                                                  if (validateAndSave()) {
-                                                    /*setState(() {
+                                padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
+                                child: IconButton(
+                                    icon: const Icon(
+                                      Icons.check,
+                                      color: Colors.black,
+                                      //size: 25.0,
+                                    ),
+                                    tooltip: AppLocalizations.of(context).submitNewCategory,
+                                    onPressed: !edit
+                                        ? () {
+                                      if (validateAndSave()) {
+                                        /*setState(() {
                                           edit = true;
                                         });*/
-                                                    if (canMoveToParent) {
-                                                      setState(() {
-                                                        bookingRequest = 'send';
-                                                      });
+                                        if (canMoveToParent) {
+                                          setState(() {
+                                            bookingRequest = 'send';
+                                          });
 
-                                                      Parent newCategoryParent = selectedParentCategory;
-                                                      debugPrint("Aggiorno " + newCategoryParent.name);
-                                                      //StoreProvider.of<AppState>(context).dispatch(ServiceListSnippetRequest(snapshot.business.id_firestore));
-                                                      ///aggiorno category tree
-                                                      //   StoreProvider.of<AppState>(context).dispatch(new UpdateCategoryTree(newCategoryParent));
+                                          Parent newCategoryParent = selectedParentCategory;
+                                          debugPrint("Aggiorno " + newCategoryParent.name);
+                                          //StoreProvider.of<AppState>(context).dispatch(ServiceListSnippetRequest(snapshot.business.id_firestore));
+                                          ///aggiorno category tree
+                                          //   StoreProvider.of<AppState>(context).dispatch(new UpdateCategoryTree(newCategoryParent));
 
-                                                      ///aggiorno singola categoria
-                                                      StoreProvider.of<AppState>(context).dispatch(new UpdateCategory(snapshot.category));
-                                                    } else {
-                                                      showDialog(
-                                                        context: context,
-                                                        builder: (BuildContext context) {
-                                                          // return object of type Dialog
-                                                          return AlertDialog(
-                                                            title: new Text(AppLocalizations.of(context).caution),
-                                                            content: new Text(AppLocalizations.of(context).youCannotMoveBranch),
-                                                          );
-                                                        },
-                                                      );
-                                                    }
-                                                  }
-                                                }
-                                              : null),
-                                    )
-                                  : SizedBox(
-                                      width: 56.0,
-                                    ),
+                                          ///aggiorno singola categoria
+                                          StoreProvider.of<AppState>(context).dispatch(new UpdateCategory(snapshot.category));
+                                        } else {
+                                          showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              // return object of type Dialog
+                                              return AlertDialog(
+                                                title: new Text(AppLocalizations.of(context).caution),
+                                                content: new Text(AppLocalizations.of(context).youCannotMoveBranch),
+                                              );
+                                            },
+                                          );
+                                        }
+                                      }
+                                    }
+                                        : null),
+                              )
+                                  : Container()
                             ],
                           ),
                           floatingActionButton: FloatingActionButton(

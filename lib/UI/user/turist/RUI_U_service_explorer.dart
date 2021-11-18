@@ -3134,7 +3134,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                 ///Popular
                                                 childrens.add(Flexible(
                                                   child: Container(
-                                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0),
+                                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0,),
                                                     //padding: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 1),
                                                     height: popularList.isNotEmpty || noActivity ? 320 : 200,
                                                     color: Colors.white,

@@ -92,47 +92,32 @@ class _RNotificationCenterState extends State<RNotificationCenter> {
             onWillPop: () async => false,
             child: Scaffold(
               key: _drawerKey,
-              appBar: BuytimeAppbar(
-                background: BuytimeTheme.ManagerPrimary,
-                width: media.width,
-                children: [
-                  ///Back Button
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
-                        child: IconButton(
-                          key: Key('business_drawer_key'),
-                          icon: const Icon(
-                            Icons.menu,
-                            color: Colors.white,
-                            size: 30.0,
-                          ),
-                          tooltip: AppLocalizations.of(context).openMenu,
-                          onPressed: () {
-                            _drawerKey.currentState.openDrawer();
-                          },
-                        ),
-                      ),
-                    ],
+              appBar: AppBar(
+                backgroundColor: Colors.white,
+                brightness: Brightness.dark,
+                elevation: 0,
+                title: Text(
+                  AppLocalizations.of(context).notificationCenter,
+                  style: TextStyle(
+                      fontFamily: BuytimeTheme.FontFamily,
+                      color: BuytimeTheme.TextBlack,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 16 ///SizeConfig.safeBlockHorizontal * 7
                   ),
-                  ///Title
-                  Container(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 10.0),
-                      child: Text(
-                        AppLocalizations.of(context).notificationCenter,
-                        textAlign: TextAlign.start,
-                        style: BuytimeTheme.appbarTitle,
-                      ),
-                    ),
+                ),
+                centerTitle: true,
+                leading: IconButton(
+                  key: Key('business_drawer_key'),
+                  icon: const Icon(
+                    Icons.menu,
+                    color: Colors.black,
+                    //size: 30.0,
                   ),
-                  SizedBox(
-                    width: 50.0,
-                  )
-
-                ],
+                  tooltip: AppLocalizations.of(context).openMenu,
+                  onPressed: () {
+                    _drawerKey.currentState.openDrawer();
+                  },
+                ),
               ),
               drawer: ManagerDrawer(),
               body: SafeArea(
@@ -204,7 +189,7 @@ class _RNotificationCenterState extends State<RNotificationCenter> {
                                 notifications.isNotEmpty ?
                                 Flexible(
                                   child: Container(
-                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
+                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0),
                                     padding: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 2),
                                     color: BuytimeTheme.BackgroundWhite,
                                     child: Column(

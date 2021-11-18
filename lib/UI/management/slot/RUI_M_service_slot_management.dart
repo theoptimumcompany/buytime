@@ -473,54 +473,44 @@ class _RServiceSlotManagementState extends State<RServiceSlotManagement> {
         drawerEnableOpenDragGesture: false,
         key: _drawerKey,
         ///Appbar
-        appBar: BuytimeAppbar(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
-                  child: IconButton(
-                    key: Key('business_drawer_key'),
-                    icon: const Icon(
-                      Icons.keyboard_arrow_left_outlined,
-                      color: Colors.white,
-                      size: 24.0,
-                    ),
-                    tooltip: AppLocalizations.of(context).openMenu,
-                    onPressed: () {
-                      //_drawerKey.currentState.openDrawer();
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ),
-              ],
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          brightness: Brightness.dark,
+          elevation: 0,
+          title: Text(
+            Utils.retriveField(myLocale.languageCode, widget.serviceState.name),
+            style: TextStyle(
+                fontFamily: BuytimeTheme.FontFamily,
+                color: BuytimeTheme.TextBlack,
+                fontWeight: FontWeight.w500,
+                fontSize: 16 ///SizeConfig.safeBlockHorizontal * 7
             ),
-            ///Title
-            Container(
-              child: Padding(
-                padding: const EdgeInsets.only(left: 20.0),
-                child: Text(
-                  Utils.retriveField(myLocale.languageCode, widget.serviceState.name),
-                  textAlign: TextAlign.start,
-                  style: BuytimeTheme.appbarTitle,
-                ),
-              ),
+          ),
+          centerTitle: true,
+          leading: IconButton(
+            key: Key('business_drawer_key'),
+            icon: const Icon(
+              Icons.keyboard_arrow_left_outlined,
+              color: Colors.black,
+              //size: 24.0,
             ),
-            Container(
-              child: IconButton(
-                onPressed: (){
-                  _selectDate(context, start, end);
-                },
-                icon: Icon(
-                    Icons.calendar_today_outlined,
-                  color: BuytimeTheme.SymbolWhite,
-                ),
+            tooltip: AppLocalizations.of(context).openMenu,
+            onPressed: () {
+              //_drawerKey.currentState.openDrawer();
+              Navigator.of(context).pop();
+            },
+          ),
+          actions: [
+            IconButton(
+              onPressed: (){
+                _selectDate(context, start, end);
+              },
+              icon: Icon(
+                Icons.calendar_today_outlined,
+                color: BuytimeTheme.TextBlack,
+                size: 24,
               ),
             )
-            /*SizedBox(
-              width: 56.0,
-            )*/
           ],
         ),
         drawer: ManagerDrawer(),

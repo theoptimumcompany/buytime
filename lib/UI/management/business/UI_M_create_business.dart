@@ -254,27 +254,26 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                 },
                 child: Scaffold(
                   //resizeToAvoidBottomInset: false,
-                  appBar: BuytimeAppbar(
-                    width: media.width,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          IconButton(
-                              icon: Icon(Icons.chevron_left, color: BuytimeTheme.TextWhite),
-                              onPressed: () {
-                                //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_BusinessList()));
-                                Navigator.pushReplacement(context, EnterExitRoute(enterPage: RBusinessList(), exitPage: UI_M_CreateBusiness(), from: false));
-                              }),
-                        ],
+                  appBar: AppBar(
+                    backgroundColor: Colors.white,
+                    brightness: Brightness.dark,
+                    elevation: 0,
+                    title: Text(
+                      AppLocalizations.of(context).businessCreation,
+                      style: TextStyle(
+                          fontFamily: BuytimeTheme.FontFamily,
+                          color: BuytimeTheme.TextBlack,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 16 ///SizeConfig.safeBlockHorizontal * 7
                       ),
-
-                      ///Title
-                      Utils.barTitle(AppLocalizations.of(context).businessCreation),
-                      SizedBox(
-                        width: 56.0,
-                      )
-                    ],
+                    ),
+                    centerTitle: true,
+                    leading: IconButton(
+                        icon: Icon(Icons.chevron_left, color: BuytimeTheme.TextBlack),
+                        onPressed: () {
+                          //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_BusinessList()));
+                          Navigator.pushReplacement(context, EnterExitRoute(enterPage: RBusinessList(), exitPage: UI_M_CreateBusiness(), from: false));
+                        }),
                   ),
                   body: Theme(
                     data: ThemeData(primaryColor: BuytimeTheme.ManagerPrimary, accentColor: BuytimeTheme.Secondary),
@@ -283,7 +282,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                         child: ConstrainedBox(
                           constraints: BoxConstraints(),
                           child: Padding(
-                            padding: EdgeInsets.only(top: 10.0),
+                            padding: EdgeInsets.only(top: 0.0),
                             child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
                               Form(
                                 key: _formKey,

@@ -4,6 +4,7 @@ import 'package:Buytime/reblox/model/business/business_list_state.dart';
 import 'package:Buytime/reblox/model/order/order_entry.dart';
 import 'package:Buytime/reblox/model/role/role.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
+import 'package:Buytime/reblox/reducer/order_reservable_reducer.dart';
 import 'package:Buytime/reusable/icon/buytime_icons.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
@@ -149,6 +150,9 @@ class CartState extends State<Cart> {
                           color: Colors.black,
                         ),
                         onPressed: () async{
+                          StoreProvider.of<AppState>(context).dispatch(SetOrderTotalPromotionDiscount(0.0));
+                          StoreProvider.of<AppState>(context).dispatch(SetOrderReservableTotalPromotionDiscount(0.0));
+                          //snapshot.order.totalPromoDiscount = 0.0;
                           Navigator.of(context).pop();
                         },
                       ),
@@ -264,7 +268,7 @@ class CartState extends State<Cart> {
                                               ),
 
                                               ///Total Order
-                                              OrderTotal(/*totalECO: 0*/ media: media, orderState: orderState),
+                                              OrderTotal(/*totalECO: 0*/ media: media, orderState: orderState, promotion: false),
 
                                               ///Divider
                                               Container(

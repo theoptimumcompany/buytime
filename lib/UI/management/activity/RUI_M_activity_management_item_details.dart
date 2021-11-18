@@ -116,50 +116,34 @@ class _RActivityManagementItemDetailsState extends State<RActivityManagementItem
                 drawerEnableOpenDragGesture: false,
                 key: _drawerKey,
                 ///Appbar
-                appBar: BuytimeAppbar(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
-                          child: IconButton(
-                            icon: const Icon(
-                              Icons.keyboard_arrow_left,
-                              color: Colors.white,
-                              size: 25.0,
-                            ),
-                            tooltip: AppLocalizations.of(context).comeBack,
-                            onPressed: () {
-                              //widget.fromConfirm != null ? Navigator.of(context).pop() : Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Landing()),);
-                              Future.delayed(Duration.zero, () {
-                                Navigator.of(context).pop();
-                              });
-                            },
-                          ),
-                        ),
-                      ],
+                appBar: AppBar(
+                  backgroundColor: Colors.white,
+                  brightness: Brightness.dark,
+                  elevation: 0,
+                  title: Text(
+                    '...',
+                    style: TextStyle(
+                        fontFamily: BuytimeTheme.FontFamily,
+                        color: BuytimeTheme.TextBlack,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 16 ///SizeConfig.safeBlockHorizontal * 7
                     ),
-                    ///Title
-                    Container(
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 20.0),
-                        child: Text(
-                          '...',
-                          textAlign: TextAlign.start,
-                          style: TextStyle(
-                              fontFamily: BuytimeTheme.FontFamily,
-                              fontSize: 20,
-                              fontWeight: FontWeight.w500,
-                              color: BuytimeTheme.TextWhite
-                          ),
-                        ),
-                      ),
+                  ),
+                  centerTitle: true,
+                  leading: IconButton(
+                    icon: const Icon(
+                      Icons.keyboard_arrow_left,
+                      color: Colors.white,
+                      size: 25.0,
                     ),
-                    SizedBox(
-                      width: 56.0,
-                    )
-                  ],
+                    tooltip: AppLocalizations.of(context).comeBack,
+                    onPressed: () {
+                      //widget.fromConfirm != null ? Navigator.of(context).pop() : Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Landing()),);
+                      Future.delayed(Duration.zero, () {
+                        Navigator.of(context).pop();
+                      });
+                    },
+                  ),
                 ),
                 //drawer: UI_M_BusinessListDrawer(),
                 body: ConstrainedBox(
@@ -188,50 +172,34 @@ class _RActivityManagementItemDetailsState extends State<RActivityManagementItem
               drawerEnableOpenDragGesture: false,
               key: _drawerKey,
               ///Appbar
-              appBar: BuytimeAppbar(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
-                        child: IconButton(
-                          icon: const Icon(
-                            Icons.keyboard_arrow_left,
-                            color: Colors.white,
-                            size: 25.0,
-                          ),
-                          tooltip: AppLocalizations.of(context).comeBack,
-                          onPressed: () {
-                            //widget.fromConfirm != null ? Navigator.of(context).pop() : Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Landing()),);
-                            Future.delayed(Duration.zero, () {
-                              Navigator.of(context).pop();
-                            });
-                          },
-                        ),
-                      ),
-                    ],
+              appBar: AppBar(
+                backgroundColor: Colors.white,
+                brightness: Brightness.dark,
+                elevation: 0,
+                title: Text(
+                  '${orderState.user.name} ${orderState.user.surname ?? ''}',
+                  style: TextStyle(
+                      fontFamily: BuytimeTheme.FontFamily,
+                      color: BuytimeTheme.TextBlack,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 16 ///SizeConfig.safeBlockHorizontal * 7
                   ),
-                  ///Title
-                  Container(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 20.0),
-                      child: Text(
-                        '${orderState.user.name} ${orderState.user.surname ?? ''}',
-                        textAlign: TextAlign.start,
-                        style: TextStyle(
-                            fontFamily: BuytimeTheme.FontFamily,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w500,
-                            color: BuytimeTheme.TextWhite
-                        ),
-                      ),
-                    ),
+                ),
+                centerTitle: true,
+                leading: IconButton(
+                  icon: const Icon(
+                    Icons.keyboard_arrow_left,
+                    color: Colors.black,
+                    //size: 25.0,
                   ),
-                  SizedBox(
-                    width: 56.0,
-                  )
-                ],
+                  tooltip: AppLocalizations.of(context).comeBack,
+                  onPressed: () {
+                    //widget.fromConfirm != null ? Navigator.of(context).pop() : Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Landing()),);
+                    Future.delayed(Duration.zero, () {
+                      Navigator.of(context).pop();
+                    });
+                  },
+                ),
               ),
               //drawer: UI_M_BusinessListDrawer(),
               body: ConstrainedBox(
@@ -689,9 +657,9 @@ class _RActivityManagementItemDetailsState extends State<RActivityManagementItem
                               ),
                               ///Total Order
                               orderState.itemList != null && orderState.itemList.length > 1 ?
-                              OrderTotal(/*totalECO: 0*/ media: media, orderState: orderState) :
+                              OrderTotal(/*totalECO: 0*/ media: media, orderState: orderState, promotion: false,) :
                               orderState.itemList.length == 1 ?
-                              OrderTotal(/*totalECO: 0*/ media: media, orderState: orderState) :
+                              OrderTotal(/*totalECO: 0*/ media: media, orderState: orderState, promotion: false) :
                               Container(
                                 width: media.width,
                                 height: SizeConfig.safeBlockVertical * 10,

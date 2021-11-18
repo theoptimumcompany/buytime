@@ -274,14 +274,14 @@ class OrderState {
 
   addItem(ServiceState itemToAdd, String idOwner, BuildContext context) {
     bool added = false;
-    double itemDiscount = Utils.calculatePromoDiscount(itemToAdd.price, context, itemToAdd.businessId, 1, totalNumberOfItems());
+    double itemDiscount = 0.0;//Utils.calculatePromoDiscount(itemToAdd.price, context, itemToAdd.businessId, 1, totalNumberOfItems());
       itemList.forEach((element) {
         if (!added && element.id == itemToAdd.serviceId) {
           element.number++;
-          if (itemDiscount != 0.0){
-            // element.numberDiscounted++;
-            debugPrint("order_state numberDiscounted: " +  element.numberDiscounted.toString());
-          }
+          // if (itemDiscount != 0.0){
+          //   // element.numberDiscounted++;
+          //   debugPrint("order_state numberDiscounted: " +  element.numberDiscounted.toString());
+          // }
           added = true;
         }
       });
@@ -321,7 +321,7 @@ class OrderState {
     itemList.forEach((element) {
       if (!deleted && element.id == entry.id) {
         this.total -= (entry.price * element.number);
-        double itemDiscount = Utils.calculatePromoDiscount(entry.price, context, entry.id_business, 2, totalNumberOfItems());
+        double itemDiscount = 0.0;//Utils.calculatePromoDiscount(entry.price, context, entry.id_business, 2, totalNumberOfItems());
         this.totalPromoDiscount -= itemDiscount;
         this.total += itemDiscount;
         // if (itemDiscount != 0.0){
@@ -338,7 +338,7 @@ class OrderState {
 
   void removeReserveItem(OrderEntry entry, BuildContext context) {
     this.total -= (entry.price);
-    double itemDiscount = Utils.calculatePromoDiscount(entry.price, context, entry.id_business, 2, totalNumberOfItems());
+    double itemDiscount = 0.0;//Utils.calculatePromoDiscount(entry.price, context, entry.id_business, 2, totalNumberOfItems());
     this.totalPromoDiscount -= itemDiscount;
     this.total += itemDiscount;
   }

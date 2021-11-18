@@ -109,32 +109,33 @@ class RBusinessListState extends State<RBusinessList> {
       onWillPop: () async => false,
       child: Scaffold(
           key: _drawerKeyTabs,
-          appBar: BuytimeAppbar(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  ///Drawer
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
-                    child: IconButton(
-                      key: Key('business_drawer_key'),
-                      icon: const Icon(
-                        Icons.menu,
-                        color: BuytimeTheme.TextWhite,
-                        size: 30.0,
-                      ),
-                      tooltip: AppLocalizations.of(context).showMenu,
-                      onPressed: () {
-                        _drawerKeyTabs.currentState.openDrawer();
-                      },
-                    ),
-                  ),
-                ],
+          appBar: AppBar(
+            backgroundColor: Colors.white,
+            brightness: Brightness.dark,
+            elevation: 0,
+            title: Text(
+              AppLocalizations.of(context).businessManagement,
+              style: TextStyle(
+                  fontFamily: BuytimeTheme.FontFamily,
+                  color: BuytimeTheme.TextBlack,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16 ///SizeConfig.safeBlockHorizontal * 7
               ),
-              ///Title
-              Utils.barTitle(AppLocalizations.of(context).businessManagement),
-              ///Add Icon
+            ),
+            centerTitle: true,
+            leading: IconButton(
+              key: Key('business_drawer_key'),
+              icon: const Icon(
+                Icons.menu,
+                color: BuytimeTheme.TextBlack,
+                //size: 30.0,
+              ),
+              tooltip: AppLocalizations.of(context).showMenu,
+              onPressed: () {
+                _drawerKeyTabs.currentState.openDrawer();
+              },
+            ),
+            actions: [
               StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin ||
                   StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman ||
                   StoreProvider.of<AppState>(context).state.user.getRole() == Role.owner ? Padding(
@@ -142,8 +143,8 @@ class RBusinessListState extends State<RBusinessList> {
                 child: IconButton(
                   icon: const Icon(
                     Icons.add,
-                    color: BuytimeTheme.TextWhite,
-                    size: 30.0,
+                    color: BuytimeTheme.TextBlack,
+                    //size: 30.0,
                   ),
                   tooltip: AppLocalizations.of(context).createBusinessPlain,
                   onPressed: () {
@@ -151,9 +152,7 @@ class RBusinessListState extends State<RBusinessList> {
                     Navigator.push(context, EnterExitRoute(enterPage: UI_M_CreateBusiness(), exitPage: RBusinessList(), from: true));
                   },
                 ),
-              ) :  SizedBox(
-                width: 56.0,
-              ),
+              ) :  Container()
             ],
           ),
           drawer: ManagerDrawer(),
@@ -209,7 +208,7 @@ class RBusinessListState extends State<RBusinessList> {
 
                     return Expanded(
                       child: Padding(
-                          padding: const EdgeInsets.only(top: 10.0),
+                          padding: const EdgeInsets.only(top: 0.0),
                           child: ListView.builder(
                               scrollDirection: Axis.vertical,
                               shrinkWrap: true,

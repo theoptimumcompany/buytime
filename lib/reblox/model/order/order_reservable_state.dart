@@ -316,14 +316,14 @@ class OrderReservableState {
         switchAutoConfirm: itemToAdd.switchAutoConfirm,
       vat: itemToAdd.vat != null && itemToAdd.vat != 0 ? itemToAdd.vat : 22
     ));
-    double itemDiscount = Utils.calculatePromoDiscount(price, context, itemToAdd.businessId, 1, totalNumberOfItems());
+    double itemDiscount = 0.0;//Utils.calculatePromoDiscount(price, context, itemToAdd.businessId, 1, totalNumberOfItems());
     this.totalPromoDiscount += itemDiscount;
     this.total += price;
     this.total -= itemDiscount;
   }
 
   void removeReserveItem(OrderEntry entry, BuildContext context) {
-    double itemDiscount = (Utils.calculatePromoDiscount(entry.price, context, entry.id_business, 2, totalNumberOfItems()));
+    double itemDiscount = 0.0;//(Utils.calculatePromoDiscount(entry.price, context, entry.id_business, 2, totalNumberOfItems()));
     this.totalPromoDiscount -= itemDiscount;
     this.total -= entry.price;
     if(this.itemList.length!= 0)

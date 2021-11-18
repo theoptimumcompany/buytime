@@ -79,7 +79,7 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
           snapshot.itemList[index].number = itemCount;
           double serviceTotal =  snapshot.total;
           serviceTotal = serviceTotal - snapshot.itemList[index].price;
-          double itemDiscount = Utils.calculatePromoDiscount(snapshot.itemList[index].price, context, snapshot.itemList[index].id_business, 2, snapshot.totalNumberOfItems());
+          double itemDiscount = 0.0;//Utils.calculatePromoDiscount(snapshot.itemList[index].price, context, snapshot.itemList[index].id_business, 2, snapshot.totalNumberOfItems());
           if (itemDiscount > 0.0) {
             snapshot.itemList[index].numberDiscounted--;
             if (snapshot.itemList[index].numberDiscounted < 0) {
@@ -106,7 +106,7 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
           snapshot.itemList[index].number = itemCount;
           double serviceTotal =  snapshot.total;
           serviceTotal = serviceTotal - snapshot.itemList[index].price;
-          double itemDiscount = Utils.calculatePromoDiscount(snapshot.itemList[index].price, context, snapshot.itemList[index].id_business, 2, snapshot.totalNumberOfItems());
+          double itemDiscount = 0.0;//Utils.calculatePromoDiscount(snapshot.itemList[index].price, context, snapshot.itemList[index].id_business, 2, snapshot.totalNumberOfItems());
           if (itemDiscount > 0.0) {
             snapshot.itemList[index].numberDiscounted--;
             if (snapshot.itemList[index].numberDiscounted < 0) {
@@ -142,7 +142,7 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
       snapshot.itemList[index].number = itemCount;
       double serviceTotal =  snapshot.total;
       serviceTotal = serviceTotal + snapshot.itemList[index].price;
-      double itemDiscount = Utils.calculatePromoDiscount(snapshot.itemList[index].price, context, snapshot.itemList[index].id_business, 1, snapshot.totalNumberOfItems());
+      double itemDiscount = 0.0;//Utils.calculatePromoDiscount(snapshot.itemList[index].price, context, snapshot.itemList[index].id_business, 1, snapshot.totalNumberOfItems());
       if (itemDiscount > 0.0) {
         snapshot.itemList[index].numberDiscounted++;
       }

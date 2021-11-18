@@ -152,72 +152,74 @@ class _RBusinessState extends State<RBusiness> {
           drawerEnableOpenDragGesture: false,
           key: _drawerKey,
           ///Appbar
-          appBar: BuytimeAppbar(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
-                    child: IconButton(
-                      key: Key('business_drawer_key'),
-                      icon: const Icon(
-                        Icons.menu,
-                        color: Colors.white,
-                        size: 30.0,
-                      ),
-                      tooltip: AppLocalizations.of(context).openMenu,
-                      onPressed: () {
-                        _drawerKey.currentState.openDrawer();
-                      },
-                    ),
-                  ),
-                ],
+          appBar: AppBar(
+            backgroundColor: Colors.white,
+            brightness: Brightness.dark,
+            elevation: 0,
+            title: Text(
+              StoreProvider.of<AppState>(context).state.business.name,
+              style: TextStyle(
+                  fontFamily: BuytimeTheme.FontFamily,
+                  color: BuytimeTheme.TextBlack,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16 ///SizeConfig.safeBlockHorizontal * 7
               ),
-              ///Title
-              //Utils.barTitle(AppLocalizations.of(context).dashboard),
-              Utils.barTitle('${StoreProvider.of<AppState>(context).state.business.name}'),
+            ),
+            centerTitle: true,
+            leading: IconButton(
+              key: Key('business_drawer_key'),
+              icon: const Icon(
+                Icons.menu,
+                color: Colors.black,
+                //size: 30.0,
+              ),
+              tooltip: AppLocalizations.of(context).openMenu,
+              onPressed: () {
+                _drawerKey.currentState.openDrawer();
+              },
+            ),
+            actions: [
               StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin ||
                   StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman ||
-                  StoreProvider.of<AppState>(context).state.user.getRole() == Role.owner ? Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
-                  child: InkWell(
-                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                    onTap: () {
-                      //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_EditBusiness()),);
-                      Navigator.push(context, EnterExitRoute(enterPage: UI_M_EditBusiness(), exitPage: RBusiness(), from: true));
-                      Navigator.of(context).push(PageRouteBuilder(
-                          pageBuilder: (context, animation, anotherAnimation) {
-                            return UI_M_EditBusiness();
-                          },
-                          transitionDuration: Duration(milliseconds: 500),
-                          transitionsBuilder:
-                              (context, animation, anotherAnimation, child) {
-                            return  SlideTransition(
-                              position: Tween(
-                                  begin: Offset(1.0, 0.0),
-                                  end: Offset(0.0, 0.0))
-                                  .animate(animation),
-                              child: child,
-                            );
-                          }));
+                  StoreProvider.of<AppState>(context).state.user.getRole() == Role.owner ?
+                  Container(
+                    margin: EdgeInsets.only(top: 13.5),
+                    child: InkWell(
+                      borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                      onTap: () {
+                        //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_EditBusiness()),);
+                        Navigator.push(context, EnterExitRoute(enterPage: UI_M_EditBusiness(), exitPage: RBusiness(), from: true));
+                        Navigator.of(context).push(PageRouteBuilder(
+                            pageBuilder: (context, animation, anotherAnimation) {
+                              return UI_M_EditBusiness();
+                            },
+                            transitionDuration: Duration(milliseconds: 500),
+                            transitionsBuilder:
+                                (context, animation, anotherAnimation, child) {
+                              return  SlideTransition(
+                                position: Tween(
+                                    begin: Offset(1.0, 0.0),
+                                    end: Offset(0.0, 0.0))
+                                    .animate(animation),
+                                child: child,
+                              );
+                            }));
 
-                    },
-                    child: Container(
-                      padding: EdgeInsets.all(5.0),
-                      margin: EdgeInsets.only(right: SizeConfig.blockSizeHorizontal * 1),
-                      child: Text(
-                        AppLocalizations.of(context).edit,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
+                      },
+                      child: Container(
+                        padding: EdgeInsets.all(5.0),
+                        margin: EdgeInsets.only(right: SizeConfig.blockSizeHorizontal * 1),
+                        child: Text(
+                          AppLocalizations.of(context).edit,
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                          ),
                         ),
                       ),
                     ),
-                  )) :  SizedBox(
-                width: 50.0,
-              ),
+                  ):  Container()
             ],
           ),
           drawer: ManagerDrawer(),

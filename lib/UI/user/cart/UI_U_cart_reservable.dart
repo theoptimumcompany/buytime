@@ -295,7 +295,7 @@ class CartReservableState extends State<CartReservable> {
                                             ),
 
                                             ///Total Order
-                                            OrderTotal(/*totalECO: 0*/ media: media, orderState: OrderState.fromReservableState(orderReservableState)),
+                                            OrderTotal(/*totalECO: 0*/ media: media, orderState: OrderState.fromReservableState(orderReservableState), promotion: false),
 
                                             ///Divider
                                             Container(

@@ -242,7 +242,7 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
 
         StoreProvider.of<AppState>(context).dispatch(new UpdateUserToken(token));
         StoreProvider.of<AppState>(context).dispatch(StripeCardListRequest(user.uid));
-        Future.delayed(Duration(seconds: 1), (){
+        Future.delayed(Duration(milliseconds: 1500), (){
           debugPrint("splash_screen => Device ID : " + deviceId + 'USER ROLE: ${StoreProvider.of<AppState>(context).state.user.getRole()}');
           if(StoreProvider.of<AppState>(context).state.user.getRole() != Role.user)
             Navigator.push(context, MaterialPageRoute(builder: (context) => RBusinessList()));

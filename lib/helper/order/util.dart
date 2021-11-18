@@ -154,7 +154,7 @@ OrderReservableState orderReservableInitialization(dynamic event, int i) {
     position: event.orderReservableState.position,
     date: event.orderReservableState.itemList[i].date,
     itemList: [event.orderReservableState.itemList[i]],
-    total: event.orderReservableState.itemList[i].price - (event.orderReservableState.totalPromoDiscount/event.orderReservableState.itemList.length),
+    total: event.orderReservableState.itemList[i].price,
     tip: event.orderReservableState.tip,
     tax: event.orderReservableState.tax,
     taxPercent: event.orderReservableState.taxPercent,

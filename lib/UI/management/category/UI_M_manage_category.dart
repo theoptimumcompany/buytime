@@ -752,46 +752,54 @@ class ManageCategoryState extends State<ManageCategory> with SingleTickerProvide
             },
             child: Scaffold(
                 key: widget._keyScaffoldCategory,
-                appBar: BuytimeAppbar(
-                  children: [
-                    IconButton(
-                      icon: Icon(Icons.keyboard_arrow_left, color: Colors.white, size: 24),
-                      tooltip: AppLocalizations.of(context).comeBack,
-                      onPressed: () {
-                        snapshot.serviceListSnippetState = ServiceListSnippetState();
-                        StoreProvider.of<AppState>(context).dispatch(ServiceListSnippetRequest(snapshot.business.id_firestore));
-                        Navigator.pushReplacement(context, EnterExitRoute(enterPage: RServiceList(), exitPage: ManageCategory(), from: false));
-                        //Navigator.of(context).pop();
-                      },
+                appBar: AppBar(
+                  backgroundColor: Colors.white,
+                  brightness: Brightness.dark,
+                  elevation: 0,
+                  title: Text(
+                    AppLocalizations.of(context).categories,
+                    style: TextStyle(
+                        fontFamily: BuytimeTheme.FontFamily,
+                        color: BuytimeTheme.TextBlack,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 16 ///SizeConfig.safeBlockHorizontal * 7
                     ),
-
-                    ///Title
-                    Utils.barTitle(AppLocalizations.of(context).categories),
+                  ),
+                  centerTitle: true,
+                  leading: IconButton(
+                    icon: Icon(Icons.keyboard_arrow_left, color: Colors.black,),
+                    tooltip: AppLocalizations.of(context).comeBack,
+                    onPressed: () {
+                      snapshot.serviceListSnippetState = ServiceListSnippetState();
+                      StoreProvider.of<AppState>(context).dispatch(ServiceListSnippetRequest(snapshot.business.id_firestore));
+                      Navigator.pushReplacement(context, EnterExitRoute(enterPage: RServiceList(), exitPage: ManageCategory(), from: false));
+                      //Navigator.of(context).pop();
+                    },
+                  ),
+                  actions: [
                     StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin || StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman
                         ? IconButton(
-                            icon: const Icon(
-                              Icons.add,
-                              color: BuytimeTheme.SymbolWhite,
-                              size: 24.0,
-                            ),
-                            tooltip: AppLocalizations.of(context).createCategory,
-                            onPressed: () {
-                              Navigator.push(context, EnterExitRoute(enterPage: UI_M_CreateCategory(empty: true), exitPage: ManageCategory(), from: true));
-                              // : showDialog(
-                              //     context: context,
-                              //     builder: (BuildContext context) {
-                              //       // return object of type Dialog
-                              //       return AlertDialog(
-                              //         title: new Text(AppLocalizations.of(context).caution),
-                              //         content: new Text(AppLocalizations.of(context).noCategoriesForBusiness),
-                              //       );
-                              //     },
-                              //   );
-                            },
-                          )
-                        : SizedBox(
-                            width: 50.0,
-                          ),
+                      icon: const Icon(
+                        Icons.add,
+                        color: BuytimeTheme.TextBlack,
+                        size: 24.0,
+                      ),
+                      tooltip: AppLocalizations.of(context).createCategory,
+                      onPressed: () {
+                        Navigator.push(context, EnterExitRoute(enterPage: UI_M_CreateCategory(empty: true), exitPage: ManageCategory(), from: true));
+                        // : showDialog(
+                        //     context: context,
+                        //     builder: (BuildContext context) {
+                        //       // return object of type Dialog
+                        //       return AlertDialog(
+                        //         title: new Text(AppLocalizations.of(context).caution),
+                        //         content: new Text(AppLocalizations.of(context).noCategoriesForBusiness),
+                        //       );
+                        //     },
+                        //   );
+                      },
+                    )
+                        : Container()
                   ],
                 ),
                 body: SafeArea(

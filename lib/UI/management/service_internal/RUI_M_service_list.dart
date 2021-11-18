@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:core';
+import 'package:Buytime/UI/management/business/RUI_M_business.dart';
 import 'package:Buytime/UI/management/business/UI_M_business.dart';
 import 'package:Buytime/UI/management/category/UI_M_manage_category.dart';
 import 'package:Buytime/UI/management/service_internal/UI_M_create_service.dart';
@@ -221,25 +222,35 @@ class RServiceListState extends State<RServiceList> {
         },
         child: Scaffold(
           resizeToAvoidBottomInset: false,
-          appBar: BuytimeAppbar(
-            width: media.width,
-            children: [
-              ///Back Button
-              IconButton(
-                key: Key('back_from_interval_service_key'),
-                icon: Icon(Icons.keyboard_arrow_left, color: Colors.white),
-                onPressed: () {
-                  //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_Business()))
-                  Provider.of<Spinner>(context, listen: false).clear();
-                  Navigator.pushReplacement(context, EnterExitRoute(enterPage: UI_M_Business(), exitPage: RServiceList(), from: false));
-                },
+          appBar: AppBar(
+            backgroundColor: Colors.white,
+            brightness: Brightness.dark,
+            elevation: 0,
+            title: Text(
+              AppLocalizations.of(context).serviceList,
+              style: TextStyle(
+                  fontFamily: BuytimeTheme.FontFamily,
+                  color: BuytimeTheme.TextBlack,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16 ///SizeConfig.safeBlockHorizontal * 7
               ),
-              Utils.barTitle(AppLocalizations.of(context).serviceList),
+            ),
+            centerTitle: true,
+            leading: IconButton(
+              key: Key('back_from_interval_service_key'),
+              icon: Icon(Icons.keyboard_arrow_left, color: Colors.black),
+              onPressed: () {
+                //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_Business()))
+                Provider.of<Spinner>(context, listen: false).clear();
+                Navigator.pushReplacement(context, EnterExitRoute(enterPage: RBusiness(), exitPage: RServiceList(), from: false));
+              },
+            ),
+            actions: [
               /*listOfServiceEachRoot.isNotEmpty &&*/ (StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin ||
                   StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman ||
                   StoreProvider.of<AppState>(context).state.user.getRole() == Role.owner ||
                   StoreProvider.of<AppState>(context).state.user.getRole() == Role.manager) ? IconButton(
-                icon: Icon(Icons.add, color: BuytimeTheme.SymbolWhite),
+                icon: Icon(Icons.add, color: BuytimeTheme.TextBlack),
                 onPressed: () {
                   StoreProvider.of<AppState>(context).dispatch(SetService(ServiceState().toEmpty()));
                   //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_CreateService(categoryId: "",)));
@@ -252,9 +263,7 @@ class RServiceListState extends State<RServiceList> {
                           exitPage: RServiceList(),
                           from: true));
                 },
-              ) : SizedBox(
-                width: 50.0,
-              ),
+              ) : Container()
             ],
           ),
           body: Column(
