@@ -755,7 +755,7 @@ class ManageCategoryState extends State<ManageCategory> with SingleTickerProvide
                 appBar: AppBar(
                   backgroundColor: Colors.white,
                   brightness: Brightness.dark,
-                  elevation: 0,
+                  elevation: 1,
                   title: Text(
                     AppLocalizations.of(context).categories,
                     style: TextStyle(

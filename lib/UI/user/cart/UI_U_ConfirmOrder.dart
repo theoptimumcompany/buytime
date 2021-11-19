@@ -1226,7 +1226,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
     return AppBar(
       backgroundColor: Colors.white,
       brightness: Brightness.dark,
-      elevation: 0,
+      elevation: 1,
       title: Text(
         AppLocalizations.of(context).confirmOrder,
         style: TextStyle(

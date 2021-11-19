@@ -257,7 +257,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                   appBar: AppBar(
                     backgroundColor: Colors.white,
                     brightness: Brightness.dark,
-                    elevation: 0,
+                    elevation: 1,
                     title: Text(
                       AppLocalizations.of(context).businessCreation,
                       style: TextStyle(

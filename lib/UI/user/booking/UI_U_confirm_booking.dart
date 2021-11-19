@@ -50,7 +50,7 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
           appBar: AppBar(
             backgroundColor: Colors.white,
             brightness: Brightness.dark,
-            elevation: 0,
+            elevation: 1,
             actions: [
               IconButton(
                 icon: Icon(

@@ -424,7 +424,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
           appBar: AppBar(
             backgroundColor: Colors.white,
             brightness: Brightness.dark,
-            elevation: 0,
+            elevation: 1,
             title: Text(
               AppLocalizations.of(context).reserveSpace + ' ' + Utils.retriveField(Localizations.localeOf(context).languageCode, widget.serviceState.name),
               style: TextStyle(

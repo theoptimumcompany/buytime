@@ -281,7 +281,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                         appBar: AppBar(
                           backgroundColor: Colors.white,
                           brightness: Brightness.dark,
-                          elevation: 0,
+                          elevation: 1,
                           title: Text(
                             AppLocalizations.of(context).createService,
                             style: TextStyle(

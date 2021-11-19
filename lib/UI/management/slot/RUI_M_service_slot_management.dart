@@ -476,7 +476,7 @@ class _RServiceSlotManagementState extends State<RServiceSlotManagement> {
         appBar: AppBar(
           backgroundColor: Colors.white,
           brightness: Brightness.dark,
-          elevation: 0,
+          elevation: 1,
           title: Text(
             Utils.retriveField(myLocale.languageCode, widget.serviceState.name),
             style: TextStyle(

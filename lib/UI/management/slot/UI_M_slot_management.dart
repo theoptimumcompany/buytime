@@ -149,7 +149,7 @@ class _SlotManagementState extends State<SlotManagement> {
               appBar: AppBar(
                 backgroundColor: Colors.white,
                 brightness: Brightness.dark,
-                elevation: 0,
+                elevation: 1,
                 title: Text(
                   AppLocalizations.of(context).slotManagement,
                   style: TextStyle(

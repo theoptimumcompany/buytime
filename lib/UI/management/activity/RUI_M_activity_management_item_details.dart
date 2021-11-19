@@ -119,7 +119,7 @@ class _RActivityManagementItemDetailsState extends State<RActivityManagementItem
                 appBar: AppBar(
                   backgroundColor: Colors.white,
                   brightness: Brightness.dark,
-                  elevation: 0,
+                  elevation: 1,
                   title: Text(
                     '...',
                     style: TextStyle(
@@ -175,7 +175,7 @@ class _RActivityManagementItemDetailsState extends State<RActivityManagementItem
               appBar: AppBar(
                 backgroundColor: Colors.white,
                 brightness: Brightness.dark,
-                elevation: 0,
+                elevation: 1,
                 title: Text(
                   '${orderState.user.name} ${orderState.user.surname ?? ''}',
                   style: TextStyle(

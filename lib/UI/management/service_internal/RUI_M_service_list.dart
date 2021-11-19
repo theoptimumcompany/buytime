@@ -225,7 +225,7 @@ class RServiceListState extends State<RServiceList> {
           appBar: AppBar(
             backgroundColor: Colors.white,
             brightness: Brightness.dark,
-            elevation: 0,
+            elevation: 1,
             title: Text(
               AppLocalizations.of(context).serviceList,
               style: TextStyle(

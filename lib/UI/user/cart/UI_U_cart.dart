@@ -153,7 +153,7 @@ class CartState extends State<Cart> {
                     appBar: AppBar(
                       backgroundColor: Colors.white,
                       brightness: Brightness.dark,
-                      elevation: 0,
+                      elevation: 1,
                       title: Text(
                         AppLocalizations.of(context).cart,
                         style: TextStyle(

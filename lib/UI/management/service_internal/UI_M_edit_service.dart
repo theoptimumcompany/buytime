@@ -397,7 +397,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                 appBar: AppBar(
                                   backgroundColor: Colors.white,
                                   brightness: Brightness.dark,
-                                  elevation: 0,
+                                  elevation: 1,
                                   title: Text(
                                     '${AppLocalizations.of(context).editSpace} ${nameController.text}',
                                     style: TextStyle(
@@ -772,8 +772,8 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
 
                                               ///Price
                                               snapshot.serviceState.switchSlots
-                                                  ? Container()
-                                                  : Container(
+                                                  ? Container() :
+                                              Container(
                                                       margin: EdgeInsets.only(top: 10.0, bottom: 5.0, left: 32.0, right: 32.0),
                                                       child: Row(
                                                         children: [
@@ -1869,26 +1869,99 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                         child: Align(
                             alignment: Alignment.topCenter,
                             child: Scaffold(
-                                appBar: BuytimeAppbar(
-                                  width: media.width,
-                                  children: [
-                                    Container(
-                                        child: IconButton(
-                                            icon: Icon(Icons.keyboard_arrow_left, color: Colors.white, size: 24),
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-
-                                              //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_ServiceList()),);
-                                              //Navigator.pushReplacement(context, EnterExitRoute(enterPage: UI_M_ServiceList(), exitPage: UI_EditService(), from: false));
-                                            })),
-                                    Flexible(
-                                      child: Utils.barTitle('${AppLocalizations.of(context).editSpace}' + widget.serviceName),
+                                appBar: AppBar(
+                                  backgroundColor: Colors.white,
+                                  brightness: Brightness.dark,
+                                  elevation: 1,
+                                  title: Text(
+                                    '${AppLocalizations.of(context).editSpace} ${nameController.text}',
+                                    style: TextStyle(
+                                        fontFamily: BuytimeTheme.FontFamily,
+                                        color: BuytimeTheme.TextBlack,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 16 ///SizeConfig.safeBlockHorizontal * 7
                                     ),
-                                    Container(
-                                        child: IconButton(
-                                      icon: Icon(Icons.check, color: BuytimeTheme.SymbolLightGrey),
-                                      onPressed: null,
-                                    )),
+                                  ),
+                                  centerTitle: true,
+                                  leading: IconButton(
+                                      icon: Icon(Icons.keyboard_arrow_left, color: Colors.black, ),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                        //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_ServiceList()),);
+                                        //Navigator.pushReplacement(context, EnterExitRoute(enterPage: UI_M_ServiceList(), exitPage: UI_EditService(), from: false));
+                                      }),
+                                  actions: [
+                                    canEditService
+                                        ? Container(
+                                      child: IconButton(
+                                          icon: Icon(Icons.check, color: Colors.black),
+                                          onPressed: () {
+                                            setState(() {
+                                              submit = true;
+                                            });
+                                            if (nameController.text.isNotEmpty) StoreProvider.of<AppState>(context).dispatch(SetServiceName(Utils.saveField(myLocale.languageCode, nameController.text, snapshot.serviceState.name)));
+                                            if (descriptionController.text.isNotEmpty)
+                                              StoreProvider.of<AppState>(context).dispatch(SetServiceDescription(Utils.saveField(myLocale.languageCode, descriptionController.text, snapshot.serviceState.description)));
+                                            if (validateReservableService() && validateChosenCategories() && validateAndSave() && validatePrice(_servicePrice.toString())) {
+                                              setState(() {
+                                                rippleLoading = true;
+                                              });
+                                              ServiceState tmpService = ServiceState.fromState(snapshot.serviceState);
+                                              tmpService.name = Utils.saveField(myLocale.languageCode, nameController.text, snapshot.serviceState.name);
+                                              tmpService.description = Utils.saveField(myLocale.languageCode, descriptionController.text, snapshot.serviceState.description);
+                                              tmpService.serviceAddress = addressController.text;
+                                              tmpService.serviceBusinessAddress = _serviceBusinessAddress;
+                                              tmpService.serviceCoordinates = _serviceCoordinates;
+                                              tmpService.serviceBusinessCoordinates = _serviceBusinessCoordinates;
+                                              tmpService.price = _servicePrice;
+                                              if(conditionController.text.isNotEmpty)
+                                                tmpService.condition =  Utils.saveField(myLocale.languageCode, conditionController.text, snapshot.serviceState.condition);
+                                              if (_serviceVAT == 0)
+                                                tmpService.vat = 22;
+                                              else
+                                                tmpService.vat = _serviceVAT;
+                                              debugPrint('UI_M_edit_service => Service Name: ${tmpService.name}');
+                                              debugPrint('UI_M_edit_service => Service Description: ${tmpService.description}');
+                                              debugPrint('UI_M_edit_service => Service Address: ${tmpService.serviceAddress}');
+                                              debugPrint('UI_M_edit_service => Service Business Address: ${tmpService.serviceBusinessAddress}');
+                                              debugPrint('UI_M_edit_service => Service Coordinates: ${tmpService.serviceCoordinates}');
+                                              debugPrint('UI_M_edit_service => Service Business Coordinates: ${tmpService.serviceBusinessCoordinates}');
+                                              debugPrint('UI_M_edit_service => Service Conidtion: ${tmpService.condition}');
+                                              StoreProvider.of<AppState>(context).dispatch(SetServiceServiceCrossSell(snapshot.serviceState.serviceCrossSell));
+
+                                              /// set the area of the service
+                                              if (_serviceCoordinates != null && _serviceCoordinates.isNotEmpty) {
+                                                AreaListState areaListState = StoreProvider.of<AppState>(context).state.areaList;
+                                                if (areaListState != null && areaListState.areaList != null) {
+                                                  for (int ij = 0; ij < areaListState.areaList.length; ij++) {
+                                                    var distance = Utils.calculateDistanceBetweenPoints(areaListState.areaList[ij].coordinates, _serviceCoordinates);
+                                                    debugPrint('UI_M_edit_service: area distance ' + distance.toString());
+                                                    if (distance != null && distance < 100) {
+                                                      setState(() {
+                                                        if (areaListState.areaList[ij].areaId.isNotEmpty && !snapshot.serviceState.tag.contains(areaListState.areaList[ij].areaId)) {
+                                                          snapshot.serviceState.tag.add(areaListState.areaList[ij].areaId);
+                                                        }
+                                                      });
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                              tmpService.serviceSlot.forEach((element) {
+                                                debugPrint('UI_M_edit_service => MAX QUANTITY: ${element.maxQuantity}');
+                                              });
+
+                                              tmpService.serviceSlot.forEach((element) {
+                                                debugPrint('UI_M_edit_service => MAX QUANTITY: ${element.maxQuantity}');
+                                              });
+
+                                              if(tmpService.originalLanguage.isEmpty)
+                                                tmpService.originalLanguage = myLocale.languageCode;
+                                              Provider.of<Spinner>(context, listen: false).initLoad(true);
+                                              StoreProvider.of<AppState>(context).dispatch(UpdateService(tmpService));
+                                            }
+                                          }),
+                                    )
+                                        : Container()
                                   ],
                                 ),
                                 body: SafeArea(

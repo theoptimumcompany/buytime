@@ -149,7 +149,7 @@ class _BuytimeMapState extends State<BuytimeMap> with SingleTickerProviderStateM
       appBar: AppBar(
         backgroundColor: Colors.white,
         brightness: Brightness.dark,
-        elevation: 0,
+        elevation: 1,
         title: Text(
           Utils.retriveField(Localizations.localeOf(context).languageCode, widget.title),
           style: TextStyle(

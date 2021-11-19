@@ -112,7 +112,7 @@ class RBusinessListState extends State<RBusinessList> {
           appBar: AppBar(
             backgroundColor: Colors.white,
             brightness: Brightness.dark,
-            elevation: 0,
+            elevation: 1,
             title: Text(
               AppLocalizations.of(context).businessManagement,
               style: TextStyle(

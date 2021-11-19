@@ -155,7 +155,7 @@ class _RBusinessState extends State<RBusiness> {
           appBar: AppBar(
             backgroundColor: Colors.white,
             brightness: Brightness.dark,
-            elevation: 0,
+            elevation: 1,
             title: Text(
               StoreProvider.of<AppState>(context).state.business.name,
               style: TextStyle(

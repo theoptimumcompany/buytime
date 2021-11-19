@@ -128,7 +128,7 @@ class CartReservableState extends State<CartReservable> {
                   appBar: AppBar(
                     backgroundColor: Colors.white,
                     brightness: Brightness.dark,
-                    elevation: 0,
+                    elevation: 1,
                     title: Text(
                       AppLocalizations.of(context).confirmBooking,
                       style: TextStyle(

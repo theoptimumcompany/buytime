@@ -95,7 +95,7 @@ class _RNotificationCenterState extends State<RNotificationCenter> {
               appBar: AppBar(
                 backgroundColor: Colors.white,
                 brightness: Brightness.dark,
-                elevation: 0,
+                elevation: 1,
                 title: Text(
                   AppLocalizations.of(context).notificationCenter,
                   style: TextStyle(

@@ -251,7 +251,7 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
                   appBar: AppBar(
                     backgroundColor: Colors.white,
                     brightness: Brightness.dark,
-                    elevation: 0,
+                    elevation: 1,
                     title: Text(
                       AppLocalizations.of(context).businessEdit,
                       style: TextStyle(
