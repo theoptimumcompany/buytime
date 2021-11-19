@@ -26,6 +26,7 @@ import 'package:Buytime/UI/management/business/widget/w_optimum_business_card_me
 import 'package:Buytime/reusable/appbar/w_buytime_appbar.dart';
 import 'package:Buytime/reusable/menu/w_manager_drawer.dart';
 import 'package:Buytime/utils/utils.dart';
+import 'package:another_flushbar/flushbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
@@ -39,7 +40,9 @@ import 'package:intl/intl.dart';
 
 class CreateBroadcast extends StatefulWidget {
   static String route = '/createBroadcast';
-
+  bool view;
+  BroadcastState broadcastState;
+  CreateBroadcast(this.view, this.broadcastState);
   @override
   State<StatefulWidget> createState() => CreateBroadcastState();
 }
@@ -65,12 +68,14 @@ class CreateBroadcastState extends State<CreateBroadcast> {
   void initState() {
     super.initState();
     emptyCategoryInvite();
+    if(widget.broadcastState.senderId.isNotEmpty)
+      messageController.text = widget.broadcastState.body;
     //initDynamicLinks();
 
   }
 
   TextEditingController messageController = TextEditingController();
-
+  bool sending = false;
 
   @override
   Widget build(BuildContext context) {
@@ -87,15 +92,6 @@ class CreateBroadcastState extends State<CreateBroadcast> {
             backgroundColor: Colors.white,
             brightness: Brightness.dark,
             elevation: 0,
-            title: Text(
-              AppLocalizations.of(context).businessManagement,
-              style: TextStyle(
-                  fontFamily: BuytimeTheme.FontFamily,
-                  color: BuytimeTheme.TextBlack,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 16 ///SizeConfig.safeBlockHorizontal * 7
-              ),
-            ),
             centerTitle: true,
             leading: IconButton(
               //key: Key('business_drawer_key'),
@@ -112,12 +108,14 @@ class CreateBroadcastState extends State<CreateBroadcast> {
           ),
           drawer: ManagerDrawer(),
           body: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              ///TextFiled
               Container(
                 margin: EdgeInsets.only(left: 16, right: 16),
                 child: TextFormField(
+                  readOnly: widget.view,
                   controller: messageController,
                   textAlign: TextAlign.start,
                   textInputAction: TextInputAction.search,
@@ -153,7 +151,101 @@ class CreateBroadcastState extends State<CreateBroadcast> {
 
                   },
                 ),
-              )
+              ),
+              ///Button
+              !widget.view ?
+              Container(
+                //height: double.infinity,
+                //color: Colors.black87,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ///Confirm button
+                    Container(
+                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5, bottom: SizeConfig.safeBlockVertical * 2),
+                        width: 198,
+                        ///media.width * .4
+                        height: 44,
+                        child: MaterialButton(
+                          key: Key('service_reserve_key'),
+                          elevation: 0,
+                          hoverElevation: 0,
+                          focusElevation: 0,
+                          highlightElevation: 0,
+                          onPressed: () async{
+                            FocusScope.of(context).unfocus();
+                            setState(() {
+                              sending = true;
+                            });
+                            BroadcastState broadcastState = BroadcastState().toEmpty();
+                            broadcastState.body = messageController.text;
+                            broadcastState.timestamp = DateTime.now();
+                            broadcastState.sendTime = DateTime.now();
+                            broadcastState.sendNow = true;
+                            broadcastState.topic = 'broadcast_user';
+                            broadcastState.title = 'Broadcast Message';
+                            broadcastState.senderId = StoreProvider.of<AppState>(context).state.user.uid;
+                            await FirebaseFirestore.instance.collection("broadcast").doc().set(broadcastState.toJson()).then((value) => setState(() {
+                              //debugPrint('SEND VALUE: $value');
+                              sending = false;
+                            }));
+                            Flushbar(
+                              padding: EdgeInsets.all(SizeConfig.safeBlockVertical * 2),
+                              margin: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 2, left: SizeConfig.blockSizeHorizontal * 20, right: SizeConfig.blockSizeHorizontal * 20),
+
+                              ///2% - 20% - 20%
+                              borderRadius: BorderRadius.all(Radius.circular(8)),
+                              backgroundColor: BuytimeTheme.SymbolGrey,
+                              boxShadows: [
+                                BoxShadow(
+                                  color: Colors.black45,
+                                  offset: Offset(3, 3),
+                                  blurRadius: 3,
+                                ),
+                              ],
+                              // All of the previous Flushbars could be dismissed by swiping down
+                              // now we want to swipe to the sides
+                              //dismissDirection: FlushbarDismissDirection.HORIZONTAL,
+                              // The default curve is Curves.easeOut
+                              duration: Duration(seconds: 2),
+                              forwardAnimationCurve: Curves.fastLinearToSlowEaseIn,
+                              messageText: Text(
+                                AppLocalizations.of(context).messageSent,
+                                style: TextStyle(color: BuytimeTheme.TextWhite, fontWeight: FontWeight.bold),
+                                textAlign: TextAlign.center,
+                              ),
+                            )..show(context);
+                          },
+                          textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
+                          color: BuytimeTheme.ActionBlackPurple,
+                          disabledColor: BuytimeTheme.SymbolLightGrey,
+                          padding: EdgeInsets.all(media.width * 0.03),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: new BorderRadius.circular(20),
+                          ),
+                          child: sending ? Container(
+                            width: 25,
+                            height: 25,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              valueColor: new AlwaysStoppedAnimation<Color>(Colors.white),
+                            ),
+                          ) : Text(
+                            AppLocalizations.of(context).send,
+                            style: TextStyle(
+                              letterSpacing: 1.25,
+                              fontSize: 14,
+                              fontFamily: BuytimeTheme.FontFamily,
+                              fontWeight: FontWeight.w500,
+                              color: BuytimeTheme.TextWhite,
+                            ),
+                          ),
+                        )),
+                  ],
+                ),
+              ) : Container()
             ],
           )
       ),

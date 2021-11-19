@@ -96,7 +96,7 @@ class RBroadcastListState extends State<RBroadcastList> {
           appBar: AppBar(
             backgroundColor: Colors.white,
             brightness: Brightness.dark,
-            elevation: 0,
+            elevation: 1,
             title: Text(
               AppLocalizations.of(context).businessManagement,
               style: TextStyle(
@@ -133,7 +133,7 @@ class RBroadcastListState extends State<RBroadcastList> {
                   tooltip: AppLocalizations.of(context).createBusinessPlain,
                   onPressed: () {
                     //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_CreateBusiness()));
-                    Navigator.push(context, EnterExitRoute(enterPage: CreateBroadcast(), exitPage: RBroadcastList(), from: true));
+                    Navigator.push(context, EnterExitRoute(enterPage: CreateBroadcast(false, BroadcastState().toEmpty()), exitPage: RBroadcastList(), from: true));
                   },
                 ),
               ) :  Container()
@@ -192,33 +192,63 @@ class RBroadcastListState extends State<RBroadcastList> {
                               itemCount: broadcastListState.length,
                               itemBuilder: (BuildContext ctxt, int index) {
                                 BroadcastState broadcast = broadcastListState.elementAt(index);
+
                                 return Container(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Container(
-                                        child: Text(
-                                            broadcast.body,
-                                          style: TextStyle(
-                                            fontFamily: BuytimeTheme.FontFamily,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w400
-                                          ),
-                                        ),
-                                      ),
-                                      Container(
-                                        child: Text(
-                                            DateFormat('dd/MM/yyyy').format(broadcast.timestamp),
-                                          style: TextStyle(
-                                            fontFamily: BuytimeTheme.FontFamily,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w400
-                                          ),
+                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, left: 8, right: 8),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.all(Radius.circular(5))
+                                  ),
+                                  child: Material(
+                                      color: Colors.transparent,
+                                      child: InkWell(
+                                          borderRadius: BorderRadius.all(Radius.circular(5)),
+                                        onTap: () async {
+                                          Navigator.push(context, EnterExitRoute(enterPage: CreateBroadcast(true, broadcast), exitPage: RBroadcastList(), from: true));
+                                        },
+                                        child: Container(
+                                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1),
+                                            decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.all(Radius.circular(5))
+                                            ),
+                                            child: Column(
+                                              mainAxisAlignment: MainAxisAlignment.start,
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Container(
+                                                  margin: EdgeInsets.only(left: 8),
+                                                  child: Column(
+                                                    mainAxisAlignment: MainAxisAlignment.start,
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: [
+                                                      Container(
+                                                        child: Text(
+                                                          broadcast.body,
+                                                          style: TextStyle(
+                                                              fontFamily: BuytimeTheme.FontFamily,
+                                                              fontSize: 16,
+                                                              fontWeight: FontWeight.w400
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Container(
+                                                        margin: EdgeInsets.only(top: 6),
+                                                        child: Text(
+                                                          DateFormat('dd/MM/yyyy').format(broadcast.timestamp),
+                                                          style: TextStyle(
+                                                              fontFamily: BuytimeTheme.FontFamily,
+                                                              fontSize: 14,
+                                                              fontWeight: FontWeight.w400
+                                                          ),
+                                                        ),
+                                                      )
+                                                    ],
+                                                  ),
+                                                )
+                                              ],
+                                            )
                                         ),
                                       )
-                                    ],
-                                  )
+                                  ),
                                 );
                               }
                           )

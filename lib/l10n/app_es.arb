@@ -660,5 +660,6 @@
   "remove": "Remove",
   "broadcastMessages": "Broadcast Messages",
   "noBroadcastMessages": "You haven't written any broadcast messages yet",
-  "writeSomething": "Write Something"
+  "writeSomething": "Write Something",
+  "messageSent": "Message Sent"
 }

@@ -3911,7 +3911,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                             key: Key('log_out_key'),
                                                             onTap: () async {
                                                               SharedPreferences prefs = await SharedPreferences.getInstance();
-                                                              await FirebaseMessaging.instance.unsubscribeFromTopic('broadcastUser');
+                                                              await FirebaseMessaging.instance.unsubscribeFromTopic('broadcast_user');
                                                               dynamicLinkHelper.clearBooking();
                                                               FirebaseAuth.instance.signOut().then((_) {
                                                                 googleSignIn.signOut();
