@@ -21,10 +21,6 @@ class PromotionListRequestService implements EpicClass<AppState> {
 
         var promotionListQuery = await FirebaseFirestore.instance.collection('promotion').get();
 
-        /*promotionListQuery.docs.forEach((element) async {
-
-      });*/
-
         for(int i = 0; i <  promotionListQuery.docs.length; i++){
           promotionState = PromotionState.fromJson(promotionListQuery.docs[i].data());
           debugPrint('promotion_service_epic => PROMOTION STATE TIMESUSED BEFORE: ${promotionState.timesUsed}');
@@ -50,7 +46,6 @@ class PromotionListRequestService implements EpicClass<AppState> {
         }
         if (promotionStateList.isEmpty) promotionStateList.add(PromotionState());
       }
-      //if (promotionStateList.isEmpty) promotionStateList.add(PromotionState());
 
     }).expand((element) => [
           SetPromotion(promotionStateList.isNotEmpty ? promotionStateList.first : []),

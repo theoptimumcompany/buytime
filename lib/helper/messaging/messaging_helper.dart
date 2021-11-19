@@ -16,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:intl/intl.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../main.dart';
 import '../../splash_screen.dart';
@@ -165,9 +166,7 @@ class MessagingHelper {
           flutterLocalNotificationsPlugin.show(
               notification.hashCode,
               notification.title,
-              can && notificationBodyList[3] == 'orderPaid' ?
-                  'Order for ${notificationBodyList[0]} on $customNotificationTime has been paid, € ${notificationBodyList[2]}'
-                  : notification.body,
+              notificationBodyBuilder(can, notificationBodyList, customNotificationTime, notification, context),
               NotificationDetails(
                 android: AndroidNotificationDetails(
                   channel.id,
@@ -198,6 +197,30 @@ class MessagingHelper {
       }
     });
   }
+
+  String notificationBodyBuilder(bool can, List<String> notificationBodyList, String customNotificationTime, RemoteNotification notification, BuildContext context) {
+    if (can) {
+      if (notificationBodyList[3] == 'orderPaid') {
+        return '${AppLocalizations.of(context).orderFor} ${notificationBodyList[0]} ${AppLocalizations.of(context).on} $customNotificationTime ${AppLocalizations.of(context).hasBeenPaid}, € ${notificationBodyList[2]}';
+      } else if (notificationBodyList[3] == 'paymentError') {
+          return '${AppLocalizations.of(context).thePaymentFor} ${notificationBodyList[0]} ${AppLocalizations.of(context).on} $customNotificationTime ${AppLocalizations.of(context).hasBeenRefusedMethod}';
+      } else if (notificationBodyList[3] == 'acceptedBuyer') {
+          return '${notificationBodyList[0]}  ${AppLocalizations.of(context).on} $customNotificationTime';
+      } else if (notificationBodyList[3] == 'declinedBuyer') {
+          return '${AppLocalizations.of(context).unfortunatelyYourBooking} ${notificationBodyList[0]} ${AppLocalizations.of(context).on} $customNotificationTime ${AppLocalizations.of(context).hasNotBeenAccepted}';
+      } else if (notificationBodyList[3] == 'canceledBuyer') {
+          return '${AppLocalizations.of(context).orderFor} ${notificationBodyList[0]} ${AppLocalizations.of(context).on} $customNotificationTime ${AppLocalizations.of(context).hasBeenCanceledFor} ${notificationBodyList[4]} ${AppLocalizations.of(context).aRefundFor} €${notificationBodyList[2]} ${AppLocalizations.of(context).hasBeenInitiated}';
+      } else if (notificationBodyList[3] == 'canceledBusiness') {
+          return '${AppLocalizations.of(context).orderFor} ${notificationBodyList[0]} ${AppLocalizations.of(context).on} $customNotificationTime ${AppLocalizations.of(context).hasBeenCanceledRefundFor} €${notificationBodyList[2]} ${AppLocalizations.of(context).hasBeenPaid}';
+      } else if (notificationBodyList[3] == 'createdAutoAcceptedBusiness') {
+          return '${AppLocalizations.of(context).aNewOrder} ${notificationBodyList[0]} ${AppLocalizations.of(context).on} $customNotificationTime ${AppLocalizations.of(context).hasBeenCreated}';
+      } else if (notificationBodyList[3] == 'actionRequiredBusiness') {
+          return '${AppLocalizations.of(context).aNewRequestFor} ${notificationBodyList[0]} ${AppLocalizations.of(context).on} $customNotificationTime ${AppLocalizations.of(context).needsConfirmation} ';
+      }
+    }
+    return notification.body;
+  }
+
   void onMessageFirst(BuildContext context) {
     FirebaseMessaging.onMessage.first.then((message) => () {
       debugPrint('messaging_helper => ON MESSAGE FIRST');

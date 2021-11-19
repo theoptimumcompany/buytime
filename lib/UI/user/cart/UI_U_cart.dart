@@ -13,7 +13,6 @@ import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/utils/utils.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
-import 'package:Buytime/reusable/appbar/w_buytime_appbar.dart';
 import 'package:Buytime/reusable/order/w_optimum_order_item_card_medium.dart';
 import 'package:Buytime/reusable/order/w_order_total.dart';
 import 'package:flutter/cupertino.dart';
