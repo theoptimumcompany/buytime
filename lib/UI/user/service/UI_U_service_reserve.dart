@@ -4,6 +4,8 @@ import 'package:Buytime/UI/management/service_internal/class/service_slot_classe
 import 'package:Buytime/UI/user/cart/UI_U_cart.dart';
 import 'package:Buytime/UI/user/cart/UI_U_cart_reservable.dart';
 import 'package:Buytime/UI/user/cart/infopark/UI_U_personal_info_park.dart';
+import 'package:Buytime/UI/user/turist/RUI_U_service_explorer.dart';
+import 'package:Buytime/helper/convention/convention_helper.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
@@ -1295,6 +1297,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                                         selectQuantity[index] = select[i];
                                                                         scrollPositionList[index][i] = select[i];
                                                                         if (select[i]) {
+
                                                                           FirebaseAnalytics().logEvent(
                                                                               name: 'slot_choice_time_slots',
                                                                               parameters: {
@@ -1399,11 +1402,14 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                                         //order.selected.add(selected);
                                                                         reserveState.order.cartCounter++;
                                                                         //StoreProvider.of<AppState>(context).dispatch(SetOrderCartCounter(order.cartCounter));
+                                                                        if(Provider.of<Explorer>(context, listen: false).businessState.id_firestore.isNotEmpty){
+                                                                          ConventionHelper conventionHelper = ConventionHelper();
+                                                                          reserveState.order.totalPromoDiscount += (serviceSlot[1].price * conventionHelper.getConventionDiscount(widget.serviceState, Provider.of<Explorer>(context, listen: false).businessState.id_firestore))/100;
+                                                                        }
                                                                         Provider.of<ReserveList>(context, listen: false).updateOrder(reserveState.order);
                                                                         StoreProvider.of<AppState>(context).dispatch(SetOrderReservable(reserveState.order));
                                                                       } else {
                                                                         OrderEntry tmp;
-
                                                                         reserveState.order.itemList.forEach((element) {
                                                                           DateTime tmpDate = dates[index];
                                                                           tmpDate = DateTime(dates[index].year, dates[index].month, dates[index].day, int.parse(element.time.split(':').first), int.parse(element.time.split(':').last));
@@ -1412,6 +1418,10 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                                             debugPrint('UI_U_service_reserve => ENTRY: ${element.id_business}');
                                                                           }
                                                                         });
+                                                                        if(Provider.of<Explorer>(context, listen: false).businessState.id_firestore.isNotEmpty){
+                                                                          ConventionHelper conventionHelper = ConventionHelper();
+                                                                          reserveState.order.totalPromoDiscount -= ((serviceSlot[1].price * conventionHelper.getConventionDiscount(widget.serviceState, Provider.of<Explorer>(context, listen: false).businessState.id_firestore))/100) * tmp.number;
+                                                                        }
                                                                         //debugPrint('UI_U_service_reserve => ENTRY: ${tmp.id_business}');
                                                                         reserveState.order.selected.remove(indexes[index][i]);
                                                                         //order.selected.remove(selected);
@@ -1566,9 +1576,13 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                                                       element.number -= 1;
                                                                                     }
                                                                                     reserveState.order.total += element.price;
-                                                                                    reserveState.order.total -= (reserveState.order.totalPromoDiscount / reserveState.order.itemList.length);
+                                                                                    //reserveState.order.total -= (reserveState.order.totalPromoDiscount / reserveState.order.itemList.length);
 
                                                                                   });
+                                                                                  if(Provider.of<Explorer>(context, listen: false).businessState.id_firestore.isNotEmpty){
+                                                                                    ConventionHelper conventionHelper = ConventionHelper();
+                                                                                    reserveState.order.totalPromoDiscount -= (tmpService.price * conventionHelper.getConventionDiscount(widget.serviceState, Provider.of<Explorer>(context, listen: false).businessState.id_firestore))/100;
+                                                                                  }
                                                                                   Provider.of<ReserveList>(context, listen: false).updateOrder(reserveState.order);
                                                                                   //});
                                                                                 }
@@ -1624,8 +1638,12 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                                                       element.number += 1;
                                                                                     }
                                                                                     reserveState.order.total += element.price;
-                                                                                    reserveState.order.total -= (reserveState.order.totalPromoDiscount / reserveState.order.itemList.length);
+                                                                                    //reserveState.order.total -= (reserveState.order.totalPromoDiscount / reserveState.order.itemList.length);
                                                                                   });
+                                                                                  if(Provider.of<Explorer>(context, listen: false).businessState.id_firestore.isNotEmpty){
+                                                                                    ConventionHelper conventionHelper = ConventionHelper();
+                                                                                    reserveState.order.totalPromoDiscount += (tmpService.price * conventionHelper.getConventionDiscount(widget.serviceState, Provider.of<Explorer>(context, listen: false).businessState.id_firestore))/100;
+                                                                                  }
                                                                                   Provider.of<ReserveList>(context, listen: false).updateOrder(reserveState.order);
                                                                                   //});
                                                                                 }
@@ -1760,7 +1778,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                         hoverElevation: 0,
                                         focusElevation: 0,
                                         highlightElevation: 0,
-                                        onPressed: () async{
+                                        onPressed: reserveState.order.cartCounter > 0 ? () async{
                                           FirebaseAnalytics().logEvent(
                                               name: 'reserve_time_slots',
                                               parameters: {
@@ -1768,8 +1786,17 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                 'date': DateTime.now().toString(),
                                                 'service_name': widget.serviceState.name
                                               });
+
                                           if (reserveState.order.cartCounter > 0) {
                                             // dispatch the order
+                                            bool found = false;
+                                            Provider.of<Explorer>(context, listen: false).cartReservableServiceList.forEach((s) {
+                                              if(s.serviceId == widget.serviceState.serviceId)
+                                                found = true;
+                                            });
+                                            if(!found)
+                                              Provider.of<Explorer>(context, listen: false).cartReservableServiceList.add(widget.serviceState);
+
                                             StoreProvider.of<AppState>(context).dispatch(SetOrderReservable(reserveState.order));
                                             // go to the cart page
                                             bool refresh = await Navigator.push(
@@ -1800,9 +1827,10 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                   ],
                                                 ));
                                           }
-                                        },
+                                        } : null,
                                         textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
                                         color: BuytimeTheme.ActionBlackPurple,
+                                        disabledColor: BuytimeTheme.SymbolLightGrey,
                                         padding: EdgeInsets.all(media.width * 0.03),
                                         shape: RoundedRectangleBorder(
                                           borderRadius: new BorderRadius.circular(20),

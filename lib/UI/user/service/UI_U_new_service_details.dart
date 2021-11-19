@@ -3,6 +3,8 @@ import 'dart:io';
 import 'dart:math';
 import 'package:Buytime/UI/user/cart/UI_U_cart.dart';
 import 'package:Buytime/UI/user/login/tourist_session/UI_U_tourist_session.dart';
+import 'package:Buytime/UI/user/turist/RUI_U_service_explorer.dart';
+import 'package:Buytime/helper/convention/convention_helper.dart';
 import 'package:Buytime/reblox/model/promotion/promotion_state.dart';
 import 'package:Buytime/reblox/reducer/order_reservable_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/service_reducer.dart';
@@ -34,6 +36,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class NewServiceDetails extends StatefulWidget {
   final ServiceState serviceState;
@@ -210,6 +213,8 @@ class _NewServiceDetailsState extends State<NewServiceDetails> with SingleTicker
         debugPrint('UI_U_service_details => CART COUNT: ${order.cartCounter}');
 
         debugPrint('UI_U_new_service_details builder | ORDER TOTAL: ${snapshot.order.total}');
+
+
         return WillPopScope(
           onWillPop: () async => false,
           child: Scaffold(
@@ -238,8 +243,15 @@ class _NewServiceDetailsState extends State<NewServiceDetails> with SingleTicker
                           highlightElevation: 0,
                           onPressed: StoreProvider.of<AppState>(context).state.user.getRole() == Role.user
                               ? () {
-                            StoreProvider.of<AppState>(context).dispatch(SetOrderTotalPromotionDiscount(0.0));
-                            StoreProvider.of<AppState>(context).dispatch(SetOrderReservableTotalPromotionDiscount(0.0));
+                            //StoreProvider.of<AppState>(context).dispatch(SetOrderTotalPromotionDiscount(0.0));
+                            //StoreProvider.of<AppState>(context).dispatch(SetOrderReservableTotalPromotionDiscount(0.0));
+                            bool found = false;
+                            Provider.of<Explorer>(context, listen: false).cartServiceList.forEach((s) {
+                              if(s.serviceId == widget.serviceState.serviceId)
+                                found = true;
+                            });
+                            if(!found)
+                              Provider.of<Explorer>(context, listen: false).cartServiceList.add(widget.serviceState);
                             if (isExternal) {
                               order.business.name = externalBusinessState.name;
                               order.business.id = externalBusinessState.id_firestore;
@@ -254,6 +266,10 @@ class _NewServiceDetailsState extends State<NewServiceDetails> with SingleTicker
                             if (!order.addingFromAnotherBusiness(widget.serviceState.businessId)) {
                               order.addItem(widget.serviceState, snapshot.business.ownerId, context);
                               order.cartCounter++;
+                              if(Provider.of<Explorer>(context, listen: false).businessState.id_firestore.isNotEmpty){
+                                ConventionHelper conventionHelper = ConventionHelper();
+                                order.totalPromoDiscount += (serviceState.price * conventionHelper.getConventionDiscount(widget.serviceState, Provider.of<Explorer>(context, listen: false).businessState.id_firestore))/100;
+                              }
                               StoreProvider.of<AppState>(context).dispatch(SetOrder(order));
                               Navigator.push(context, MaterialPageRoute(builder: (context) => Cart(tourist: widget.tourist,)),);
                             } else {
@@ -328,6 +344,8 @@ class _NewServiceDetailsState extends State<NewServiceDetails> with SingleTicker
                                               onPressed: () {
                                                 setState(() {
                                                   /// svuotare il carrello
+                                                  StoreProvider.of<AppState>(context).dispatch(SetOrderTotalPromotionDiscount(0.0));
+                                                  StoreProvider.of<AppState>(context).dispatch(SetOrderReservableTotalPromotionDiscount(0.0));
                                                   // StoreProvider.of<AppState>(context).dispatch(());
                                                   /// fare la nuova add
                                                   for (int i = 0; i < order.itemList.length; i++) {
@@ -337,6 +355,14 @@ class _NewServiceDetailsState extends State<NewServiceDetails> with SingleTicker
                                                   order.cartCounter = 0;
                                                   order.addItem(widget.serviceState, snapshot.business.ownerId, context);
                                                   order.cartCounter = 1;
+                                                  order.totalPromoDiscount = 0.0;
+                                                  Provider.of<Explorer>(context, listen: false).cartServiceList.clear();
+                                                  Provider.of<Explorer>(context, listen: false).cartServiceList.add(widget.serviceState);
+                                                  if(Provider.of<Explorer>(context, listen: false).businessState.id_firestore.isNotEmpty){
+                                                    ConventionHelper conventionHelper = ConventionHelper();
+                                                    order.totalPromoDiscount += (serviceState.price * conventionHelper.getConventionDiscount(widget.serviceState, Provider.of<Explorer>(context, listen: false).businessState.id_firestore))/100;
+                                                  }
+                                                  StoreProvider.of<AppState>(context).dispatch(SetOrder(order));
                                                   Navigator.of(context).pop();
                                                   Navigator.push(
                                                     context,
@@ -417,8 +443,18 @@ class _NewServiceDetailsState extends State<NewServiceDetails> with SingleTicker
                           highlightElevation: 0,
                           onPressed: StoreProvider.of<AppState>(context).state.user.getRole() == Role.user
                               ? () {
-                            StoreProvider.of<AppState>(context).dispatch(SetOrderTotalPromotionDiscount(0.0));
-                            StoreProvider.of<AppState>(context).dispatch(SetOrderReservableTotalPromotionDiscount(0.0));
+                            //StoreProvider.of<AppState>(context).dispatch(SetOrderTotalPromotionDiscount(0.0));
+                            //StoreProvider.of<AppState>(context).dispatch(SetOrderReservableTotalPromotionDiscount(0.0));
+                            bool found = false;
+                            Provider.of<Explorer>(context, listen: false).cartServiceList.forEach((s) {
+                              if(s.serviceId == widget.serviceState.serviceId)
+                                found = true;
+                            });
+                            if(!found)
+                              Provider.of<Explorer>(context, listen: false).cartServiceList.add(widget.serviceState);
+
+                            debugPrint('UI_U_new_service_details builder => CART LIST LENGTH: ${Provider.of<Explorer>(context, listen: false).cartServiceList.length}');
+
                             if (isExternal) {
                               order.business.name = externalBusinessState.name;
                               order.business.id = externalBusinessState.id_firestore;
@@ -432,6 +468,10 @@ class _NewServiceDetailsState extends State<NewServiceDetails> with SingleTicker
                             if (!order.addingFromAnotherBusiness(widget.serviceState.businessId)) {
                               order.addItem(widget.serviceState, snapshot.business.ownerId, context);
                               order.cartCounter++;
+                              if(Provider.of<Explorer>(context, listen: false).businessState.id_firestore.isNotEmpty){
+                                ConventionHelper conventionHelper = ConventionHelper();
+                                order.totalPromoDiscount += (serviceState.price * conventionHelper.getConventionDiscount(widget.serviceState, Provider.of<Explorer>(context, listen: false).businessState.id_firestore))/100;
+                              }
                               StoreProvider.of<AppState>(context).dispatch(SetOrder(order));
                             } else {
                               /// TODO ask if they want the cart to be flushed empty
@@ -506,6 +546,8 @@ class _NewServiceDetailsState extends State<NewServiceDetails> with SingleTicker
                                                 setState(() {
                                                   /// svuotare il carrello
                                                   // StoreProvider.of<AppState>(context).dispatch(());
+                                                  StoreProvider.of<AppState>(context).dispatch(SetOrderTotalPromotionDiscount(0.0));
+                                                  StoreProvider.of<AppState>(context).dispatch(SetOrderReservableTotalPromotionDiscount(0.0));
                                                   /// fare la nuova add
                                                   for (int i = 0; i < order.itemList.length; i++) {
                                                     order.removeItem(order.itemList[i],context);
@@ -514,6 +556,14 @@ class _NewServiceDetailsState extends State<NewServiceDetails> with SingleTicker
                                                   order.cartCounter = 0;
                                                   order.addItem(widget.serviceState, snapshot.business.ownerId, context);
                                                   order.cartCounter = 1;
+                                                  order.totalPromoDiscount = 0.0;
+                                                  Provider.of<Explorer>(context, listen: false).cartServiceList.clear();
+                                                  Provider.of<Explorer>(context, listen: false).cartServiceList.add(widget.serviceState);
+                                                  if(Provider.of<Explorer>(context, listen: false).businessState.id_firestore.isNotEmpty){
+                                                    ConventionHelper conventionHelper = ConventionHelper();
+                                                    order.totalPromoDiscount += (serviceState.price * conventionHelper.getConventionDiscount(widget.serviceState, Provider.of<Explorer>(context, listen: false).businessState.id_firestore))/100;
+                                                  }
+                                                  StoreProvider.of<AppState>(context).dispatch(SetOrder(order));
                                                   Navigator.of(context).pop();
                                                 });
                                               },
@@ -594,8 +644,8 @@ class _NewServiceDetailsState extends State<NewServiceDetails> with SingleTicker
                         onPressed: StoreProvider.of<AppState>(context).state.user.getRole() == Role.user
                             ? () {
                           StoreProvider.of<AppState>(context).dispatch(SetOrderReservableToEmpty('ok'));
-                          StoreProvider.of<AppState>(context).dispatch(SetOrderTotalPromotionDiscount(0.0));
-                          StoreProvider.of<AppState>(context).dispatch(SetOrderReservableTotalPromotionDiscount(0.0));
+                          //StoreProvider.of<AppState>(context).dispatch(SetOrderTotalPromotionDiscount(0.0));
+                          //StoreProvider.of<AppState>(context).dispatch(SetOrderReservableTotalPromotionDiscount(0.0));
                           Navigator.push(
                             context,
                             MaterialPageRoute(builder: (context) => ServiceReserve(serviceState: widget.serviceState, tourist: widget.tourist)),
@@ -851,6 +901,12 @@ class _NewServiceDetailsState extends State<NewServiceDetails> with SingleTicker
                                               child: NewDiscount(widget.serviceState, StoreProvider.of<AppState>(context).state.bookingList.bookingListState.isNotEmpty ?
                                               StoreProvider.of<AppState>(context).state.bookingList.bookingListState.first.business_id : '', true, true),
                                             ) : Container(),
+                                            ConventionHelper().getConvention(widget.serviceState, StoreProvider.of<AppState>(context).state.bookingList.bookingListState ?? [], context) ?
+                                            Container(
+                                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * 3.5),
+                                              child: NewDiscount(widget.serviceState, Provider.of<Explorer>(context, listen: false).businessState.id_firestore, false, false)
+                                            )
+                                             : Container(),
                                             ///Service Name Text
                                             Container(
                                               margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * 0.5),
@@ -938,7 +994,7 @@ class _NewServiceDetailsState extends State<NewServiceDetails> with SingleTicker
                           ///Service Name & The rest
                           SliverToBoxAdapter(
                             child: Container(
-                              margin: EdgeInsets.only(bottom: !widget.serviceState.switchSlots ? 100 : 59),
+                              margin: EdgeInsets.only(bottom: !widget.serviceState.switchSlots ? 120 : 60),
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 mainAxisSize: MainAxisSize.min,

@@ -1,5 +1,6 @@
 import 'package:Buytime/UI/user/service/UI_U_new_service_details.dart';
 import 'package:Buytime/UI/user/service/UI_U_service_details.dart';
+import 'package:Buytime/UI/user/turist/RUI_U_service_explorer.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reusable/w_convention_discount.dart';
@@ -13,6 +14,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 import 'w_promo_discount.dart';
 
 class ServiceListItem extends StatefulWidget {
@@ -133,13 +135,13 @@ class _ServiceListItemState extends State<ServiceListItem> {
                                 StoreProvider.of<AppState>(context).state.bookingList.bookingListState.first.business_id : '', true, true)
                             ),
                           ) : Container(),
-                          ConventionHelper().getConvention(widget.serviceState, StoreProvider.of<AppState>(context).state.bookingList.bookingListState ?? []) ?
+                          ConventionHelper().getConvention(widget.serviceState, StoreProvider.of<AppState>(context).state.bookingList.bookingListState ?? [], context) ?
                           Positioned.fill(
                             right: 0,
                             top: Utils.checkPromoDiscount('general_1', context, widget.serviceState.businessId).promotionId != 'empty' ? 35 : 0,
                             child: Align(
                                 alignment: Alignment.topRight,
-                                child: NewDiscount(widget.serviceState,StoreProvider.of<AppState>(context).state.bookingList.bookingListState.first.business_id, false, false)
+                                child: NewDiscount(widget.serviceState,Provider.of<Explorer>(context, listen: false).businessState.id_firestore, false, false)
                             ),
                           ) : Container()
                         ],

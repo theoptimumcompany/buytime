@@ -1,3 +1,5 @@
+import 'package:Buytime/UI/user/turist/RUI_U_service_explorer.dart';
+import 'package:Buytime/helper/convention/convention_helper.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/model/order/order_entry.dart';
@@ -9,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 
 typedef OptimumOrderItemCardMediumCallback = void Function(OrderEntry);
 
@@ -50,13 +53,26 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
 
   _OptimumOrderItemCardMediumState({this.orderEntry, this.onOrderItemCardTap, this.rightWidget1, this.mediaSize, this.key, this.orderState, this.index, this.show});
 
-  void deleteItem(OrderState snapshot, int index) {
+  /*void deleteItem(OrderState snapshot, int index) {
     setState(() {
       if (snapshot.itemList.length > 1) {
+        debugPrint('WOPICM => DELETE TILE');
+        if(Provider.of<Explorer>(context, listen: false).businessState.id_firestore.isNotEmpty){
+          ConventionHelper conventionHelper = ConventionHelper();
+          Provider.of<Explorer>(context, listen: false).cartServiceList.forEach((s) {
+            debugPrint('WOPICM => ${s.serviceId} - ${snapshot.itemList[index].id}');
+            if(s.serviceId == snapshot.itemList[index].id)
+              snapshot.totalPromoDiscount -= ((s.price * conventionHelper.getConventionDiscount(s, Provider.of<Explorer>(context, listen: false).businessState.id_firestore))/100) * snapshot.itemList[index].number;
+          });
+        }else{
+          debugPrint('WOPICM => NO BUSINESS');
+        }
+        Provider.of<Explorer>(context, listen: false).cartServiceList.removeWhere((s) => s.serviceId == snapshot.itemList[index].id);
         snapshot.cartCounter = snapshot.cartCounter - snapshot.itemList[index].number;
         snapshot.removeItem(snapshot.itemList[index],context);
         snapshot.itemList.removeAt(index);
       } else {
+
         snapshot.cartCounter = snapshot.cartCounter - snapshot.itemList[index].number;
         snapshot.removeItem(snapshot.itemList[index],context);
         snapshot.itemList.removeAt(index);
@@ -65,7 +81,7 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
       }
       StoreProvider.of<AppState>(context).dispatch(UpdateOrder(snapshot));
     });
-  }
+  }*/
 
   void deleteOneItem(OrderState snapshot, int index) {
     setState(() {
@@ -86,12 +102,27 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
               snapshot.itemList[index].numberDiscounted = 0;
             }
           }
+          if(Provider.of<Explorer>(context, listen: false).businessState.id_firestore.isNotEmpty){
+            ConventionHelper conventionHelper = ConventionHelper();
+            Provider.of<Explorer>(context, listen: false).cartServiceList.forEach((s) {
+              if(s.serviceId == snapshot.itemList[index].id)
+                snapshot.totalPromoDiscount -= (s.price * conventionHelper.getConventionDiscount(s, Provider.of<Explorer>(context, listen: false).businessState.id_firestore))/100;
+            });
+          }
           snapshot.totalPromoDiscount -= double.parse(itemDiscount.toStringAsFixed(2));
           snapshot.total = serviceTotal;
           snapshot.total += itemDiscount;
           debugPrint('UI_U_Cart => AFTER| ${snapshot.itemList[index].name} ITEM COUNT: ${snapshot.itemList[index].number}');
           debugPrint('UI_U_Cart => AFTER| TOTAL: ${snapshot.total}');
         }else{
+          if(Provider.of<Explorer>(context, listen: false).businessState.id_firestore.isNotEmpty){
+            ConventionHelper conventionHelper = ConventionHelper();
+            Provider.of<Explorer>(context, listen: false).cartServiceList.forEach((s) {
+              if(s.serviceId == snapshot.itemList[index].id)
+                snapshot.totalPromoDiscount -= ((s.price * conventionHelper.getConventionDiscount(s, Provider.of<Explorer>(context, listen: false).businessState.id_firestore))/100) * snapshot.itemList[index].number;
+            });
+          }
+          Provider.of<Explorer>(context, listen: false).cartServiceList.removeWhere((s) => s.serviceId == snapshot.itemList[index].id);
           snapshot.cartCounter = snapshot.cartCounter - snapshot.itemList[index].number;
           snapshot.removeItem(snapshot.itemList[index],context);
           snapshot.itemList.removeAt(index);
@@ -113,6 +144,14 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
               snapshot.itemList[index].numberDiscounted = 0;
             }
           }
+          if(Provider.of<Explorer>(context, listen: false).businessState.id_firestore.isNotEmpty){
+            ConventionHelper conventionHelper = ConventionHelper();
+            Provider.of<Explorer>(context, listen: false).cartServiceList.forEach((s) {
+              if(s.serviceId == snapshot.itemList[index].id)
+                snapshot.totalPromoDiscount -= (s.price * conventionHelper.getConventionDiscount(s, Provider.of<Explorer>(context, listen: false).businessState.id_firestore))/100;
+            });
+          }
+
           snapshot.totalPromoDiscount -= double.parse(itemDiscount.toStringAsFixed(2));
           snapshot.total = serviceTotal;
           snapshot.total += itemDiscount;
@@ -121,6 +160,14 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
           /*snapshot.removeItem(snapshot.itemList[index]);
         snapshot.itemList.removeAt(index);*/
         }else{
+          if(Provider.of<Explorer>(context, listen: false).businessState.id_firestore.isNotEmpty){
+            ConventionHelper conventionHelper = ConventionHelper();
+            Provider.of<Explorer>(context, listen: false).cartServiceList.forEach((s) {
+              if(s.serviceId == snapshot.itemList[index].id)
+                snapshot.totalPromoDiscount -= ((s.price * conventionHelper.getConventionDiscount(s, Provider.of<Explorer>(context, listen: false).businessState.id_firestore))/100) * snapshot.itemList[index].number;
+            });
+          }
+          Provider.of<Explorer>(context, listen: false).cartServiceList.removeWhere((s) => s.serviceId == snapshot.itemList[index].id);
           snapshot.cartCounter = snapshot.cartCounter - snapshot.itemList[index].number;
           snapshot.removeItem(snapshot.itemList[index],context);
           snapshot.itemList.removeAt(index);
@@ -145,6 +192,13 @@ class _OptimumOrderItemCardMediumState extends State<OptimumOrderItemCardMedium>
       double itemDiscount = 0.0;//Utils.calculatePromoDiscount(snapshot.itemList[index].price, context, snapshot.itemList[index].id_business, 1, snapshot.totalNumberOfItems());
       if (itemDiscount > 0.0) {
         snapshot.itemList[index].numberDiscounted++;
+      }
+      if(Provider.of<Explorer>(context, listen: false).businessState.id_firestore.isNotEmpty){
+        ConventionHelper conventionHelper = ConventionHelper();
+        Provider.of<Explorer>(context, listen: false).cartServiceList.forEach((s) {
+          if(s.serviceId == snapshot.itemList[index].id)
+            snapshot.totalPromoDiscount += (s.price * conventionHelper.getConventionDiscount(s, Provider.of<Explorer>(context, listen: false).businessState.id_firestore))/100;
+        });
       }
       snapshot.totalPromoDiscount += double.parse(itemDiscount.toStringAsFixed(2));
       //StoreProvider.of<AppState>(context).dispatch(IncreasePromotionCounter(1));

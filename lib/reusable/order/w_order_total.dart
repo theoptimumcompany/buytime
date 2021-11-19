@@ -239,7 +239,7 @@ class OrderTotal extends StatelessWidget {
                       Text(
                         !orderState.carbonCompensation ?
                         ' ${orderState.totalPromoDiscount > orderState.total ? '1.00': (orderState.total-orderState.totalPromoDiscount).toStringAsFixed(2)}${AppLocalizations.of(context).currencySpace}':
-                        ' ${(totalECO-orderState.totalPromoDiscount).toStringAsFixed(2)}${AppLocalizations.of(context).currencySpace}',
+                        ' ${orderState.totalPromoDiscount > totalECO ? '${(1+partialECO).toStringAsFixed(2)}': (totalECO-orderState.totalPromoDiscount).toStringAsFixed(2)}${AppLocalizations.of(context).currencySpace}',
                         style: TextStyle(
                             fontFamily: BuytimeTheme.FontFamily,
                             fontWeight: FontWeight.w500,

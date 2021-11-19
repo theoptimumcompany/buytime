@@ -655,5 +655,9 @@
   "aNewOrder": "A new order",
   "aNewRequestFor": "A new request for",
   "needsConfirmation": "needs confirmation.",
-  "invalidPromocode": "Invalid Promo Code"
+  "invalidPromocode": "Invalid Promo Code",
+  "remove": "Remove",
+  "broadcastMessages": "Broadcast Messages",
+  "noBroadcastMessages": "You haven't written any broadcast messages yet",
+  "writeSomething": "Write Something"
 }

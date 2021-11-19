@@ -1,4 +1,5 @@
 import 'package:Buytime/UI/management/activity/RUI_M_activity_management.dart';
+import 'package:Buytime/UI/management/broadcast/RUI_M_broadcast_list.dart';
 import 'package:Buytime/UI/management/notification/RUI_M_notification_center.dart';
 import 'package:Buytime/UI/management/service_internal/RUI_M_service_list.dart';
 import 'package:Buytime/UI/management/slot/UI_M_slot_management.dart';
@@ -22,7 +23,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:Buytime/UI/management/business/RUI_M_business_list.dart';
 
 final GoogleSignIn googleSignIn = new GoogleSignIn();
-enum DrawerSelection { BusinessList, NotificationCenter, ActivityManagement, SlotManagement }
+enum DrawerSelection { BusinessList, NotificationCenter, ActivityManagement, SlotManagement, broadcastMessages }
 
 class ManagerDrawer extends StatefulWidget {
   ManagerDrawer({
@@ -322,6 +323,37 @@ class _ManagerDrawerState extends State<ManagerDrawer> {
                             },
                           ),
                         ),
+                        ///Broadcast Messages
+                        Container(
+                          decoration: BoxDecoration(border: Border(bottom: BorderSide(color: BuytimeTheme.DividerGrey))),
+                          child: ListTile(
+                            key: Key('broadcast_messages_key'),
+                            selected: drawerSelection == DrawerSelection.SlotManagement,
+                            //selectedTileColor: Color.fromRGBO(32, 124, 195, 0.3),
+                            autofocus: false,
+                            title: Text(
+                              AppLocalizations.of(context).broadcastMessages,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.start,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w400,
+                                fontSize: 14,
+                                fontFamily: BuytimeTheme.FontFamily,
+                                letterSpacing: 0.1,
+                                color: drawerSelection == DrawerSelection.broadcastMessages ? BuytimeTheme.ManagerPrimary : BuytimeTheme.TextBlack,
+                              ),
+                            ),
+                            //leading: Icon(Icons.list),
+                            onTap: () {
+                              //Navigator.pop(context);
+                              setState(() {
+                                drawerSelection = DrawerSelection.broadcastMessages;
+                                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => RBroadcastList()));
+                              });
+                            },
+                          ),
+                        ),
+                        ///Bottom
                         Expanded(
                           child: Align(
                             alignment: FractionalOffset.bottomLeft,

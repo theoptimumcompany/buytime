@@ -1,5 +1,7 @@
 import 'package:Buytime/UI/user/cart/UI_U_ConfirmOrder.dart';
 import 'package:Buytime/UI/user/login/tourist_session/UI_U_tourist_session_register.dart';
+import 'package:Buytime/UI/user/turist/RUI_U_service_explorer.dart';
+import 'package:Buytime/helper/convention/convention_helper.dart';
 import 'package:Buytime/reblox/model/business/business_list_state.dart';
 import 'package:Buytime/reblox/model/order/order_entry.dart';
 import 'package:Buytime/reblox/model/role/role.dart';
@@ -19,6 +21,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
+import 'package:provider/provider.dart';
 
 class Cart extends StatefulWidget {
   ServiceState serviceState;
@@ -55,6 +58,14 @@ class CartState extends State<Cart> {
     debugPrint('UI_U_cart => Remove Normal Item');
     setState(() {
       if (snapshot.itemList.length >= 1) {
+        if(Provider.of<Explorer>(context, listen: false).businessState.id_firestore.isNotEmpty){
+          ConventionHelper conventionHelper = ConventionHelper();
+          Provider.of<Explorer>(context, listen: false).cartServiceList.forEach((s) {
+            if(s.serviceId == entry.id)
+              snapshot.totalPromoDiscount -= ((s.price * conventionHelper.getConventionDiscount(s, Provider.of<Explorer>(context, listen: false).businessState.id_firestore))/100) * entry.number;
+          });
+        }
+        Provider.of<Explorer>(context, listen: false).cartServiceList.removeWhere((s) => s.serviceId == entry.id);
         orderState.cartCounter = orderState.cartCounter - entry.number;
         orderState.itemList.remove(entry);
         double serviceTotal = orderState.total;
@@ -63,6 +74,14 @@ class CartState extends State<Cart> {
         //snapshot.removeItem(snapshot.itemList[index]);
         //snapshot.itemList.removeAt(index);
       } else {
+        if(Provider.of<Explorer>(context, listen: false).businessState.id_firestore.isNotEmpty){
+          ConventionHelper conventionHelper = ConventionHelper();
+          Provider.of<Explorer>(context, listen: false).cartServiceList.forEach((s) {
+            if(s.serviceId == entry.id)
+              snapshot.totalPromoDiscount -= ((s.price * conventionHelper.getConventionDiscount(s, Provider.of<Explorer>(context, listen: false).businessState.id_firestore))/100) * entry.number;
+          });
+        }
+        Provider.of<Explorer>(context, listen: false).cartServiceList.removeWhere((s) => s.serviceId == snapshot.itemList[index].id);
         orderState.cartCounter = orderState.cartCounter - entry.number;
         orderState.itemList.remove(entry);
         double serviceTotal = orderState.total;
@@ -125,6 +144,8 @@ class CartState extends State<Cart> {
                 isExternal = true;
               }
 
+
+
               return GestureDetector(
                 onTap: () => FocusScope.of(context).unfocus(),
                 child: Scaffold(
@@ -149,8 +170,11 @@ class CartState extends State<Cart> {
                           color: Colors.black,
                         ),
                         onPressed: () async{
-                          StoreProvider.of<AppState>(context).dispatch(SetOrderTotalPromotionDiscount(0.0));
-                          StoreProvider.of<AppState>(context).dispatch(SetOrderReservableTotalPromotionDiscount(0.0));
+                          if(Provider.of<Explorer>(context, listen: false).promotionCode.isNotEmpty){
+                            StoreProvider.of<AppState>(context).dispatch(SetOrderTotalPromotionDiscount(0.0));
+                            StoreProvider.of<AppState>(context).dispatch(SetOrderReservableTotalPromotionDiscount(0.0));
+                            Provider.of<Explorer>(context, listen: false).promotionCode = '';
+                          }
                           //snapshot.order.totalPromoDiscount = 0.0;
                           Navigator.of(context).pop();
                         },
@@ -218,14 +242,14 @@ class CartState extends State<Cart> {
                                                               orderState.selected == null || orderState.selected.isEmpty ? deleteItem(orderState, item, index) : deleteReserveItem(orderState, item, index);
                                                               debugPrint('UI_U_cart => DX to DELETE');
                                                               // Show a snackbar. This snackbar could also contain "Undo" actions.
-                                                              Scaffold.of(context).showSnackBar(SnackBar(
-                                                                  content: Text(Utils.retriveField(Localizations.localeOf(context).languageCode, item.name) + ' ${AppLocalizations.of(context).spaceRemoved}'),
-                                                                  action: SnackBarAction(
-                                                                      label: AppLocalizations.of(context).undo,
-                                                                      onPressed: () {
-                                                                        //To undo deletion
-                                                                        undoDeletion(index, item);
-                                                                      })));
+                                                              // Scaffold.of(context).showSnackBar(SnackBar(
+                                                              //     content: Text(Utils.retriveField(Localizations.localeOf(context).languageCode, item.name) + ' ${AppLocalizations.of(context).spaceRemoved}'),
+                                                              //     action: SnackBarAction(
+                                                              //         label: AppLocalizations.of(context).undo,
+                                                              //         onPressed: () {
+                                                              //           //To undo deletion
+                                                              //           undoDeletion(index, item);
+                                                              //         })));
                                                             } else {
                                                               orderState.itemList.insert(index, item);
                                                             }
@@ -427,6 +451,7 @@ class CartState extends State<Cart> {
                                                     children: [
                                                       Container(
                                                           width: 250.0,
+                                                          height: 38,
                                                           margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
                                                           child: TextFormField(
                                                             key: Key('table_number_field_key'),
@@ -453,7 +478,7 @@ class CartState extends State<Cart> {
                                                         margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
                                                         child: MaterialButton(
                                                           key: Key('close_table_number_field_key'),
-                                                          height: 58.0,
+                                                          height: 38.0,
                                                           elevation: 0,
                                                           hoverElevation: 0,
                                                           focusElevation: 0,
@@ -462,10 +487,10 @@ class CartState extends State<Cart> {
                                                             FocusScope.of(context).unfocus();
                                                           },
                                                           textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
-                                                          color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
+                                                          color: BuytimeTheme.ActionBlackPurple,
                                                           //padding: EdgeInsets.all(media.width * 0.03),
                                                           shape: RoundedRectangleBorder(
-                                                            borderRadius: new BorderRadius.circular(5),
+                                                            borderRadius: new BorderRadius.circular(20),
                                                           ),
                                                           child: Text(
                                                             AppLocalizations.of(context).ok,

@@ -48,15 +48,15 @@ class RNotificationBell extends StatelessWidget {
                 ),
                 userNotificationSnapshot.data != null && userNotificationSnapshot.data.get('hasNotification') ?
                 Positioned.fill(
-                  bottom: 20,
-                  left: 15,
+                  bottom: 10,
+                  left: 10,
                   child: Align(
                     alignment: Alignment.center,
                     child: Container(
-                      width: 15,
-                      height: 15,
+                      width: 8,
+                      height: 8,
                       decoration: BoxDecoration(
-                          color: BuytimeTheme.AccentRed,
+                          color: BuytimeTheme.TextBlack,
                           borderRadius: BorderRadius.all(Radius.circular(7.5))
                       ),
                     ),

@@ -172,10 +172,19 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
       if (result == 1) {
         setState(() {
           isLoggedIn = true;
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => RServiceExplorer()),
-          );
+          Future.delayed(Duration(milliseconds: 1500), () async {
+            if (StoreProvider.of<AppState>(context).state.user.getRole() != Role.user){
+              debugPrint('UI_U_login => Account authority: > User');
+              Navigator.push(context, MaterialPageRoute(builder: (context) => RBusinessList()));
+            }else{
+              debugPrint('UI_U_login => Account authority: <= User');
+              await FirebaseMessaging.instance.subscribeToTopic('broadcast_user');
+              debugPrint('FIREBASE MESSAGING TOP SUBSCRIBTION TO: broadcast_user');
+              Navigator.of(context).pushNamedAndRemoveUntil(AppRoutes.serviceExplorer, (Route<dynamic> route) => false);
+            }
+            //Navigator.of(context).pushNamedAndRemoveUntil(AppRoutes.myBookings, ModalRoute.withName(AppRoutes.landing));
+            //StoreProvider.of<AppState>(context).dispatch(new UserBookingRequest(user.email));
+          });
         });
       } else {
         print("No result");
@@ -256,10 +265,19 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
       if (result == 1) {
         setState(() {
           isLoggedIn = true;
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => RServiceExplorer()),
-          );
+          Future.delayed(Duration(milliseconds: 1500), () async {
+            if (StoreProvider.of<AppState>(context).state.user.getRole() != Role.user){
+              debugPrint('UI_U_login => Account authority: > User');
+              Navigator.push(context, MaterialPageRoute(builder: (context) => RBusinessList()));
+            }else{
+              debugPrint('UI_U_login => Account authority: <= User');
+              await FirebaseMessaging.instance.subscribeToTopic('broadcast_user');
+              debugPrint('FIREBASE MESSAGING TOP SUBSCRIBTION TO: broadcast_user');
+              Navigator.of(context).pushNamedAndRemoveUntil(AppRoutes.serviceExplorer, (Route<dynamic> route) => false);
+            }
+            //Navigator.of(context).pushNamedAndRemoveUntil(AppRoutes.myBookings, ModalRoute.withName(AppRoutes.landing));
+            //StoreProvider.of<AppState>(context).dispatch(new UserBookingRequest(user.email));
+          });
         });
       } else {
         print("No result");
@@ -336,6 +354,8 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
       StoreProvider.of<AppState>(context).dispatch(new UpdateUserDevice(device));
       TokenB token = TokenB(name: "token", id: MessagingHelper.serverToken, user_uid: user.uid);
       StoreProvider.of<AppState>(context).dispatch(new UpdateUserToken(token));
+
+
       // return 'signInWithGoogle succeeded: $user';
       await pr.hide();
       return 1;
@@ -1274,12 +1294,14 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
       StoreProvider.of<AppState>(context).dispatch(new UpdateUserToken(token));
       setState(() {
         _success = true;
-        Future.delayed(Duration(seconds: 1), (){
+        Future.delayed(Duration(milliseconds: 1500), () async {
           if (StoreProvider.of<AppState>(context).state.user.getRole() != Role.user){
             debugPrint('UI_U_login => Account authority: > User');
             Navigator.push(context, MaterialPageRoute(builder: (context) => RBusinessList()));
-          } else{
+          }else{
             debugPrint('UI_U_login => Account authority: <= User');
+            await FirebaseMessaging.instance.subscribeToTopic('broadcast_user');
+            debugPrint('FIREBASE MESSAGING TOP SUBSCRIBTION TO: broadcast_user');
             Navigator.of(context).pushNamedAndRemoveUntil(AppRoutes.serviceExplorer, (Route<dynamic> route) => false);
           }
           //Navigator.of(context).pushNamedAndRemoveUntil(AppRoutes.myBookings, ModalRoute.withName(AppRoutes.landing));

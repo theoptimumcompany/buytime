@@ -13,7 +13,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
+
+import '../RUI_U_service_explorer.dart';
 
 class PRCardWidget extends StatefulWidget {
 
@@ -110,13 +113,13 @@ class _PRCardWidgetState extends State<PRCardWidget> {
                               //color: Colors.black.withOpacity(.2)
                             ),
                             child: ///Promo Discount label
-                            ConventionHelper().getConvention(widget.serviceState, StoreProvider.of<AppState>(context).state.bookingList.bookingListState)
+                            ConventionHelper().getConvention(widget.serviceState, StoreProvider.of<AppState>(context).state.bookingList.bookingListState, context)
                                 ? Container(
                               alignment: Alignment.bottomLeft,
                               margin: EdgeInsets.only(left: 5, bottom: 5),
                               child: FittedBox(
                                 fit: BoxFit.contain,
-                                child: W_ConventionDiscount(widget.serviceState, StoreProvider.of<AppState>(context).state.bookingList.bookingListState.first.business_id, true),
+                                child: W_ConventionDiscount(widget.serviceState, Provider.of<Explorer>(context, listen: false).businessState.id_firestore, true),
                               ),
                             ): Container(),
                           )

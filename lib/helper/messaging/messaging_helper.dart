@@ -156,9 +156,12 @@ class MessagingHelper {
       bool can = false;
       if(notificationBodyList.isNotEmpty && notificationBodyList.length == 4)
         can = true;
-      DateTime notificationTime = DateTime.now();
-      notificationTime = DateTime.fromMillisecondsSinceEpoch(int.parse(notificationBodyList[1]));
-      String customNotificationTime = DateFormat('E, dd/M/yyyy, HH:mm').format(notificationTime);
+      String customNotificationTime = '';
+      if(can){
+        DateTime notificationTime = DateTime.now();
+        notificationTime = DateTime.fromMillisecondsSinceEpoch(int.parse(notificationBodyList[1]));
+        customNotificationTime = DateFormat('E, dd/M/yyyy, HH:mm').format(notificationTime);
+      }
       if(Platform.isAndroid)
       {
         AndroidNotification android = message.notification?.android;

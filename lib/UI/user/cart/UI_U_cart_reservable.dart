@@ -1,6 +1,8 @@
 import 'package:Buytime/UI/user/cart/UI_U_ConfirmOrder.dart';
 import 'package:Buytime/UI/user/login/tourist_session/UI_U_tourist_session.dart';
 import 'package:Buytime/UI/user/service/UI_U_service_reserve.dart';
+import 'package:Buytime/UI/user/turist/RUI_U_service_explorer.dart';
+import 'package:Buytime/helper/convention/convention_helper.dart';
 import 'package:Buytime/reblox/enum/order_time_intervals.dart';
 import 'package:Buytime/reblox/model/order/order_entry.dart';
 import 'package:Buytime/reblox/model/order/order_reservable_state.dart';
@@ -51,7 +53,7 @@ class CartReservableState extends State<CartReservable> {
   }
 
   void deleteItem(OrderReservableState snapshot, OrderEntry entry, int index) {
-    debugPrint('UI_U_cart_reservable => Remove Normal Item');
+    debugPrint('UI_U_cart_reservable => Remove Normal Item 1');
     setState(() {
       if (snapshot.itemList.length >= 1) {
         orderReservableState.cartCounter = orderReservableState.cartCounter - entry.number;
@@ -76,7 +78,7 @@ class CartReservableState extends State<CartReservable> {
   }
 
   void deleteReserveItem(OrderReservableState snapshot, OrderEntry entry, int index) {
-    debugPrint('UI_U_cart_reservable => Remove Normal Item');
+    debugPrint('UI_U_cart_reservable => Remove Normal Item 2 - ${entry.number} - ${entry.price}');
     setState(() {
       StoreProvider.of<AppState>(context).state.slotSnippetListState.slotListSnippet.forEach((element) {
         element.slot.forEach((element2) {
@@ -88,7 +90,11 @@ class CartReservableState extends State<CartReservable> {
           }
         });
       });
-      orderReservableState.cartCounter = orderReservableState.cartCounter - entry.number;
+      if(Provider.of<Explorer>(context, listen: false).businessState.id_firestore.isNotEmpty){
+        ConventionHelper conventionHelper = ConventionHelper();
+        orderReservableState.totalPromoDiscount -= (((entry.price/entry.number) * conventionHelper.getConventionDiscount(Provider.of<Explorer>(context, listen: false).cartReservableServiceList.first, Provider.of<Explorer>(context, listen: false).businessState.id_firestore))/100) * entry.number;
+      }
+      orderReservableState.cartCounter -= 1;
       orderReservableState.removeReserveItem(entry,context);
       orderReservableState.selected.removeAt(index);
 
@@ -213,19 +219,20 @@ class CartReservableState extends State<CartReservable> {
                                                                   orderReservableState.itemList.removeAt(index);
                                                                 });
                                                                 if (direction == DismissDirection.endToStart) {
+
                                                                   orderReservableState.selected == null || orderReservableState.selected.isEmpty ?
                                                                     deleteItem(orderReservableState, item, index) :
                                                                   deleteReserveItem(orderReservableState, item, index);
                                                                   debugPrint('UI_U_cart_reservable => DX to DELETE');
                                                                   // Show a snackbar. This snackbar could also contain "Undo" actions.
-                                                                  Scaffold.of(context).showSnackBar(SnackBar(
-                                                                      content: Text(Utils.retriveField(Localizations.localeOf(context).languageCode, item.name) + ' ${AppLocalizations.of(context).spaceRemoved}'),
-                                                                      action: SnackBarAction(
-                                                                          label: AppLocalizations.of(context).undo,
-                                                                          onPressed: () {
-                                                                            //To undo deletion
-                                                                            undoDeletion(index, item);
-                                                                          })));
+                                                                  // Scaffold.of(context).showSnackBar(SnackBar(
+                                                                  //     content: Text(Utils.retriveField(Localizations.localeOf(context).languageCode, item.name) + ' ${AppLocalizations.of(context).spaceRemoved}'),
+                                                                  //     action: SnackBarAction(
+                                                                  //         label: AppLocalizations.of(context).undo,
+                                                                  //         onPressed: () {
+                                                                  //           //To undo deletion
+                                                                  //           undoDeletion(index, item);
+                                                                  //         })));
                                                                 } else {
                                                                   orderReservableState.itemList.insert(index, item);
                                                                 }

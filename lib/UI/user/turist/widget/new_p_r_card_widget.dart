@@ -16,8 +16,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import '../RUI_U_service_explorer.dart';
 
 class NewPRCardWidget extends StatefulWidget {
 
@@ -228,14 +231,13 @@ class _NewPRCardWidgetState extends State<NewPRCardWidget> {
                 StoreProvider.of<AppState>(context).state.bookingList.bookingListState.first.business_id : '', true, true)
             ),
           ) : Container(),
-          ConventionHelper().getConvention(widget.serviceState, StoreProvider.of<AppState>(context).state.bookingList.bookingListState ?? []) ?
+          ConventionHelper().getConvention(widget.serviceState, StoreProvider.of<AppState>(context).state.bookingList.bookingListState ?? [], context) ?
           Positioned.fill(
             right: 10,
             top: Utils.checkPromoDiscount('general_1', context, widget.serviceState.businessId).promotionId != 'empty' ? 40 : 5,
             child: Align(
                 alignment: Alignment.topRight,
-                child: NewDiscount(widget.serviceState, StoreProvider.of<AppState>(context).state.bookingList.bookingListState.isNotEmpty ?
-                StoreProvider.of<AppState>(context).state.bookingList.bookingListState.first.business_id : '', false, false)
+                child: NewDiscount(widget.serviceState, Provider.of<Explorer>(context, listen: false).businessState.id_firestore, false, false)
             ),
           ) : Container()
         ],

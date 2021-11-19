@@ -23,6 +23,7 @@ import 'package:Buytime/helper/algolia_helper.dart';
 import 'package:Buytime/helper/pagination/category_helper.dart';
 import 'package:Buytime/helper/pagination/service_helper.dart';
 import 'package:Buytime/helper/payment/satispay/satispay_service.dart';
+import 'package:Buytime/reblox/model/area/area_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reblox/model/role/role.dart';
 import 'package:Buytime/reblox/reducer/app_reducer.dart';
@@ -66,6 +67,7 @@ import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/utils/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -90,7 +92,7 @@ class RServiceExplorer extends StatefulWidget {
   Widget create(BuildContext context) {
     //final pageIndex = context.watch<Spinner>();
     return ChangeNotifierProvider<Explorer>(
-      create: (_) => Explorer(false, [], [], [], TextEditingController(), false, [], BusinessState().toEmpty()),
+      create: (_) => Explorer(false, [], [], [], TextEditingController(), false, [], BusinessState().toEmpty(), [], '', []),
       child: RServiceExplorer(),
     );
   }
@@ -579,6 +581,8 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
 
     _locationData = await location.getLocation();
     if (_locationData.latitude != null) {
+      await FirebaseMessaging.instance.subscribeToTopic('broadcast_gps');
+      debugPrint('FIREBASE MESSAGING TOP SUBSCRIBTION TO: broadcast_gps');
       setState(() {
         gettingLocation = false;
         currentLat = _locationData.latitude;
@@ -588,7 +592,10 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
 
       /// set current area in the store
       AreaListState areaListState = StoreProvider.of<AppState>(context).state.areaList;
-      StoreProvider.of<AppState>(context).dispatch(SetArea(Utils.getCurrentArea('$currentLat, $currentLng', areaListState)));
+      AreaState areaState = Utils.getCurrentArea('$currentLat, $currentLng', areaListState);
+      await FirebaseMessaging.instance.subscribeToTopic('broadcast_${areaState.areaId}');
+      debugPrint('FIREBASE MESSAGING TOP SUBSCRIBTION TO: broadcast_${areaState.areaId}');
+      StoreProvider.of<AppState>(context).dispatch(SetArea(areaState));
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context).problemsGettingYourPosition)));
     }
@@ -3904,6 +3911,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                             key: Key('log_out_key'),
                                                             onTap: () async {
                                                               SharedPreferences prefs = await SharedPreferences.getInstance();
+                                                              await FirebaseMessaging.instance.unsubscribeFromTopic('broadcastUser');
                                                               dynamicLinkHelper.clearBooking();
                                                               FirebaseAuth.instance.signOut().then((_) {
                                                                 googleSignIn.signOut();
@@ -4239,7 +4247,10 @@ class Explorer with ChangeNotifier{
   List<dynamic> searchedList;
   TextEditingController searchController;
   BusinessState businessState;
-  Explorer(this.searching, this.serviceList, this.rootCategoryList, this.searchedList, this.searchController, this.first, this.allCategoryList, this.businessState);
+  List<ServiceState> cartServiceList;
+  List<ServiceState> cartReservableServiceList;
+  String promotionCode;
+  Explorer(this.searching, this.serviceList, this.rootCategoryList, this.searchedList, this.searchController, this.first, this.allCategoryList, this.businessState, this.cartServiceList, this.promotionCode, this.cartReservableServiceList);
 
   initSearching(bool searching){
     this.searching = searching;
@@ -4286,6 +4297,9 @@ class Explorer with ChangeNotifier{
     this.searchedList.clear();
     this.searchController = TextEditingController();
     this.businessState = BusinessState().toEmpty();
+    this.cartServiceList = [];
+    this.cartReservableServiceList = [];
+    this.promotionCode = '';
     notifyListeners();
   }
 

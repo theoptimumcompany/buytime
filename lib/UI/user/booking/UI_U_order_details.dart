@@ -1218,7 +1218,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                                               ),
                                               Text(
                                                 order.carbonCompensation != null && order.carbonCompensation?
-                                                '${AppLocalizations.of(context).euroSpace} ${(orderDetails.total + Utils.calculateEcoTax(order) -order.totalPromoDiscount).toStringAsFixed(2)}' :
+                                                '${AppLocalizations.of(context).euroSpace}${order.totalPromoDiscount > (orderDetails.total + Utils.calculateEcoTax(order)) ? '${(1+Utils.calculateEcoTax(order)).toStringAsFixed(2)}': ((orderDetails.total + Utils.calculateEcoTax(order))-order.totalPromoDiscount).toStringAsFixed(2)}' :
                                                 '${AppLocalizations.of(context).euroSpace} ${order.totalPromoDiscount > orderDetails.total ? '1.00': (orderDetails.total-order.totalPromoDiscount).toStringAsFixed(2)}',
                                                 style: TextStyle(letterSpacing: 0.15, fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.bold, fontSize: 16
 
@@ -1234,8 +1234,8 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                                             fit: BoxFit.scaleDown,
                                             child: Text(
                                               order.carbonCompensation != null && order.carbonCompensation?
-                                              '${AppLocalizations.of(context).euroSpace} ${(orderDetails.total + Utils.calculateEcoTax(order)).toStringAsFixed(2)}':
-                                              '${AppLocalizations.of(context).euroSpace} ${orderDetails.total.toStringAsFixed(2)}',
+                                              '${AppLocalizations.of(context).euroSpace}${order.totalPromoDiscount > (orderDetails.total + Utils.calculateEcoTax(order)) ? '${(1+Utils.calculateEcoTax(order)).toStringAsFixed(2)}': ((orderDetails.total + Utils.calculateEcoTax(order))-order.totalPromoDiscount).toStringAsFixed(2)}' :
+                                              '${AppLocalizations.of(context).euroSpace} ${order.totalPromoDiscount > orderDetails.total ? '1.00': (orderDetails.total-order.totalPromoDiscount).toStringAsFixed(2)}',
                                               style: TextStyle(letterSpacing: 0.15, fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.bold, fontSize: 16
 
                                                 ///SizeConfig.safeBlockHorizontal * 4

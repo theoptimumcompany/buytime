@@ -1,14 +1,16 @@
 
+import 'package:Buytime/UI/user/turist/RUI_U_service_explorer.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
 
 class ConventionHelper{
 
-  bool getConvention(ServiceState service, List<BookingState> bookingList){
+  bool getConvention(ServiceState service, List<BookingState> bookingList, BuildContext context){
     bool isConvention = false;
-    String businessId = bookingList.isNotEmpty ? checkActiveBooking(bookingList) : '';
+    String businessId = Provider.of<Explorer>(context, listen: false).businessState.id_firestore;//bookingList.isNotEmpty ? checkActiveBooking(bookingList) : '';
     //debugPrint('convention_helper => CONVENTION BUSINESS ID: $businessId');
     if(service.hubConvention && service.conventionSlotList.isNotEmpty){
       if(service.conventionSlotList.first.hubId == 'allHubs'){
