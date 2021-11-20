@@ -407,6 +407,7 @@ ServiceState serviceReducer(ServiceState state, action) {
     serviceState.hubConvention = action.serviceHubConvention;
     return serviceState;
   }
+
   if (action is SetServiceDescription) {
     serviceState.description = action.description;
     return serviceState;
@@ -476,6 +477,7 @@ ServiceState serviceReducer(ServiceState state, action) {
     serviceState.serviceSlot.removeAt(action.index);
     return serviceState;
   }
+
   if (action is SetServiceSelectedCategories) {
     List<String> selCat = [];
 
@@ -497,6 +499,10 @@ ServiceState serviceReducer(ServiceState state, action) {
   }
   if (action is SetServiceConventionSlotList) {
     serviceState.conventionSlotList = action.conventionSlotList;
+    return serviceState;
+  }
+  if (action is DeleteConventionSlot) {
+    serviceState.conventionSlotList.removeAt(action.index);
     return serviceState;
   }
   if (action is CreatedService) {

@@ -400,6 +400,7 @@ class HubConventionCreateState extends State<HubConventionCreate> {
           padding: EdgeInsets.all(20.0),
           child: TextFormField(
             controller: discountController,
+            maxLength: 2,
             keyboardType: TextInputType.number,
             inputFormatters: <TextInputFormatter>[
               FilteringTextInputFormatter.digitsOnly
