@@ -112,44 +112,47 @@ class CreateBroadcastState extends State<CreateBroadcast> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               ///TextFiled
-              Container(
-                margin: EdgeInsets.only(left: 16, right: 16),
-                child: TextFormField(
-                  readOnly: widget.view,
-                  controller: messageController,
-                  textAlign: TextAlign.start,
-                  textInputAction: TextInputAction.search,
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    //enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                    //focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                    //errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                    //labelText: AppLocalizations.of(context).writeSomething,
-                    //helperText: AppLocalizations.of(context).searchForServicesAndIdeasAroundYou,
-                    hintText:AppLocalizations.of(context).writeSomething,
-                    hintStyle: TextStyle(
+              Flexible(
+                child: Container(
+                  margin: EdgeInsets.only(left: 16, right: 16),
+                  child: TextFormField(
+                    readOnly: widget.view,
+                    controller: messageController,
+                    textAlign: TextAlign.start,
+                    maxLines: 10,
+                    textInputAction: TextInputAction.search,
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      //enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                      //focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                      //errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                      //labelText: AppLocalizations.of(context).writeSomething,
+                      //helperText: AppLocalizations.of(context).searchForServicesAndIdeasAroundYou,
+                      hintText:AppLocalizations.of(context).writeSomething,
+                      hintStyle: TextStyle(
+                          color: Color(0xff666666),
+                          fontWeight: FontWeight.w400,
+                          fontSize: 18,
+                          fontFamily: BuytimeTheme.FontFamily
+                      ),
+                      labelStyle: TextStyle(
+                        fontFamily: BuytimeTheme.FontFamily,
                         color: Color(0xff666666),
-                      fontWeight: FontWeight.w400,
-                      fontSize: 18,
-                      fontFamily: BuytimeTheme.FontFamily
+                        fontWeight: FontWeight.w400,
+                      ),
+                      helperStyle: TextStyle(
+                        fontFamily: BuytimeTheme.FontFamily,
+                        color: Color(0xff666666),
+                        fontWeight: FontWeight.w400,
+                      ),
                     ),
-                    labelStyle: TextStyle(
-                      fontFamily: BuytimeTheme.FontFamily,
-                      color: Color(0xff666666),
-                      fontWeight: FontWeight.w400,
-                    ),
-                    helperStyle: TextStyle(
-                      fontFamily: BuytimeTheme.FontFamily,
-                      color: Color(0xff666666),
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                  style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextMedium, fontWeight: FontWeight.w400, fontSize: 16),
-                  onEditingComplete: () {
-                    debugPrint('UI_M_add_external_service_list => done');
-                    FocusScope.of(context).unfocus();
+                    style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextMedium, fontWeight: FontWeight.w400, fontSize: 16),
+                    onEditingComplete: () {
+                      debugPrint('UI_M_add_external_service_list => done');
+                      FocusScope.of(context).unfocus();
 
-                  },
+                    },
+                  ),
                 ),
               ),
               ///Button

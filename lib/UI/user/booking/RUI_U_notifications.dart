@@ -1,6 +1,8 @@
+import 'package:Buytime/UI/user/booking/widget/user_broadcast_list_item.dart';
 import 'package:Buytime/UI/user/booking/widget/user_notification_list_item.dart';
 import 'package:Buytime/UI/user/cart/UI_U_cart.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
+import 'package:Buytime/reblox/model/broadcast/broadcast_state.dart';
 import 'package:Buytime/reblox/model/notification/notification_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
@@ -16,6 +18,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:rxdart/rxdart.dart';
 
 class RNotifications extends StatefulWidget {
   static String route = '/notifications';
@@ -34,9 +37,12 @@ class _RNotificationsState extends State<RNotifications> {
   String searched = '';
   OrderState order = OrderState().toEmpty();
   Stream<QuerySnapshot> _orderNotificationStream;
+  Stream<QuerySnapshot> _broadcastStream;
   String userId;
   bool showAll = false;
   List<NotificationState> notifications = [];
+  List<BroadcastState> broadcastList = [];
+  List<dynamic> combined = [];
   bool startRequest = false;
   bool rippleLoading = false;
   ScrollController _scrollController;
@@ -51,6 +57,12 @@ class _RNotificationsState extends State<RNotifications> {
     _scrollController = ScrollController();
     //notifications.add(tmpNotification1);
     //notifications.add(tmpNotification2);
+
+   _broadcastStream = FirebaseFirestore.instance
+        .collection("broadcast")
+        .where("topic", isEqualTo: 'broadcast_user')
+          //.limit(limit)
+        .snapshots(includeMetadataChanges: true);
   }
 
   String _selected = '';
@@ -229,10 +241,12 @@ class _RNotificationsState extends State<RNotifications> {
                       child: Container(
                         width: double.infinity,
                         //color: BuytimeTheme.DividerGrey,
-                        child: StreamBuilder<QuerySnapshot>(
-                          stream: _orderNotificationStream,
-                          builder: (context, AsyncSnapshot<QuerySnapshot> notificationSnapshot) {
+                        child: StreamBuilder<List<QuerySnapshot>>(
+                          stream: CombineLatestStream.list([_broadcastStream, _orderNotificationStream]),
+                          builder: (context, AsyncSnapshot<List<QuerySnapshot>> notificationSnapshot) {
                             notifications.clear();
+                            broadcastList.clear();
+                            combined.clear();
                             if (notificationSnapshot.hasError) {
                               return  Container(
                                 height: SizeConfig.safeBlockVertical * 8,
@@ -253,15 +267,29 @@ class _RNotificationsState extends State<RNotifications> {
                             if (notificationSnapshot.connectionState == ConnectionState.waiting) {
                               return CircularProgressIndicator();
                             }
-                            for (int j = 0; j < notificationSnapshot.data.docs.length; j++) {
-                              String idNotification = notificationSnapshot.data.docs[j].id;
+                            for (int j = 0; j < notificationSnapshot.data[0].docs.length; j++) {
+                              String idNotification = notificationSnapshot.data[0].docs[j].id;
+                              //debugPrint('RUI_U_notifications => NOTIFICATION ID: $idNotification');
+                              BroadcastState broadcastState = BroadcastState.fromJson(notificationSnapshot.data[0].docs[j].data());
+                              broadcastList.add(broadcastState);
+                            }
+                            for (int j = 0; j < notificationSnapshot.data[1].docs.length; j++) {
+                              String idNotification = notificationSnapshot.data[1].docs[j].id;
                               debugPrint('RUI_U_notifications => NOTIFICATION ID: $idNotification');
-                              NotificationState notificationState = NotificationState.fromJson(notificationSnapshot.data.docs[j].data());
+                              NotificationState notificationState = NotificationState.fromJson(notificationSnapshot.data[1].docs[j].data());
                               notificationState.notificationId = idNotification;
                               notifications.add(notificationState);
                             }
 
+                            combined.addAll(broadcastList);
+                            combined.addAll(notifications);
+
+                            debugPrint('RUI_U_notifications => BROADCAST LIST LENGTH: ${broadcastList.length}');
+                            broadcastList.sort((b,a) => a.timestamp.millisecondsSinceEpoch.compareTo(b.timestamp.millisecondsSinceEpoch));
                             notifications.sort((b,a) => a.timestamp.compareTo(b.timestamp));
+                            combined.sort((b,a) => (a is BroadcastState) ?
+                              a.timestamp.millisecondsSinceEpoch.compareTo((b is BroadcastState) ? b.timestamp.millisecondsSinceEpoch : b.timestamp) :
+                            a.timestamp.compareTo((b is BroadcastState) ? b.timestamp.millisecondsSinceEpoch : b.timestamp));
                             /*if(notifications.isEmpty && startRequest){
           noActivity = true;
         }else{
@@ -313,36 +341,42 @@ class _RNotificationsState extends State<RNotifications> {
                                                 delegate: SliverChildBuilderDelegate(
                                                       (context, index) {
                                                     //MenuItemModel menuItem = menuItems.elementAt(index);
-                                                    NotificationState notification = notifications.elementAt(index);
-                                                    //StoreProvider.of<AppState>(context).dispatch(SetServiceToEmpty());
-                                                    //StoreProvider.of<AppState>(context).dispatch(ServiceRequestByID(notification.data.state.serviceId));
-                                                    ServiceState serviceState = ServiceState().toEmpty();
-                                                    OrderState orderState = OrderState().toEmpty();
-                                                    StoreProvider.of<AppState>(context).state.serviceList.serviceListState.forEach((service) {
-                                                      if(service.serviceId == notification.data.state.serviceId)
-                                                        serviceState = service;
-                                                    });
-                                                    debugPrint('RUI_U_notification => OUT: ${notification.data.state.orderId}');
-                                                    widget.orderStateList.forEach((element) {
-                                                      if(notification.data.state != null && element.orderId == notification.data.state.orderId){
-                                                        debugPrint('RUI_U_notification => IN: ${element.orderId}');
-                                                        orderState = element;
-                                                      }
-                                                    });
-                                                    // snapshot.serviceList.serviceListState.forEach((element) {
-                                                    //   if(notification.data.state != null && element.serviceId == notification.data.state.serviceId){
-                                                    //     //debugPrint('RUI_U_notifications => ${element.orderId}');
-                                                    //     serviceState = element;
-                                                    //   }
-                                                    // });
-                                                    // if (orderState != null) {
-                                                    return UserNotificationListItem(notification, serviceState, widget.tourist, orderState);
-                                                    // }
-                                                    return Container();
+                                                        if(combined.elementAt(index) is BroadcastState){
+                                                          BroadcastState broadcastState = combined.elementAt(index);
+                                                          return UserBroadcastListItem(broadcastState);
+                                                        }else{
+                                                          NotificationState notification = combined.elementAt(index);
+                                                          //StoreProvider.of<AppState>(context).dispatch(SetServiceToEmpty());
+                                                          //StoreProvider.of<AppState>(context).dispatch(ServiceRequestByID(notification.data.state.serviceId));
+                                                          ServiceState serviceState = ServiceState().toEmpty();
+                                                          OrderState orderState = OrderState().toEmpty();
+                                                          StoreProvider.of<AppState>(context).state.serviceList.serviceListState.forEach((service) {
+                                                            if(service.serviceId == notification.data.state.serviceId)
+                                                              serviceState = service;
+                                                          });
+                                                          debugPrint('RUI_U_notification => OUT: ${notification.data.state.orderId}');
+                                                          widget.orderStateList.forEach((element) {
+                                                            if(notification.data.state != null && element.orderId == notification.data.state.orderId){
+                                                              debugPrint('RUI_U_notification => IN: ${element.orderId}');
+                                                              orderState = element;
+                                                            }
+                                                          });
+                                                          // snapshot.serviceList.serviceListState.forEach((element) {
+                                                          //   if(notification.data.state != null && element.serviceId == notification.data.state.serviceId){
+                                                          //     //debugPrint('RUI_U_notifications => ${element.orderId}');
+                                                          //     serviceState = element;
+                                                          //   }
+                                                          // });
+                                                          // if (orderState != null) {
+                                                          return UserNotificationListItem(notification, serviceState, widget.tourist, orderState);
+                                                          // }
+                                                          return Container();
 
-                                                    //debugPrint('RUI_U_notifications => booking_month_list: bookings booking status: ${booking.user.first.surname} ${booking.status}');
+                                                          //debugPrint('RUI_U_notifications => booking_month_list: bookings booking status: ${booking.user.first.surname} ${booking.status}');
+                                                        }
+
                                                   },
-                                                  childCount: notifications.length,
+                                                  childCount: combined.length,
                                                 ),
                                               ),
                                             ])
