@@ -29,16 +29,10 @@ void main() {
       await tester.tap(find.byKey(ValueKey('free_access_key')));
       await tester.pumpAndSettle(const Duration(seconds: 2));
 
+      await tester.tap(find.byKey(ValueKey('action_search_button_key')));
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+
       await tester.enterText(find.byKey(ValueKey('search_field_key')), 'Diving');
-      await tester.pumpAndSettle(const Duration(seconds: 1));
-
-      await tester.tap(find.byKey(ValueKey('search_button_key')));
-      await tester.pumpAndSettle(const Duration(seconds: 2));
-
-      await tester.tap(find.byKey(ValueKey('search_clear_button_key')));
-      await tester.pumpAndSettle(const Duration(seconds: 2));
-
-      await tester.enterText(find.byKey(ValueKey('search_field_key')), 'tour');
       await tester.pumpAndSettle(const Duration(seconds: 1));
 
       await tester.tap(find.byKey(ValueKey('search_button_key')));

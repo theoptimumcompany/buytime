@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:Buytime/UI/user/turist/RUI_U_service_explorer.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reblox/model/user/snippet/user_snippet_state.dart';
@@ -528,8 +529,8 @@ class _BookingSelfCreationState extends State<BookingSelfCreation> {
 
                                                     bookingState.userEmail.add(_emailToInviteController.text);
 
-                                                    StoreProvider.of<AppState>(context).dispatch(CreateSelfBookingRequest(bookingState, StoreProvider.of<AppState>(context).state.business.id_firestore));
-
+                                                    //StoreProvider.of<AppState>(context).dispatch(CreateSelfBookingRequest(bookingState, StoreProvider.of<AppState>(context).state.business.id_firestore));
+                                                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => RServiceExplorer()));
                                                     // Timer(Duration(seconds: 1), () {
                                                     //   setState(() {
                                                     //     bookingRequest = '';
@@ -540,17 +541,17 @@ class _BookingSelfCreationState extends State<BookingSelfCreation> {
                                                   }
                                                 },
                                                 textColor: BuytimeTheme.TextWhite,
-                                                color: BuytimeTheme.BackgroundCerulean,
-                                                padding: EdgeInsets.all(media.width * 0.03),
+                                                color: BuytimeTheme.ActionBlackPurple,
+                                                //padding: EdgeInsets.all(media.width * 0.03),
                                                 shape: RoundedRectangleBorder(
-                                                  borderRadius: new BorderRadius.circular(5),
+                                                  borderRadius: new BorderRadius.circular(20),
                                                 ),
                                                 child: Row(
                                                   mainAxisAlignment: MainAxisAlignment.center,
                                                   children: [
                                                     Text(
                                                       AppLocalizations.of(context).send.toUpperCase(),
-                                                      style: TextStyle(fontSize: 14, fontFamily: BuytimeTheme.FontFamily, fontWeight: FontWeight.w600, color: BuytimeTheme.TextDark, letterSpacing: 1.25),
+                                                      style: TextStyle(fontSize: 14, fontFamily: BuytimeTheme.FontFamily, fontWeight: FontWeight.w600, color: BuytimeTheme.TextWhite, letterSpacing: 1.25),
                                                     )
                                                   ],
                                                 ),

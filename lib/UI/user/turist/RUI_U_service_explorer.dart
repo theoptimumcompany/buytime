@@ -771,11 +771,10 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                     child: Scaffold(
                       appBar: !searching ? AppBar(
                         backgroundColor: Colors.white,
-                        leading: FirebaseAuth.instance.currentUser != null && FirebaseAuth.instance.currentUser.uid.isNotEmpty ?
-                        Container(
+                        leading: Container(
                           margin: EdgeInsets.only(top: 5),
                           child: IconButton(
-                            key: Key('action_button_discover'),
+                            key: Key('action_search_button_key'),
                             icon: Icon(
                               Icons.search,
                               color: Colors.black,
@@ -788,17 +787,6 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                               });
                             },
                           ),
-                        ) : IconButton(
-                          key: Key('action_button_discover'),
-                          icon: Icon(
-                            Icons.keyboard_arrow_left,
-                            color: Colors.black,
-                            size: 25.0,
-                          ),
-                          tooltip: AppLocalizations.of(context).comeBack,
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
                         ),
                         /*Padding(
                           padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),

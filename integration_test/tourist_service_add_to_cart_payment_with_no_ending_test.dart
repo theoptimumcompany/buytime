@@ -35,8 +35,8 @@ void main() {
       await tester.pumpAndSettle(const Duration(seconds: 2));
 
       debugPrint('KEY VALUE: ${find.text('Mai Tai').toString()}');
-      if(!find.text('Mai Tai').toString().contains('zero widgets with')){
-        await tester.drag(find.text('Mai Tai').last, const Offset(-700, 0));
+      if(!find.text('Vodka Red Bull').toString().contains('zero widgets with')){
+        await tester.drag(find.text('Vodka Red Bull').last, const Offset(-700, 0));
         await tester.pumpAndSettle(const Duration(seconds: 2));
 
         await tester.tap(find.byKey(ValueKey('cart_key')));
@@ -66,7 +66,7 @@ void main() {
         await tester.tap(find.byKey(ValueKey('back_from_cart_key')));
         await tester.pumpAndSettle(const Duration(seconds: 1));
 
-        await tester.tap(find.text('Mai Tai').last);
+        await tester.tap(find.text('Vodka Red Bull').last);
         await tester.pumpAndSettle(const Duration(seconds: 2));
 
         await tester.tap(find.byKey(ValueKey('service_details_add_to_cart_key')).first);

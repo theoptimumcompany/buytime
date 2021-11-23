@@ -165,6 +165,7 @@ class CartState extends State<Cart> {
                       ),
                       centerTitle: true,
                       leading: IconButton(
+                        key: Key('back_from_cart_key'),
                         icon: Icon(
                           Icons.keyboard_arrow_left,
                           color: Colors.black,

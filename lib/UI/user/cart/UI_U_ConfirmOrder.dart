@@ -1238,6 +1238,7 @@ class ConfirmOrderState extends State<ConfirmOrder> with SingleTickerProviderSta
       ),
       centerTitle: true,
       leading: IconButton(
+        key: Key('back_cart_from_confirm_order_key'),
         icon: Icon(
           Icons.keyboard_arrow_left,
           color: Colors.black,
