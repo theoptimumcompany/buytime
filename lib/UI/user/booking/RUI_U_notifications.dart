@@ -265,7 +265,16 @@ class _RNotificationsState extends State<RNotifications> {
                               );
                             }
                             if (notificationSnapshot.connectionState == ConnectionState.waiting) {
-                              return CircularProgressIndicator();
+                              return Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      CircularProgressIndicator()
+                                    ],
+                                  )
+                                ],
+                              );
                             }
                             for (int j = 0; j < notificationSnapshot.data[0].docs.length; j++) {
                               String idNotification = notificationSnapshot.data[0].docs[j].id;

@@ -370,7 +370,7 @@ class _NewFilterByCategoryState extends State<NewFilterByCategory> {
                       child: FittedBox(
                         fit: BoxFit.scaleDown,
                         child: Text(
-                          widget.categoryState.name,
+                          Utils.translateCategory(context, widget.categoryState.name),
                           textAlign: TextAlign.start,
                           style: TextStyle(
                               fontFamily: BuytimeTheme.FontFamily,

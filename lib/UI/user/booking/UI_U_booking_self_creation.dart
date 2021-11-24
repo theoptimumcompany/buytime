@@ -112,27 +112,20 @@ class _BookingSelfCreationState extends State<BookingSelfCreation> {
             key: _drawerKey,
 
             ///Appbar
-            appBar: BuytimeAppbar(
-              width: media.width,
-              background: BuytimeTheme.BackgroundCerulean,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    IconButton(
-                        icon: Icon(Icons.chevron_left, color: BuytimeTheme.BackgroundCerulean),
-                        onPressed: () {
-                          //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_BusinessList()));
-                        }),
-                  ],
+            appBar: AppBar(
+              backgroundColor: Colors.white,
+              brightness: Brightness.dark,
+              elevation: 1,
+              title: Text(
+                '${AppLocalizations.of(context).checkIn}',
+                style: TextStyle(
+                    fontFamily: BuytimeTheme.FontFamily,
+                    color: BuytimeTheme.TextBlack,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 16 ///SizeConfig.safeBlockHorizontal * 7
                 ),
-
-                ///Title
-                Utils.barTitle(AppLocalizations.of(context).checkIn),
-                SizedBox(
-                  width: 56.0,
-                )
-              ],
+              ),
+              centerTitle: true,
             ),
             //drawer: UI_M_BusinessListDrawer(),
             body: SafeArea(

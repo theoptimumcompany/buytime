@@ -36,12 +36,12 @@ class Utils {
   static double calculatePromoDiscount(double fullPrice, context, String businessId, int addRemove, int itemNumber) {
     double promoPrice = 0.0;
     bool promoForSpecificBusiness = StoreProvider.of<AppState>(context).state.promotionState != null &&
-                                    StoreProvider.of<AppState>(context).state.promotionState.businessIdList != null &&
-                                    StoreProvider.of<AppState>(context).state.promotionState.businessIdList.isNotEmpty &&
-                                    StoreProvider.of<AppState>(context).state.promotionState.businessIdList.contains(businessId);
+        StoreProvider.of<AppState>(context).state.promotionState.businessIdList != null &&
+        StoreProvider.of<AppState>(context).state.promotionState.businessIdList.isNotEmpty &&
+        StoreProvider.of<AppState>(context).state.promotionState.businessIdList.contains(businessId);
     bool promoForAllServices = StoreProvider.of<AppState>(context).state.promotionState != null &&
-                              (StoreProvider.of<AppState>(context).state.promotionState.businessIdList == null ||
-                               StoreProvider.of<AppState>(context).state.promotionState.businessIdList.isEmpty);
+        (StoreProvider.of<AppState>(context).state.promotionState.businessIdList == null ||
+            StoreProvider.of<AppState>(context).state.promotionState.businessIdList.isEmpty);
     if(itemNumber < StoreProvider.of<AppState>(context).state.promotionState.limit) {
       if (addRemove == 2 ) {
         StoreProvider.of<AppState>(context).state.promotionState.timesUsed -= 1;
@@ -70,11 +70,11 @@ class Utils {
         if ((fullPrice - (promotionState.discount).toDouble()) >= 3.0) {
           promoPrice = (promotionState.discount).toDouble();
         } else {
-           if (fullPrice - (promotionState.discount).toDouble() >= 0) { // 4 5 6 7
-             promoPrice = fullPrice - 3;
-           } else { // 1
-             promoPrice = 0.0;
-           }
+          if (fullPrice - (promotionState.discount).toDouble() >= 0) { // 4 5 6 7
+            promoPrice = fullPrice - 3;
+          } else { // 1
+            promoPrice = 0.0;
+          }
         }
         break;
       case 'percentageAmount':
@@ -89,16 +89,16 @@ class Utils {
   ///Check Promo Discount (gestisce principalmente le label rosse)
   static PromotionState checkPromoDiscount(String promoName, context, String businessId) {
     if(
-        StoreProvider.of<AppState>(context).state.promotionState != null &&
+    StoreProvider.of<AppState>(context).state.promotionState != null &&
         (StoreProvider.of<AppState>(context).state.promotionState.timesUsed < StoreProvider.of<AppState>(context).state.promotionState.limit) &&
         StoreProvider.of<AppState>(context).state.promotionState.businessIdList != null &&
         StoreProvider.of<AppState>(context).state.promotionState.businessIdList.isNotEmpty &&
         StoreProvider.of<AppState>(context).state.promotionState.businessIdList.contains(businessId)) {
       return StoreProvider.of<AppState>(context).state.promotionState;
     } else if (
-      StoreProvider.of<AppState>(context).state.promotionState != null &&
-      (StoreProvider.of<AppState>(context).state.promotionState.timesUsed < StoreProvider.of<AppState>(context).state.promotionState.limit) &&
-      (StoreProvider.of<AppState>(context).state.promotionState.businessIdList == null || StoreProvider.of<AppState>(context).state.promotionState.businessIdList.isEmpty)
+    StoreProvider.of<AppState>(context).state.promotionState != null &&
+        (StoreProvider.of<AppState>(context).state.promotionState.timesUsed < StoreProvider.of<AppState>(context).state.promotionState.limit) &&
+        (StoreProvider.of<AppState>(context).state.promotionState.businessIdList == null || StoreProvider.of<AppState>(context).state.promotionState.businessIdList.isEmpty)
     ) {
       PromotionState(promotionId: 'empty');
       // return StoreProvider.of<AppState>(context).state.promotionState;
@@ -109,14 +109,14 @@ class Utils {
   ///Check Promo Discount (gestisce principalmente le label rosse)
   static PromotionState checkPromoDiscountTotal(String promoName, context, String businessId) {
     if(
-        StoreProvider.of<AppState>(context).state.promotionState != null &&
+    StoreProvider.of<AppState>(context).state.promotionState != null &&
         StoreProvider.of<AppState>(context).state.promotionState.businessIdList != null &&
         StoreProvider.of<AppState>(context).state.promotionState.businessIdList.isNotEmpty &&
         StoreProvider.of<AppState>(context).state.promotionState.businessIdList.contains(businessId)) {
       return StoreProvider.of<AppState>(context).state.promotionState;
     } else if (
-      StoreProvider.of<AppState>(context).state.promotionState != null &&
-      (StoreProvider.of<AppState>(context).state.promotionState.businessIdList == null || StoreProvider.of<AppState>(context).state.promotionState.businessIdList.isEmpty)
+    StoreProvider.of<AppState>(context).state.promotionState != null &&
+        (StoreProvider.of<AppState>(context).state.promotionState.businessIdList == null || StoreProvider.of<AppState>(context).state.promotionState.businessIdList.isEmpty)
     ) {
       PromotionState(promotionId: 'empty');
       // return StoreProvider.of<AppState>(context).state.promotionState;
@@ -563,7 +563,7 @@ class Utils {
           physics: ClampingScrollPhysics(),
           child: Padding(
             padding: EdgeInsets.only(
-                //top: SizeConfig.safeBlockVertical * 5,
+              //top: SizeConfig.safeBlockVertical * 5,
                 bottom: MediaQuery.of(context).viewInsets.bottom),
             child: SafeArea(
               child: Container(
@@ -613,7 +613,7 @@ class Utils {
                           },
                           style: TextStyle(color: BuytimeTheme.TextGrey, fontFamily: BuytimeTheme.FontFamily),
                           decoration: InputDecoration(
-                              //labelText: field,
+                            //labelText: field,
                               enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
                               border: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
                               focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
@@ -649,13 +649,13 @@ class Utils {
                             slivers: [
                               SliverList(
                                 delegate: SliverChildBuilderDelegate(
-                                  (context, index) {
+                                      (context, index) {
                                     String flag = flags.elementAt(index);
                                     if (myLocaleCharCode != flag)
                                       return Container(
                                         margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 6, right: SizeConfig.safeBlockHorizontal * 6, top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1),
                                         child: TextFormField(
-                                            //initialValue: _serviceName,
+                                          //initialValue: _serviceName,
                                             controller: controllers.elementAt(index),
                                             keyboardType: TextInputType.multiline,
                                             textInputAction: TextInputAction.done,
@@ -885,21 +885,21 @@ class Utils {
                         ),
                         addressController.text.isNotEmpty && predictions.isNotEmpty
                             ? Flexible(
-                                child: ListView.builder(
-                                  shrinkWrap: true,
-                                  itemCount: predictions.length,
-                                  itemBuilder: (context, index) {
-                                    debugPrint('data found');
-                                    return ListTile(
-                                      leading: Icon(
-                                        Icons.place,
-                                        color: BuytimeTheme.ManagerPrimary,
-                                      ),
-                                      title: Text(predictions[index][0]),
-                                      onTap: () async {
-                                        debugPrint(predictions[index][1]);
-                                        getDetails(predictions[index][1], context);
-                                        /*Navigator.push(
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: predictions.length,
+                            itemBuilder: (context, index) {
+                              debugPrint('data found');
+                              return ListTile(
+                                leading: Icon(
+                                  Icons.place,
+                                  color: BuytimeTheme.ManagerPrimary,
+                                ),
+                                title: Text(predictions[index][0]),
+                                onTap: () async {
+                                  debugPrint(predictions[index][1]);
+                                  getDetails(predictions[index][1], context);
+                                  /*Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => DetailsPage(
@@ -908,11 +908,11 @@ class Utils {
                                 ),
                               ),
                             );*/
-                                      },
-                                    );
-                                  },
-                                ),
-                              )
+                                },
+                              );
+                            },
+                          ),
+                        )
                             : Container(),
                         /*Container(
                   margin: EdgeInsets.only(top: 10, bottom: 10),
@@ -1077,6 +1077,173 @@ class Utils {
       }
     }
     return areaFound;
+  }
+
+  static String translateCategory(BuildContext context, String categoryName){
+    String localeCategory = '';
+    switch(categoryName){
+      case 'Adrenaline Activities':
+        localeCategory = AppLocalizations.of(context).defaultCategory_AdrenalineActivities.toString();
+        break;
+      case 'Adults Sailing':
+        localeCategory = AppLocalizations.of(context).defaultCategory_AdultsSailing.toString();
+        break;
+      case 'Advanced Diving':
+        localeCategory = AppLocalizations.of(context).defaultCategory_AdvancedDiving.toString();
+        break;
+      case 'Alcoholic Drinks':
+        localeCategory = AppLocalizations.of(context).defaultCategory_AlcoholicDrinks.toString();
+        break;
+      case 'Archeology Museum':
+        localeCategory = AppLocalizations.of(context).defaultCategory_ArcheologyMuseum.toString();
+        break;
+      case 'Art Museum':
+        localeCategory = AppLocalizations.of(context).defaultCategory_ArtMuseum.toString();
+        break;
+      case 'Base Diving':
+        localeCategory = AppLocalizations.of(context).defaultCategory_BaseDiving.toString();
+        break;
+      case 'Beach':
+        localeCategory = AppLocalizations.of(context).defaultCategory_Beach.toString();
+        break;
+      case 'Bike':
+        localeCategory = AppLocalizations.of(context).defaultCategory_Bike.toString();
+        break;
+      case 'Bike Course':
+        localeCategory = AppLocalizations.of(context).defaultCategory_BikeCourse.toString();
+        break;
+      case 'Bike Rental':
+        localeCategory = AppLocalizations.of(context).defaultCategory_BikeRental.toString();
+        break;
+      case 'Bike Tours':
+        localeCategory = AppLocalizations.of(context).defaultCategory_BikeTours.toString();
+        break;
+      case 'Car Rental':
+        localeCategory = AppLocalizations.of(context).defaultCategory_CarRental.toString();
+        break;
+      case 'Concerts And Venues':
+        localeCategory = AppLocalizations.of(context).defaultCategory_ConcertsAndVenues.toString();
+        break;
+      case 'Concierge':
+        localeCategory = AppLocalizations.of(context).defaultCategory_Concierge.toString();
+        break;
+      case 'Conference':
+        localeCategory = AppLocalizations.of(context).defaultCategory_Conference.toString();
+        break;
+      case 'Diving':
+        localeCategory = AppLocalizations.of(context).defaultCategory_Diving.toString();
+        break;
+      case 'Diving Certification':
+        localeCategory = AppLocalizations.of(context).defaultCategory_DivingCertification.toString();
+        break;
+      case 'Drink':
+        localeCategory = AppLocalizations.of(context).defaultCategory_Drink.toString();
+        break;
+      case 'eBike Rental':
+        localeCategory = AppLocalizations.of(context).defaultCategory_eBikeRental.toString();
+        break;
+      case 'Entertainment':
+        localeCategory = AppLocalizations.of(context).defaultCategory_Entertainment.toString();
+        break;
+      case 'Exhibitions':
+        localeCategory = AppLocalizations.of(context).defaultCategory_Exhibitions.toString();
+        break;
+      case 'Exotic Food':
+        localeCategory = AppLocalizations.of(context).defaultCategory_ExoticFood.toString();
+        break;
+      case 'Family':
+        localeCategory = AppLocalizations.of(context).defaultCategory_Family.toString();
+        break;
+      case 'Fast Food':
+        localeCategory = AppLocalizations.of(context).defaultCategory_FastFood.toString();
+        break;
+      case 'Food':
+        localeCategory = AppLocalizations.of(context).defaultCategory_Food.toString();
+        break;
+      case 'Golf':
+        localeCategory = AppLocalizations.of(context).defaultCategory_Golf.toString();
+        break;
+      case 'History Museum':
+        localeCategory = AppLocalizations.of(context).defaultCategory_HistoryMuseum.toString();
+        break;
+      case 'Kids Diving':
+        localeCategory = AppLocalizations.of(context).defaultCategory_KidsDiving.toString();
+        break;
+      case 'Kids Sailing':
+        localeCategory = AppLocalizations.of(context).defaultCategory_KidsSailing.toString();
+        break;
+      case 'Local Events':
+        localeCategory = AppLocalizations.of(context).defaultCategory_LocalEvents.toString();
+        break;
+      case 'Local Food':
+        localeCategory = AppLocalizations.of(context).defaultCategory_LocalFood.toString();
+        break;
+      case 'Massage':
+        localeCategory = AppLocalizations.of(context).defaultCategory_Massage.toString();
+        break;
+      case 'Mbk Bike':
+        localeCategory = AppLocalizations.of(context).defaultCategory_MbkBike.toString();
+        break;
+      case 'Medium Car Rental':
+        localeCategory = AppLocalizations.of(context).defaultCategory_MediumCarRental.toString();
+        break;
+      case 'Moto Rental':
+        localeCategory = AppLocalizations.of(context).defaultCategory_MotoRental.toString();
+        break;
+      case 'Museum':
+        localeCategory = AppLocalizations.of(context).defaultCategory_Museum.toString();
+        break;
+      case 'Nature & Wildlife':
+        localeCategory = AppLocalizations.of(context).defaultCategory_NatureWildlife.toString();
+        break;
+      case 'Other Sport':
+        localeCategory = AppLocalizations.of(context).defaultCategory_OtherSport.toString();
+        break;
+      case 'Pool':
+        localeCategory = AppLocalizations.of(context).defaultCategory_Pool.toString();
+        break;
+      case 'Premium Car Rental':
+        localeCategory = AppLocalizations.of(context).defaultCategory_PremiumCarRental.toString();
+        break;
+      case 'Room Service Food':
+        localeCategory = AppLocalizations.of(context).defaultCategory_RoomServiceFood.toString();
+        break;
+      case 'Sailing':
+        localeCategory = AppLocalizations.of(context).defaultCategory_Sailing.toString();
+        break;
+      case 'Shuttle Taxi':
+        localeCategory = AppLocalizations.of(context).defaultCategory_ShuttleTaxi.toString();
+        break;
+      case 'Small Car Rental':
+        localeCategory = AppLocalizations.of(context).defaultCategory_SmallCarRental.toString();
+        break;
+      case 'Soft Drinks':
+        localeCategory = AppLocalizations.of(context).defaultCategory_SoftDrinks.toString();
+        break;
+      case 'SPA':
+        localeCategory = AppLocalizations.of(context).defaultCategory_Spa.toString();
+        break;
+      case 'Special Bikes':
+        localeCategory = AppLocalizations.of(context).defaultCategory_SpecialBikes.toString();
+        break;
+      case 'Sport':
+        localeCategory = AppLocalizations.of(context).defaultCategory_Sport.toString();
+        break;
+      case 'Tennis':
+        localeCategory = AppLocalizations.of(context).defaultCategory_Tennis.toString();
+        break;
+      case 'Tours':
+        localeCategory = AppLocalizations.of(context).defaultCategory_Tours.toString();
+        break;
+      case 'Wellness':
+        localeCategory = AppLocalizations.of(context).defaultCategory_Wellness.toString();
+        break;
+      default:
+        localeCategory = categoryName;
+        break;
+    }
+    return localeCategory;
+
   }
 }
 

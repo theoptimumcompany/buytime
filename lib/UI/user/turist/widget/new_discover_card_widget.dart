@@ -91,7 +91,7 @@ class _NewDiscoverCardWidgetState extends State<NewDiscoverCardWidget> {
               child: Container(
                 margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2, right: SizeConfig.safeBlockHorizontal * 1),
                 child: Text(
-                  widget.categoryState.name.toUpperCase(),
+                  Utils.translateCategory(context, widget.categoryState.name).toUpperCase(),
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                       fontFamily: BuytimeTheme.FontFamily,
