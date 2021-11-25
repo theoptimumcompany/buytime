@@ -16,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class RActivityManagementItemDetails extends StatefulWidget {
   static String route = '/activityManagementItemDetails';
@@ -733,6 +734,72 @@ class _RActivityManagementItemDetailsState extends State<RActivityManagementItem
                       ),
                     ),
 
+                    Column(
+                      children: [
+                        Container(
+                          child: Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                                onTap: () async{
+                                  String encodeQueryParameters(Map<String, String> params) {
+                                    return params.entries
+                                        .map((e) => '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
+                                        .join('&');
+                                  }
+                                  final Uri emailLaunchUri = Uri(
+                                    scheme: 'mailto',
+                                    path: orderState.user.email,
+                                      query: encodeQueryParameters(<String, String>{
+                                        'subject' : 'EMAIL FOR ...',
+                                        'body' : 'EMAIL SEND FOR ...'
+                                      }),
+                                  );
+                                  if (await canLaunch(emailLaunchUri.toString())) {
+                                    await launch(emailLaunchUri.toString());
+                                  } else {
+                                    throw 'Could not launch $emailLaunchUri';
+                                  }
+                                },
+                                borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                child: Container(
+                                  padding: EdgeInsets.only(top: 12.5, bottom: 12.5),
+                                  margin: EdgeInsets.symmetric(horizontal: 18),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Container(
+                                        child: Text(
+                                          AppLocalizations.of(context).sendAnEmail,
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              fontFamily: BuytimeTheme.FontFamily,
+                                              fontWeight: FontWeight.w500,
+                                              //letterSpacing: 1.25
+                                          ),
+                                        ),
+                                      ),
+                                      Container(
+                                        child: Icon(
+                                          Icons.email_outlined,
+                                          color: BuytimeTheme.TextBlack,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                )
+                            ),
+                          ),
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(left: 18),
+                          child: Divider(
+                            indent: 0.0,
+                            color: BuytimeTheme.DividerGrey,
+                            thickness: 1.0,
+                          ),
+                        )
+                      ],
+                    ),
                     ///Accept & Cancel
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,

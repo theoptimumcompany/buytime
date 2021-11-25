@@ -285,21 +285,23 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
       });
     }
 
-    AlgoliaQuery query = algolia.instance.index('service').query(_searchController.text);
-    AlgoliaQuerySnapshot snap = await query.getObjects();
-    debugPrint('RUI_U_service_explorer => ALGOLIA RESULT: ${snap}');
-    setState(() {
-      if(snap.hits.isNotEmpty){
-        snap.hits.forEach((hit) {
-          ServiceState service = ServiceState.fromJson(hit.data);
-          tmpServices.add(service);
-        });
-        Provider.of<Explorer>(context, listen: false).searchedList.add(tmp);
-        Provider.of<Explorer>(context, listen: false).searchedList.add(tmpServices);
-      }else{
-        Provider.of<Explorer>(context, listen: false).searchedList.add(tmp);
-      }
-    });
+    if(_searchController.text.length > 3){ ///TODO check if work
+      AlgoliaQuery query = algolia.instance.index('service').query(_searchController.text);
+      AlgoliaQuerySnapshot snap = await query.getObjects();
+      debugPrint('RUI_U_service_explorer => ALGOLIA RESULT: ${snap}');
+      setState(() {
+        if(snap.hits.isNotEmpty){
+          snap.hits.forEach((hit) {
+            ServiceState service = ServiceState.fromJson(hit.data);
+            tmpServices.add(service);
+          });
+          Provider.of<Explorer>(context, listen: false).searchedList.add(tmp);
+          Provider.of<Explorer>(context, listen: false).searchedList.add(tmpServices);
+        }else{
+          Provider.of<Explorer>(context, listen: false).searchedList.add(tmp);
+        }
+      });
+    }
 
     debugPrint('RUI_U_service_explorer => SEARCHED LIST LENGTH: ${Provider.of<Explorer>(context, listen: false).searchedList.length}');
   }

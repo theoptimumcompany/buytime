@@ -715,5 +715,6 @@
   "defaultCategory_Sport" : "Sport",
   "defaultCategory_Tennis" : "Tennis",
   "defaultCategory_Tours" : "Escursioni",
-  "defaultCategory_Wellness" : "Benessere"
+  "defaultCategory_Wellness" : "Benessere",
+  "sendAnEmail" : "Send an Email"
 }

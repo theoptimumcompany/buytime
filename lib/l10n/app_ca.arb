@@ -714,5 +714,6 @@
   "defaultCategory_Sport" : "Esport",
   "defaultCategory_Tennis" : "Tennis",
   "defaultCategory_Tours" : "Tours",
-  "defaultCategory_Wellness" : "Benestar"
+  "defaultCategory_Wellness" : "Benestar",
+  "sendAnEmail" : "Send an Email"
 }
