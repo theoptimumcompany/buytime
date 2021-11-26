@@ -285,7 +285,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
       });
     }
 
-    if(_searchController.text.length > 3){ ///TODO check if work
+    if(_searchController.text.length >= 3){ ///TODO check if work
       AlgoliaQuery query = algolia.instance.index('service').query(_searchController.text);
       AlgoliaQuerySnapshot snap = await query.getObjects();
       debugPrint('RUI_U_service_explorer => ALGOLIA RESULT: ${snap}');
