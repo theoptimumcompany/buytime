@@ -171,7 +171,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
             .where("visibility", isEqualTo: 'Active')
         //.orderBy("name")
             .limit(10)
-            .snapshots(includeMetadataChanges: true);;
+            .snapshots(includeMetadataChanges: true);
       }else{
         _serviceStream = FirebaseFirestore.instance.collection("service")
             .where("visibility", isEqualTo: 'Active')
