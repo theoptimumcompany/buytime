@@ -717,5 +717,10 @@
   "defaultCategory_Tennis" : "Tennis",
   "defaultCategory_Tours" : "Escursioni",
   "defaultCategory_Wellness" : "Benessere",
-  "sendAnEmail" : "Send an Email"
+  "sendAnEmail" : "Send an Email",
+  "selectInterestedServices" : "Select interested Services:",
+  "selectRecipient" : "Select recipient:",
+  "guestsOf" : "Guests of",
+  "turist" : "Turist",
+  "allServices" : "All Services"
 }

@@ -583,8 +583,8 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
 
     _locationData = await location.getLocation();
     if (_locationData.latitude != null) {
-      await FirebaseMessaging.instance.subscribeToTopic('broadcast_gps');
-      debugPrint('FIREBASE MESSAGING TOP SUBSCRIBTION TO: broadcast_gps');
+      //await FirebaseMessaging.instance.subscribeToTopic('broadcast_gps');
+      //debugPrint('FIREBASE MESSAGING TOP SUBSCRIBTION TO: broadcast_gps');
       setState(() {
         gettingLocation = false;
         currentLat = _locationData.latitude;
@@ -595,8 +595,10 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
       /// set current area in the store
       AreaListState areaListState = StoreProvider.of<AppState>(context).state.areaList;
       AreaState areaState = Utils.getCurrentArea('$currentLat, $currentLng', areaListState);
-      await FirebaseMessaging.instance.subscribeToTopic('broadcast_${areaState.areaId}');
-      debugPrint('FIREBASE MESSAGING TOP SUBSCRIBTION TO: broadcast_${areaState.areaId}');
+      if(areaState != null && areaState.areaId != null && areaState.areaId.isNotEmpty){
+        await FirebaseMessaging.instance.subscribeToTopic('broadcast_${areaState.areaId}');
+        debugPrint('FIREBASE MESSAGING TOP SUBSCRIBTION TO: broadcast_${areaState.areaId}');
+      }
       StoreProvider.of<AppState>(context).dispatch(SetArea(areaState));
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context).problemsGettingYourPosition)));

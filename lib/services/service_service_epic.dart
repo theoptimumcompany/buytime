@@ -321,7 +321,6 @@ class ServiceListByIdsRequestService implements EpicClass<AppState> {
 
 class ServiceListByBusinessIdsRequestService implements EpicClass<AppState> {
   StatisticsState statisticsState;
-
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     debugPrint("service_service_epic => ServiceListByBusinessIdsRequestService => ServiceListService CATCHED ACTION");
@@ -335,6 +334,62 @@ class ServiceListByBusinessIdsRequestService implements EpicClass<AppState> {
       for(int i = 0; i < event.businessIds.length; i++){
         CollectionReference servicesFirebase = FirebaseFirestore.instance.collection("service");
         Query query = servicesFirebase.where("businessId", isEqualTo: event.businessIds[i]).where("switchSlots", isEqualTo: true);
+
+        /// 1 READ - ? DOC
+        //   query = query.where("id_category", isEqualTo: categoryInviteState.id_category);
+
+        await query.get().then((value) {
+          docs = value.docs.length;
+          value.docs.forEach((element) {
+            ServiceState serviceState = ServiceState.fromJson(element.data());
+
+            serviceStateList.add(serviceState);
+          });
+        });
+
+        ++read;
+      }
+
+
+      debugPrint("service_service_epic => ServiceListByBusinessIdsRequestService => Epic ServiceListService return list with " + serviceStateList.length.toString());
+
+      statisticsState = store.state.statistics;
+      int reads = statisticsState.serviceListRequestServiceRead;
+      int writes = statisticsState.serviceListRequestServiceWrite;
+      int documents = statisticsState.serviceListRequestServiceDocuments;
+      debugPrint('service_service_epic => ServiceListByBusinessIdsRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      reads = reads + read;
+      documents = documents + docs;
+      debugPrint('service_service_epic => ServiceListByBusinessIdsRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      statisticsState.serviceListRequestServiceRead = reads;
+      statisticsState.serviceListRequestServiceWrite = writes;
+      statisticsState.serviceListRequestServiceDocuments = documents;
+
+      if(serviceStateList.isEmpty)
+        serviceStateList.add(ServiceState());
+
+    }).expand((element) => [
+      ServiceListReturned(serviceStateList),
+      UpdateStatistics(statisticsState),
+    ]);
+  }
+}
+
+class ServiceListByBusinessIdsRequestServiceBroadcast implements EpicClass<AppState> {
+  StatisticsState statisticsState;
+  @override
+  Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
+    debugPrint("service_service_epic => ServiceListByBusinessIdsRequestService => ServiceListService CATCHED ACTION");
+    List<ServiceState> serviceStateList = [];
+    return actions.whereType<ServiceListRequestByBusinessIdsBroadcast>().asyncMap((event) async {
+      debugPrint("service_service_epic => ServiceListByBusinessIdsRequestService => ServiceListService Firestore request");
+      debugPrint("service_service_epic => ServiceListByBusinessIdsRequestService => Service Ids Length: ${event.businessIds.length}");
+      int docs = 0;
+      int read = 0;
+      serviceStateList.clear();
+      for(int i = 0; i < event.businessIds.length; i++){
+        CollectionReference servicesFirebase = FirebaseFirestore.instance.collection("service");
+        Query query = servicesFirebase.where("businessId", isEqualTo: event.businessIds[i]);
 
         /// 1 READ - ? DOC
         //   query = query.where("id_category", isEqualTo: categoryInviteState.id_category);

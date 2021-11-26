@@ -138,7 +138,8 @@ CategoryTreeDeleteService(), */
   ServiceUpdateSlotSnippetService(),
   StripeCardListRequestAndNavigatePop(),
   PromotionListRequestService(),
-  PromotionRequestService()
+  PromotionRequestService(),
+  ServiceListByBusinessIdsRequestServiceBroadcast()
 //DefaultCategoryTreeAddService(),
 /*BusinessGenerateDefaultCategoryService(),
 DefaultCategoryCreateService(),

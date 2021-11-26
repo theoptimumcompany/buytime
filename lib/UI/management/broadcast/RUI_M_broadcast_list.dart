@@ -98,7 +98,7 @@ class RBroadcastListState extends State<RBroadcastList> {
             brightness: Brightness.dark,
             elevation: 1,
             title: Text(
-              AppLocalizations.of(context).businessManagement,
+              AppLocalizations.of(context).broadcastMessages,
               style: TextStyle(
                   fontFamily: BuytimeTheme.FontFamily,
                   color: BuytimeTheme.TextBlack,
@@ -108,7 +108,7 @@ class RBroadcastListState extends State<RBroadcastList> {
             ),
             centerTitle: true,
             leading: IconButton(
-              key: Key('business_drawer_key'),
+              //key: Key('business_drawer_key'),
               icon: const Icon(
                 Icons.menu,
                 color: BuytimeTheme.TextBlack,
@@ -120,7 +120,19 @@ class RBroadcastListState extends State<RBroadcastList> {
               },
             ),
             actions: [
-              StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin ||
+              IconButton(
+                icon: const Icon(
+                  Icons.add,
+                  color: BuytimeTheme.TextBlack,
+                  //size: 30.0,
+                ),
+                tooltip: AppLocalizations.of(context).createBusinessPlain,
+                onPressed: () {
+                  //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_CreateBusiness()));
+                  Navigator.push(context, EnterExitRoute(enterPage: CreateBroadcast(false, BroadcastState().toEmpty()), exitPage: RBroadcastList(), from: true));
+                },
+              )
+              /*StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin ||
                   StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman ||
                   StoreProvider.of<AppState>(context).state.user.getRole() == Role.owner ? Padding(
                 padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
@@ -136,7 +148,7 @@ class RBroadcastListState extends State<RBroadcastList> {
                     Navigator.push(context, EnterExitRoute(enterPage: CreateBroadcast(false, BroadcastState().toEmpty()), exitPage: RBroadcastList(), from: true));
                   },
                 ),
-              ) :  Container()
+              ) :  Container()*/
             ],
           ),
           drawer: ManagerDrawer(),

@@ -35,6 +35,13 @@ class ServiceListRequestByBusinessIds{
 
   List<String> get businessIds => _businessIds;
 }
+class ServiceListRequestByBusinessIdsBroadcast{
+  List<String> _businessIds;
+
+  ServiceListRequestByBusinessIdsBroadcast(this._businessIds);
+
+  List<String> get businessIds => _businessIds;
+}
 
 class ServiceListAndNavigateRequest {
   String _businessId;

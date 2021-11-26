@@ -22,6 +22,7 @@ import 'package:Buytime/reblox/navigation/navigation_middleware.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:rxdart/rxdart.dart';
+import 'UI/management/broadcast/UI_M_create_broadcast.dart';
 import 'UI/management/service_internal/RUI_M_service_list.dart';
 import 'UI/management/service_internal/UI_M_hub_convention_edit.dart';
 import 'UI/user/booking/RUI_U_notifications.dart';
@@ -61,6 +62,7 @@ Future<void> main() async {
             ChangeNotifierProvider(create: (_) => ReserveList([], OrderReservableState().toEmpty(),[], [], [], [])),
             ChangeNotifierProvider(create: (_) => Explorer(false, [], [], [], TextEditingController(), false, [], BusinessState().toEmpty(), [], '', [])),
             ChangeNotifierProvider(create: (_) => CategoryService([], [])),
+            ChangeNotifierProvider(create: (_) => Broadcast([], Map())),
           ],
           child: Buytime(store: store),
         ));
