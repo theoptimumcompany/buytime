@@ -190,7 +190,7 @@ class MessagingHelper {
           flutterLocalNotificationsPlugin.show(
               notification.hashCode,
               notification.title,
-              notification.body,
+              notificationBodyBuilder(can, notificationBodyList, customNotificationTime, notification, context),
               NotificationDetails(
                 iOS: IOSNotificationDetails(sound: 'slow_spring_board.aiff'),
               ),
