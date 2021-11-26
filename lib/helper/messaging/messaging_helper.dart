@@ -160,7 +160,7 @@ class MessagingHelper {
       if(can){
         DateTime notificationTime = DateTime.now();
         notificationTime = DateTime.fromMillisecondsSinceEpoch(int.parse(notificationBodyList[1]));
-        customNotificationTime = DateFormat('E, dd/M/yyyy, HH:mm').format(notificationTime);
+        customNotificationTime = DateFormat('E, dd/M/yyyy, HH:mm', Localizations.localeOf(context).languageCode).format(notificationTime);
       }
       if(Platform.isAndroid)
       {

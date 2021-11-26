@@ -11,6 +11,7 @@ import 'package:Buytime/utils/utils.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:intl/intl.dart';
 
 class ManagerNotificationListItem extends StatefulWidget {
 
@@ -29,10 +30,15 @@ class _ManagerNotificationListItemState extends State<ManagerNotificationListIte
   String minutes = '';
   String seconds = '';
 
+  bool can = false;
+
+  List<String> notificationBodyList = [];
+  String customNotificationTime = '';
+  DateTime notificationTime = DateTime.now();
   @override
   void initState() {
     super.initState();
-    DateTime notificationTime = DateTime.now();
+
     if(widget.notificationState.timestamp != null)
       notificationTime = DateTime.fromMillisecondsSinceEpoch(widget.notificationState.timestamp);
     debugPrint('manager_notification_list_item => NOTIFICATION TIME: $notificationTime');
@@ -56,11 +62,39 @@ class _ManagerNotificationListItemState extends State<ManagerNotificationListIte
       //debugPrint('manager_notification_list_item => SECONDS: ${tmpDuration.inSeconds}');
       seconds = tmpDuration.inSeconds.toString();
     }
+
+    notificationBodyList =  widget.notificationState.body.split('|');
+    if(notificationBodyList.isNotEmpty && notificationBodyList.length == 4)
+      can = true;
   }
+
+  String notificationBodyBuilder(bool can, List<String> notificationBodyList, String customNotificationTime, BuildContext context) {
+    if (can) {
+      if (notificationBodyList[3] == 'orderPaid') {
+        return '${AppLocalizations.of(context).orderFor} ${notificationBodyList[0]} ${AppLocalizations.of(context).on} $customNotificationTime ${AppLocalizations.of(context).hasBeenPaid}, € ${notificationBodyList[2]}';
+      } else if (notificationBodyList[3] == 'paymentError') {
+        return '${AppLocalizations.of(context).thePaymentFor} ${notificationBodyList[0]} ${AppLocalizations.of(context).on} $customNotificationTime ${AppLocalizations.of(context).hasBeenRefusedMethod}';
+      } else if (notificationBodyList[3] == 'acceptedBuyer') {
+        return '${notificationBodyList[0]}  ${AppLocalizations.of(context).on} $customNotificationTime';
+      } else if (notificationBodyList[3] == 'declinedBuyer') {
+        return '${AppLocalizations.of(context).unfortunatelyYourBooking} ${notificationBodyList[0]} ${AppLocalizations.of(context).on} $customNotificationTime ${AppLocalizations.of(context).hasNotBeenAccepted}';
+      } else if (notificationBodyList[3] == 'canceledBuyer') {
+        return '${AppLocalizations.of(context).orderFor} ${notificationBodyList[0]} ${AppLocalizations.of(context).on} $customNotificationTime ${AppLocalizations.of(context).hasBeenCanceledFor} ${notificationBodyList[4]} ${AppLocalizations.of(context).aRefundFor} €${notificationBodyList[2]} ${AppLocalizations.of(context).hasBeenInitiated}';
+      } else if (notificationBodyList[3] == 'canceledBusiness') {
+        return '${AppLocalizations.of(context).orderFor} ${notificationBodyList[0]} ${AppLocalizations.of(context).on} $customNotificationTime ${AppLocalizations.of(context).hasBeenCanceledRefundFor} €${notificationBodyList[2]} ${AppLocalizations.of(context).hasBeenPaid}';
+      } else if (notificationBodyList[3] == 'createdAutoAcceptedBusiness') {
+        return '${AppLocalizations.of(context).aNewOrder} ${notificationBodyList[0]} ${AppLocalizations.of(context).on} $customNotificationTime ${AppLocalizations.of(context).hasBeenCreated}';
+      } else if (notificationBodyList[3] == 'actionRequiredBusiness') {
+        return '${AppLocalizations.of(context).aNewRequestFor} ${notificationBodyList[0]} ${AppLocalizations.of(context).on} $customNotificationTime ${AppLocalizations.of(context).needsConfirmation} ';
+      }
+    }
+    return widget.notificationState.body;
+  }
+
 
   @override
   Widget build(BuildContext context) {
-
+    customNotificationTime = DateFormat('E, dd/M/yyyy, HH:mm', Localizations.localeOf(context).languageCode).format(notificationTime);
     //debugPrint('manager_notification_list_item => image: ${widget.serviceState.image1}');
     return Container(
       //margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 4, right: SizeConfig.safeBlockHorizontal * 4),
@@ -183,7 +217,7 @@ class _ManagerNotificationListItemState extends State<ManagerNotificationListIte
                                     child: Container(
                                       margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 0, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1),
                                       child: Text(
-                                        widget.notificationState.body,
+                                        notificationBodyBuilder(can, notificationBodyList, customNotificationTime, context),
                                         overflow: TextOverflow.ellipsis,
                                         maxLines: 3,
                                         style: TextStyle(
