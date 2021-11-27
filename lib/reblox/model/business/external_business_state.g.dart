@@ -54,6 +54,9 @@ ExternalBusinessState _$ExternalBusinessStateFromJson(
     area: (json['area'] as List)?.map((e) => e as String)?.toList(),
     hub: json['hub'] as bool ?? false,
     businessAddress: json['businessAddress'] as String,
+    contentCreator: json['contentCreator'] == null
+        ? null
+        : UserSnippet.fromJson(json['contentCreator'] as Map<String, dynamic>),
   );
 }
 
@@ -101,4 +104,5 @@ Map<String, dynamic> _$ExternalBusinessStateToJson(
       'area': instance.area,
       'hub': instance.hub,
       'businessAddress': instance.businessAddress,
+      'contentCreator': instance.contentCreator?.toJson(),
     };

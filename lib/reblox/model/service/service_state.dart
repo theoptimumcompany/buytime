@@ -1,8 +1,10 @@
 import 'package:Buytime/reblox/model/service/service_slot_time_state.dart';
+import 'package:Buytime/reblox/model/user/snippet/user_snippet_state.dart';
 import '../file/optimum_file_to_upload.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import 'convention_slot_state.dart';
+
 part 'service_state.g.dart';
 
 @JsonSerializable(explicitToJson: true)
@@ -50,6 +52,7 @@ class ServiceState {
   bool paymentMethodOnSite = false;
   @JsonKey(defaultValue: '')
   String condition;
+  UserSnippet contentCreator;
 
   @JsonKey(defaultValue: [])
   List<ConventionSlot> conventionSlotList;
@@ -91,6 +94,7 @@ class ServiceState {
     this.paymentMethodCard,
     this.paymentMethodOnSite,
     this.condition,
+    this.contentCreator,
   });
 
   ServiceState toEmpty() {
@@ -127,6 +131,7 @@ class ServiceState {
       paymentMethodCard: true,
       paymentMethodOnSite: false,
       condition: '',
+      contentCreator: UserSnippet().toEmpty(),
     );
   }
 
@@ -163,42 +168,43 @@ class ServiceState {
     this.paymentMethodOnSite = service.paymentMethodOnSite;
     this.paymentMethodRoom = service.paymentMethodRoom;
     this.condition = service.condition;
+    this.contentCreator = service.contentCreator;
   }
 
-  ServiceState copyWith({
-    String serviceId,
-    String businessId,
-    List<String> categoryId,
-    String name,
-    String image1,
-    String image2,
-    String image3,
-    String description,
-    String visibility,
-    double price,
-    int vat,
-    List<OptimumFileToUpload> fileToUploadList,
-    List<ConventionSlot> conventionSlotList,
-    int timesSold,
-    List<String> tag,
-    bool switchSlots,
-    bool hubConvention,
-    bool switchAutoConfirm,
-    List<ServiceSlot> serviceSlot,
-    bool spinnerVisibility,
-    bool serviceCreated,
-    bool serviceEdited,
-    bool serviceCrossSell,
-    String serviceBusinessAddress,
-    String serviceBusinessCoordinates,
-    String originalLanguage,
-    String serviceAddress,
-    String serviceCoordinates,
-    bool paymentMethodRoom,
-    bool paymentMethodCard,
-    bool paymentMethodOnSite,
-    String condition,
-  }) {
+  ServiceState copyWith(
+      {String serviceId,
+      String businessId,
+      List<String> categoryId,
+      String name,
+      String image1,
+      String image2,
+      String image3,
+      String description,
+      String visibility,
+      double price,
+      int vat,
+      List<OptimumFileToUpload> fileToUploadList,
+      List<ConventionSlot> conventionSlotList,
+      int timesSold,
+      List<String> tag,
+      bool switchSlots,
+      bool hubConvention,
+      bool switchAutoConfirm,
+      List<ServiceSlot> serviceSlot,
+      bool spinnerVisibility,
+      bool serviceCreated,
+      bool serviceEdited,
+      bool serviceCrossSell,
+      String serviceBusinessAddress,
+      String serviceBusinessCoordinates,
+      String originalLanguage,
+      String serviceAddress,
+      String serviceCoordinates,
+      bool paymentMethodRoom,
+      bool paymentMethodCard,
+      bool paymentMethodOnSite,
+      String condition,
+      UserSnippet contentCreator}) {
     return ServiceState(
       serviceId: serviceId ?? this.serviceId,
       businessId: businessId ?? this.businessId,
@@ -232,6 +238,7 @@ class ServiceState {
       paymentMethodCard: paymentMethodCard ?? this.paymentMethodCard,
       paymentMethodOnSite: paymentMethodOnSite ?? this.paymentMethodOnSite,
       condition: condition ?? this.condition,
+      contentCreator: contentCreator ?? this.contentCreator,
     );
   }
 

@@ -1389,8 +1389,8 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                               onStepContinue: next,
                                               onStepTapped: (step) => goTo(step),
                                               onStepCancel: cancel,
-                                              controlsBuilder: (BuildContext context, {VoidCallback onStepContinue, VoidCallback onStepCancel}) => StoreConnector<AppState, BusinessState>(
-                                                converter: (store) => store.state.business,
+                                              controlsBuilder: (BuildContext context, {VoidCallback onStepContinue, VoidCallback onStepCancel}) => StoreConnector<AppState, AppState>(
+                                                converter: (store) => store.state,
                                                 builder: (context, snapshot) {
                                                   return Row(
                                                     mainAxisSize: MainAxisSize.max,
@@ -1450,7 +1450,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                                 ),
                                                                 onPressed: () {
                                                                   setState(() {
-                                                                    required = validate(snapshot);
+                                                                    required = validate(snapshot.business);
                                                                   });
                                                                   if (required) {
                                                                     final snackBar = SnackBar(content: Text(AppLocalizations.of(context).pleaseFillAllFields));
@@ -1463,7 +1463,11 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                                     bookingRequest = 'send';
                                                                   });
                                                                   print("salesman board: Upload to DB");
-                                                                  StoreProvider.of<AppState>(context).dispatch(CreateBusiness(snapshot));
+                                                                  snapshot.business.contentCreator.name = snapshot.user.name;
+                                                                  snapshot.business.contentCreator.surname = snapshot.user.surname;
+                                                                  snapshot.business.contentCreator.email = snapshot.user.email;
+                                                                  snapshot.business.contentCreator.id = snapshot.user.uid;
+                                                                  StoreProvider.of<AppState>(context).dispatch(CreateBusiness(snapshot.business));
                                                                 },
                                                                 child: Text(AppLocalizations.of(context).createBusiness, style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextWhite, fontSize: 18)),
                                                               ),
