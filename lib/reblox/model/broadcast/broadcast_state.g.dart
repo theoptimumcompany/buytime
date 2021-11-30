@@ -15,6 +15,9 @@ BroadcastState _$BroadcastStateFromJson(Map<String, dynamic> json) {
     timestamp: Utils.getDate(json['timestamp'] as Timestamp),
     title: json['title'] as String ?? '',
     topic: json['topic'] as String ?? '',
+    serviceIdList:
+        (json['serviceIdList'] as List)?.map((e) => e as String)?.toList() ??
+            [],
   );
 }
 
@@ -27,4 +30,5 @@ Map<String, dynamic> _$BroadcastStateToJson(BroadcastState instance) =>
       'timestamp': Utils.setDate(instance.timestamp),
       'title': instance.title,
       'topic': instance.topic,
+      'serviceIdList': instance.serviceIdList,
     };

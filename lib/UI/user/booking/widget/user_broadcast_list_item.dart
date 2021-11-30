@@ -90,7 +90,7 @@ class _UserBroadcastListItemState extends State<UserBroadcastListItem> {
             child: InkWell(
               //borderRadius: BorderRadius.all(Radius.circular(10)),
               onTap: () {
-                Navigator.push(context, EnterExitRoute(enterPage: CreateBroadcast(true, widget.broadcastState), exitPage: RBroadcastList(), from: true));
+                Navigator.push(context, EnterExitRoute(enterPage: CreateBroadcast(true, widget.broadcastState, ''), exitPage: RBroadcastList(), from: true));
               },
               child: Container(
                 height: 110,  ///SizeConfig.safeBlockVertical * 15

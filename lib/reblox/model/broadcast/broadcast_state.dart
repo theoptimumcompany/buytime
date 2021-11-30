@@ -23,6 +23,8 @@ class BroadcastState {
   String title;
   @JsonKey(defaultValue: '')
   String topic;
+  @JsonKey(defaultValue: [])
+  List<String> serviceIdList;
 
 
   BroadcastState({
@@ -32,7 +34,8 @@ class BroadcastState {
     this.senderId,
     this.timestamp,
     this.title,
-    this.topic
+    this.topic,
+    this.serviceIdList
   });
 
   BroadcastState toEmpty() {
@@ -44,6 +47,7 @@ class BroadcastState {
       timestamp: DateTime.now(),
       title: '',
       topic: '',
+      serviceIdList: [],
     );
   }
 
@@ -55,6 +59,7 @@ class BroadcastState {
     this.timestamp = state.timestamp;
     this.title = state.title;
     this.topic = state.topic;
+    this.serviceIdList = state.serviceIdList;
   }
 
 
@@ -65,7 +70,8 @@ class BroadcastState {
     String senderId,
     DateTime timestamp,
     String title,
-    String topic
+    String topic,
+    List<String> serviceIdList
   }) {
     return BroadcastState(
       body: body ?? this.body,
@@ -75,6 +81,7 @@ class BroadcastState {
       timestamp: timestamp ?? this.timestamp,
       title: title ?? this.title,
       topic: topic ?? this.topic,
+      serviceIdList: serviceIdList ?? this.serviceIdList,
     );
   }
 

@@ -1,3 +1,4 @@
+import 'package:Buytime/UI/management/broadcast/RUI_M_broadcast_business_list.dart';
 import 'package:Buytime/UI/management/business/RUI_M_business.dart';
 import 'package:Buytime/UI/management/business/UI_M_business_list.dart';
 import 'package:Buytime/UI/management/business/UI_M_create_business.dart';
@@ -128,8 +129,8 @@ class RBroadcastListState extends State<RBroadcastList> {
                 ),
                 tooltip: AppLocalizations.of(context).createBusinessPlain,
                 onPressed: () {
-                  //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_CreateBusiness()));
-                  Navigator.push(context, EnterExitRoute(enterPage: CreateBroadcast(false, BroadcastState().toEmpty()), exitPage: RBroadcastList(), from: true));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => RBroadcastBusinessList()));
+                  //Navigator.push(context, EnterExitRoute(enterPage: CreateBroadcast(false, BroadcastState().toEmpty(), ''), exitPage: RBroadcastList(), from: true));
                 },
               )
               /*StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin ||
@@ -215,7 +216,7 @@ class RBroadcastListState extends State<RBroadcastList> {
                                       child: InkWell(
                                           borderRadius: BorderRadius.all(Radius.circular(5)),
                                         onTap: () async {
-                                          Navigator.push(context, EnterExitRoute(enterPage: CreateBroadcast(true, broadcast), exitPage: RBroadcastList(), from: true));
+                                          Navigator.push(context, EnterExitRoute(enterPage: CreateBroadcast(true, broadcast, ''), exitPage: RBroadcastList(), from: true));
                                         },
                                         child: Container(
                                             margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1),

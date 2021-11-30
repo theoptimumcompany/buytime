@@ -422,7 +422,7 @@ class ServiceListByBusinessIdsRequestServiceBroadcast implements EpicClass<AppSt
       statisticsState.serviceListRequestServiceDocuments = documents;
 
       if(serviceStateList.isEmpty)
-        serviceStateList.add(ServiceState());
+        serviceStateList.add(ServiceState().toEmpty());
 
     }).expand((element) => [
       ServiceListReturned(serviceStateList),

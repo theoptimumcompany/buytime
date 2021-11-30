@@ -45,14 +45,15 @@ class CreateBroadcast extends StatefulWidget {
   static String route = '/createBroadcast';
   bool view;
   BroadcastState broadcastState;
+  String businessId;
   Widget create(BuildContext context) {
     //final pageIndex = context.watch<Spinner>();
     return ChangeNotifierProvider<Broadcast>(
       create: (_) => Broadcast([], Map()),
-      child: CreateBroadcast(this.view, this.broadcastState),
+      child: CreateBroadcast(this.view, this.broadcastState, this.businessId),
     );
   }
-  CreateBroadcast(this.view, this.broadcastState);
+  CreateBroadcast(this.view, this.broadcastState, this.businessId);
   @override
   State<StatefulWidget> createState() => CreateBroadcastState();
 }
@@ -122,6 +123,8 @@ class CreateBroadcastState extends State<CreateBroadcast> {
   }
 
   ServiceState allServices = ServiceState().toEmpty();
+  String area = '';
+  bool isHub = false;
 
   @override
   Widget build(BuildContext context) {
@@ -129,6 +132,7 @@ class CreateBroadcastState extends State<CreateBroadcast> {
     var mediaHeight = media.height;
     SizeConfig().init(context);
     allServices.name = AppLocalizations.of(context).allServices;
+    allServices.serviceId = AppLocalizations.of(context).allServices;
 
     return StoreConnector<AppState, AppState>(
       converter: (store) => store.state,
@@ -137,20 +141,30 @@ class CreateBroadcastState extends State<CreateBroadcast> {
         List<String> businessIds = [];
         debugPrint('UI_M_slot_management => BUSINESS LIST LENGTH: ${store.state.businessList.businessListState.length}');
         store.state.businessList.businessListState.forEach((element) {
-          businessIds.add(element.id_firestore);
+          //businessIds.add(element.id_firestore);
+          if(widget.businessId == element.id_firestore){
+            area = element.tag.first;
+          }
           if(element.hub){
-            topics.add('${AppLocalizations.of(context).guestsOf} ${element.name.toUpperCase()}');
-            topicSelected.putIfAbsent(topics.last, () => false);
+            if(widget.businessId == element.id_firestore){
+              isHub = true;
+              topics.add('${AppLocalizations.of(context).guestsOf} ${element.name.toUpperCase()}');
+              topicSelected.putIfAbsent(topics.last, () => false);
+            }
           }
         });
         if(topics.isNotEmpty){
           topics.add(AppLocalizations.of(context).turist);
           topicSelected.putIfAbsent(AppLocalizations.of(context).turist, () => false);
         }
+        if(store.state.user.getRole() == Role.admin){
+          topics.add('${AppLocalizations.of(context).allUser}');
+          topicSelected.putIfAbsent(topics.last, () => false);
+        }
 
         debugPrint('UI_M_crate_broadcast => BUSINESS IDS LIST LENGTH: ${businessIds.length}');
         if(!widget.view)
-          store.dispatch(ServiceListRequestByBusinessIdsBroadcast(businessIds));
+          store.dispatch(ServiceListRequestByBusinessIdsBroadcast([widget.businessId]));
         noActivity = true;
         startRequest = true;
 
@@ -173,10 +187,14 @@ class CreateBroadcastState extends State<CreateBroadcast> {
             if(!serviceList.contains(allServices)){
               serviceList.add(allServices);
             }
-            serviceList.sort((a, b) => (Utils.retriveField(myLocale.languageCode, a.name)).compareTo(Utils.retriveField(myLocale.languageCode, b.name)));
-            serviceList.forEach((service) {
-              serviceSelected.putIfAbsent(service.name, () => false);
-            });
+            if(serviceList.first.serviceId.isNotEmpty){
+              serviceList.sort((a, b) => (Utils.retriveField(myLocale.languageCode, a.name)).compareTo(Utils.retriveField(myLocale.languageCode, b.name)));
+              serviceList.forEach((service) {
+                serviceSelected.putIfAbsent(service.serviceId, () => false);
+              });
+            }else{
+              serviceList.removeLast();
+            }
 
             //serviceList.sort((a,b) => a.name.compareTo(b.name));
             noActivity = false;
@@ -226,6 +244,7 @@ class CreateBroadcastState extends State<CreateBroadcast> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               ///Header
+                              serviceList.isNotEmpty ?
                               Container(
                                   margin: EdgeInsets.only(left: 16),
                                   child: Text(
@@ -236,7 +255,7 @@ class CreateBroadcastState extends State<CreateBroadcast> {
                                         fontWeight: FontWeight.w500,
                                         fontSize: 14 ///SizeConfig.safeBlockHorizontal * 7
                                     ),
-                                  )),
+                                  )) : Container(),
                               ///Chips
                               noActivity ?
                               Container(
@@ -270,7 +289,7 @@ class CreateBroadcastState extends State<CreateBroadcast> {
                                                   spacing: 5,
                                                   children: serviceList.map((e) => InputChip(
                                                     selected: false,
-                                                    backgroundColor: serviceSelected[e.name] ?
+                                                    backgroundColor: serviceSelected[e.serviceId] ?
                                                     BuytimeTheme.ManagerPrimary : BuytimeTheme.SymbolLightGrey,
                                                     label: Text(
                                                       Utils.retriveField(Localizations.localeOf(context).languageCode, e.name),
@@ -283,7 +302,7 @@ class CreateBroadcastState extends State<CreateBroadcast> {
                                                     //avatar: FlutterLogo(),
                                                     onPressed: serviceSelected[AppLocalizations.of(context).allServices] && e.name != AppLocalizations.of(context).allServices ? null :  () {
                                                       setState(() {
-                                                        serviceSelected[e.name] = !serviceSelected[e.name];
+                                                        serviceSelected[e.serviceId] = !serviceSelected[e.serviceId];
                                                       });
                                                     },
                                                   ))
@@ -344,7 +363,9 @@ class CreateBroadcastState extends State<CreateBroadcast> {
                                                       ),
                                                     ),
                                                     //avatar: FlutterLogo(),
-                                                    onPressed: topicSelected[AppLocalizations.of(context).turist] && e != AppLocalizations.of(context).turist ? null : () {
+                                                    onPressed: (topicSelected.containsKey(AppLocalizations.of(context).turist) && topicSelected[AppLocalizations.of(context).turist] && e != AppLocalizations.of(context).turist) ||
+                                                        (topicSelected.containsKey(AppLocalizations.of(context).allUser) && topicSelected[AppLocalizations.of(context).allUser] && e != AppLocalizations.of(context).allUser)
+                                                      ? null : () {
                                                       setState(() {
                                                         topicSelected[e] = !topicSelected[e];
                                                       });
@@ -446,9 +467,45 @@ class CreateBroadcastState extends State<CreateBroadcast> {
                                     broadcastState.timestamp = DateTime.now();
                                     broadcastState.sendTime = DateTime.now();
                                     broadcastState.sendNow = true;
-                                    broadcastState.topic = 'broadcast_user';
+
+                                    if(topicSelected.isNotEmpty){
+                                      if(topicSelected.containsKey(AppLocalizations.of(context).allUser) && topicSelected[AppLocalizations.of(context).allUser]){
+                                        broadcastState.topic = 'broadcast_user';
+                                      }else if(topicSelected.containsKey(AppLocalizations.of(context).turist) && topicSelected[AppLocalizations.of(context).turist]){
+                                        broadcastState.topic = 'broadcast_$area';
+                                      }else {
+                                        if(topicSelected[topics.first]){
+                                          broadcastState.topic = 'broadcast_${widget.businessId}';
+                                        }else{
+                                          broadcastState.topic = 'broadcast_$area';
+                                        }
+                                      }
+                                    }else{
+                                      broadcastState.topic = 'broadcast_$area';
+                                    }
+
+                                    //broadcastState.topic = 'broadcast_user|broadcast_${widget.businessId}|broadcast_$area';
                                     broadcastState.title = 'Broadcast Message';
                                     broadcastState.senderId = StoreProvider.of<AppState>(context).state.user.uid;
+                                    List<String> serviceIdList = [];
+                                    if(serviceSelected[AppLocalizations.of(context).allServices]){
+                                      serviceList.forEach((element) {
+                                        if(element.serviceId != AppLocalizations.of(context).allServices){
+                                          serviceIdList.add(element.serviceId);
+                                        }
+                                      });
+                                    }else{
+                                      serviceSelected.forEach((key, value) {
+                                        if(value){
+                                          serviceList.forEach((element) {
+                                            if(element.serviceId == key){
+                                              serviceIdList.add(element.serviceId);
+                                            }
+                                          });
+                                        }
+                                      });
+                                    }
+                                    broadcastState.serviceIdList = serviceIdList;
                                     await FirebaseFirestore.instance.collection("broadcast").doc().set(broadcastState.toJson()).then((value) => setState(() {
                                       //debugPrint('SEND VALUE: $value');
                                       sending = false;
