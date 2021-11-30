@@ -1,9 +1,11 @@
 import 'package:Buytime/reblox/model/business/external_business_state.dart';
 import 'package:Buytime/reblox/model/snippet/generic.dart';
+import 'package:Buytime/reblox/model/user/snippet/user_snippet_state.dart';
 import 'package:Buytime/utils/utils.dart';
 import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 import '../file/optimum_file_to_upload.dart';
+
 part 'business_state.g.dart';
 
 @JsonSerializable(explicitToJson: true)
@@ -15,12 +17,24 @@ class BusinessState {
   String phone_number;
   String email;
   String VAT;
-  String street; /// old
-  String municipality; /// old
-  String street_number; /// old
-  String state_province; /// old
-  String nation; /// old
-  String ZIP; /// old
+  String street;
+
+  /// old
+  String municipality;
+
+  /// old
+  String street_number;
+
+  /// old
+  String state_province;
+
+  /// old
+  String nation;
+
+  /// old
+  String ZIP;
+
+  /// old
   @JsonKey(defaultValue: '')
   String phoneSalesman;
   @JsonKey(defaultValue: '')
@@ -64,97 +78,98 @@ class BusinessState {
   @JsonKey(defaultValue: false)
   bool hub;
   String businessAddress;
+  UserSnippet contentCreator;
 
-  BusinessState({
-    @required this.name,
-    @required this.responsible_person_name,
-    @required this.responsible_person_surname,
-    @required this.responsible_person_email,
-    @required this.phone_number,
-    @required this.email,
-    @required this.VAT,
-    @required this.street,
-    @required this.municipality,
-    @required this.street_number,
-    @required this.ZIP,
-    @required this.salesmanName,
-    @required this.phoneSalesman,
-    @required this.phoneConcierge,
-    @required this.state_province,
-    @required this.nation,
-    @required this.country,
-    @required this.address,
-    @required this.addressOptional,
-    @required this.cityTown,
-    @required this.stateTerritoryProvince,
-    @required this.zipPostal,
-    @required this.coordinate,
-    @required this.profile,
-    @required this.gallery,
-    this.hasAccess,
-    @required this.wide,
-    @required this.logo,
-    @required this.draft,
-    @required this.business_type,
-    @required this.description,
-    @required this.id_firestore,
-    this.salesman,
-    this.salesmanId,
-    this.stripeCustomerId,
-    this.owner,
-    this.ownerId,
-    this.fileToUploadList,
-    this.tag,
-    this.area,
-    this.hub,
-    this.businessAddress
-  });
+  BusinessState(
+      {@required this.name,
+      @required this.responsible_person_name,
+      @required this.responsible_person_surname,
+      @required this.responsible_person_email,
+      @required this.phone_number,
+      @required this.email,
+      @required this.VAT,
+      @required this.street,
+      @required this.municipality,
+      @required this.street_number,
+      @required this.ZIP,
+      @required this.salesmanName,
+      @required this.phoneSalesman,
+      @required this.phoneConcierge,
+      @required this.state_province,
+      @required this.nation,
+      @required this.country,
+      @required this.address,
+      @required this.addressOptional,
+      @required this.cityTown,
+      @required this.stateTerritoryProvince,
+      @required this.zipPostal,
+      @required this.coordinate,
+      @required this.profile,
+      @required this.gallery,
+      this.hasAccess,
+      @required this.wide,
+      @required this.logo,
+      @required this.draft,
+      @required this.business_type,
+      @required this.description,
+      @required this.id_firestore,
+      this.salesman,
+      this.salesmanId,
+      this.stripeCustomerId,
+      this.owner,
+      this.ownerId,
+      this.fileToUploadList,
+      this.tag,
+      this.area,
+      this.hub,
+      this.businessAddress,
+      this.contentCreator});
 
   BusinessState toEmpty() {
     return BusinessState(
-      name: "",
-      responsible_person_name: "",
-      responsible_person_surname: "",
-      responsible_person_email: "",
-      phone_number: '',
-      email: "",
-      VAT: "",
-      street: "",
-      street_number: "",
-      ZIP: "",
+        name: "",
+        responsible_person_name: "",
+        responsible_person_surname: "",
+        responsible_person_email: "",
+        phone_number: '',
+        email: "",
+        VAT: "",
+        street: "",
+        street_number: "",
+        ZIP: "",
         salesmanName: "",
         phoneSalesman: "",
         phoneConcierge: "",
-      state_province: "",
-      nation: "",
+        state_province: "",
+        nation: "",
         country: "",
         address: "",
         addressOptional: "",
         cityTown: "",
         stateTerritoryProvince: "",
         zipPostal: "",
-      coordinate: "",
-      municipality: "",
-      profile: "",
-      gallery: [""],
-      hasAccess: [""],
-      wide: "",
-      logo: "",
-      draft: true,
-      business_type: '',
-      description: "",
-      id_firestore: "",
-      salesman: GenericState(),
-      salesmanId: "",
+        coordinate: "",
+        municipality: "",
+        profile: "",
+        gallery: [""],
+        hasAccess: [""],
+        wide: "",
+        logo: "",
+        draft: true,
+        business_type: '',
+        description: "",
+        id_firestore: "",
+        salesman: GenericState(),
+        salesmanId: "",
         stripeCustomerId: "",
-      owner: GenericState(),
-      ownerId: "",
-      fileToUploadList: null,
-      tag: [],
-      area: [],
-      hub: false,
-        businessAddress: ''
-    );
+        owner: GenericState(),
+        ownerId: "",
+        fileToUploadList: null,
+        tag: [],
+        area: [],
+        hub: false,
+        businessAddress: '',
+        contentCreator: UserSnippet().toEmpty());
   }
 
   BusinessState.fromState(BusinessState state) {
@@ -200,6 +215,7 @@ class BusinessState {
     this.area = state.area;
     this.hub = state.hub;
     this.businessAddress = state.businessAddress;
+    this.contentCreator = state.contentCreator;
   }
 
   BusinessState.fromExternalState(ExternalBusinessState state) {
@@ -245,52 +261,53 @@ class BusinessState {
     this.area = state.area;
     this.hub = state.hub;
     this.businessAddress = state.businessAddress;
+    this.contentCreator = state.contentCreator;
   }
 
-  BusinessState copyWith({
-    String name,
-    String responsible_person_name,
-    String responsible_person_surname,
-    String responsible_person_email,
-    String phone_number,
-    String email,
-    String VAT,
-    String street,
-    String municipality,
-    String street_number,
-    String ZIP,
-    String salesmanName,
-    String phoneSalesman,
-    String phoneConcierge,
-    String state_province,
-    String nation,
-    String country,
-    String address,
-    String addressOptional,
-    String cityTown,
-    String stateTerritoryProvince,
-    String zipPostal,
-    String coordinate,
-    String profile,
-    List<String> gallery,
-    List<String> hasAccess,
-    String wide,
-    String logo,
-    String business_type,
-    String description,
-    String id_firestore,
-    GenericState salesaman,
-    String salesmanId,
-    String stripeCustomerId,
-    GenericState owner,
-    String ownerId,
-    bool draft,
-    List<OptimumFileToUpload> fileToUploadList,
-    List<String> tag,
-    List<String> area,
-    bool hub,
-    String businessAddress
-  }) {
+  BusinessState copyWith(
+      {String name,
+      String responsible_person_name,
+      String responsible_person_surname,
+      String responsible_person_email,
+      String phone_number,
+      String email,
+      String VAT,
+      String street,
+      String municipality,
+      String street_number,
+      String ZIP,
+      String salesmanName,
+      String phoneSalesman,
+      String phoneConcierge,
+      String state_province,
+      String nation,
+      String country,
+      String address,
+      String addressOptional,
+      String cityTown,
+      String stateTerritoryProvince,
+      String zipPostal,
+      String coordinate,
+      String profile,
+      List<String> gallery,
+      List<String> hasAccess,
+      String wide,
+      String logo,
+      String business_type,
+      String description,
+      String id_firestore,
+      GenericState salesaman,
+      String salesmanId,
+      String stripeCustomerId,
+      GenericState owner,
+      String ownerId,
+      bool draft,
+      List<OptimumFileToUpload> fileToUploadList,
+      List<String> tag,
+      List<String> area,
+      bool hub,
+      String businessAddress,
+      UserSnippet contentCreator}) {
     return BusinessState(
       name: name ?? this.name,
       responsible_person_name: responsible_person_name ?? this.responsible_person_name,
@@ -334,10 +351,11 @@ class BusinessState {
       area: area ?? this.area,
       hub: hub ?? this.hub,
       businessAddress: businessAddress ?? this.businessAddress,
+      contentCreator: contentCreator ?? this.contentCreator,
     );
   }
 
   factory BusinessState.fromJson(Map<String, dynamic> json) => _$BusinessStateFromJson(json);
-  Map<String, dynamic> toJson() => _$BusinessStateToJson(this);
 
+  Map<String, dynamic> toJson() => _$BusinessStateToJson(this);
 }

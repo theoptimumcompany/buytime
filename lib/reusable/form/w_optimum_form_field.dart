@@ -110,7 +110,7 @@ class OptimumFormFieldState extends State<OptimumFormField> {
               key: widget.globalFieldKey,
               autovalidate: _autoValidate,
               child: TextFormField(
-                textCapitalization: TextCapitalization.sentences,
+                textCapitalization: widget.typeOfValidate == 'email' ? TextCapitalization.none : TextCapitalization.sentences,
                 focusNode: focusNode,
                 controller: widget.controller,
                 //initialValue: widget.initialFieldValue,

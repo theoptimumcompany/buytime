@@ -865,6 +865,7 @@ class ServiceDuplicateService implements EpicClass<AppState> {
       debugPrint('service_service_epic => SERVICE NAME WITH COPY OF: ${serviceState.name}');
       DocumentReference docReference = FirebaseFirestore.instance.collection('service').doc();
       serviceState.serviceId = docReference.id;
+      serviceState.visibility = 'Invisible';
       docReference.set(serviceState.toJson()).then((value) {
         debugPrint("service_service_epic => ServiceDuplicateService => ServiceService has duplicated a Service! ");
         serviceState = serviceState.copyWith();

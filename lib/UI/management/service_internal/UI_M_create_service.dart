@@ -334,6 +334,11 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                     Provider.of<Spinner>(context, listen: false).initLoad(true);
                                     if(tmpService.originalLanguage.isEmpty)
                                       tmpService.originalLanguage = myLocale.languageCode;
+
+                                    tmpService.contentCreator.name = snapshot.user.name;
+                                    tmpService.contentCreator.surname = snapshot.user.surname;
+                                    tmpService.contentCreator.email = snapshot.user.email;
+                                    tmpService.contentCreator.id = snapshot.user.uid;
                                     StoreProvider.of<AppState>(context).dispatch(CreateService(tmpService));
 
                                   }

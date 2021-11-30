@@ -49,6 +49,9 @@ ServiceState _$ServiceStateFromJson(Map<String, dynamic> json) {
     paymentMethodCard: json['paymentMethodCard'] as bool ?? true,
     paymentMethodOnSite: json['paymentMethodOnSite'] as bool ?? false,
     condition: json['condition'] as String ?? '',
+    contentCreator: json['contentCreator'] == null
+        ? null
+        : UserSnippet.fromJson(json['contentCreator'] as Map<String, dynamic>),
   );
 }
 
@@ -84,6 +87,7 @@ Map<String, dynamic> _$ServiceStateToJson(ServiceState instance) =>
       'paymentMethodCard': instance.paymentMethodCard,
       'paymentMethodOnSite': instance.paymentMethodOnSite,
       'condition': instance.condition,
+      'contentCreator': instance.contentCreator?.toJson(),
       'conventionSlotList':
           instance.conventionSlotList?.map((e) => e?.toJson())?.toList(),
     };

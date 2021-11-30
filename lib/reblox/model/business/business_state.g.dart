@@ -54,6 +54,9 @@ BusinessState _$BusinessStateFromJson(Map<String, dynamic> json) {
         ['Reception'],
     hub: json['hub'] as bool ?? false,
     businessAddress: json['businessAddress'] as String,
+    contentCreator: json['contentCreator'] == null
+        ? null
+        : UserSnippet.fromJson(json['contentCreator'] as Map<String, dynamic>),
   );
 }
 
@@ -100,4 +103,5 @@ Map<String, dynamic> _$BusinessStateToJson(BusinessState instance) =>
       'area': instance.area,
       'hub': instance.hub,
       'businessAddress': instance.businessAddress,
+      'contentCreator': instance.contentCreator?.toJson(),
     };
