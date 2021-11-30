@@ -24,6 +24,7 @@ import 'package:Buytime/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
@@ -79,6 +80,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {});
+    FlutterSecureStorage().write(key: 'serviceId', value: '');
   }
 
   void _manageTristate(bool value, String type) {

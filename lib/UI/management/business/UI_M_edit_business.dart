@@ -15,6 +15,7 @@ import 'package:Buytime/utils/utils.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -54,9 +55,11 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
     setState(() => currentStep = step);
   }
 
+
   @override
   void initState() {
     super.initState();
+    FlutterSecureStorage().write(key: 'businessId', value: '');
   }
 
   bool _validateInputs() {

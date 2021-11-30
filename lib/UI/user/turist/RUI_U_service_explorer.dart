@@ -698,6 +698,8 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
         dynamicLinkHelper.selfCheckInFound(context);
         dynamicLinkHelper.categoryInviteFound(context);
         dynamicLinkHelper.onSitePaymentFound(context);
+        dynamicLinkHelper.serviceManagerDetailsFound(context);
+        dynamicLinkHelper.busienssDetailsFound(context);
         dynamicLinkHelper.searchBusiness();
         store.state.categoryList.categoryListState.clear();
         store.state.serviceList.serviceListState.clear();

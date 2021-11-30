@@ -264,6 +264,8 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
     dynamicLinkHelper.selfCheckInFound(context);
     dynamicLinkHelper.categoryInviteFound(context);
     dynamicLinkHelper.onSitePaymentFound(context);
+    dynamicLinkHelper.serviceManagerDetailsFound(context);
+    dynamicLinkHelper.busienssDetailsFound(context);
     dynamicLinkHelper.searchBusiness();
     return Scaffold(
       backgroundColor: Color(0xFF207CC3),

@@ -220,6 +220,7 @@ class CreateBroadcastState extends State<CreateBroadcast> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           ///Interested services
+                          !widget.view ?
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisSize: MainAxisSize.min,
@@ -296,9 +297,9 @@ class CreateBroadcastState extends State<CreateBroadcast> {
                                   )
                               ) : Container()
                             ],
-                          ),
+                          ) : Container(),
                           ///Select Recipient
-                          topics.isNotEmpty ?
+                          topics.isNotEmpty && !widget.view ?
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
