@@ -1,5 +1,6 @@
 import 'package:Buytime/UI/management/broadcast/RUI_M_broadcast_list.dart';
 import 'package:Buytime/UI/management/broadcast/UI_M_create_broadcast.dart';
+import 'package:Buytime/UI/management/broadcast/UI_U_view_broadcast.dart';
 import 'package:Buytime/UI/user/service/UI_U_service_reserve.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/broadcast/broadcast_state.dart';
@@ -90,7 +91,7 @@ class _UserBroadcastListItemState extends State<UserBroadcastListItem> {
             child: InkWell(
               //borderRadius: BorderRadius.all(Radius.circular(10)),
               onTap: () {
-                Navigator.push(context, EnterExitRoute(enterPage: CreateBroadcast(true, widget.broadcastState, ''), exitPage: RBroadcastList(), from: true));
+                Navigator.push(context, EnterExitRoute(enterPage: ViewBroadcast( widget.broadcastState), exitPage: RBroadcastList(), from: true));
               },
               child: Container(
                 height: 110,  ///SizeConfig.safeBlockVertical * 15
