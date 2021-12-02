@@ -2,6 +2,8 @@ import 'package:Buytime/UI/user/booking/widget/user_broadcast_list_item.dart';
 import 'package:Buytime/UI/user/booking/widget/user_notification_list_item.dart';
 import 'package:Buytime/UI/user/cart/UI_U_cart.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
+import 'package:Buytime/reblox/model/area/area_list_state.dart';
+import 'package:Buytime/reblox/model/area/area_state.dart';
 import 'package:Buytime/reblox/model/broadcast/broadcast_state.dart';
 import 'package:Buytime/reblox/model/notification/notification_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
@@ -61,6 +63,8 @@ class _RNotificationsState extends State<RNotifications> {
    _broadcastStream = FirebaseFirestore.instance
         .collection("broadcast")
         .where("topic", isEqualTo: 'broadcast_user')
+        .where("topic", isEqualTo: 'broadcast_user')
+        .where("topic", isEqualTo: 'broadcast_${StoreProvider.of<AppState>(context).state.area.areaId}')
           //.limit(limit)
         .snapshots(includeMetadataChanges: true);
   }
