@@ -356,7 +356,7 @@ class _RNotificationsState extends State<RNotifications> {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 ///RNotifications
-                                notifications.isNotEmpty ?
+                                combined.isNotEmpty ?
                                 Flexible(
                                   child: Container(
                                     margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
