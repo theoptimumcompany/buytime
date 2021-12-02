@@ -1,6 +1,7 @@
 import 'package:Buytime/UI/user/booking/widget/user_broadcast_list_item.dart';
 import 'package:Buytime/UI/user/booking/widget/user_notification_list_item.dart';
 import 'package:Buytime/UI/user/cart/UI_U_cart.dart';
+import 'package:Buytime/UI/user/turist/RUI_U_service_explorer.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/area/area_list_state.dart';
 import 'package:Buytime/reblox/model/area/area_state.dart';
@@ -20,6 +21,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 
 class RNotifications extends StatefulWidget {
@@ -63,7 +65,7 @@ class _RNotificationsState extends State<RNotifications> {
    _broadcastStream = FirebaseFirestore.instance
         .collection("broadcast")
         .where("topic", isEqualTo: 'broadcast_user')
-        .where("topic", isEqualTo: 'broadcast_user')
+        .where("topic", isEqualTo: 'broadcast_${Provider.of<Explorer>(context, listen: false).businessState.id_firestore}')
         .where("topic", isEqualTo: 'broadcast_${StoreProvider.of<AppState>(context).state.area.areaId}')
           //.limit(limit)
         .snapshots(includeMetadataChanges: true);
