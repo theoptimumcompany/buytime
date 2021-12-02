@@ -62,13 +62,16 @@ class _RNotificationsState extends State<RNotifications> {
     //notifications.add(tmpNotification1);
     //notifications.add(tmpNotification2);
 
-   _broadcastStream = FirebaseFirestore.instance
-        .collection("broadcast")
-        .where("topic", isEqualTo: 'broadcast_user')
-        .where("topic", isEqualTo: 'broadcast_${Provider.of<Explorer>(context, listen: false).businessState.id_firestore}')
-        .where("topic", isEqualTo: 'broadcast_${StoreProvider.of<AppState>(context).state.area.areaId}')
-          //.limit(limit)
-        .snapshots(includeMetadataChanges: true);
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _broadcastStream = FirebaseFirestore.instance
+          .collection("broadcast")
+          .where("topic", isEqualTo: 'broadcast_user')
+          .where("topic", isEqualTo: 'broadcast_${Provider.of<Explorer>(context, listen: false).businessState.id_firestore}')
+          .where("topic", isEqualTo: 'broadcast_${StoreProvider.of<AppState>(context).state.area.areaId}')
+      //.limit(limit)
+          .snapshots(includeMetadataChanges: true);
+    });
+
   }
 
   String _selected = '';
