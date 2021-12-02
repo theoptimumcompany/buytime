@@ -41,7 +41,9 @@ class _RNotificationsState extends State<RNotifications> {
   String searched = '';
   OrderState order = OrderState().toEmpty();
   Stream<QuerySnapshot> _orderNotificationStream;
-  Stream<QuerySnapshot> _broadcastStream;
+  Stream<QuerySnapshot> _broadcastUserStream;
+  Stream<QuerySnapshot> _broadcastBusinessStream;
+  Stream<QuerySnapshot> _broadcastAreaStream;
   String userId;
   bool showAll = false;
   List<NotificationState> notifications = [];
@@ -63,13 +65,7 @@ class _RNotificationsState extends State<RNotifications> {
     //notifications.add(tmpNotification2);
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      _broadcastStream = FirebaseFirestore.instance
-          .collection("broadcast")
-          .where("topic", isEqualTo: 'broadcast_user')
-          .where("topic", isEqualTo: 'broadcast_${Provider.of<Explorer>(context, listen: false).businessState.id_firestore}')
-          .where("topic", isEqualTo: 'broadcast_${StoreProvider.of<AppState>(context).state.area.areaId}')
-      //.limit(limit)
-          .snapshots(includeMetadataChanges: true);
+
     });
 
   }
@@ -84,6 +80,23 @@ class _RNotificationsState extends State<RNotifications> {
     var media = MediaQuery.of(context).size;
     //notifications = [];
     SizeConfig().init(context);
+    _broadcastUserStream = FirebaseFirestore.instance
+        .collection("broadcast")
+        .where("topic", isEqualTo: 'broadcast_user')
+        /*.where("topic", isEqualTo: 'broadcast_${Provider.of<Explorer>(context, listen: false).businessState.id_firestore}')
+        .where("topic", isEqualTo: 'broadcast_${StoreProvider.of<AppState>(context).state.area.areaId}')*/
+    //.limit(limit)
+        .snapshots(includeMetadataChanges: true);
+    _broadcastBusinessStream = FirebaseFirestore.instance
+        .collection("broadcast")
+        .where("topic", isEqualTo: 'broadcast_${Provider.of<Explorer>(context, listen: false).businessState.id_firestore}')
+    //.limit(limit)
+        .snapshots(includeMetadataChanges: true);
+    _broadcastAreaStream = FirebaseFirestore.instance
+        .collection("broadcast")
+        .where("topic", isEqualTo: 'broadcast_${StoreProvider.of<AppState>(context).state.area.areaId}')
+    //.limit(limit)
+        .snapshots(includeMetadataChanges: true);
     userId = StoreProvider.of<AppState>(context).state.user.uid;
     order = StoreProvider.of<AppState>(context).state.order;
     if(userId != null && userId.isNotEmpty) {
@@ -251,7 +264,7 @@ class _RNotificationsState extends State<RNotifications> {
                         width: double.infinity,
                         //color: BuytimeTheme.DividerGrey,
                         child: StreamBuilder<List<QuerySnapshot>>(
-                          stream: CombineLatestStream.list([_broadcastStream, _orderNotificationStream]),
+                          stream: CombineLatestStream.list([_broadcastUserStream, _broadcastBusinessStream, _broadcastAreaStream, _orderNotificationStream]),
                           builder: (context, AsyncSnapshot<List<QuerySnapshot>> notificationSnapshot) {
                             notifications.clear();
                             broadcastList.clear();
@@ -293,8 +306,20 @@ class _RNotificationsState extends State<RNotifications> {
                             }
                             for (int j = 0; j < notificationSnapshot.data[1].docs.length; j++) {
                               String idNotification = notificationSnapshot.data[1].docs[j].id;
+                              //debugPrint('RUI_U_notifications => NOTIFICATION ID: $idNotification');
+                              BroadcastState broadcastState = BroadcastState.fromJson(notificationSnapshot.data[1].docs[j].data());
+                              broadcastList.add(broadcastState);
+                            }
+                            for (int j = 0; j < notificationSnapshot.data[2].docs.length; j++) {
+                              String idNotification = notificationSnapshot.data[2].docs[j].id;
+                              //debugPrint('RUI_U_notifications => NOTIFICATION ID: $idNotification');
+                              BroadcastState broadcastState = BroadcastState.fromJson(notificationSnapshot.data[2].docs[j].data());
+                              broadcastList.add(broadcastState);
+                            }
+                            for (int j = 0; j < notificationSnapshot.data[3].docs.length; j++) {
+                              String idNotification = notificationSnapshot.data[3].docs[j].id;
                               debugPrint('RUI_U_notifications => NOTIFICATION ID: $idNotification');
-                              NotificationState notificationState = NotificationState.fromJson(notificationSnapshot.data[1].docs[j].data());
+                              NotificationState notificationState = NotificationState.fromJson(notificationSnapshot.data[3].docs[j].data());
                               notificationState.notificationId = idNotification;
                               notifications.add(notificationState);
                             }
