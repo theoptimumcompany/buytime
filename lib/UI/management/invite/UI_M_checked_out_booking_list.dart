@@ -54,13 +54,21 @@ class _CheckedOutBookingListState extends State<CheckedOutBookingList> {
         key: _drawerKey,
         ///Appbar
         appBar: AppBar(
-          backgroundColor: BuytimeTheme.ManagerPrimary,
-          title: Utils.barTitle(AppLocalizations.of(context).checkedOutBookings),
+          backgroundColor: BuytimeTheme.TextWhite,
+          title: Text(
+            AppLocalizations.of(context).checkedOutBookings,
+            textAlign: TextAlign.start,
+            style: TextStyle(
+              color: BuytimeTheme.TextBlack,
+              fontSize: 16,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
           centerTitle: true,
           leading: IconButton(
             icon: Icon(
               Icons.keyboard_arrow_left,
-              color: Colors.white,
+              color: Colors.black,
             ),
             onPressed: () async{
               Navigator.of(context).pop();

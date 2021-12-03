@@ -421,47 +421,49 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
           child: WillPopScope(
             onWillPop: () async => false,
             child: Scaffold(
-              appBar: BuytimeAppbar(
-                background: BuytimeTheme.ManagerPrimary,
-                width: media.width,
-                children: [
-                  ///Back Button
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
-                        child: IconButton(
-                          key: Key('external_business_details_back_key'),
-                          icon: const Icon(
-                            Icons.keyboard_arrow_left,
-                            color: Colors.white,
-                            size: 25.0,
-                          ),
-                          tooltip: AppLocalizations.of(context).comeBack,
-                          onPressed: () {
-                            if(widget.fromMyList && !widget.fromMyBusiness){
-                              StoreProvider.of<AppState>(context).dispatch(ExternalServiceImportedListRequest(StoreProvider.of<AppState>(context).state.business.id_firestore));
-                              StoreProvider.of<AppState>(context).dispatch(ExternalBusinessImportedListRequest(StoreProvider.of<AppState>(context).state.business.id_firestore));
-                              Navigator.pushReplacement(context, EnterExitRoute(enterPage: ExternalServiceList(), exitPage: AddExternalServiceList(false), from: false));
-                            }else if(!widget.fromMyList && widget.fromMyBusiness){
-                              StoreProvider.of<AppState>(context).dispatch(ExternalServiceImportedListRequest(StoreProvider.of<AppState>(context).state.business.id_firestore));
-                              StoreProvider.of<AppState>(context).dispatch(ExternalBusinessImportedListRequest(StoreProvider.of<AppState>(context).state.business.id_firestore));
-                              Navigator.pushReplacement(context, EnterExitRoute(enterPage: ExternalBusinessDetails(widget.externalBusinessState, true, false), exitPage: AddExternalServiceList(false), from: false));
-                            }else
-                              Navigator.of(context).pop();
-                          },
+              appBar: AppBar(
+                backgroundColor: BuytimeTheme.BackgroundWhite,
+                leading: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
+                      child: IconButton(
+                        key: Key('external_business_details_back_key'),
+                        icon: const Icon(
+                          Icons.keyboard_arrow_left,
+                          color: Colors.black,
+                          size: 25.0,
                         ),
+                        tooltip: AppLocalizations.of(context).comeBack,
+                        onPressed: () {
+                          if(widget.fromMyList && !widget.fromMyBusiness){
+                            StoreProvider.of<AppState>(context).dispatch(ExternalServiceImportedListRequest(StoreProvider.of<AppState>(context).state.business.id_firestore));
+                            StoreProvider.of<AppState>(context).dispatch(ExternalBusinessImportedListRequest(StoreProvider.of<AppState>(context).state.business.id_firestore));
+                            Navigator.pushReplacement(context, EnterExitRoute(enterPage: ExternalServiceList(), exitPage: AddExternalServiceList(false), from: false));
+                          }else if(!widget.fromMyList && widget.fromMyBusiness){
+                            StoreProvider.of<AppState>(context).dispatch(ExternalServiceImportedListRequest(StoreProvider.of<AppState>(context).state.business.id_firestore));
+                            StoreProvider.of<AppState>(context).dispatch(ExternalBusinessImportedListRequest(StoreProvider.of<AppState>(context).state.business.id_firestore));
+                            Navigator.pushReplacement(context, EnterExitRoute(enterPage: ExternalBusinessDetails(widget.externalBusinessState, true, false), exitPage: AddExternalServiceList(false), from: false));
+                          }else
+                            Navigator.of(context).pop();
+                        },
                       ),
+                    ),
 
-                    ],
+                  ],
+                ),
+                title: Text(
+                  widget.externalBusinessState.name ?? 'Test',
+                  textAlign: TextAlign.start,
+                  style: TextStyle(
+                    color: BuytimeTheme.TextBlack,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
                   ),
-                  ///Title
-                  Utils.barTitle(widget.externalBusinessState.name ?? 'Test'),
-                  SizedBox(
-                    width: 50,
-                  )
-                ],
+                ),
+                centerTitle: true,
+                elevation: 1,
               ),
               floatingActionButton: !widget.fromMyList ?
               Container(

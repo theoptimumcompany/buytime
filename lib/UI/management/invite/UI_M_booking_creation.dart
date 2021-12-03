@@ -127,7 +127,7 @@ class _BookingCreationState extends State<BookingCreation> {
               key: _drawerKey,
               ///Appbar
               appBar: AppBar(
-                backgroundColor: BuytimeTheme.ManagerPrimary,
+                backgroundColor: BuytimeTheme.TextWhite,
                 title: Container(
                   child: Padding(
                     padding: const EdgeInsets.only(left: 0.0),
@@ -136,22 +136,24 @@ class _BookingCreationState extends State<BookingCreation> {
                       AppLocalizations.of(context).createInvite,
                       textAlign: TextAlign.start,
                       style: TextStyle(
-                        color: Colors.white,
-                        fontSize: media.height * 0.025,
+                        color: Colors.black,
+                        fontSize: 16,
                         fontWeight: FontWeight.w400,
                       ),
                     ),
                   ),
                 ),
+                centerTitle: true,
                 leading: IconButton(
                   icon: Icon(
                     Icons.keyboard_arrow_left,
-                    color: Colors.white,
+                    color: Colors.black,
                   ),
                   onPressed: () async{
                     Navigator.of(context).pop();
                   },
                 ),
+                elevation: 1,
               ),
               //drawer: UI_M_BusinessListDrawer(),
               body: SafeArea(
@@ -596,6 +598,7 @@ class _BookingCreationState extends State<BookingCreation> {
                                                   focusElevation: 0,
                                                   highlightElevation: 0,
                                                   onPressed: () {
+                                                    bookingState = BookingState().toEmpty();
                                                     if (_formKey.currentState.validate()) {
 
                                                       setState(() {
@@ -625,6 +628,14 @@ class _BookingCreationState extends State<BookingCreation> {
                                                       bookingState.status = Utils.enumToString(BookingStatus.created);
 
                                                       bookingState.userEmail.add(_emailToInviteController.text);
+
+                                                      _emailToInviteController.clear();
+                                                      _nameController.clear();
+                                                      _surnameController.clear();
+                                                      _checkInController.clear();
+                                                      _checkOutController.clear();
+                                                      _numberOfGuestsController.text = '1';
+
 
                                                       StoreProvider.of<AppState>(context).dispatch(CreateBookingRequest(bookingState));
 

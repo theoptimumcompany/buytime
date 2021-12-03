@@ -139,7 +139,7 @@ class _BookingDetailsState extends State<BookingDetails> {
 
             ///Appbar
             appBar: AppBar(
-              backgroundColor: BuytimeTheme.ManagerPrimary,
+              backgroundColor: BuytimeTheme.TextWhite,
               title: Container(
                 child: Padding(
                   padding: const EdgeInsets.only(left: 0.0),
@@ -147,8 +147,8 @@ class _BookingDetailsState extends State<BookingDetails> {
                     AppLocalizations.of(context).guestDetails,
                     textAlign: TextAlign.start,
                     style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
+                      color: Colors.black,
+                      fontSize: 16,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -157,12 +157,14 @@ class _BookingDetailsState extends State<BookingDetails> {
               leading: IconButton(
                 icon: Icon(
                   Icons.keyboard_arrow_left,
-                  color: Colors.white,
+                  color: Colors.black,
                 ),
                 onPressed: () async {
                   Navigator.of(context).pop();
                 },
               ),
+              elevation: 1,
+              centerTitle: true,
             ),
             //drawer: !view ? UI_M_BusinessListDrawer() : null,
             body: SafeArea(

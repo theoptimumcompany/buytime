@@ -1,3 +1,4 @@
+import 'package:Buytime/UI/management/business/RUI_M_business.dart';
 import 'package:Buytime/UI/management/business/UI_M_business.dart';
 import 'package:Buytime/UI/management/service_external/UI_M_add_external_service_list.dart';
 import 'package:Buytime/UI/management/service_external/widget/W_external_business_list_item.dart';
@@ -166,26 +167,27 @@ class ExternalServiceListState extends State<ExternalServiceList> {
               },
               child: Scaffold(
                 resizeToAvoidBottomInset: false,
-                appBar: BuytimeAppbar(
-                  width: media.width,
-                  children: [
-                    ///Back Button
-                    IconButton(
-                      key: Key('external_business_list_back_key'),
-                      icon: Icon(Icons.keyboard_arrow_left, color: Colors.white),
-                      onPressed: () {
-                        //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_Business()))
-                        Navigator.pushReplacement(context, EnterExitRoute(enterPage: UI_M_Business(), exitPage: ExternalServiceList(), from: false));
-                      },
+                appBar: AppBar(
+                  backgroundColor: BuytimeTheme.BackgroundWhite,
+                  leading: IconButton(
+                    key: Key('external_business_list_back_key'),
+                    icon: Icon(Icons.keyboard_arrow_left, color: Colors.black),
+                    onPressed: () {
+                      //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_Business()))
+                      Navigator.pushReplacement(context, EnterExitRoute(enterPage: RBusiness(), exitPage: ExternalServiceList(), from: false));
+                    },
+                  ),
+                  title: Text(
+                    AppLocalizations.of(context).externalServices,
+                    textAlign: TextAlign.start,
+                    style: TextStyle(
+                      color: BuytimeTheme.TextBlack,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
                     ),
-                    Utils.barTitle(AppLocalizations.of(context).externalServices),
-                    IconButton(
-                      icon: Icon(Icons.add, color: BuytimeTheme.ManagerPrimary),
-                      onPressed: () {
-                        return null;
-                      },
-                    ),
-                  ],
+                  ),
+                  centerTitle: true,
+                  elevation: 1,
                 ),
                 body: ConstrainedBox(
                   constraints: BoxConstraints(),

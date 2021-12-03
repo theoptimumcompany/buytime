@@ -104,26 +104,27 @@ class PAServiceListState extends State<PAServiceList> {
               },
               child: Scaffold(
                 resizeToAvoidBottomInset: false,
-                appBar: BuytimeAppbar(
-                  width: media.width,
-                  children: [
-                    ///Back Button
-                    IconButton(
-                      icon: Icon(Icons.keyboard_arrow_left, color: Colors.white),
-                      onPressed: () {
-                        //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_Business()))
-                        //Navigator.pushReplacement(context, EnterExitRoute(enterPage: UI_M_Business(), exitPage: PAServiceList(), from: false));
-                        Navigator.of(context).pop();
-                      },
+                appBar: AppBar(
+                 backgroundColor: BuytimeTheme.BackgroundWhite,
+                  leading: IconButton(
+                    icon: Icon(Icons.keyboard_arrow_left, color: Colors.black),
+                    onPressed: () {
+                      //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_Business()))
+                      //Navigator.pushReplacement(context, EnterExitRoute(enterPage: UI_M_Business(), exitPage: PAServiceList(), from: false));
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  title: Text(
+                    widget.title,
+                    textAlign: TextAlign.start,
+                    style: TextStyle(
+                      color: BuytimeTheme.TextBlack,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
                     ),
-                    Utils.barTitle(widget.title),
-                    IconButton(
-                      icon: Icon(Icons.add, color: BuytimeTheme.ManagerPrimary),
-                      onPressed: () {
-                        return null;
-                      },
-                    ),
-                  ],
+                  ),
+                  centerTitle: true,
+                  elevation: 1,
                 ),
                 floatingActionButton: Container(
                     margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5, bottom: SizeConfig.safeBlockVertical *4),

@@ -67,7 +67,7 @@ class _BookingListState extends State<BookingList> {
         key: _drawerKey,
         ///Appbar
         appBar: AppBar(
-          backgroundColor: BuytimeTheme.ManagerPrimary,
+          backgroundColor: BuytimeTheme.TextWhite,
           title: Container(
             child: Padding(
               padding: const EdgeInsets.only(left: 0.0),
@@ -75,13 +75,28 @@ class _BookingListState extends State<BookingList> {
                 AppLocalizations.of(context).guests,
                 textAlign: TextAlign.start,
                 style: TextStyle(
-                  color: BuytimeTheme.TextWhite,
-                  fontSize: media.height * 0.025,
+                  color: BuytimeTheme.TextBlack,
+                  fontSize: 16,
                   fontWeight: FontWeight.w400,
                 ),
               ),
             ),
           ),
+          leading: IconButton(
+            key: Key('business_drawer_key'),
+            icon: const Icon(
+              Icons.keyboard_arrow_left,
+              color: BuytimeTheme.TextBlack,
+              //size: 30.0,
+            ),
+            tooltip: AppLocalizations.of(context).showMenu,
+            onPressed: () {
+              //_drawerKey.currentState.openDrawer();
+              Navigator.of(context).pop();
+            },
+          ),
+          elevation: 1,
+          centerTitle: true,
         ),
         drawer: ManagerDrawer(),
         body: Center(
