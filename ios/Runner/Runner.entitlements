@@ -11,6 +11,7 @@
 	<key>com.apple.developer.associated-domains</key>
 	<array>
 		<string>applinks:buytime.page.link</string>
+		<string>webcredentials:buytime.network</string>
 	</array>
 	<key>com.apple.developer.in-app-payments</key>
 	<array>
