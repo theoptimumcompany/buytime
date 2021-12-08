@@ -416,7 +416,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2.9.20;
+				CURRENT_PROJECT_VERSION = 3.1.0;
 				DEVELOPMENT_TEAM = GJL2PR3KKZ;
 				ENABLE_BITCODE = NO;
 				FLUTTER_ROOT = /Users/riccardo/Development/flutter;
@@ -434,7 +434,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 2.9.20;
+				MARKETING_VERSION = 3.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.theoptimumcompany.buytime;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -566,7 +566,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2.9.20;
+				CURRENT_PROJECT_VERSION = 3.1.0;
 				DEVELOPMENT_TEAM = GJL2PR3KKZ;
 				ENABLE_BITCODE = NO;
 				FLUTTER_ROOT = /Users/riccardo/Development/flutter;
@@ -584,7 +584,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 2.9.20;
+				MARKETING_VERSION = 3.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.theoptimumcompany.buytime;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -606,7 +606,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2.9.20;
+				CURRENT_PROJECT_VERSION = 3.1.0;
 				DEVELOPMENT_TEAM = GJL2PR3KKZ;
 				ENABLE_BITCODE = NO;
 				FLUTTER_ROOT = /Users/riccardo/Development/flutter;
@@ -624,7 +624,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 2.9.20;
+				MARKETING_VERSION = 3.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.theoptimumcompany.buytime;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

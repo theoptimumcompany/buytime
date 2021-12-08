@@ -27,7 +27,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:keychain_plugin/keychain_plugin.dart';
+//import 'package:keychain_plugin/keychain_plugin.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
@@ -533,11 +533,12 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
                                       //didAuthenticate = true;
                                       if (didAuthenticate) {
                                         _emailController.text = autoCompleteList.elementAt(index).email;
-                                        if(Platform.isIOS){
-                                          _passwordController.text = await KeychainPlugin.getKeychainValue(autoCompleteList.elementAt(index).email, '');
-                                        }else{
+                                        // if(Platform.isIOS){
+                                        //   _passwordController.text = await KeychainPlugin.getKeychainValue(autoCompleteList.elementAt(index).email, '');
+                                        // }else{
+                                        //   _passwordController.text = autoCompleteList.elementAt(index).password;
+                                        // }
                                           _passwordController.text = autoCompleteList.elementAt(index).password;
-                                        }
 
                                         if (_formKey.currentState.validate() && !_isRequestFlying) {
                                           _signInWithEmailAndPassword();
@@ -1231,7 +1232,7 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
     setState(() {
       _isRequestFlying = false;
     });
-    await KeychainPlugin.setKeychainValue(_emailController.text, _passwordController.text, '');
+   // await KeychainPlugin.setKeychainValue(_emailController.text, _passwordController.text, '');
     if (user != null) {
       AutoCompleteState autoComplete = AutoCompleteState().toEmpty();
       autoComplete.email = _emailController.text;
