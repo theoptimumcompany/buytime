@@ -533,13 +533,12 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
                                       //didAuthenticate = true;
                                       if (didAuthenticate) {
                                         _emailController.text = autoCompleteList.elementAt(index).email;
-                                        // if(Platform.isIOS){
-                                        //   _passwordController.text = await KeychainPlugin.getKeychainValue(autoCompleteList.elementAt(index).email, '');
-                                        // }else{
-                                        //   _passwordController.text = autoCompleteList.elementAt(index).password;
-                                        // }
+                                        /*if(Platform.isIOS){
+                                          _passwordController.text = await KeychainPlugin.getKeychainValue(autoCompleteList.elementAt(index).email, '');
+                                        }else{
                                           _passwordController.text = autoCompleteList.elementAt(index).password;
-
+                                        }*/
+                                        _passwordController.text = autoCompleteList.elementAt(index).password;
                                         if (_formKey.currentState.validate() && !_isRequestFlying) {
                                           _signInWithEmailAndPassword();
                                         }
@@ -1232,7 +1231,7 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
     setState(() {
       _isRequestFlying = false;
     });
-   // await KeychainPlugin.setKeychainValue(_emailController.text, _passwordController.text, '');
+    //await KeychainPlugin.setKeychainValue(_emailController.text, _passwordController.text, '');
     if (user != null) {
       AutoCompleteState autoComplete = AutoCompleteState().toEmpty();
       autoComplete.email = _emailController.text;
