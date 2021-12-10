@@ -132,7 +132,7 @@ class OrderTotal extends StatelessWidget {
                 Container(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    AppLocalizations.of(context).promotionalCode,
+                    AppLocalizations.of(context).promo,
                     style: TextStyle(
                         fontFamily: BuytimeTheme.FontFamily,
                         fontWeight: FontWeight.w400,

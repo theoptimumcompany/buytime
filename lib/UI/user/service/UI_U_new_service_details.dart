@@ -266,7 +266,9 @@ class _NewServiceDetailsState extends State<NewServiceDetails> with SingleTicker
                             if (!order.addingFromAnotherBusiness(widget.serviceState.businessId)) {
                               order.addItem(widget.serviceState, snapshot.business.ownerId, context);
                               order.cartCounter++;
-                              if(Provider.of<Explorer>(context, listen: false).businessState.id_firestore.isNotEmpty){
+                              if(Utils.checkPromoDiscount('general_1', context, widget.serviceState.businessId).promotionId != 'empty'){
+                                order.totalPromoDiscount += (serviceState.price * StoreProvider.of<AppState>(context).state.promotionState.discount)/100;
+                              }else if(Provider.of<Explorer>(context, listen: false).businessState.id_firestore.isNotEmpty){
                                 ConventionHelper conventionHelper = ConventionHelper();
                                 order.totalPromoDiscount += (serviceState.price * conventionHelper.getConventionDiscount(widget.serviceState, Provider.of<Explorer>(context, listen: false).businessState.id_firestore))/100;
                               }
@@ -358,7 +360,9 @@ class _NewServiceDetailsState extends State<NewServiceDetails> with SingleTicker
                                                   order.totalPromoDiscount = 0.0;
                                                   Provider.of<Explorer>(context, listen: false).cartServiceList.clear();
                                                   Provider.of<Explorer>(context, listen: false).cartServiceList.add(widget.serviceState);
-                                                  if(Provider.of<Explorer>(context, listen: false).businessState.id_firestore.isNotEmpty){
+                                                  if(Utils.checkPromoDiscount('general_1', context, widget.serviceState.businessId).promotionId != 'empty'){
+                                                    order.totalPromoDiscount += (serviceState.price * StoreProvider.of<AppState>(context).state.promotionState.discount)/100;
+                                                  }else if(Provider.of<Explorer>(context, listen: false).businessState.id_firestore.isNotEmpty){
                                                     ConventionHelper conventionHelper = ConventionHelper();
                                                     order.totalPromoDiscount += (serviceState.price * conventionHelper.getConventionDiscount(widget.serviceState, Provider.of<Explorer>(context, listen: false).businessState.id_firestore))/100;
                                                   }
@@ -468,7 +472,9 @@ class _NewServiceDetailsState extends State<NewServiceDetails> with SingleTicker
                             if (!order.addingFromAnotherBusiness(widget.serviceState.businessId)) {
                               order.addItem(widget.serviceState, snapshot.business.ownerId, context);
                               order.cartCounter++;
-                              if(Provider.of<Explorer>(context, listen: false).businessState.id_firestore.isNotEmpty){
+                              if(Utils.checkPromoDiscount('general_1', context, widget.serviceState.businessId).promotionId != 'empty'){
+                                order.totalPromoDiscount += (serviceState.price * StoreProvider.of<AppState>(context).state.promotionState.discount)/100;
+                              }else if(Provider.of<Explorer>(context, listen: false).businessState.id_firestore.isNotEmpty){
                                 ConventionHelper conventionHelper = ConventionHelper();
                                 order.totalPromoDiscount += (serviceState.price * conventionHelper.getConventionDiscount(widget.serviceState, Provider.of<Explorer>(context, listen: false).businessState.id_firestore))/100;
                               }
