@@ -4,7 +4,7 @@ import 'package:Buytime/reblox/model/finance/year_state.dart';
 import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'month_state.dart';
-part 'finance.g.dart';
+part 'finance_state.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class Finance {

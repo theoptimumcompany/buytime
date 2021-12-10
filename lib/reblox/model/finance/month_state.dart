@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
-part 'month.g.dart';
+part 'month_state.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class Month {
