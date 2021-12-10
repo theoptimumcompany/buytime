@@ -154,7 +154,7 @@ class MessagingHelper {
       RemoteNotification notification = message.notification;
       List<String> notificationBodyList = notification.body.split('|');
       bool can = false;
-      if(notificationBodyList.isNotEmpty && notificationBodyList.length == 4)
+      if(notificationBodyList.isNotEmpty && notificationBodyList.length >= 4)
         can = true;
       String customNotificationTime = '';
       if(can){

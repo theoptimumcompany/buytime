@@ -87,6 +87,7 @@ class _RNotificationsState extends State<RNotifications> {
         .where("topic", isEqualTo: 'broadcast_${StoreProvider.of<AppState>(context).state.area.areaId}')*/
     //.limit(limit)
         .snapshots(includeMetadataChanges: true);
+        debugPrint("RUI_U_notifications: id del business nello stato" + Provider.of<Explorer>(context, listen: false).businessState.id_firestore);
     _broadcastBusinessStream = FirebaseFirestore.instance
         .collection("broadcast")
         .where("topic", isEqualTo: 'broadcast_${Provider.of<Explorer>(context, listen: false).businessState.id_firestore}')
