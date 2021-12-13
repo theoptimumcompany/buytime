@@ -31,10 +31,3 @@ class Finance {
   factory Finance.fromJson(Map<String, dynamic> json) => _$FinanceFromJson(json);
   Map<String, dynamic> toJson() => _$FinanceToJson(this);
 }
-
-
-
-
-
-
-
