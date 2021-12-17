@@ -13,10 +13,10 @@ class Month {
   });
 
   dynamic data;
-  int mediumRevenue;
-  int orderNumber;
+  double mediumRevenue;
+  double orderNumber;
   int totalRevenue;
-  int realRevenue;
+  double realRevenue;
   factory Month.fromJson(Map<String, dynamic> json) => _$MonthFromJson(json);
   Map<String, dynamic> toJson() => _$MonthToJson(this);
 }

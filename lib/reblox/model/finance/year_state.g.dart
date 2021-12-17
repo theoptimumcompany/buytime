@@ -9,10 +9,10 @@ part of 'year_state.dart';
 Year _$YearFromJson(Map<String, dynamic> json) {
   return Year(
     data: json['data'],
-    mediumRevenue: json['mediumRevenue'] as int,
-    orderNumber: json['orderNumber'] as int,
+    mediumRevenue: (json['mediumRevenue'] as num)?.toDouble(),
+    orderNumber: (json['orderNumber'] as num)?.toDouble(),
     totalRevenue: json['totalRevenue'] as int,
-    realRevenue: json['realRevenue'] as int,
+    realRevenue: (json['realRevenue'] as num)?.toDouble(),
   );
 }
 
