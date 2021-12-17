@@ -19,12 +19,14 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:google_place/google_place.dart';
 import 'package:html_unescape/html_unescape.dart';
+import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
 
 typedef OnTranslatingCallback = void Function(bool translated);
 typedef OnPlaceDetailsCallback = void Function(List<dynamic> placeDetails);
+typedef OnDateValueCallback = void Function(String month, String year);
 
 class Utils {
   ///Image sizes
@@ -763,6 +765,206 @@ class Utils {
     );
   }
 
+  static void dashboardDateSelection(BuildContext context, bool month, bool year, OnDateValueCallback callback) async {
+    Locale myLocale = Localizations.localeOf(context);
+
+    ///Year
+    int startDate = 2020;
+    int yearsLength = DateTime.now().year - startDate;
+    List<int> yearsList = List.generate(yearsLength == 0 ? 1 : yearsLength+1, (index) => startDate++);
+    yearsList = yearsList.reversed.toList();
+
+    ///Month
+    Map<int, List<String>> monthMap = Map();
+    yearsList.forEach((y) {
+      int month = DateTime.now().month;
+      monthMap.putIfAbsent(y, () => List.generate(y == DateTime.now().year ? month : 12, (index) => DateFormat('MMMM').format(DateTime(DateTime.now().year, index+1, DateTime.now().day))).reversed.toList());
+    });
+
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(topRight: Radius.circular(10), topLeft: Radius.circular(10))),
+      builder: (BuildContext context) {
+        return SingleChildScrollView(
+          physics: ClampingScrollPhysics(),
+          child: Padding(
+            padding: EdgeInsets.only(
+              //top: SizeConfig.safeBlockVertical * 5,
+                bottom: MediaQuery.of(context).viewInsets.bottom),
+            child: SafeArea(
+              child: Container(
+                decoration: BoxDecoration(borderRadius: BorderRadius.only(topRight: Radius.circular(10), topLeft: Radius.circular(10))),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Container(
+                      margin: EdgeInsets.only(top: 11),
+                      //height: 24,
+                      alignment: Alignment.centerRight,
+                      child: IconButton(
+                        onPressed: (){
+                          Navigator.of(context).pop();
+                        },
+                        icon: Icon(
+                            Icons.close
+                        ),
+                      ),
+                    ),
+                    month ? Flexible(
+                      child: Container(
+                        //height: SizeConfig.safeBlockVertical * 50,
+                        margin: EdgeInsets.only(bottom: 39, top: 0, left: 16, right: 16),
+                        child: CustomScrollView(
+                            physics: new ClampingScrollPhysics(),
+                            //physics: NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            slivers: [
+                              SliverList(
+                                delegate: SliverChildBuilderDelegate(
+                                      (context, index) {
+                                    int year = yearsList.elementAt(index);
+                                    return Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Container(
+                                            margin: EdgeInsets.only(top: 16),
+                                            height: 42,
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                              //color: BuytimeTheme.SymbolLightGrey.withOpacity(.3),
+                                            ),
+                                            child: Text(
+                                              '$year',
+                                              style: TextStyle(
+                                                //letterSpacing: .25,
+                                                  fontFamily: BuytimeTheme.FontFamily,
+                                                  color: BuytimeTheme.TextBlack,
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 18
+
+                                                ///SizeConfig.safeBlockHorizontal * 4
+                                              ),
+                                            )),
+                                        Flexible(
+                                          child: GridView.count(
+                                            // Create a grid with 2 columns. If you change the scrollDirection to
+                                            // horizontal, this produces 2 rows.
+                                            physics: NeverScrollableScrollPhysics(),
+                                              shrinkWrap: true,
+                                              crossAxisCount: 2,
+                                              mainAxisSpacing: 16.0,
+                                              crossAxisSpacing: 9.0,
+                                              childAspectRatio: (167 / 42),
+                                              // Generate 100 widgets that display their index in the List.
+                                              children: monthMap[year].map((m) =>
+                                                  Container(
+                                                  //margin: EdgeInsets.only(top: ),
+                                                  height: 42,
+                                                  decoration: BoxDecoration(
+                                                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                                    color: BuytimeTheme.SymbolLightGrey.withOpacity(.3),
+                                                  ),
+                                                  child: Material(
+                                                    color: Colors.transparent,
+                                                    child: InkWell(
+                                                        onTap: () {
+                                                          callback('$m', '$year');
+                                                          Navigator.of(context).pop();
+                                                        },
+                                                        borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                                        child: Container(
+                                                          alignment: Alignment.center,
+                                                          child: Text(
+                                                            '$m',
+                                                            style: TextStyle(
+                                                              //letterSpacing: .25,
+                                                                fontFamily: BuytimeTheme.FontFamily,
+                                                                color: BuytimeTheme.TextBlack,
+                                                                fontWeight: FontWeight.w500,
+                                                                fontSize: 18
+
+                                                              ///SizeConfig.safeBlockHorizontal * 4
+                                                            ),
+                                                          ),
+                                                        )),
+                                                  ))
+                                              ).toList()),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                  childCount: yearsList.length,
+                                ),
+                              ),
+                            ]),
+                      ),
+                    ) :
+                        year ?
+                    Flexible(
+                      child: Container(
+                        //height: SizeConfig.safeBlockVertical * 50,
+                        margin: EdgeInsets.only(bottom: 39, top: 19, left: 16, right: 16),
+                        child: CustomScrollView(
+                            physics: new ClampingScrollPhysics(),
+                            //physics: NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            slivers: [
+                              SliverList(
+                                delegate: SliverChildBuilderDelegate(
+                                      (context, index) {
+                                        int year = yearsList.elementAt(index);
+                                    return Container(
+                                      margin: EdgeInsets.only(top: 16),
+                                        height: 42,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                          color: BuytimeTheme.SymbolLightGrey.withOpacity(.3),
+                                        ),
+                                        child: Material(
+                                          color: Colors.transparent,
+                                          child: InkWell(
+                                              onTap: () {
+                                                callback('', '$year');
+                                                Navigator.of(context).pop();
+                                              },
+                                              borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                              child: Container(
+                                                alignment: Alignment.center,
+                                                child: Text(
+                                                  '$year',
+                                                  style: TextStyle(
+                                                      //letterSpacing: .25,
+                                                      fontFamily: BuytimeTheme.FontFamily,
+                                                      color: BuytimeTheme.TextBlack,
+                                                      fontWeight: FontWeight.w500,
+                                                      fontSize: 18
+
+                                                    ///SizeConfig.safeBlockHorizontal * 4
+                                                  ),
+                                                ),
+                                              )),
+                                        ));
+                                  },
+                                  childCount: yearsList.length,
+                                ),
+                              ),
+                            ]),
+                      ),
+                    )
+                            : Container(),
+
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   static void googleSearch(BuildContext context, OnPlaceDetailsCallback detailsCallback) {
     GooglePlace googlePlace = GooglePlace(Environment().config.googleApiKey);
     List<List<String>> predictions = [];
@@ -954,7 +1156,7 @@ class Utils {
       return '${AppLocalizations.of(context).accepted}';
     }
     if (progress == Utils.enumToString(OrderStatus.paid)) {
-      return '${AppLocalizations.of(context).pending}';
+      return '${AppLocalizations.of(context).paid}';
     }
     if (progress == Utils.enumToString(OrderStatus.pending)) {
       return '${AppLocalizations.of(context).pending}';

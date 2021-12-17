@@ -12,7 +12,7 @@ Today _$TodayFromJson(Map<String, dynamic> json) {
     mediumRevenue: json['mediumRevenue'] as int,
     realRevenue: json['realRevenue'] as int,
     orderNumber: json['orderNumber'] as int,
-    total: (json['total'] as num)?.toDouble(),
+    totalRevenue: json['totalRevenue'] as int,
   );
 }
 
@@ -21,5 +21,5 @@ Map<String, dynamic> _$TodayToJson(Today instance) => <String, dynamic>{
       'mediumRevenue': instance.mediumRevenue,
       'realRevenue': instance.realRevenue,
       'orderNumber': instance.orderNumber,
-      'total': instance.total,
+      'totalRevenue': instance.totalRevenue,
     };

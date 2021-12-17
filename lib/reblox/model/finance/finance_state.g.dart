@@ -21,9 +21,9 @@ Finance _$FinanceFromJson(Map<String, dynamic> json) {
         : Month.fromJson(json['month'] as Map<String, dynamic>),
     monthlyExternalServiceRevenue: json['monthlyExternalServiceRevenue'] as int,
     activeUserMonthly: json['activeUserMonthly'] as int,
-    today: json['today'] == null
+    today: json['day'] == null
         ? null
-        : Today.fromJson(json['today'] as Map<String, dynamic>),
+        : Today.fromJson(json['day'] as Map<String, dynamic>),
     monthlyGiveback: json['monthlyGiveback'] as int,
   );
 }
@@ -35,6 +35,6 @@ Map<String, dynamic> _$FinanceToJson(Finance instance) => <String, dynamic>{
       'month': instance.month?.toJson(),
       'monthlyExternalServiceRevenue': instance.monthlyExternalServiceRevenue,
       'activeUserMonthly': instance.activeUserMonthly,
-      'today': instance.today?.toJson(),
+      'day': instance.today?.toJson(),
       'monthlyGiveback': instance.monthlyGiveback,
     };

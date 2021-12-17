@@ -9,14 +9,14 @@ class Today {
     @required this.mediumRevenue,
     @required this.realRevenue,
     @required this.orderNumber,
-    @required this.total,
+    @required this.totalRevenue,
   });
 
   List<int> hour;
   int mediumRevenue;
   int realRevenue;
   int orderNumber;
-  double total;
+  int totalRevenue;
 
   factory Today.fromJson(Map<String, dynamic> json) => _$TodayFromJson(json);
   Map<String, dynamic> toJson() => _$TodayToJson(this);

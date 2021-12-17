@@ -723,5 +723,21 @@
   "guestsOf" : "Guests of",
   "turist" : "Turist",
   "allServices" : "All Services",
-  "allUser" : "All User"
+  "allUser" : "All User",
+  "financeDashboard" : "Dashboard",
+  "d" : "G",
+  "w" : "S",
+  "m" : "M",
+  "y" : "A",
+  "dataInEvidence" : "Data in evidence",
+  "averageGain" : "Average Gain",
+  "activeUsersBroughtIntoTheApp" : "Active users brought into the app",
+  "giveback" : "Giveback",
+  "externalServicesAddedToYourNetwork" : "External services added to your network",
+  "montlyEarningsForExternalServices" : "Monthly earnings for external services",
+  "givebackExternalServices" : "Giveback external services",
+  "realGain" : "Real gain",
+  "theMore" : "The more external services you add to your network the greater your giveback can be",
+  "bringAtLest" : "Bring at least",
+  "inTheApp" : "in the app and get a giveback of"
 }

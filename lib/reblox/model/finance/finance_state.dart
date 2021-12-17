@@ -25,6 +25,7 @@ class Finance {
   Month month;
   int monthlyExternalServiceRevenue;
   int activeUserMonthly;
+  @JsonKey(name: "day")
   Today today;
   int monthlyGiveback;
 
