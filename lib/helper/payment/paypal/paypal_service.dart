@@ -7,8 +7,8 @@ import 'package:http_auth/http_auth.dart';
 class PaypalServices {
 
   //String domain = "api.sandbox.paypal.com"; // for sandbox mode
-  String domain = "api-m.sandbox.paypal.com"; // for sandbox mode
-  //  String domain = "https://api.paypal.com"; // for production mode
+  //String domain = "api-m.sandbox.paypal.com"; // for sandbox mode
+  String domain = "api-m.paypal.com"; // for production mode
 
   // change clientId and secret with your own, provided by paypal
   String clientId = 'AQCFN-vKDWJTCp88ZT3OsBVgCfuvJ_GX3xENVwTHX2k5PJsVN4xR07TrJwEaqSEcUSBzDfBN0qQ7qIVd';
