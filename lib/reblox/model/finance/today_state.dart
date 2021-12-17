@@ -5,18 +5,18 @@ part 'today_state.g.dart';
 @JsonSerializable(explicitToJson: true)
 class Today {
   Today({
-    @required this.hour,
+    @required this.data,
     @required this.mediumRevenue,
-    @required this.realRevenue,
     @required this.orderNumber,
     @required this.totalRevenue,
+    @required this.realRevenue,
   });
 
-  List<int> hour;
+  dynamic data;
   int mediumRevenue;
-  int realRevenue;
   int orderNumber;
   int totalRevenue;
+  int realRevenue;
 
   factory Today.fromJson(Map<String, dynamic> json) => _$TodayFromJson(json);
   Map<String, dynamic> toJson() => _$TodayToJson(this);

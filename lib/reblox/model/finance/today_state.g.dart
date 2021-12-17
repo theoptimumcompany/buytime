@@ -8,18 +8,18 @@ part of 'today_state.dart';
 
 Today _$TodayFromJson(Map<String, dynamic> json) {
   return Today(
-    hour: (json['hour'] as List)?.map((e) => e as int)?.toList(),
+    data: json['data'],
     mediumRevenue: json['mediumRevenue'] as int,
-    realRevenue: json['realRevenue'] as int,
     orderNumber: json['orderNumber'] as int,
     totalRevenue: json['totalRevenue'] as int,
+    realRevenue: json['realRevenue'] as int,
   );
 }
 
 Map<String, dynamic> _$TodayToJson(Today instance) => <String, dynamic>{
-      'hour': instance.hour,
+      'data': instance.data,
       'mediumRevenue': instance.mediumRevenue,
-      'realRevenue': instance.realRevenue,
       'orderNumber': instance.orderNumber,
       'totalRevenue': instance.totalRevenue,
+      'realRevenue': instance.realRevenue,
     };
