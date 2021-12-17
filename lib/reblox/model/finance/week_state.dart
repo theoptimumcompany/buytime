@@ -14,9 +14,10 @@ class Week {
 
   dynamic data;
   double mediumRevenue;
-  double orderNumber;
-  int totalRevenue;
+  int orderNumber;
+  double totalRevenue;
   double realRevenue;
+
   factory Week.fromJson(Map<String, dynamic> json) => _$WeekFromJson(json);
   Map<String, dynamic> toJson() => _$WeekToJson(this);
 }

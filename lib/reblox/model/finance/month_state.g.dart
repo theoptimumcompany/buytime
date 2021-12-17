@@ -10,8 +10,8 @@ Month _$MonthFromJson(Map<String, dynamic> json) {
   return Month(
     data: json['data'],
     mediumRevenue: (json['mediumRevenue'] as num)?.toDouble(),
-    orderNumber: (json['orderNumber'] as num)?.toDouble(),
-    totalRevenue: json['totalRevenue'] as int,
+    orderNumber: json['orderNumber'] as int,
+    totalRevenue: (json['totalRevenue'] as num)?.toDouble(),
     realRevenue: (json['realRevenue'] as num)?.toDouble(),
   );
 }

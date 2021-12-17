@@ -14,8 +14,8 @@ class Year {
 
   dynamic data;
   double mediumRevenue;
-  double orderNumber;
-  int totalRevenue;
+  int orderNumber;
+  double totalRevenue;
   double realRevenue;
 
   factory Year.fromJson(Map<String, dynamic> json) => _$YearFromJson(json);

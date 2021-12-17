@@ -14,8 +14,8 @@ class Today {
 
   dynamic data;
   double mediumRevenue;
-  double orderNumber;
-  int totalRevenue;
+  int orderNumber;
+  double totalRevenue;
   double realRevenue;
 
   factory Today.fromJson(Map<String, dynamic> json) => _$TodayFromJson(json);
