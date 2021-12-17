@@ -1156,7 +1156,7 @@ class Utils {
       return '${AppLocalizations.of(context).accepted}';
     }
     if (progress == Utils.enumToString(OrderStatus.paid)) {
-      return '${AppLocalizations.of(context).paid}';
+      return '${AppLocalizations.of(context).pending}';
     }
     if (progress == Utils.enumToString(OrderStatus.pending)) {
       return '${AppLocalizations.of(context).pending}';
