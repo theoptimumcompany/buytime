@@ -965,6 +965,15 @@ class Utils {
     );
   }
 
+  static int getMonthNumber(String locale, String monthString){
+    int month = DateTime.now().month - 1;
+    for(int i = 1; i <= 12; i++){
+      if(DateFormat('MMMM',locale).format(DateTime(DateTime.now().year, i)) == monthString)
+        return i - 1;
+    }
+    return month;
+  }
+
   static void googleSearch(BuildContext context, OnPlaceDetailsCallback detailsCallback) {
     GooglePlace googlePlace = GooglePlace(Environment().config.googleApiKey);
     List<List<String>> predictions = [];

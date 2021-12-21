@@ -127,15 +127,14 @@ class RDashboardBusinessListState extends State<RDashboardBusinessList> {
             ),
             centerTitle: true,
             leading: IconButton(
-              key: Key('business_drawer_key'),
               icon: const Icon(
-                Icons.chevron_left,
-                color: BuytimeTheme.TextBlack,
+                Icons.menu,
+                color: Colors.black,
                 //size: 30.0,
               ),
-              tooltip: AppLocalizations.of(context).showMenu,
+              tooltip: AppLocalizations.of(context).openMenu,
               onPressed: () {
-                Navigator.of(context).pop();
+                _drawerKeyTabs.currentState.openDrawer();
               },
             ),
             actions: [

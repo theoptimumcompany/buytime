@@ -117,6 +117,7 @@ dependencies:
   algolia: ^1.0.1
   card_swiper: ^1.0.4
   fl_chart: ^0.40.6
+  week_of_year: ^2.0.0
 
 dependency_overrides:
   intl: ^0.17.0-nullsafety.2

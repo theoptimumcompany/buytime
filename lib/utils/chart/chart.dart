@@ -6,7 +6,7 @@ import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
+import 'package:week_of_year/week_of_year.dart' as WeekData;
 import '../utils.dart';
 
 class BarChartSample1 extends StatefulWidget {
@@ -45,7 +45,7 @@ class BarChartSample1State extends State<BarChartSample1> {
   String month = '';
   String year = '';
   List<int> day = [];
-
+  final date = DateTime.now();
   Future<void> _selectDate(BuildContext context) async {
     setState(() {
       day.clear();
@@ -92,10 +92,14 @@ class BarChartSample1State extends State<BarChartSample1> {
     }
     return null;
   }
-
+  Locale myLocale;
   @override
   Widget build(BuildContext context) {
-
+    debugPrint('NOW: ${DateTime.now()}');
+    debugPrint('year: $year');
+    debugPrint('month: $month');
+    //debugPrint('day: ${day[2]}/${day[1]}/${day[0]}');
+    myLocale = Localizations.localeOf(context);
     return Container(
       height: SizeConfig.safeBlockVertical * 30,
       width: SizeConfig.safeBlockHorizontal * 90,
@@ -131,10 +135,10 @@ class BarChartSample1State extends State<BarChartSample1> {
                         child: Container(
                           padding: EdgeInsets.all(5.0),
                           child: Text(
-                            widget.day ? ( day.isNotEmpty ? '${DateFormat('dd MMMM').format(DateTime(day[2], day[1], day[0]))}' : '${DateFormat('dd MMMM').format(DateTime.now())}') :
-                            widget.week ? '${DateFormat('EEEE').format(DateTime.now())}' :
-                            widget.month ? (month.isNotEmpty ? '$month $year' :'${DateFormat('MMMM yyyy').format(DateTime.now())}') :
-                            (year.isNotEmpty ? year : '${DateFormat('yyyy').format(DateTime.now())}'),
+                            widget.day ? ( day.isNotEmpty ? '${DateFormat('dd MMMM', myLocale.languageCode).format(DateTime(day[2], day[1], day[0]))}' : '${DateFormat('dd MMMM', myLocale.languageCode).format(DateTime.now())}') :
+                            widget.week ? '${DateFormat('EEEE', myLocale.languageCode).format(DateTime.now())}' :
+                            widget.month ? (month.isNotEmpty ? '$month $year' :'${DateFormat('MMMM yyyy', myLocale.languageCode).format(DateTime.now())}') :
+                            (year.isNotEmpty ? year : '${DateFormat('yyyy', myLocale.languageCode).format(DateTime.now())}'),
                             style: TextStyle(
                                 letterSpacing: .25,
                                 fontFamily: BuytimeTheme.FontFamily,
@@ -195,30 +199,49 @@ class BarChartSample1State extends State<BarChartSample1> {
     );
   }
 
-  List<BarChartGroupData> showingDayGroups() => List.generate(25, (i) {
-    return makeGroupData(i,  widget.financeState.today != null ?
-                              i < widget.financeState.today.hour.length ?
-                                  widget.financeState.today.hour[i].toDouble()
-                                  : 0
-                              : 0, isTouched: i == touchedIndex);
+  List<BarChartGroupData> showingDayGroups() => List.generate(24, (i) {
+    return makeGroupData(i,  day.isNotEmpty ?
+      (widget.financeState.today.data['${day[2]}'] != null ?
+        (widget.financeState.today.data['${day[2]}']['${day[1] - 1}'] != null ?
+          (widget.financeState.today.data['${day[2]}']['${day[1] - 1}']['${day[0]}'] != null ?
+            widget.financeState.today.data['${day[2]}']['${day[1] - 1}']['${day[0]}'][i].toDouble()
+            : 0)
+          : 0)
+        : 0)
+        : (widget.financeState.today != null ?
+              (widget.financeState.today.data['${DateTime.now().year}'] != null ?
+              (widget.financeState.today.data['${DateTime.now().year}']['${DateTime.now().month-1}'] != null ?
+              (widget.financeState.today.data['${DateTime.now().year}']['${DateTime.now().month-1}']['${DateTime.now().day}'] != null ?
+                                  widget.financeState.today.data['${DateTime.now().year}']['${DateTime.now().month-1}']['${DateTime.now().day}'][i].toDouble() : 0)
+                              : 0 ): 0)
+        : 0), isTouched: i == touchedIndex);
   });
   List<BarChartGroupData> showingWeekGroups() => List.generate(7, (i) {
     return makeGroupData(i,  widget.financeState.week != null ?
-                              i < widget.financeState.week.day.length ?
-                                widget.financeState.week.day[i].toDouble()
-                                  : 0 : 0, isTouched: i == touchedIndex);
+    widget.financeState.week.data['${DateTime.now().year}']['${date.weekOfYear}'] != null ?
+                                widget.financeState.week.data['${DateTime.now().year}']['${date.weekOfYear}'][i].toDouble() : 0
+                                  : 0, isTouched: i == touchedIndex);
   });
   List<BarChartGroupData> showingMothGroups() => List.generate(30, (i) {
-    return makeGroupData(i, widget.financeState.month != null ?
-                              i < widget.financeState.month.day.length ?
-                                widget.financeState.month.day[i].toDouble()
-                                  : 0 : 0, isTouched: i == touchedIndex);
+    return makeGroupData(i, month.isNotEmpty ?
+    (widget.financeState.month.data['$year'] != null ?
+    (widget.financeState.month.data['$year']['${Utils.getMonthNumber(myLocale.languageCode, month)}'] != null ?
+    widget.financeState.month.data['$year']['${Utils.getMonthNumber(myLocale.languageCode, month)}'][i].toDouble()
+        : 0)
+        : 0) :
+        (widget.financeState.month != null ?
+        widget.financeState.month.data['${DateTime.now().year}'] != null?
+        widget.financeState.month.data['${DateTime.now().year}']['${DateTime.now().month-1}'] != null ?
+                                widget.financeState.month.data['${DateTime.now().year}']['${DateTime.now().month-1}'][i].toDouble()
+                                  : 0 : 0 : 0), isTouched: i == touchedIndex);
   });
   List<BarChartGroupData> showingYearGroups() => List.generate(12, (i) {
-    return makeGroupData(i, widget.financeState.year != null ?
-                              i < widget.financeState.year.month.length ?
-                                widget.financeState.year.month[i].toDouble()
-                                  : 0 : 0, isTouched: i == touchedIndex);
+    return makeGroupData(i, year.isNotEmpty ?
+    (widget.financeState.year.data['$year'] != null ? widget.financeState.year.data['$year'][i].toDouble()
+        : 0) :
+    (widget.financeState.year != null ?
+      widget.financeState.year.data['${DateTime.now().year}'][i].toDouble()
+        : 0), isTouched: i == touchedIndex);
   });
 
   BarChartData mainBarData() {
@@ -236,7 +259,21 @@ class BarChartSample1State extends State<BarChartSample1> {
                   weekDay = '';
               }
               return BarTooltipItem(
-                '€${(rod.y - 1).toStringAsFixed(0)}',
+                widget.day ? (
+                day.isNotEmpty ?
+                '€${widget.financeState.today.data['${day[2]}']['${day[1] - 1}']['${day[0]}'][group.x].toDouble().toStringAsFixed(2)}' :
+                '€${widget.financeState.today.data['${DateTime.now().year}']['${DateTime.now().month-1}']['${DateTime.now().day}'][group.x].toDouble().toStringAsFixed(2)}'
+                ) :
+                 widget.week ?
+                '€${widget.financeState.week.data['${DateTime.now().year}']['${date.weekOfYear}'][group.x].toDouble().toStringAsFixed(2)}' :
+                 widget.month ? (
+                  month.isNotEmpty ?
+                 '€${widget.financeState.month.data['$year']['${Utils.getMonthNumber(myLocale.languageCode, month)}'][group.x].toDouble().toStringAsFixed(2)}':
+                 '€${widget.financeState.month.data['${DateTime.now().year}']['${DateTime.now().month-1}'][group.x].toDouble().toStringAsFixed(2)}'
+                 ) :
+                (year.isNotEmpty ?
+                '€${widget.financeState.year.data['$year'][group.x].toDouble().toStringAsFixed(2)}' :
+                '€${widget.financeState.year.data['${DateTime.now().year}'][group.x].toDouble().toStringAsFixed(2)}'),
                 const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -244,7 +281,7 @@ class BarChartSample1State extends State<BarChartSample1> {
                 ),
                 children: <TextSpan>[
                   TextSpan(
-                    text: widget.month ? '\n ${DateFormat('dd/MM/yy').format(getDate(DateTime.now().year, DateTime.now().month, rodIndex + 1))}' : '',
+                    text: widget.month ? '\n ${DateFormat('dd/MM/yy', myLocale.languageCode).format(getDate(DateTime.now().year, DateTime.now().month, group.x))}' : '',
                     style: const TextStyle(
                       color: BuytimeTheme.TextWhite,
                       fontSize: 16,
@@ -337,9 +374,9 @@ class BarChartSample1State extends State<BarChartSample1> {
               case 22:
                 return widget.day ? '' : widget.week ? '' : widget.month ? '' : '';
               case 23:
-                return widget.day ? '' : widget.week ? '' : widget.month ? '' : '';
+                return widget.day ? '24' : widget.week ? '' : widget.month ? '' : '';
               case 24:
-                return widget.day ? '24' : widget.week ? '' : widget.month ? '25' : '';
+                return widget.day ? '' : widget.week ? '' : widget.month ? '25' : '';
               case 25:
                 return widget.day ? '' : widget.week ? '' : widget.month ? '' : '';
               case 26:

@@ -241,7 +241,7 @@ class _NewServiceDetailsState extends State<NewServiceDetails> with SingleTicker
                           hoverElevation: 0,
                           focusElevation: 0,
                           highlightElevation: 0,
-                          onPressed: StoreProvider.of<AppState>(context).state.user.getRole() == Role.user
+                          onPressed: StoreProvider.of<AppState>(context).state.user.getRole() != Role.admin
                               ? () {
                             //StoreProvider.of<AppState>(context).dispatch(SetOrderTotalPromotionDiscount(0.0));
                             //StoreProvider.of<AppState>(context).dispatch(SetOrderReservableTotalPromotionDiscount(0.0));
@@ -445,7 +445,7 @@ class _NewServiceDetailsState extends State<NewServiceDetails> with SingleTicker
                           hoverElevation: 0,
                           focusElevation: 0,
                           highlightElevation: 0,
-                          onPressed: StoreProvider.of<AppState>(context).state.user.getRole() == Role.user
+                          onPressed: StoreProvider.of<AppState>(context).state.user.getRole() != Role.admin
                               ? () {
                             //StoreProvider.of<AppState>(context).dispatch(SetOrderTotalPromotionDiscount(0.0));
                             //StoreProvider.of<AppState>(context).dispatch(SetOrderReservableTotalPromotionDiscount(0.0));

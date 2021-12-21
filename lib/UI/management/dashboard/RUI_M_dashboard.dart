@@ -76,6 +76,7 @@ class RDashboardState extends State<RDashboard> {
   Finance financeState = Finance();
   BusinessState businessState = BusinessState().toEmpty();
   DocumentSnapshot finance;
+  final GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -94,15 +95,15 @@ class RDashboardState extends State<RDashboard> {
         noActivity = true;
         startRequest = true;
         _broadcastStream =  FirebaseFirestore.instance
-            .collection("business").doc('29FdcpS1TBA4gQj6xRRg').collection('finance').doc('finance')
+            .collection("business").doc('${businessState.id_firestore}').collection('finance').doc('finance')
             .snapshots(includeMetadataChanges: true);
 
          finance = await FirebaseFirestore.instance
-            .collection("business").doc('29FdcpS1TBA4gQj6xRRg').collection('finance').doc('finance').get();
+            .collection("business").doc('${businessState.id_firestore}').collection('finance').doc('finance').get();
 
       },
       builder: (context, snapshot) {
-        if(finance != null){
+        if(finance != null && finance.data() != null){
           print("RUI_M_dashboard => finance data: ${finance.data()}");
           financeState = Finance.fromJson(finance.data());
         }
@@ -116,7 +117,7 @@ class RDashboardState extends State<RDashboard> {
         if(snapshot.categoryList.categoryListState.isEmpty && financeState == null && startRequest && financeState.activeUserMonthly == null){
           noActivity = true;
         }else{
-          if(snapshot.categoryList.categoryListState.isNotEmpty && financeState != null ){
+          if(snapshot.categoryList.categoryListState.isNotEmpty){
             //serviceList.clear();
             print("RUI_M_dashboard => Category List Length: ${snapshot.categoryList.categoryListState.length}");
             categories = snapshot.categoryList.categoryListState ?? [];
@@ -131,9 +132,9 @@ class RDashboardState extends State<RDashboard> {
 
             if(financeState != null && financeState.activeUserMonthly != null && financeState.week.totalRevenue != null){
               print("RUI_M_dashboard => finance data: ${financeState.toJson()}");
-              print("RUI_M_dashboard => CFinance day length: ${financeState.today.hour.length}");
-              print("RUI_M_dashboard => CFinance week length: ${financeState.week.day.length}");
-              print("RUI_M_dashboard => CFinance month length: ${financeState.month.day.length}");
+              print("RUI_M_dashboard => CFinance day length: ${financeState.today.data.length}");
+              print("RUI_M_dashboard => CFinance week length: ${financeState.week.data.length}");
+              print("RUI_M_dashboard => CFinance month length: ${financeState.month.data.length}");
               //print("RUI_M_dashboard => CFinance year length: ${financeState.year.month.length}");
               noActivity = false;
               startRequest = false;
@@ -162,13 +163,12 @@ class RDashboardState extends State<RDashboard> {
                 ),
                 centerTitle: true,
                 leading: IconButton(
-                  //key: Key('business_drawer_key'),
                   icon: const Icon(
                     Icons.chevron_left,
-                    color: BuytimeTheme.TextBlack,
+                    color: Colors.black,
                     //size: 30.0,
                   ),
-                  tooltip: AppLocalizations.of(context).dashboard,
+                  tooltip: AppLocalizations.of(context).openMenu,
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
@@ -231,14 +231,14 @@ class RDashboardState extends State<RDashboard> {
                                 Container(
                                   margin: EdgeInsets.only(top: 8),
                                   child: Text(
-                                    '€${dWMYFilter[0] ?
+                                    noActivity ? '€0000.00' : ('€${dWMYFilter[0] ?
                                     financeState.today.totalRevenue.toStringAsFixed(2) :
                                     dWMYFilter[1] ?
                                     financeState.week.totalRevenue.toStringAsFixed(2) :
                                     dWMYFilter[2] ?
                                     financeState.month.totalRevenue.toStringAsFixed(2) :
                                     financeState.year.totalRevenue.toStringAsFixed(2)
-                                    }',
+                                    }'),
                                     style: TextStyle(
                                         fontWeight: FontWeight.w500,
                                         fontFamily: BuytimeTheme.FontFamily,
@@ -429,16 +429,6 @@ class RDashboardState extends State<RDashboard> {
                             alignment: Alignment.center,
                             margin: EdgeInsets.only(top: 10),
                             child: BarChartSample1(dWMYFilter[0], dWMYFilter[1], dWMYFilter[2], dWMYFilter[3], financeState)),
-                        noActivity ?
-                            Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    CircularProgressIndicator()
-                                  ],
-                                )
-                              ],
-                            ):
                         Container(
                             width: double.infinity,
                             //height: double.infinity,
@@ -461,37 +451,38 @@ class RDashboardState extends State<RDashboard> {
                                   ),
                                 ),
                                 WFinancialDetail(AppLocalizations.of(context).averageGain, '',
-                                    '€${dWMYFilter[0] ?
+                                    noActivity ? '€0000.00' : ('€${dWMYFilter[0] ?
                                     financeState.today.mediumRevenue.toStringAsFixed(2) :
                                     dWMYFilter[1] ?
                                     financeState.week.mediumRevenue.toStringAsFixed(2) :
                                     dWMYFilter[2] ?
                                     financeState.month.mediumRevenue.toStringAsFixed(2) :
                                     financeState.year.mediumRevenue.toStringAsFixed(2)
-                                    }'),
+                                    }')),
                                 WFinancialDetail(AppLocalizations.of(context).activeUsersBroughtIntoTheApp, '${AppLocalizations.of(context).bringAtLest} ?? ${AppLocalizations.of(context).inTheApp} ??%', '${financeState.activeUserMonthly}'),
-                                WFinancialDetail('${AppLocalizations.of(context).giveback} ??%', '', '€${financeState.monthlyGiveback.toStringAsFixed(2)}'),
+                                WFinancialDetail('${AppLocalizations.of(context).giveback} ??%', '', noActivity ? '' : '€${financeState.monthlyGiveback.toStringAsFixed(2)}'),
                                 businessState.hub ?
                                 WFinancialDetail(AppLocalizations.of(context).externalServicesAddedToYourNetwork, AppLocalizations.of(context).theMore, '?') : Container(),
                                 businessState.hub ?
-                                WFinancialDetail(AppLocalizations.of(context).montlyEarningsForExternalServices, '', '€000,00'): Container(),
+                                WFinancialDetail(AppLocalizations.of(context).montlyEarningsForExternalServices, '', '€000.00'): Container(),
                                 businessState.hub ?
-                                WFinancialDetail(AppLocalizations.of(context).givebackExternalServices, '', '€000,00'): Container(),
+                                WFinancialDetail(AppLocalizations.of(context).givebackExternalServices, '', '€000.00'): Container(),
                                 WFinancialDetail(AppLocalizations.of(context).realGain, '',
-                                    '€${dWMYFilter[0] ?
-                                    financeState.today.mediumRevenue.toStringAsFixed(2) :
+                                    noActivity ? '€0000.00' : ('€${dWMYFilter[0] ?
+                                    financeState.today.realRevenue.toStringAsFixed(2) :
                                     dWMYFilter[1] ?
-                                    financeState.week.mediumRevenue.toStringAsFixed(2) :
+                                    financeState.week.realRevenue.toStringAsFixed(2) :
                                     dWMYFilter[2] ?
-                                    financeState.month.mediumRevenue.toStringAsFixed(2) :
-                                    financeState.year.mediumRevenue.toStringAsFixed(2)
-                                    }'),
+                                    financeState.month.realRevenue.toStringAsFixed(2) :
+                                    financeState.year.realRevenue.toStringAsFixed(2)
+                                    }')),
                                 Container(
                                   height: 10,
                                 )
                               ],
                             )
-                        ),
+                        )
+                        ,
 
                       ],
                     ),
