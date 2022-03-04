@@ -117,7 +117,7 @@ class WidgetServicePhotoState extends State<WidgetServicePhoto> {
         });
       } else {
         debugPrint('W_service_photo => crop');
-        croppedFile = await ImageCropper.cropImage(
+        croppedFile = await ImageCropper().cropImage(
             aspectRatio: cropAspectRatioPreset == CropAspectRatioPreset.square ? CropAspectRatio(ratioX: 1, ratioY: 1) : CropAspectRatio(ratioX: 16, ratioY: 9),
             sourcePath: pickedFile.path,
             /*aspectRatioPresets: Platform.isAndroid

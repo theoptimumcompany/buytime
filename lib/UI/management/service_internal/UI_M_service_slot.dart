@@ -140,7 +140,7 @@ class UI_M_ServiceSlotState extends State<UI_M_ServiceSlot> {
                                           currentStep = step;
                                         });
                                       },
-                                      controlsBuilder: (BuildContext context, {VoidCallback onStepContinue, VoidCallback onStepCancel}) {
+                                      controlsBuilder: (BuildContext context, ControlsDetails details) {
                                         return Row(
                                           mainAxisSize: MainAxisSize.max,
                                           mainAxisAlignment: MainAxisAlignment.center,
@@ -154,7 +154,7 @@ class UI_M_ServiceSlotState extends State<UI_M_ServiceSlot> {
                                                   style: OutlinedButton.styleFrom(
                                                     backgroundColor: BuytimeTheme.ManagerPrimary,
                                                   ),
-                                                  onPressed: onStepContinue,
+                                                  onPressed: details.onStepContinue,
                                                   child: Padding(
                                                     padding: const EdgeInsets.all(0.0),
                                                     child: Text(

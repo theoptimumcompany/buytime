@@ -45,7 +45,7 @@ class OptimumFormField extends StatefulWidget {
 
 class OptimumFormFieldState extends State<OptimumFormField> {
   FocusNode focusNode = FocusNode();
-  bool _autoValidate = false;
+  AutovalidateMode _autoValidate = AutovalidateMode.disabled;
   OnSaveOrChangedCallback onSaveOrChangedCallback;
   TextEditingController controller;
   int minLength;
@@ -94,7 +94,7 @@ class OptimumFormFieldState extends State<OptimumFormField> {
     } else {
 //    If all data are not valid then start auto validation.
       setState(() {
-        _autoValidate = true;
+        _autoValidate = AutovalidateMode.always;
       });
     }
   }
@@ -108,7 +108,7 @@ class OptimumFormFieldState extends State<OptimumFormField> {
           margin: EdgeInsets.only(bottom: 15),
           child: Form(
               key: widget.globalFieldKey,
-              autovalidate: _autoValidate,
+              autovalidateMode: _autoValidate,
               child: TextFormField(
                 textCapitalization: widget.typeOfValidate == 'email' ? TextCapitalization.none : TextCapitalization.sentences,
                 focusNode: focusNode,

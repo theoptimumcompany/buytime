@@ -35,7 +35,7 @@ class BuytimeMap extends StatefulWidget {
   createState() => _BuytimeMapState();
 }
 
-class _BuytimeMapState extends State<BuytimeMap> with SingleTickerProviderStateMixin, TickerProviderStateMixin {
+class _BuytimeMapState extends State<BuytimeMap> with SingleTickerProviderStateMixin {
   Animation _containerRadiusAnimation, _containerSizeAnimation, _containerColorAnimation;
 
   AnimationController _containerAnimationController;

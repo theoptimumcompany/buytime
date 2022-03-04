@@ -39,7 +39,7 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
   int steps = 4;
   List<String> europeanCountries = ['Austria', 'Italy', 'Belgium', 'Latvia', 'Bulgaria', 'Lithuania', 'Croatia', 'Luxembourg', 'Cyprus', 'Malta', 'Czechia', 'Netherlands', 'Denmark', 'Poland', 'Estonia', 'Portugal', 'Finland', 'Romania', 'France', 'Slovakia', 'Germany', 'Slovenia', 'Greece', 'Spain', 'Hungary', 'Sweden', 'Ireland'];
   final GlobalKey<FormState> _formKeyEdit = GlobalKey<FormState>();
-  bool _autoValidate = false;
+  AutovalidateMode _autoValidate = AutovalidateMode.disabled;
 
   next() {
     currentStep + 1 != steps ? goTo(currentStep + 1) : setState(() => complete = true);
@@ -70,7 +70,7 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
     } else {
 //    If all data are not valid then start auto validation.
       setState(() {
-        _autoValidate = true;
+        _autoValidate = AutovalidateMode.always;
       });
       return false;
     }
@@ -284,7 +284,7 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
                             child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
                               Form(
                                 key: _formKeyEdit,
-                                autovalidate: _autoValidate,
+                                autovalidateMode: _autoValidate,
                                 child: Flexible(
                                   child: StoreConnector<AppState, BusinessState>(
                                       converter: (store) => store.state.business,
@@ -1403,7 +1403,7 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
                                           onStepContinue: next,
                                           onStepTapped: (step) => goTo(step),
                                           onStepCancel: cancel,
-                                          controlsBuilder: (BuildContext context, {VoidCallback onStepContinue, VoidCallback onStepCancel}) => StoreConnector<AppState, BusinessState>(
+                                          controlsBuilder: (BuildContext context, ControlsDetails details) => StoreConnector<AppState, BusinessState>(
                                             converter: (store) => store.state.business,
                                             builder: (context, snapshot) {
                                               return Row(
@@ -1439,7 +1439,7 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
                                                             highlightElevation: 0,
                                                             onPressed: () {
                                                               print("salesman board: Upload to DB");
-                                                              onStepContinue();
+                                                              details.onStepContinue();
                                                             },
                                                             padding: EdgeInsets.all(0),
                                                             shape: RoundedRectangleBorder(

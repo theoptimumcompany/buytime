@@ -33,7 +33,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
   bool complete = false;
   int steps = 4;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  bool _autoValidate = false;
+  AutovalidateMode _autoValidate = AutovalidateMode.disabled;
 
   List<String> tag = [];
 
@@ -86,7 +86,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
     } else {
 //    If all data are not valid then start auto validation.
       setState(() {
-        _autoValidate = true;
+        _autoValidate = AutovalidateMode.always;
       });
       return false;
     }
@@ -286,7 +286,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                             child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
                               Form(
                                 key: _formKey,
-                                autovalidate: _autoValidate,
+                                autovalidateMode: _autoValidate,
                                 child: Flexible(
                                   child: StoreConnector<AppState, BusinessState>(
                                       converter: (store) => store.state.business,
@@ -1389,7 +1389,8 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                               onStepContinue: next,
                                               onStepTapped: (step) => goTo(step),
                                               onStepCancel: cancel,
-                                              controlsBuilder: (BuildContext context, {VoidCallback onStepContinue, VoidCallback onStepCancel}) => StoreConnector<AppState, AppState>(
+                                              controlsBuilder: (BuildContext context, ControlsDetails details) =>
+                                                  StoreConnector<AppState, AppState>(
                                                 converter: (store) => store.state,
                                                 builder: (context, snapshot) {
                                                   return Row(
@@ -1425,7 +1426,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                                 highlightElevation: 0,
                                                                 onPressed: () {
                                                                   print("salesman board: Upload to DB");
-                                                                  onStepContinue();
+                                                                  details.onStepContinue();
                                                                 },
                                                                 padding: EdgeInsets.all(0),
                                                                 shape: RoundedRectangleBorder(

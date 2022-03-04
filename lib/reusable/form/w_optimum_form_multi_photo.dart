@@ -121,7 +121,7 @@ class OptimumFormMultiPhotoState extends State<OptimumFormMultiPhoto> {
         });
       } else {
         debugPrint('optimum_from_multi_photo: crop');
-        croppedFile = await ImageCropper.cropImage(
+        croppedFile = await ImageCropper().cropImage(
             aspectRatio: cropAspectRatioPreset == CropAspectRatioPreset.square ? CropAspectRatio(ratioX: 1, ratioY: 1) : CropAspectRatio(ratioX: 16, ratioY: 9),
             sourcePath: pickedFile.path,
             androidUiSettings: AndroidUiSettings(toolbarTitle: AppLocalizations.of(context).cropYourImage, toolbarColor: BuytimeTheme.UserPrimary, toolbarWidgetColor: BuytimeTheme.TextWhite, initAspectRatio: cropAspectRatioPreset, lockAspectRatio: true, hideBottomControls: true),
