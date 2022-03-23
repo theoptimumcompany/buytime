@@ -1142,7 +1142,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                                       (context, index) {
                                                                     //MenuItemModel menuItem = menuItems.elementAt(index);
                                                                     CategoryState category = CategoryState().toEmpty();
-                                                                    //debugPrint('RUI_U_service_explorer => ${category.name}: ${categoryListIds[category.name]}');
+                                                                    debugPrint('RUI_U_service_explorer => ${category.name}: ${categoryListIds[category.name]}');
                                                                     return  Container(
                                                                       width: 100,
                                                                       height: 100,

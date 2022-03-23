@@ -25,7 +25,7 @@ class ConventionHelper{
         });
       }
     }
-    debugPrint('convention_helper => FINAL CONVENTION FOR $businessId IS $isConvention');
+    //debugPrint('convention_helper => FINAL CONVENTION FOR $businessId IS $isConvention');
     return isConvention;
   }
 
@@ -54,7 +54,7 @@ class ConventionHelper{
       }
 
     }
-    debugPrint('convention_helper => FINAL CONVENTION DISCOUNT FOR $businessId IS $discount');
+    //debugPrint('convention_helper => FINAL CONVENTION DISCOUNT FOR $businessId IS $discount');
     return discount;
   }
 }

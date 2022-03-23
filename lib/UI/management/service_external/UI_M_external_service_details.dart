@@ -104,6 +104,7 @@ class _ExternalServiceDetailsState extends State<ExternalServiceDetails> with Si
   String address = '';
   double distance;
 
+  ///TODO: Non funziona calcolo distanza nel modo giusto
   double calculateDistance(BusinessState businessState){
     double lat1 = 0.0;
     double lon1 = 0.0;

@@ -2665,12 +2665,12 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
                                                               StreamBuilder<QuerySnapshot>(
                                                                   stream: _categoryStream,
                                                                   builder: (context, AsyncSnapshot<QuerySnapshot> categorySnaphot) {
-                                                                    debugPrint('----------');
+                                                                   // debugPrint('----------');
                                                                     Provider.of<Explorer>(context, listen: false).rootCategoryList.clear();
                                                                     Provider.of<Explorer>(context, listen: false).allCategoryList.clear();
                                                                     if (categorySnaphot.hasError || categorySnaphot.connectionState == ConnectionState.waiting) {
-                                                                      debugPrint('RUI_U_service_explorer => CATEGORY SNAPSHOT ERROR => ${categorySnaphot.hasError}');
-                                                                      debugPrint('RUI_U_service_explorer => CATEGORY CONNECTION STATE => ${categorySnaphot.connectionState}');
+                                                                     // debugPrint('RUI_U_service_explorer => CATEGORY SNAPSHOT ERROR => ${categorySnaphot.hasError}');
+                                                                      //debugPrint('RUI_U_service_explorer => CATEGORY CONNECTION STATE => ${categorySnaphot.connectionState}');
                                                                       return Flexible(
                                                                         child: CustomScrollView(physics: new ClampingScrollPhysics(), shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
                                                                           SliverList(
