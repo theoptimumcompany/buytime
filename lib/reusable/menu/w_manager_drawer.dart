@@ -497,7 +497,7 @@ class _ManagerDrawerState extends State<ManagerDrawer> {
                                   leading: Icon(Icons.logout, color: BuytimeTheme.TextMedium, size: 24),
                                   onTap: () async {
                                     SharedPreferences prefs = await SharedPreferences.getInstance();
-                                    await storage.write(key: 'bookingCode', value: '');
+                                   // await storage.write(key: 'bookingCode', value: '');
                                     FirebaseAuth.instance.signOut().then((_) {
                                       googleSignIn.signOut();
                                       Provider.of<Explorer>(context, listen: false).clear();

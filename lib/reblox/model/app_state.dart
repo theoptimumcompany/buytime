@@ -70,7 +70,7 @@ class AppRoutes {
   static const serviceDetails = "/serviceDetails";
   static const serviceExplorer = "/serviceExplorer";
   static const bookingSelfCreation = "/bookingSelfCreation";
-
+  static const inviteGuestForm = "/inviteGuestForm";
 }
 
 class AppState {

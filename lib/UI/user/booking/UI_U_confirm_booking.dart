@@ -1,6 +1,5 @@
 import 'package:Buytime/UI/user/turist/RUI_U_service_explorer.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
-import 'package:Buytime/reblox/reducer/booking_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/booking_reducer.dart';
 import 'package:Buytime/utils/utils.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -29,7 +28,7 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
   BookingState bookingState;
 
   ///Storage
-  final storage = new FlutterSecureStorage();
+  // final storage = new FlutterSecureStorage();
 
   @override
   void initState() {
@@ -78,10 +77,9 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
                 color: Colors.black,
               ),
               onPressed: () async{
-                await storage.write(key: 'bookingCodeRead', value: 'false');
-                await storage.delete(key: 'bookingCode').whenComplete(() => {
-                  Navigator.of(context).pop()
-                });
+                //await storage.delete(key: 'bookingCode').whenComplete(() => {
+                Navigator.of(context).pushNamed(AppRoutes.inviteGuestForm);
+                //});
               },
             ),
           ),
@@ -207,41 +205,6 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
                                       focusElevation: 0,
                                       highlightElevation: 0,
                                       onPressed: () async {
-                                        /*showDialog(
-                                          context: context,
-                                          builder: (context) {
-                                            return  WillPopScope(
-                                                onWillPop: () async {
-                                                  FocusScope.of(context).unfocus();
-                                                  return false;
-                                                },
-                                                child: Container(
-                                                    height: SizeConfig.safeBlockVertical * 100,
-                                                    decoration: BoxDecoration(
-                                                      color: Colors.white.withOpacity(.8),
-                                                    ),
-                                                    child: Center(
-                                                      child: Column(
-                                                        mainAxisAlignment: MainAxisAlignment.center,
-                                                        children: <Widget>[
-                                                          Container(
-                                                            width: SizeConfig.safeBlockVertical * 20,
-                                                            height: SizeConfig.safeBlockVertical * 20,
-                                                            child: Center(
-                                                              child: BCubeGridSpinner(
-                                                                color: Colors.transparent,
-                                                                size: SizeConfig.safeBlockVertical * 15,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    )
-                                                )
-                                            );
-                                          });*/
-                                        await storage.write(key: 'bookingCodeRead', value: 'false');
-                                        await storage.delete(key: 'bookingCode');
                                         bookingState.status = Utils.enumToString(BookingStatus.opened);
                                         StoreProvider.of<AppState>(context).dispatch(UpdateBookingOnConfirm(bookingState));
                                         //StoreProvider.of<AppState>(context).dispatch(BusinessAndNavigateOnConfirmRequest(bookingState.business_id));
@@ -292,10 +255,9 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
                                       focusElevation: 0,
                                       highlightElevation: 0,
                                       onPressed: () async {
-                                        await storage.write(key: 'bookingCodeRead', value: 'false');
-                                        await storage.delete(key: 'bookingCode');
-                                        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => RServiceExplorer()), (Route<dynamic> route) => false);
-                                        //Navigator.of(context).pushNamedAndRemoveUntil(Landing.route, (Route<dynamic> route) => false);
+                                       // await storage.delete(key: 'bookingCode');
+                                       // Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => RServiceExplorer()), (Route<dynamic> route) => false);
+                                        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => RServiceExplorer()));
                                       },
                                       textColor: BuytimeTheme.ActionBlackPurple,
                                       color: BuytimeTheme.BackgroundWhite,
@@ -316,32 +278,6 @@ class _ConfirmBookingState extends State<ConfirmBooking> {
                                 )
                               ],
                             )
-                            /*Container(
-                                  margin: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 10),
-                                  alignment: Alignment.center,
-                                  child: Material(
-                                    color: Colors.transparent,
-                                    child: InkWell(
-                                        onTap: (){
-                                          Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => Landing()), (Route<dynamic> route) => false);
-                                          //Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => BookingPage()));
-                                        },
-                                        borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                                        child: Container(
-                                          padding: EdgeInsets.all(5.0),
-                                          child: Text(
-                                            AppLocalizations.of(context).somethingIsNotRight,
-                                            style: TextStyle(
-                                                fontFamily: BuytimeTheme.FontFamily,
-                                                color: BuytimeTheme.UserPrimary,
-                                                fontWeight: FontWeight.w600,
-                                                fontSize: 14 ///SizeConfig.safeBlockHorizontal * 4
-                                            ),
-                                          ),
-                                        )
-                                    ),
-                                  )
-                              ),*/
                           ],
                         ),
                       )

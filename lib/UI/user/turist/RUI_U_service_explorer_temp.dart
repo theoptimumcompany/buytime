@@ -420,7 +420,7 @@ class _RServiceExplorerState extends State<RServiceExplorer> {
   Future<Color> getDominatColor(String image) async {
     ImageProvider imageProvider = Image.network(image).image;
     PaletteGenerator p = await PaletteGenerator.fromImageProvider(imageProvider,timeout: Duration(milliseconds: 1100));
-    debugPrint('RUI_U_service_explorer => Category domina color: ${p.dominantColor.color}');
+    //debugPrint('RUI_U_service_explorer => Category domina color: ${p.dominantColor.color}');
     return p.dominantColor.color;
   }
 

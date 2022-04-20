@@ -38,6 +38,7 @@ var combinedEpics = combineEpics<AppState>([
   ExternalBusinessListRequestService(),
   BookingCreateRequestService(),
   BookingRequestService(),
+  BookingRequestOnInviteService(),
   UserBookingListRequestService(),
   BookingListRequestService(),
   BookingUpdateRequestService(),

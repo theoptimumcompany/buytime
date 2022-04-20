@@ -308,8 +308,8 @@ class _NewFilterByCategoryState extends State<NewFilterByCategory> {
           categoryServices = FirebaseFirestore.instance.collection("service")
             //  .where("tag", arrayContainsAny: [StoreProvider.of<AppState>(context).state.area.areaId])
               .where("visibility", isEqualTo: 'Active')
-              //.where('categoryId', arrayContainsAny: tmpCategoryIdList.length > 10 ? tmpCategoryIdList.sublist(0, 10) : tmpCategoryIdList)
-              .where('categoryId', arrayContainsAny: widget.categoryState.categoryIdList)
+              .where('categoryId', arrayContainsAny: tmpCategoryIdList.length > 10 ? tmpCategoryIdList.sublist(0, 10) : tmpCategoryIdList)
+              //.where('categoryId', arrayContainsAny: widget.categoryState.categoryIdList)
           //.limit(4)
               .snapshots(includeMetadataChanges: true);
         }else{
@@ -820,7 +820,7 @@ class _NewFilterByCategoryState extends State<NewFilterByCategory> {
                                           stream: categoryServices,
                                           builder: (context, AsyncSnapshot<QuerySnapshot> categoryServicesSnapshot) {
                                             if (categoryServicesSnapshot.hasError || categoryServicesSnapshot.connectionState == ConnectionState.waiting) {
-                                              debugPrint('RUI_U_service_explorer => CATEGORY SERVICE WAITING');
+                                              //debugPrint('RUI_U_service_explorer => CATEGORY SERVICE WAITING');
                                               return Column(
                                                 mainAxisAlignment: MainAxisAlignment.start,
                                                 mainAxisSize: MainAxisSize.min,
