@@ -17,6 +17,15 @@ class BookingRequest {
   String get bookingId => _bookingId;
 }
 
+class BookingRequestOnInvite {
+  String _bookingId;
+
+  BookingRequestOnInvite(this._bookingId);
+
+  String get bookingId => _bookingId;
+}
+
+
 class CreateBookingRequest {
   BookingState _bookingState;
 

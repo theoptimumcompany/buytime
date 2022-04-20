@@ -35,35 +35,30 @@ class Utils {
   static String imageSizing1000 = "_1000x1000";
 
   ///Calculate Promo Discount
-  static double calculatePromoDiscount(double fullPrice, context, String businessId, int addRemove, int itemNumber) {
-    double promoPrice = 0.0;
-    bool promoForSpecificBusiness = StoreProvider.of<AppState>(context).state.promotionState != null &&
-        StoreProvider.of<AppState>(context).state.promotionState.businessIdList != null &&
-        StoreProvider.of<AppState>(context).state.promotionState.businessIdList.isNotEmpty &&
-        StoreProvider.of<AppState>(context).state.promotionState.businessIdList.contains(businessId);
-    bool promoForAllServices = StoreProvider.of<AppState>(context).state.promotionState != null &&
-        (StoreProvider.of<AppState>(context).state.promotionState.businessIdList == null ||
-            StoreProvider.of<AppState>(context).state.promotionState.businessIdList.isEmpty);
-    if(itemNumber < StoreProvider.of<AppState>(context).state.promotionState.limit) {
-      if (addRemove == 2 ) {
-        StoreProvider.of<AppState>(context).state.promotionState.timesUsed -= 1;
-        promoPrice = applyPromotion(context, fullPrice, promoPrice, addRemove);
-      }
-    }
-    if(StoreProvider.of<AppState>(context).state.promotionState.timesUsed < StoreProvider.of<AppState>(context).state.promotionState.limit) {
-      if(promoForSpecificBusiness || promoForAllServices) {
-        if (addRemove == 1) {
-          StoreProvider.of<AppState>(context).state.promotionState.timesUsed += 1;
-          promoPrice = applyPromotion(context, fullPrice, promoPrice, addRemove);
-        }
-      }
-    }
-    if (StoreProvider.of<AppState>(context).state.promotionState.timesUsed < 0) {
-      StoreProvider.of<AppState>(context).state.promotionState.timesUsed = 0;
-    }
-    debugPrint('calculatePromoDiscount timesUsed: ' + StoreProvider.of<AppState>(context).state.promotionState.timesUsed.toString() + ' itemNumber ' + itemNumber.toString());
-    return promoPrice;
-  }
+  // static double calculatePromoDiscount(double fullPrice, context, String businessId, int addRemove, int itemNumber) {
+  //   double promoPrice = 0.0;
+  //   bool promoForSpecificBusiness = StoreProvider.of<AppState>(context).state.promotionState != null && StoreProvider.of<AppState>(context).state.promotionState.businessIdList != null && StoreProvider.of<AppState>(context).state.promotionState.businessIdList.isNotEmpty && StoreProvider.of<AppState>(context).state.promotionState.businessIdList.contains(businessId);
+  //   bool promoForAllServices = StoreProvider.of<AppState>(context).state.promotionState != null && (StoreProvider.of<AppState>(context).state.promotionState.businessIdList == null || StoreProvider.of<AppState>(context).state.promotionState.businessIdList.isEmpty);
+  //   if (itemNumber < StoreProvider.of<AppState>(context).state.promotionState.limit) {
+  //     if (addRemove == 2) {
+  //       StoreProvider.of<AppState>(context).state.promotionState.timesUsed -= 1;
+  //       promoPrice = applyPromotion(context, fullPrice, promoPrice, addRemove);
+  //     }
+  //   }
+  //   if (StoreProvider.of<AppState>(context).state.promotionState.timesUsed < StoreProvider.of<AppState>(context).state.promotionState.limit) {
+  //     if (promoForSpecificBusiness || promoForAllServices) {
+  //       if (addRemove == 1) {
+  //         StoreProvider.of<AppState>(context).state.promotionState.timesUsed += 1;
+  //         promoPrice = applyPromotion(context, fullPrice, promoPrice, addRemove);
+  //       }
+  //     }
+  //   }
+  //   if (StoreProvider.of<AppState>(context).state.promotionState.timesUsed < 0) {
+  //     StoreProvider.of<AppState>(context).state.promotionState.timesUsed = 0;
+  //   }
+  //   debugPrint('calculatePromoDiscount timesUsed: ' + StoreProvider.of<AppState>(context).state.promotionState.timesUsed.toString() + ' itemNumber ' + itemNumber.toString());
+  //   return promoPrice;
+  // }
 
   static double applyPromotion(context, double fullPrice, double promoPrice, int addRemove) {
     PromotionState promotionState = StoreProvider.of<AppState>(context).state.promotionState;
@@ -72,15 +67,17 @@ class Utils {
         if ((fullPrice - (promotionState.discount).toDouble()) >= 3.0) {
           promoPrice = (promotionState.discount).toDouble();
         } else {
-          if (fullPrice - (promotionState.discount).toDouble() >= 0) { // 4 5 6 7
+          if (fullPrice - (promotionState.discount).toDouble() >= 0) {
+            // 4 5 6 7
             promoPrice = fullPrice - 3;
-          } else { // 1
+          } else {
+            // 1
             promoPrice = 0.0;
           }
         }
         break;
       case 'percentageAmount':
-        promoPrice = ((fullPrice * promotionState.discount)/100);
+        promoPrice = ((fullPrice * promotionState.discount) / 100);
         break;
       default:
         promoPrice = 0.0;
@@ -90,36 +87,21 @@ class Utils {
 
   ///Check Promo Discount (gestisce principalmente le label rosse)
   static PromotionState checkPromoDiscount(String promoName, context, String businessId) {
-    if(
-    StoreProvider.of<AppState>(context).state.promotionState != null &&
-        (StoreProvider.of<AppState>(context).state.promotionState.timesUsed < StoreProvider.of<AppState>(context).state.promotionState.limit) &&
-        StoreProvider.of<AppState>(context).state.promotionState.businessIdList != null &&
-        StoreProvider.of<AppState>(context).state.promotionState.businessIdList.isNotEmpty &&
-        StoreProvider.of<AppState>(context).state.promotionState.businessIdList.contains(businessId)) {
-      return StoreProvider.of<AppState>(context).state.promotionState;
-    } else if (
-    StoreProvider.of<AppState>(context).state.promotionState != null &&
-        (StoreProvider.of<AppState>(context).state.promotionState.timesUsed < StoreProvider.of<AppState>(context).state.promotionState.limit) &&
-        (StoreProvider.of<AppState>(context).state.promotionState.businessIdList == null || StoreProvider.of<AppState>(context).state.promotionState.businessIdList.isEmpty)
-    ) {
-      PromotionState(promotionId: 'empty');
-      // return StoreProvider.of<AppState>(context).state.promotionState;
+    if (StoreProvider.of<AppState>(context).state.promotionState.limit != 0) {
+      if (StoreProvider.of<AppState>(context).state.promotionState != null /*&& (StoreProvider.of<AppState>(context).state.promotionState.timesUsed <= StoreProvider.of<AppState>(context).state.promotionState.limit) */ && StoreProvider.of<AppState>(context).state.promotionState.businessIdList != null && StoreProvider.of<AppState>(context).state.promotionState.businessIdList.isNotEmpty && StoreProvider.of<AppState>(context).state.promotionState.businessIdList.contains(businessId)) {
+        return StoreProvider.of<AppState>(context).state.promotionState;
+      } else if (StoreProvider.of<AppState>(context).state.promotionState != null && /*(StoreProvider.of<AppState>(context).state.promotionState.timesUsed <= StoreProvider.of<AppState>(context).state.promotionState.limit)  && */  (StoreProvider.of<AppState>(context).state.promotionState.businessIdList == null || StoreProvider.of<AppState>(context).state.promotionState.businessIdList.isEmpty)) {
+        return PromotionState(promotionId: 'empty');
+      }
     }
     return PromotionState(promotionId: 'empty');
   }
 
   ///Check Promo Discount (gestisce principalmente le label rosse)
   static PromotionState checkPromoDiscountTotal(String promoName, context, String businessId) {
-    if(
-    StoreProvider.of<AppState>(context).state.promotionState != null &&
-        StoreProvider.of<AppState>(context).state.promotionState.businessIdList != null &&
-        StoreProvider.of<AppState>(context).state.promotionState.businessIdList.isNotEmpty &&
-        StoreProvider.of<AppState>(context).state.promotionState.businessIdList.contains(businessId)) {
+    if (StoreProvider.of<AppState>(context).state.promotionState != null && StoreProvider.of<AppState>(context).state.promotionState.businessIdList != null && StoreProvider.of<AppState>(context).state.promotionState.businessIdList.isNotEmpty && StoreProvider.of<AppState>(context).state.promotionState.businessIdList.contains(businessId)) {
       return StoreProvider.of<AppState>(context).state.promotionState;
-    } else if (
-    StoreProvider.of<AppState>(context).state.promotionState != null &&
-        (StoreProvider.of<AppState>(context).state.promotionState.businessIdList == null || StoreProvider.of<AppState>(context).state.promotionState.businessIdList.isEmpty)
-    ) {
+    } else if (StoreProvider.of<AppState>(context).state.promotionState != null && (StoreProvider.of<AppState>(context).state.promotionState.businessIdList == null || StoreProvider.of<AppState>(context).state.promotionState.businessIdList.isEmpty)) {
       PromotionState(promotionId: 'empty');
       // return StoreProvider.of<AppState>(context).state.promotionState;
     }
@@ -238,7 +220,7 @@ class Utils {
   }
 
   ///Shimmer
-  static Widget imageShimmer(double width, double heigth) {
+  static Widget imageShimmer(double width, double height) {
     return Shimmer.fromColors(
       baseColor: Colors.grey[300],
       highlightColor: Colors.grey[100],
@@ -249,7 +231,7 @@ class Utils {
         width: width,
 
         ///SizeConfig.safeBlockVertical * widget.width
-        height: heigth,
+        height: height,
 
         ///SizeConfig.safeBlockVertical * widget.width,
         decoration: BoxDecoration(
@@ -431,7 +413,7 @@ class Utils {
   static Future<String> singleGoogleTranslate(String translateFrom, String translateTo, String ogText) async {
     //debugPrint('LanguageCode: ${language[i]} | Flag: ${flags[i]}');
     //var url = Uri.https('translation.googleapis.com', '/language/translate/v2', {'source': '${translateFrom}', 'target': '${translateTo}', 'key': '${Environment().config.googleApiKey}', 'q': '${ogText}'});
-    var url = Uri.https('translation.googleapis.com', '/language/translate/v2', { 'target': '${translateTo}', 'key': '${Environment().config.googleApiKey}', 'q': '${ogText}'});
+    var url = Uri.https('translation.googleapis.com', '/language/translate/v2', {'target': '${translateTo}', 'key': '${Environment().config.googleApiKey}', 'q': '${ogText}'});
     final http.Response response = await http.get(url, headers: {
       //HttpHeaders.contentTypeHeader : "utf-8",
       'charset': "utf-8"
@@ -565,7 +547,7 @@ class Utils {
           physics: ClampingScrollPhysics(),
           child: Padding(
             padding: EdgeInsets.only(
-              //top: SizeConfig.safeBlockVertical * 5,
+                //top: SizeConfig.safeBlockVertical * 5,
                 bottom: MediaQuery.of(context).viewInsets.bottom),
             child: SafeArea(
               child: Container(
@@ -615,7 +597,7 @@ class Utils {
                           },
                           style: TextStyle(color: BuytimeTheme.TextGrey, fontFamily: BuytimeTheme.FontFamily),
                           decoration: InputDecoration(
-                            //labelText: field,
+                              //labelText: field,
                               enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
                               border: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
                               focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
@@ -651,13 +633,13 @@ class Utils {
                             slivers: [
                               SliverList(
                                 delegate: SliverChildBuilderDelegate(
-                                      (context, index) {
+                                  (context, index) {
                                     String flag = flags.elementAt(index);
                                     if (myLocaleCharCode != flag)
                                       return Container(
                                         margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 6, right: SizeConfig.safeBlockHorizontal * 6, top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1),
                                         child: TextFormField(
-                                          //initialValue: _serviceName,
+                                            //initialValue: _serviceName,
                                             controller: controllers.elementAt(index),
                                             keyboardType: TextInputType.multiline,
                                             textInputAction: TextInputAction.done,
@@ -722,12 +704,10 @@ class Utils {
                           debugPrint('MultiLingualTranslate => $serviceField');
                           if (isName)
                             StoreProvider.of<AppState>(context).dispatch(SetServiceName(serviceField));
-                          else if (isDescription){
+                          else if (isDescription) {
                             StoreProvider.of<AppState>(context).dispatch(SetServiceDescription(serviceField));
-                            if(StoreProvider.of<AppState>(context).state.serviceState.originalLanguage.isEmpty || StoreProvider.of<AppState>(context).state.serviceState.originalLanguage == myLanguage)
-                              StoreProvider.of<AppState>(context).dispatch(SetServiceOriginalLanguage(myLanguage));
-                          }
-                          else
+                            if (StoreProvider.of<AppState>(context).state.serviceState.originalLanguage.isEmpty || StoreProvider.of<AppState>(context).state.serviceState.originalLanguage == myLanguage) StoreProvider.of<AppState>(context).dispatch(SetServiceOriginalLanguage(myLanguage));
+                          } else
                             StoreProvider.of<AppState>(context).dispatch(SetServiceCondition(serviceField));
                           //nextPage();
                           Navigator.of(context).pop();
@@ -771,16 +751,15 @@ class Utils {
     ///Year
     int startDate = 2020;
     int yearsLength = DateTime.now().year - startDate;
-    List<int> yearsList = List.generate(yearsLength == 0 ? 1 : yearsLength+1, (index) => startDate++);
+    List<int> yearsList = List.generate(yearsLength == 0 ? 1 : yearsLength + 1, (index) => startDate++);
     yearsList = yearsList.reversed.toList();
 
     ///Month
     Map<int, List<String>> monthMap = Map();
     yearsList.forEach((y) {
       int month = DateTime.now().month;
-      monthMap.putIfAbsent(y, () => List.generate(y == DateTime.now().year ? month : 12, (index) => DateFormat('MMMM').format(DateTime(DateTime.now().year, index+1, DateTime.now().day))).reversed.toList());
+      monthMap.putIfAbsent(y, () => List.generate(y == DateTime.now().year ? month : 12, (index) => DateFormat('MMMM').format(DateTime(DateTime.now().year, index + 1, DateTime.now().day))).reversed.toList());
     });
-
 
     showModalBottomSheet(
       context: context,
@@ -791,7 +770,7 @@ class Utils {
           physics: ClampingScrollPhysics(),
           child: Padding(
             padding: EdgeInsets.only(
-              //top: SizeConfig.safeBlockVertical * 5,
+                //top: SizeConfig.safeBlockVertical * 5,
                 bottom: MediaQuery.of(context).viewInsets.bottom),
             child: SafeArea(
               child: Container(
@@ -804,63 +783,118 @@ class Utils {
                       //height: 24,
                       alignment: Alignment.centerRight,
                       child: IconButton(
-                        onPressed: (){
+                        onPressed: () {
                           Navigator.of(context).pop();
                         },
-                        icon: Icon(
-                            Icons.close
-                        ),
+                        icon: Icon(Icons.close),
                       ),
                     ),
-                    month ? Flexible(
-                      child: Container(
-                        //height: SizeConfig.safeBlockVertical * 50,
-                        margin: EdgeInsets.only(bottom: 39, top: 0, left: 16, right: 16),
-                        child: CustomScrollView(
-                            physics: new ClampingScrollPhysics(),
-                            //physics: NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            slivers: [
-                              SliverList(
-                                delegate: SliverChildBuilderDelegate(
-                                      (context, index) {
-                                    int year = yearsList.elementAt(index);
-                                    return Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Container(
-                                            margin: EdgeInsets.only(top: 16),
-                                            height: 42,
-                                            decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                                              //color: BuytimeTheme.SymbolLightGrey.withOpacity(.3),
-                                            ),
-                                            child: Text(
-                                              '$year',
-                                              style: TextStyle(
-                                                //letterSpacing: .25,
-                                                  fontFamily: BuytimeTheme.FontFamily,
-                                                  color: BuytimeTheme.TextBlack,
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 18
+                    month
+                        ? Flexible(
+                            child: Container(
+                              //height: SizeConfig.safeBlockVertical * 50,
+                              margin: EdgeInsets.only(bottom: 39, top: 0, left: 16, right: 16),
+                              child: CustomScrollView(
+                                  physics: new ClampingScrollPhysics(),
+                                  //physics: NeverScrollableScrollPhysics(),
+                                  shrinkWrap: true,
+                                  slivers: [
+                                    SliverList(
+                                      delegate: SliverChildBuilderDelegate(
+                                        (context, index) {
+                                          int year = yearsList.elementAt(index);
+                                          return Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Container(
+                                                  margin: EdgeInsets.only(top: 16),
+                                                  height: 42,
+                                                  decoration: BoxDecoration(
+                                                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                                    //color: BuytimeTheme.SymbolLightGrey.withOpacity(.3),
+                                                  ),
+                                                  child: Text(
+                                                    '$year',
+                                                    style: TextStyle(
+                                                        //letterSpacing: .25,
+                                                        fontFamily: BuytimeTheme.FontFamily,
+                                                        color: BuytimeTheme.TextBlack,
+                                                        fontWeight: FontWeight.w500,
+                                                        fontSize: 18
 
-                                                ///SizeConfig.safeBlockHorizontal * 4
+                                                        ///SizeConfig.safeBlockHorizontal * 4
+                                                        ),
+                                                  )),
+                                              Flexible(
+                                                child: GridView.count(
+                                                    // Create a grid with 2 columns. If you change the scrollDirection to
+                                                    // horizontal, this produces 2 rows.
+                                                    physics: NeverScrollableScrollPhysics(),
+                                                    shrinkWrap: true,
+                                                    crossAxisCount: 2,
+                                                    mainAxisSpacing: 16.0,
+                                                    crossAxisSpacing: 9.0,
+                                                    childAspectRatio: (167 / 42),
+                                                    // Generate 100 widgets that display their index in the List.
+                                                    children: monthMap[year]
+                                                        .map((m) => Container(
+                                                            //margin: EdgeInsets.only(top: ),
+                                                            height: 42,
+                                                            decoration: BoxDecoration(
+                                                              borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                                              color: BuytimeTheme.SymbolLightGrey.withOpacity(.3),
+                                                            ),
+                                                            child: Material(
+                                                              color: Colors.transparent,
+                                                              child: InkWell(
+                                                                  onTap: () {
+                                                                    callback('$m', '$year');
+                                                                    Navigator.of(context).pop();
+                                                                  },
+                                                                  borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                                                  child: Container(
+                                                                    alignment: Alignment.center,
+                                                                    child: Text(
+                                                                      '$m',
+                                                                      style: TextStyle(
+                                                                          //letterSpacing: .25,
+                                                                          fontFamily: BuytimeTheme.FontFamily,
+                                                                          color: BuytimeTheme.TextBlack,
+                                                                          fontWeight: FontWeight.w500,
+                                                                          fontSize: 18
+
+                                                                          ///SizeConfig.safeBlockHorizontal * 4
+                                                                          ),
+                                                                    ),
+                                                                  )),
+                                                            )))
+                                                        .toList()),
                                               ),
-                                            )),
-                                        Flexible(
-                                          child: GridView.count(
-                                            // Create a grid with 2 columns. If you change the scrollDirection to
-                                            // horizontal, this produces 2 rows.
-                                            physics: NeverScrollableScrollPhysics(),
-                                              shrinkWrap: true,
-                                              crossAxisCount: 2,
-                                              mainAxisSpacing: 16.0,
-                                              crossAxisSpacing: 9.0,
-                                              childAspectRatio: (167 / 42),
-                                              // Generate 100 widgets that display their index in the List.
-                                              children: monthMap[year].map((m) =>
-                                                  Container(
-                                                  //margin: EdgeInsets.only(top: ),
+                                            ],
+                                          );
+                                        },
+                                        childCount: yearsList.length,
+                                      ),
+                                    ),
+                                  ]),
+                            ),
+                          )
+                        : year
+                            ? Flexible(
+                                child: Container(
+                                  //height: SizeConfig.safeBlockVertical * 50,
+                                  margin: EdgeInsets.only(bottom: 39, top: 19, left: 16, right: 16),
+                                  child: CustomScrollView(
+                                      physics: new ClampingScrollPhysics(),
+                                      //physics: NeverScrollableScrollPhysics(),
+                                      shrinkWrap: true,
+                                      slivers: [
+                                        SliverList(
+                                          delegate: SliverChildBuilderDelegate(
+                                            (context, index) {
+                                              int year = yearsList.elementAt(index);
+                                              return Container(
+                                                  margin: EdgeInsets.only(top: 16),
                                                   height: 42,
                                                   decoration: BoxDecoration(
                                                     borderRadius: BorderRadius.all(Radius.circular(5.0)),
@@ -870,91 +904,34 @@ class Utils {
                                                     color: Colors.transparent,
                                                     child: InkWell(
                                                         onTap: () {
-                                                          callback('$m', '$year');
+                                                          callback('', '$year');
                                                           Navigator.of(context).pop();
                                                         },
                                                         borderRadius: BorderRadius.all(Radius.circular(5.0)),
                                                         child: Container(
                                                           alignment: Alignment.center,
                                                           child: Text(
-                                                            '$m',
+                                                            '$year',
                                                             style: TextStyle(
-                                                              //letterSpacing: .25,
+                                                                //letterSpacing: .25,
                                                                 fontFamily: BuytimeTheme.FontFamily,
                                                                 color: BuytimeTheme.TextBlack,
                                                                 fontWeight: FontWeight.w500,
                                                                 fontSize: 18
 
-                                                              ///SizeConfig.safeBlockHorizontal * 4
-                                                            ),
+                                                                ///SizeConfig.safeBlockHorizontal * 4
+                                                                ),
                                                           ),
                                                         )),
-                                                  ))
-                                              ).toList()),
+                                                  ));
+                                            },
+                                            childCount: yearsList.length,
+                                          ),
                                         ),
-                                      ],
-                                    );
-                                  },
-                                  childCount: yearsList.length,
+                                      ]),
                                 ),
-                              ),
-                            ]),
-                      ),
-                    ) :
-                        year ?
-                    Flexible(
-                      child: Container(
-                        //height: SizeConfig.safeBlockVertical * 50,
-                        margin: EdgeInsets.only(bottom: 39, top: 19, left: 16, right: 16),
-                        child: CustomScrollView(
-                            physics: new ClampingScrollPhysics(),
-                            //physics: NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            slivers: [
-                              SliverList(
-                                delegate: SliverChildBuilderDelegate(
-                                      (context, index) {
-                                        int year = yearsList.elementAt(index);
-                                    return Container(
-                                      margin: EdgeInsets.only(top: 16),
-                                        height: 42,
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                                          color: BuytimeTheme.SymbolLightGrey.withOpacity(.3),
-                                        ),
-                                        child: Material(
-                                          color: Colors.transparent,
-                                          child: InkWell(
-                                              onTap: () {
-                                                callback('', '$year');
-                                                Navigator.of(context).pop();
-                                              },
-                                              borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                                              child: Container(
-                                                alignment: Alignment.center,
-                                                child: Text(
-                                                  '$year',
-                                                  style: TextStyle(
-                                                      //letterSpacing: .25,
-                                                      fontFamily: BuytimeTheme.FontFamily,
-                                                      color: BuytimeTheme.TextBlack,
-                                                      fontWeight: FontWeight.w500,
-                                                      fontSize: 18
-
-                                                    ///SizeConfig.safeBlockHorizontal * 4
-                                                  ),
-                                                ),
-                                              )),
-                                        ));
-                                  },
-                                  childCount: yearsList.length,
-                                ),
-                              ),
-                            ]),
-                      ),
-                    )
+                              )
                             : Container(),
-
                   ],
                 ),
               ),
@@ -965,11 +942,10 @@ class Utils {
     );
   }
 
-  static int getMonthNumber(String locale, String monthString){
+  static int getMonthNumber(String locale, String monthString) {
     int month = DateTime.now().month - 1;
-    for(int i = 1; i <= 12; i++){
-      if(DateFormat('MMMM',locale).format(DateTime(DateTime.now().year, i)) == monthString)
-        return i - 1;
+    for (int i = 1; i <= 12; i++) {
+      if (DateFormat('MMMM', locale).format(DateTime(DateTime.now().year, i)) == monthString) return i - 1;
     }
     return month;
   }
@@ -1096,21 +1072,21 @@ class Utils {
                         ),
                         addressController.text.isNotEmpty && predictions.isNotEmpty
                             ? Flexible(
-                          child: ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: predictions.length,
-                            itemBuilder: (context, index) {
-                              debugPrint('data found');
-                              return ListTile(
-                                leading: Icon(
-                                  Icons.place,
-                                  color: BuytimeTheme.ManagerPrimary,
-                                ),
-                                title: Text(predictions[index][0]),
-                                onTap: () async {
-                                  debugPrint(predictions[index][1]);
-                                  getDetails(predictions[index][1], context);
-                                  /*Navigator.push(
+                                child: ListView.builder(
+                                  shrinkWrap: true,
+                                  itemCount: predictions.length,
+                                  itemBuilder: (context, index) {
+                                    debugPrint('data found');
+                                    return ListTile(
+                                      leading: Icon(
+                                        Icons.place,
+                                        color: BuytimeTheme.ManagerPrimary,
+                                      ),
+                                      title: Text(predictions[index][0]),
+                                      onTap: () async {
+                                        debugPrint(predictions[index][1]);
+                                        getDetails(predictions[index][1], context);
+                                        /*Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => DetailsPage(
@@ -1119,11 +1095,11 @@ class Utils {
                                 ),
                               ),
                             );*/
-                                },
-                              );
-                            },
-                          ),
-                        )
+                                      },
+                                    );
+                                  },
+                                ),
+                              )
                             : Container(),
                         /*Container(
                   margin: EdgeInsets.only(top: 10, bottom: 10),
@@ -1290,9 +1266,9 @@ class Utils {
     return areaFound;
   }
 
-  static String translateCategory(BuildContext context, String categoryName){
+  static String translateCategory(BuildContext context, String categoryName) {
     String localeCategory = '';
-    switch(categoryName){
+    switch (categoryName) {
       case 'Adrenaline Activities':
         localeCategory = AppLocalizations.of(context).defaultCategory_AdrenalineActivities.toString();
         break;
@@ -1454,7 +1430,6 @@ class Utils {
         break;
     }
     return localeCategory;
-
   }
 }
 

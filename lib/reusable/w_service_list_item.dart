@@ -195,7 +195,7 @@ class _ServiceListItemState extends State<ServiceListItem> {
                                 //color: Colors.black,
                                 width: SizeConfig.safeBlockHorizontal * 60,
                                 ///SizeConfig.safeBlockHorizontal * 50
-                                //height: 40,
+                                //height: 35,
                                 ///SizeConfig.safeBlockVertical * 10
                                 margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * .5),
                                 child: Text(
@@ -215,7 +215,7 @@ class _ServiceListItemState extends State<ServiceListItem> {
                             children: [
                               widget.serviceState.switchSlots ?
                               Container(
-                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 0, top: SizeConfig.safeBlockVertical * 2, bottom:  SizeConfig.safeBlockVertical * 0.5),
+                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 0, top: SizeConfig.safeBlockVertical * 1, bottom:  SizeConfig.safeBlockVertical * 0.5),
                                 child: Text(
                                   AppLocalizations.of(context).from,
                                   style: TextStyle(
@@ -229,7 +229,7 @@ class _ServiceListItemState extends State<ServiceListItem> {
                                 ),
                               ) : Container(),
                               Container(
-                                margin: EdgeInsets.only(left: !widget.serviceState.switchSlots ? SizeConfig.safeBlockHorizontal * 0 : 5, top: SizeConfig.safeBlockVertical * 2, bottom:  SizeConfig.safeBlockVertical * 0.5),
+                                margin: EdgeInsets.only(left: !widget.serviceState.switchSlots ? SizeConfig.safeBlockHorizontal * 0 : 5, top: SizeConfig.safeBlockVertical * 1, bottom:  SizeConfig.safeBlockVertical * 0.5),
                                 child: Text(
                                   '${widget.serviceState.price.toStringAsFixed(2)}${AppLocalizations.of(context).currencySpace}',
                                   style: TextStyle(
@@ -245,7 +245,7 @@ class _ServiceListItemState extends State<ServiceListItem> {
                               ),
                               Utils.checkPromoDiscount('general_1', context, widget.serviceState.businessId).promotionId != 'empty' ?
                               Container(
-                                margin: EdgeInsets.only(left: 5, top: SizeConfig.safeBlockVertical * 2, bottom:  SizeConfig.safeBlockVertical * 0.5),
+                                margin: EdgeInsets.only(left: 5, top: SizeConfig.safeBlockVertical * 1, bottom:  SizeConfig.safeBlockVertical * 0.5),
                                 child: Text(
                                   '${(widget.serviceState.price-((widget.serviceState.price*StoreProvider.of<AppState>(context).state.promotionState.discount)/100)).toStringAsFixed(2)}${AppLocalizations.of(context).currencySpace}',
                                   style: TextStyle(

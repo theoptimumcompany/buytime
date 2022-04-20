@@ -53,7 +53,7 @@ class NavigateReplaceAction {
 
   @override
   String toString() {
-    return 'MainMenuNavigateAction{routeName: $routeName}';
+    return 'NavigateReplaceAction{routeName: $routeName}';
   }
 }
 

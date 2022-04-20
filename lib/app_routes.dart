@@ -7,6 +7,7 @@ import 'package:Buytime/UI/user/booking/UI_U_booking_self_creation.dart';
 import 'package:Buytime/UI/user/booking/UI_U_confirm_booking.dart';
 import 'package:Buytime/UI/user/booking/UI_U_my_bookings.dart';
 import 'package:Buytime/UI/user/cart/UI_U_ConfirmOrder.dart';
+import 'package:Buytime/UI/user/landing/invite_guest_form.dart';
 import 'package:Buytime/UI/user/login/UI_U_login.dart';
 import 'package:Buytime/UI/user/login/UI_U_registration.dart';
 import 'package:Buytime/UI/user/booking/RUI_U_order_detail.dart';
@@ -60,6 +61,8 @@ MaterialPageRoute<dynamic> appRoutes(RouteSettings settings) {
       return FabRoute(ServiceDetails(), settings: settings);
     case AppRoutes.serviceExplorer:
       return FabRoute(RServiceExplorer(), settings: settings);
+    case AppRoutes.inviteGuestForm:
+      return FabRoute(InviteGuestForm(), settings: settings);
     default:
       return MainRoute(Home(), settings: settings);
   }
