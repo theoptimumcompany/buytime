@@ -9,22 +9,3 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ==============================================================================*/
-
-import 'package:json_annotation/json_annotation.dart';
-part 'parent.g.dart';
-
-@JsonSerializable(explicitToJson: true)
-class Parent {
-  String id;
-  int level;
-  String name;
-
-  Parent({
-    this.id = "",
-    this.level = 0,
-    this.name = "",
-  });
-
-  factory Parent.fromJson(Map<String, dynamic> json) => _$ParentFromJson(json);
-  Map<String, dynamic> toJson() => _$ParentToJson(this);
-}
