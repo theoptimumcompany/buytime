@@ -11,16 +11,20 @@ limitations under the License.
 ==============================================================================*/
 
 import 'dart:io';
-import 'package:Buytime/UI/user/landing/UI_U_landing.dart';
+import 'package:Buytime/UI/management/business/RUI_M_business_list.dart';
+import 'package:Buytime/UI/user/login/UI_U_login.dart';
+import 'package:Buytime/UI/user/turist/RUI_U_service_explorer.dart';
 import 'package:Buytime/reblox/model/autoComplete/auto_complete_state.dart';
+import 'package:Buytime/reblox/model/role/role.dart';
 import 'package:Buytime/reblox/model/snippet/device.dart';
 import 'package:Buytime/reblox/model/snippet/token.dart';
 import 'package:Buytime/reblox/reducer/auto_complete_list_reducer.dart';
+import 'package:Buytime/services/user_service_epic.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/user/user_state.dart';
 import 'package:Buytime/reblox/reducer/user_reducer.dart';
-import 'package:Buytime/reusable/branded_button.dart';
+import 'package:Buytime/reusable/w_branded_button.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:device_info/device_info.dart';
@@ -40,6 +44,8 @@ import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'dart:convert';
 import 'dart:math';
 import 'package:crypto/crypto.dart';
+import 'package:Buytime/UI/user/login/UI_U_home.dart';
+import 'dart:async';
 
 /// Generates a cryptographically secure random nonce, to be included in a
 /// credential request.
@@ -58,6 +64,8 @@ String sha256ofString(String input) {
 
 class Registration extends StatefulWidget {
   static String route = '/registration';
+  bool fromDiscover;
+  Registration(this.fromDiscover);
   @override
   State<StatefulWidget> createState() => RegistrationState();
 }
@@ -97,11 +105,11 @@ class RegistrationState extends State<Registration> {
       firebaseMessaging.requestPermission();
       firebaseMessaging.getToken().then((String token) {
         assert(token != null);
-        print("UI_U_Registration Token " + token);
+        debugPrint("UI_U_registration => Token " + token);
         serverToken = token;
       });
     }).catchError((onError) {
-      print("error on firebase application start: " + onError.toString());
+      debugPrint("UI_U_registration => error on firebase application start: " + onError.toString());
     });
     initPlatformState();
   }
@@ -225,13 +233,7 @@ class RegistrationState extends State<Registration> {
           print('Failed to get platform version');
         }
       }
-
-      print("Device ID : " + deviceId);
-      StoreProvider.of<AppState>(context).dispatch(new LoggedUser(UserState.fromFirebaseUser(user, deviceId, [serverToken])));
-      Device device = Device(name: "device", id: deviceId, user_uid: user.uid);
-      StoreProvider.of<AppState>(context).dispatch(new UpdateUserDevice(device));
-      TokenB token = TokenB(name: "token", id: serverToken, user_uid: user.uid);
-      StoreProvider.of<AppState>(context).dispatch(new UpdateUserToken(token));
+      await waitUserCreationInDatabase(user, deviceId);
       await pr.hide();
       return 1;
     }
@@ -252,7 +254,7 @@ class RegistrationState extends State<Registration> {
           isLoggedIn = true;
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => Landing()),
+            MaterialPageRoute(builder: (context) => RServiceExplorer()),
           );
         });
       } else {}
@@ -267,7 +269,7 @@ class RegistrationState extends State<Registration> {
           isLoggedIn = true;
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => Landing()),
+            MaterialPageRoute(builder: (context) => RServiceExplorer()),
           );
         });
       } else {
@@ -339,13 +341,7 @@ class RegistrationState extends State<Registration> {
         }
       }
       print("Device ID : " + deviceId);
-
-      StoreProvider.of<AppState>(context).dispatch(new LoggedUser(UserState.fromFirebaseUser(user, deviceId, [serverToken])));
-      Device device = Device(name: "device", id: deviceId, user_uid: user.uid);
-      StoreProvider.of<AppState>(context).dispatch(new UpdateUserDevice(device));
-      TokenB token = TokenB(name: "token", id: serverToken, user_uid: user.uid);
-      StoreProvider.of<AppState>(context).dispatch(new UpdateUserToken(token));
-      // return 'signInWithGoogle succeeded: $user';
+      await waitUserCreationInDatabase(user, deviceId);
       await pr.hide();
       return 1;
     }
@@ -393,6 +389,7 @@ class RegistrationState extends State<Registration> {
               color: BuytimeTheme.SymbolBlack,
             ),
             onPressed: () {
+              controller.play();
               Navigator.of(context).pop();
             },
           ),
@@ -651,7 +648,6 @@ class RegistrationState extends State<Registration> {
                               flex: 1,
                               child: Container(
                                   margin: EdgeInsets.only(
-                                     // top: SizeConfig.safeBlockVertical * 2.5,
                                       bottom: SizeConfig.safeBlockVertical * 2.5,
                                       left: SizeConfig.safeBlockHorizontal * 8,
                                       right: SizeConfig.safeBlockHorizontal * 8),
@@ -684,8 +680,6 @@ class RegistrationState extends State<Registration> {
                   Expanded(
                     flex: 2,
                     child: Container(
-                      //height: SizeConfig.safeBlockVertical * 30,
-                      //height: 243, ///285
                       padding: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, bottom: SizeConfig.safeBlockVertical * 2),
                       color: BuytimeTheme.BackgroundCerulean,
                       child: Column(mainAxisAlignment: MainAxisAlignment.center, mainAxisSize: MainAxisSize.min, children: [
@@ -695,7 +689,42 @@ class RegistrationState extends State<Registration> {
                         ),
                         Platform.isIOS ?
                         BrandedButton("assets/img/apple_logo.png", AppLocalizations.of(context).logInWithApple, initiateAppleSignIn) : Container(),
-                        //BrandedButton("assets/img/facebook_logo.png", AppLocalizations.of(context).signFacebook, initiateFacebookSignIn),
+                        widget.fromDiscover ?
+                        Container(
+                            margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
+                            alignment: Alignment.center,
+                            child: Material(
+                              color: Colors.transparent,
+                              child: InkWell(
+                                key: Key('tourist_login'),
+                                onTap: () {
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => Login(widget.fromDiscover)),
+                                  );
+                                },
+                                borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                child: Container(
+                                  //width: 328,
+                                  width: 80,
+                                  height: 28,
+                                  padding: EdgeInsets.all(5.0),
+                                  child: FittedBox(
+                                    child: Text(
+                                      AppLocalizations.of(context).logIn,
+                                      style: TextStyle(
+                                        fontFamily: BuytimeTheme.FontFamily,
+                                        color: BuytimeTheme.TextWhite,
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 16,
+
+                                        ///SizeConfig.safeBlockHorizontal * 3
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            )) : Container(),
                       ]),
                     ),
                   )
@@ -784,27 +813,6 @@ class RegistrationState extends State<Registration> {
         await autoComplete.writeToStorage(list);
         StoreProvider.of<AppState>(context).dispatch(AddAutoCompleteToList(list));
       }
-      /*if (remeberMe) {
-        AutoCompleteState autoComplete = AutoCompleteState().toEmpty();
-        autoComplete.email = _emailController.text;
-        autoComplete.password = _passwordController.text;
-        if (autoCompleteList.isNotEmpty) {
-          int i = 0;
-          autoCompleteList.forEach((element) {
-            if (element.email == autoComplete.email) ++i;
-          });
-          if (i == 0) {
-            autoCompleteList.add(autoComplete);
-            await autoComplete.writeToStorage(autoCompleteList);
-            StoreProvider.of<AppState>(context).dispatch(AddAutoCompleteToList(autoCompleteList));
-          }
-        } else {
-          List<AutoCompleteState> list = [];
-          list.add(autoComplete);
-          await autoComplete.writeToStorage(list);
-          StoreProvider.of<AppState>(context).dispatch(AddAutoCompleteToList(list));
-        }
-      }*/
 
       String deviceId = "web";
       if (!kIsWeb) {
@@ -820,25 +828,48 @@ class RegistrationState extends State<Registration> {
           print('Failed to get platform version');
         }
       }
-
-      print("Device ID : " + deviceId);
-      StoreProvider.of<AppState>(context).dispatch(new LoggedUser(UserState.fromFirebaseUser(user, deviceId, [serverToken])));
-      Device device = Device(name: "device", id: deviceId, user_uid: user.uid);
-      StoreProvider.of<AppState>(context).dispatch(new UpdateUserDevice(device));
-      TokenB token = TokenB(name: "token", id: serverToken, user_uid: user.uid);
-      StoreProvider.of<AppState>(context).dispatch(new UpdateUserToken(token));
-      setState(() {
-        _success = true;
-        _userEmail = user.email;
-        //Navigator.push(context, MaterialPageRoute(builder: (context) => Landing()));
-        Navigator.of(context).pushNamed(Landing.route);
-      });
+      await waitUserCreationInDatabase(user, deviceId);
     } else {
       Navigator.of(context).pop();
       setState(() {
         _success = false;
       });
     }
+  }
+
+  /// check that the document for the user has been created by the cloud function,
+  /// this will require some time, so we check every 3 seconds.
+  /// If the waiting is not enough the user has to login manually.
+  Future<void> waitUserCreationInDatabase(auth.User user, String deviceId) async {
+    int requestCounter = 0;
+    UserState userState;
+    Timer.periodic(Duration(seconds: 3), (timer) async {
+      requestCounter++;
+      userState = await requestForUserDocument(user.uid);
+      if (requestCounter >= 10 || userState != null) {
+        timer.cancel();
+        StoreProvider.of<AppState>(context).dispatch(new LoggedUser(UserState.fromFirebaseUser(user, deviceId, [serverToken])));
+        Device device = Device(name: "device", id: deviceId, user_uid: user.uid);
+        StoreProvider.of<AppState>(context).dispatch(new UpdateUserDevice(device));
+        TokenB token = TokenB(name: "token", id: serverToken, user_uid: user.uid);
+        StoreProvider.of<AppState>(context).dispatch(new UpdateUserToken(token));
+        setState(() {
+          _success = true;
+          _userEmail = user.email;
+          Future.delayed(Duration(seconds: 1), (){
+            if (StoreProvider.of<AppState>(context).state.user.getRole() != Role.user){
+              debugPrint('UI_U_registration => Account authority: > User');
+              Navigator.push(context, MaterialPageRoute(builder: (context) => RBusinessList()));
+            } else{
+              debugPrint('UI_U_registration => Account authority: <= User');
+              Navigator.of(context).pushNamedAndRemoveUntil(AppRoutes.serviceExplorer, (Route<dynamic> route) => false);
+            }
+            //Navigator.of(context).pushNamedAndRemoveUntil(AppRoutes.myBookings, ModalRoute.withName(AppRoutes.landing));
+            //StoreProvider.of<AppState>(context).dispatch(new UserBookingRequest(user.email));
+          });
+        });
+      }
+    });
   }
 
   void onError(error) {
@@ -853,7 +884,6 @@ class RegistrationState extends State<Registration> {
             return ErrorDialog(error.message, "ok");
           });*/
       }
-      //_isRequestFlying = false;
     });
   }
 }

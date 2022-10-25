@@ -12,6 +12,7 @@ limitations under the License.
 
 import 'dart:async';
 import 'dart:core';
+import 'package:Buytime/UI/management/business/RUI_M_business.dart';
 import 'package:Buytime/UI/management/business/UI_M_business.dart';
 import 'package:Buytime/UI/management/category/UI_M_manage_category.dart';
 import 'package:Buytime/UI/management/service_internal/UI_M_create_service.dart';
@@ -33,8 +34,8 @@ import 'package:Buytime/reblox/reducer/category_tree_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/service_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/service_reducer.dart';
 import 'package:Buytime/reblox/reducer/service_list_snippet_reducer.dart';
-import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
-import 'package:Buytime/reusable/enterExitRoute.dart';
+import 'package:Buytime/reusable/appbar/w_buytime_appbar.dart';
+import 'package:Buytime/reusable/animation/enterExitRoute.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/utils/utils.dart';
@@ -92,7 +93,7 @@ class RServiceListState extends State<RServiceList> {
       List<ServiceSnippetState> listRoot = [];
       List<bool> internalSpinnerVisibility = [];
       for (int s = 0; s < categories[c].serviceList.length; s++) {
-        debugPrint('RUI_M_service_litt => ${categories[c].categoryName} - ${categories[c].serviceList[s].serviceName}');
+        debugPrint('RUI_M_service_list => ${categories[c].categoryName} - ${categories[c].serviceList[s].serviceName}');
         listRoot.add(categories[c].serviceList[s]);
         internalSpinnerVisibility.add(false);
       }
@@ -104,11 +105,11 @@ class RServiceListState extends State<RServiceList> {
 
       if(Provider.of<Spinner>(context, listen: false).add.isNotEmpty && Provider.of<Spinner>(context, listen: false).add.length == categories.length){
         if(Provider.of<Spinner>(context, listen: false).add[c][0]){
-          debugPrint('ADD WAS TRUE');
+          debugPrint('RUI_M_service_list => ADD WAS TRUE');
           listAdd.last[0] = true;
         }
         if(Provider.of<Spinner>(context, listen: false).add[c][1] != listRoot.length){
-          debugPrint('LIST SIZE DIFFERENCE');
+          debugPrint('RUI_M_service_list => LIST SIZE DIFFERENCE');
           listAdd.last[0] = false;
         }
       }
@@ -117,7 +118,7 @@ class RServiceListState extends State<RServiceList> {
       Provider.of<Spinner>(context, listen: false).initAdd(listAdd);
       Provider.of<Spinner>(context, listen: false).initSpinner(listDOfVisibility);
       Provider.of<Spinner>(context, listen: false).initDuplicateSpinner(listDDOfVisibility);
-      debugPrint('ADD List: $listAdd - ${Provider.of<Spinner>(context, listen: false).add}');
+      debugPrint('RUI_M_service_list => ADD List: $listAdd - ${Provider.of<Spinner>(context, listen: false).add}');
     });
 
   }
@@ -233,25 +234,35 @@ class RServiceListState extends State<RServiceList> {
         },
         child: Scaffold(
           resizeToAvoidBottomInset: false,
-          appBar: BuytimeAppbar(
-            width: media.width,
-            children: [
-              ///Back Button
-              IconButton(
-                key: Key('back_from_interval_service_key'),
-                icon: Icon(Icons.keyboard_arrow_left, color: Colors.white),
-                onPressed: () {
-                  //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_Business()))
-                  Provider.of<Spinner>(context, listen: false).clear();
-                  Navigator.pushReplacement(context, EnterExitRoute(enterPage: UI_M_Business(), exitPage: RServiceList(), from: false));
-                },
+          appBar: AppBar(
+            backgroundColor: Colors.white,
+            brightness: Brightness.dark,
+            elevation: 1,
+            title: Text(
+              AppLocalizations.of(context).serviceList,
+              style: TextStyle(
+                  fontFamily: BuytimeTheme.FontFamily,
+                  color: BuytimeTheme.TextBlack,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16 ///SizeConfig.safeBlockHorizontal * 7
               ),
-              Utils.barTitle(AppLocalizations.of(context).serviceList),
+            ),
+            centerTitle: true,
+            leading: IconButton(
+              key: Key('back_from_interval_service_key'),
+              icon: Icon(Icons.keyboard_arrow_left, color: Colors.black),
+              onPressed: () {
+                //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_Business()))
+                Provider.of<Spinner>(context, listen: false).clear();
+                Navigator.pushReplacement(context, EnterExitRoute(enterPage: RBusiness(), exitPage: RServiceList(), from: false));
+              },
+            ),
+            actions: [
               /*listOfServiceEachRoot.isNotEmpty &&*/ (StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin ||
                   StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman ||
                   StoreProvider.of<AppState>(context).state.user.getRole() == Role.owner ||
                   StoreProvider.of<AppState>(context).state.user.getRole() == Role.manager) ? IconButton(
-                icon: Icon(Icons.add, color: BuytimeTheme.SymbolWhite),
+                icon: Icon(Icons.add, color: BuytimeTheme.TextBlack),
                 onPressed: () {
                   StoreProvider.of<AppState>(context).dispatch(SetService(ServiceState().toEmpty()));
                   //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_CreateService(categoryId: "",)));
@@ -264,9 +275,7 @@ class RServiceListState extends State<RServiceList> {
                           exitPage: RServiceList(),
                           from: true));
                 },
-              ) : SizedBox(
-                width: 50.0,
-              ),
+              ) : Container()
             ],
           ),
           body: Column(
@@ -663,10 +672,10 @@ class RServiceListState extends State<RServiceList> {
                                             physics: const NeverScrollableScrollPhysics(),
                                             itemCount: arraySize,
                                             itemBuilder: (context, index) {
-                                              debugPrint('SERVICE IMAGE: ${listOfServiceEachRoot[i][index].serviceImage}');
+                                              debugPrint('RUI_M_service_list => SERVICE IMAGE: ${listOfServiceEachRoot[i][index].serviceImage}');
 
                                               if(Provider.of<Spinner>(context, listen: false).add.isNotEmpty && Provider.of<Spinner>(context, listen: false).add[i][0] && index == listOfServiceEachRoot[i].length && arraySize == listOfServiceEachRoot[i].length + 1 ){
-                                                debugPrint('not full service length');
+                                                debugPrint('RUI_M_service_list => not full service length');
                                                 return Column(
                                                   children: [
                                                     Container(
@@ -1065,60 +1074,60 @@ class Spinner with ChangeNotifier{
 
   initLoad(bool load){
     this.load = load;
-    debugPrint('LOAD INIT');
+    debugPrint('RUI_M_service_list => LOAD INIT');
     notifyListeners();
   }
   initAdd(List<List<dynamic>> add){
     this.add = add;
-    debugPrint('ADD INIT');
+    debugPrint('RUI_M_service_list => ADD INIT');
     notifyListeners();
   }
   initSpinner(List<List<bool>> spinnerList){
     this.spinners = spinnerList;
-    debugPrint('SPINNER INIT');
+    debugPrint('RUI_M_service_list => SPINNER INIT');
     notifyListeners();
   }
   initDuplicateSpinner(List<List<bool>> spinnerList){
     this.duplicateSpinners = spinnerList;
-    debugPrint('DUPLICATE SPINNER INIT');
+    debugPrint('RUI_M_service_list => UPLICATE SPINNER INIT');
     notifyListeners();
   }
 
   updateSpinner(List<List<bool>> spinnerList, int i, int index){
     spinnerList[i][index] = true;
     this.spinners = spinnerList;
-    debugPrint('SPINNER UPDATE VISIBILITY: ${spinners[i][index]}');
+    debugPrint('RUI_M_service_list => SPINNER UPDATE VISIBILITY: ${spinners[i][index]}');
     notifyListeners();
   }
 
    updateDuplicateSpinner(List<List<bool>> spinnerList, int i, int index){
     spinnerList[i][index] = true;
     this.duplicateSpinners = spinnerList;
-    debugPrint('SPINNER DUPLICATE UPDATE VISIBILITY: ${duplicateSpinners[i][index]}');
+    debugPrint('RUI_M_service_list => SPINNER DUPLICATE UPDATE VISIBILITY: ${duplicateSpinners[i][index]}');
     notifyListeners();
   }
 
   bool getSpinner(int i, int index){
     if(spinners.isNotEmpty && spinners[i].isNotEmpty && spinners[i].asMap().containsKey(index)){
-      debugPrint('SPINNER GET VISIBILITY: ${spinners[i][index]}');
+      debugPrint('RUI_M_service_list => SPINNER GET VISIBILITY: ${spinners[i][index]}');
       return spinners[i][index];
     }else
       return false;
   }
   bool getDuplicateSpinner(int i, int index){
     if(duplicateSpinners.isNotEmpty && duplicateSpinners[i].isNotEmpty  && duplicateSpinners[i].asMap().containsKey(index)){
-      debugPrint('DUPLICATE SPINNER GET VISIBILITY: ${duplicateSpinners[i][index]}');
+      debugPrint('RUI_M_service_list => DUPLICATE SPINNER GET VISIBILITY: ${duplicateSpinners[i][index]}');
       return duplicateSpinners[i][index];
     }else
       return false;
   }
 
   List<List<bool>> getSpinnerList(){
-    //debugPrint('SPINNER GET VISIBILITY: ${spinners[i][index]}');
+    //debugPrint('RUI_M_service_list => SPINNER GET VISIBILITY: ${spinners[i][index]}');
     return spinners;
   }
   List<List<bool>> getDuplicateSpinnerList(){
-    //debugPrint('SPINNER GET VISIBILITY: ${spinners[i][index]}');
+    //debugPrint('RUI_M_service_list => SPINNER GET VISIBILITY: ${spinners[i][index]}');
     return duplicateSpinners;
   }
 
@@ -1127,6 +1136,7 @@ class Spinner with ChangeNotifier{
     this.add = [];
     this.spinners = [];
     this.duplicateSpinners = [];
+    notifyListeners();
   }
 
 }

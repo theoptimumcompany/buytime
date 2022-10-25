@@ -17,10 +17,10 @@ import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:Buytime/reblox/model/role/role.dart';
 import 'package:Buytime/reblox/model/snippet/generic.dart';
 import 'package:Buytime/reblox/reducer/business_reducer.dart';
-import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
-import 'package:Buytime/reusable/enterExitRoute.dart';
-import 'package:Buytime/reusable/form/optimum_form_field.dart';
-import 'package:Buytime/reusable/form/optimum_form_multi_photo.dart';
+import 'package:Buytime/reusable/appbar/w_buytime_appbar.dart';
+import 'package:Buytime/reusable/animation/enterExitRoute.dart';
+import 'package:Buytime/reusable/form/w_optimum_form_field.dart';
+import 'package:Buytime/reusable/form/w_optimum_form_multi_photo.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/utils/utils.dart';
@@ -29,7 +29,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:image_cropper/image_cropper.dart';
-import '../../../reusable/form/optimum_chip.dart';
+import '../../../reusable/form/w_optimum_chip.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'RUI_M_business_list.dart';
@@ -45,7 +45,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
   bool complete = false;
   int steps = 4;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  bool _autoValidate = false;
+  AutovalidateMode _autoValidate = AutovalidateMode.disabled;
 
   List<String> tag = [];
 
@@ -98,7 +98,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
     } else {
 //    If all data are not valid then start auto validation.
       setState(() {
-        _autoValidate = true;
+        _autoValidate = AutovalidateMode.always;
       });
       return false;
     }
@@ -266,27 +266,26 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                 },
                 child: Scaffold(
                   //resizeToAvoidBottomInset: false,
-                  appBar: BuytimeAppbar(
-                    width: media.width,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          IconButton(
-                              icon: Icon(Icons.chevron_left, color: BuytimeTheme.TextWhite),
-                              onPressed: () {
-                                //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_BusinessList()));
-                                Navigator.pushReplacement(context, EnterExitRoute(enterPage: RBusinessList(), exitPage: UI_M_CreateBusiness(), from: false));
-                              }),
-                        ],
+                  appBar: AppBar(
+                    backgroundColor: Colors.white,
+                    brightness: Brightness.dark,
+                    elevation: 1,
+                    title: Text(
+                      AppLocalizations.of(context).businessCreation,
+                      style: TextStyle(
+                          fontFamily: BuytimeTheme.FontFamily,
+                          color: BuytimeTheme.TextBlack,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 16 ///SizeConfig.safeBlockHorizontal * 7
                       ),
-
-                      ///Title
-                      Utils.barTitle(AppLocalizations.of(context).businessCreation),
-                      SizedBox(
-                        width: 56.0,
-                      )
-                    ],
+                    ),
+                    centerTitle: true,
+                    leading: IconButton(
+                        icon: Icon(Icons.chevron_left, color: BuytimeTheme.TextBlack),
+                        onPressed: () {
+                          //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_BusinessList()));
+                          Navigator.pushReplacement(context, EnterExitRoute(enterPage: RBusinessList(), exitPage: UI_M_CreateBusiness(), from: false));
+                        }),
                   ),
                   body: Theme(
                     data: ThemeData(primaryColor: BuytimeTheme.ManagerPrimary, accentColor: BuytimeTheme.Secondary),
@@ -295,11 +294,11 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                         child: ConstrainedBox(
                           constraints: BoxConstraints(),
                           child: Padding(
-                            padding: EdgeInsets.only(top: 10.0),
+                            padding: EdgeInsets.only(top: 0.0),
                             child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
                               Form(
                                 key: _formKey,
-                                autovalidate: _autoValidate,
+                                autovalidateMode: _autoValidate,
                                 child: Flexible(
                                   child: StoreConnector<AppState, BusinessState>(
                                       converter: (store) => store.state.business,
@@ -465,6 +464,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                               //enabled: false,
                                                               //focusNode: focusNode,
                                                               //initialValue: widget.initialFieldValue,
+                                                              textCapitalization: TextCapitalization.sentences,
                                                               controller: _salesmanNameController,
                                                               onChanged: (value) {
                                                                 StoreProvider.of<AppState>(context).dispatch(SetBusinessSalesmanName(value));
@@ -498,6 +498,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                           child: Form(
                                                             key: _formKeySalesmanPhonenumberFieldEdit,
                                                             child: TextFormField(
+                                                              textCapitalization: TextCapitalization.sentences,
                                                               //maxLength: 10,
                                                               //enabled: false,
                                                               //focusNode: focusNode,
@@ -539,6 +540,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                           child: Form(
                                                             key: _formKeyConciergePhonenumberFieldEdit,
                                                             child: TextFormField(
+                                                              textCapitalization: TextCapitalization.sentences,
                                                               //maxLength: 10,
                                                               //enabled: false,
                                                               //focusNode: focusNode,
@@ -634,7 +636,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                               value: snapshot.hub,
                                                               onChanged: StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin || StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman
                                                                   ? (value) {
-                                                                      debugPrint('UI_M-create_business => HUB: $value');
+                                                                      debugPrint('UI_M_create_business => HUB: $value');
                                                                       setState(() {
                                                                         //isHub = value;
                                                                       });
@@ -709,6 +711,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                                     margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0),
                                                                     //decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
                                                                     child: TextFormField(
+                                                                        textCapitalization: TextCapitalization.sentences,
                                                                       enabled: false,
                                                                       readOnly: true,
                                                                       keyboardType: TextInputType.multiline,
@@ -782,6 +785,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                             child: Form(
                                                               key: _formKeyCoordinateFieldEdit,
                                                               child: TextFormField(
+                                                                textCapitalization: TextCapitalization.sentences,
                                                                 enabled: false,
                                                                 //focusNode: focusNode,
                                                                 //initialValue: widget.initialFieldValue,
@@ -989,6 +993,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                                     height: SizeConfig.safeBlockHorizontal * 10,
                                                                     width: SizeConfig.safeBlockHorizontal * 30,
                                                                     child: TextFormField(
+                                                                      textCapitalization: TextCapitalization.sentences,
                                                                       controller: _tagController,
                                                                       textAlign: TextAlign.start,
                                                                       decoration: InputDecoration(
@@ -1132,6 +1137,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                                     height: SizeConfig.safeBlockHorizontal * 10,
                                                                     width: SizeConfig.safeBlockHorizontal * 60,
                                                                     child: TextFormField(
+                                                                      textCapitalization: TextCapitalization.sentences,
                                                                       controller: _areaController,
                                                                       textAlign: TextAlign.start,
                                                                       decoration: InputDecoration(
@@ -1395,8 +1401,9 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                               onStepContinue: next,
                                               onStepTapped: (step) => goTo(step),
                                               onStepCancel: cancel,
-                                              controlsBuilder: (BuildContext context, {VoidCallback onStepContinue, VoidCallback onStepCancel}) => StoreConnector<AppState, BusinessState>(
-                                                converter: (store) => store.state.business,
+                                              controlsBuilder: (BuildContext context, ControlsDetails details) =>
+                                                  StoreConnector<AppState, AppState>(
+                                                converter: (store) => store.state,
                                                 builder: (context, snapshot) {
                                                   return Row(
                                                     mainAxisSize: MainAxisSize.max,
@@ -1431,7 +1438,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                                 highlightElevation: 0,
                                                                 onPressed: () {
                                                                   print("salesman board: Upload to DB");
-                                                                  onStepContinue();
+                                                                  details.onStepContinue();
                                                                 },
                                                                 padding: EdgeInsets.all(0),
                                                                 shape: RoundedRectangleBorder(
@@ -1456,7 +1463,7 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                                 ),
                                                                 onPressed: () {
                                                                   setState(() {
-                                                                    required = validate(snapshot);
+                                                                    required = validate(snapshot.business);
                                                                   });
                                                                   if (required) {
                                                                     final snackBar = SnackBar(content: Text(AppLocalizations.of(context).pleaseFillAllFields));
@@ -1469,7 +1476,11 @@ class UI_M_CreateBusinessState extends State<UI_M_CreateBusiness> {
                                                                     bookingRequest = 'send';
                                                                   });
                                                                   print("salesman board: Upload to DB");
-                                                                  StoreProvider.of<AppState>(context).dispatch(CreateBusiness(snapshot));
+                                                                  snapshot.business.contentCreator.name = snapshot.user.name;
+                                                                  snapshot.business.contentCreator.surname = snapshot.user.surname;
+                                                                  snapshot.business.contentCreator.email = snapshot.user.email;
+                                                                  snapshot.business.contentCreator.id = snapshot.user.uid;
+                                                                  StoreProvider.of<AppState>(context).dispatch(CreateBusiness(snapshot.business));
                                                                 },
                                                                 child: Text(AppLocalizations.of(context).createBusiness, style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextWhite, fontSize: 18)),
                                                               ),

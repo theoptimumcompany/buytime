@@ -28,17 +28,17 @@ import 'package:Buytime/reblox/reducer/external_service_imported_list_reducer.da
 import 'package:Buytime/reblox/reducer/service/service_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/service_list_snippet_reducer.dart';
 import 'package:Buytime/reblox/reducer/user_reducer.dart';
-import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
+import 'package:Buytime/reusable/appbar/w_buytime_appbar.dart';
 import 'package:Buytime/UI/management/service_internal/UI_M_service_list.dart';
 import 'package:Buytime/UI/model/manager_model.dart';
 import 'package:Buytime/UI/model/service_model.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reblox/model/category/category_state.dart';
-import 'package:Buytime/reusable/booking_page_service_list_item.dart';
-import 'package:Buytime/reusable/enterExitRoute.dart';
-import 'package:Buytime/reusable/menu/UI_M_business_list_drawer.dart';
-import 'package:Buytime/reusable/slot_management_service_list_item.dart';
+import 'package:Buytime/reusable/w_service_list_item.dart';
+import 'package:Buytime/reusable/animation/enterExitRoute.dart';
+import 'package:Buytime/reusable/menu/w_manager_drawer.dart';
+import 'package:Buytime/UI/management/slot/widget/slot_management_service_list_item.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/utils/utils.dart';
@@ -121,10 +121,11 @@ class _SlotManagementState extends State<SlotManagement> {
       onInit: (store) {
         store.state.serviceList.serviceListState.clear();
         List<String> businessIds = [];
+        debugPrint('UI_M_slot_management => BUSINESS LIST LENGTH: ${store.state.businessList.businessListState.length}');
         store.state.businessList.businessListState.forEach((element) {
           businessIds.add(element.id_firestore);
         });
-
+        debugPrint('UI_M_slot_management => BUSINESS IDS LIST LENGTH: ${businessIds.length}');
         store.dispatch(ServiceListRequestByBusinessIds(businessIds));
         noActivity = true;
         startRequest = true;
@@ -137,7 +138,7 @@ class _SlotManagementState extends State<SlotManagement> {
         /*if(snapshot.serviceListSnippetState.businessSnippet != null && snapshot.serviceListSnippetState.businessSnippet.isNotEmpty){
           categories = snapshot.serviceListSnippetState.businessSnippet;
         }*/
-        //debugPrint('UI_M_Business => IMPORTED SERVICE LENGTH: ${snapshot.externalServiceImportedListState.externalServiceImported.length}');
+        //debugPrint('UI_M_slot_management => IMPORTED SERVICE LENGTH: ${snapshot.externalServiceImportedListState.externalServiceImported.length}');
         if(snapshot.serviceList.serviceListState.isEmpty && startRequest){
           noActivity = true;
         }else{
@@ -157,36 +158,33 @@ class _SlotManagementState extends State<SlotManagement> {
               drawerEnableOpenDragGesture: false,
               key: _drawerKey,
               ///Appbar
-              appBar: BuytimeAppbar(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
-                        child: IconButton(
-                          icon: const Icon(
-                            Icons.menu,
-                            color: Colors.white,
-                            size: 30.0,
-                          ),
-                          tooltip: AppLocalizations.of(context).openMenu,
-                          onPressed: () {
-                            _drawerKey.currentState.openDrawer();
-                          },
-                        ),
-                      ),
-                    ],
+              appBar: AppBar(
+                backgroundColor: Colors.white,
+                brightness: Brightness.dark,
+                elevation: 1,
+                title: Text(
+                  AppLocalizations.of(context).slotManagement,
+                  style: TextStyle(
+                      fontFamily: BuytimeTheme.FontFamily,
+                      color: BuytimeTheme.TextBlack,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 16 ///SizeConfig.safeBlockHorizontal * 7
                   ),
-                  ///Title
-                  //Utils.barTitle(AppLocalizations.of(context).dashboard),
-                  Utils.barTitle('${AppLocalizations.of(context).slotManagement}'),
-                  SizedBox(
-                    width: 50.0,
+                ),
+                centerTitle: true,
+                leading: IconButton(
+                  icon: const Icon(
+                    Icons.menu,
+                    color: Colors.black,
+                    //size: 30.0,
                   ),
-                ],
+                  tooltip: AppLocalizations.of(context).openMenu,
+                  onPressed: () {
+                    _drawerKey.currentState.openDrawer();
+                  },
+                ),
               ),
-              drawer: UI_M_BusinessListDrawer(),
+              drawer: ManagerDrawer(),
               body: ConstrainedBox(
                 constraints: BoxConstraints(),
                 child: Center(
@@ -197,8 +195,9 @@ class _SlotManagementState extends State<SlotManagement> {
                       serviceList.isNotEmpty ?
                       Expanded(
                         child: Container(
-                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
+                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0),
                           child: CustomScrollView(
+                              physics: new ClampingScrollPhysics(),
                               shrinkWrap: true, slivers: [
                           SliverList(
                             delegate: SliverChildBuilderDelegate(
@@ -217,7 +216,7 @@ class _SlotManagementState extends State<SlotManagement> {
                                 );
                                 // return InkWell(
                                 //   onTap: () {
-                                //     debugPrint('Category Item: ${categoryItem.name.toUpperCase()} Clicked!');
+                                //     debugPrint('UI_M_slot_management => Category Item: ${categoryItem.name.toUpperCase()} Clicked!');
                                 //   },
                                 //   //child: MenuItemListItemWidget(menuItem),
                                 //   child: CategoryListItemWidget(categoryItem),
@@ -232,6 +231,7 @@ class _SlotManagementState extends State<SlotManagement> {
                         child: Container(
                           margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
                           child: CustomScrollView(
+                            physics: new ClampingScrollPhysics(),
                             shrinkWrap: true,
                             slivers: [
                               SliverList(
@@ -254,7 +254,7 @@ class _SlotManagementState extends State<SlotManagement> {
                                                     Utils.imageShimmer(91, 91),
                                                     ///Service Name & Description
                                                     Container(
-                                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1),
+                                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1),
                                                       child:  Column(
                                                         mainAxisAlignment: MainAxisAlignment.center,
                                                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -304,7 +304,7 @@ class _SlotManagementState extends State<SlotManagement> {
                         ),
                       ) : Container(
                         height: SizeConfig.safeBlockVertical * 8,
-                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                         decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
                         child: Center(
                             child: Container(

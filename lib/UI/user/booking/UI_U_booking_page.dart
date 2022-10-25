@@ -11,13 +11,10 @@ limitations under the License.
 ==============================================================================*/
 
 import 'package:Buytime/UI/management/business/RUI_M_business_list.dart';
-import 'package:Buytime/UI/management/business/UI_M_business_list.dart';
-import 'package:Buytime/UI/user/booking/RUI_U_all_bookings.dart';
 import 'package:Buytime/UI/user/booking/UI_U_all_bookings.dart';
 import 'package:Buytime/UI/user/booking/RUI_notification_bell.dart';
 import 'package:Buytime/UI/user/booking/widget/user_service_card_widget.dart';
 import 'package:Buytime/UI/user/cart/UI_U_cart.dart';
-import 'package:Buytime/UI/user/landing/UI_U_landing.dart';
 import 'package:Buytime/UI/user/search/UI_U_filter_general.dart';
 import 'package:Buytime/UI/user/service/UI_U_service_reserve.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
@@ -36,11 +33,11 @@ import 'package:Buytime/reblox/reducer/notification_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reservable_list_reducer.dart';
-import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
-import 'package:Buytime/reusable/booking_page_service_list_item.dart';
-import 'package:Buytime/reusable/buytime_icons.dart';
-import 'package:Buytime/reusable/custom_bottom_button_widget.dart';
-import 'package:Buytime/reusable/find_your_inspiration_card_widget.dart';
+import 'package:Buytime/reusable/appbar/w_buytime_appbar.dart';
+import 'package:Buytime/reusable/w_service_list_item.dart';
+import 'package:Buytime/reusable/icon/buytime_icons.dart';
+import 'package:Buytime/reusable/w_custom_bottom_button.dart';
+import 'package:Buytime/reusable/w_find_your_inspiration_card.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
@@ -57,7 +54,6 @@ import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'RUI_U_notifications.dart';
 
 class BookingPage extends StatefulWidget {
   static String route = '/bookingPage';
@@ -111,29 +107,29 @@ class _BookingPageState extends State<BookingPage> {
     List<ServiceListSnippetState> serviceListSnippetListState = StoreProvider.of<AppState>(context).state.serviceListSnippetListState.serviceListSnippetListState;
     ServiceListSnippetState serviceListSnippetState = StoreProvider.of<AppState>(context).state.serviceListSnippetState;
 
-    //debugPrint('BUSINESS ID: ${serviceListSnippetState.businessId}');
+    //debugPrint('UI_U_booking_page => BUSINESS ID: ${serviceListSnippetState.businessId}');
     for (var w = 0; w < serviceListSnippetState.businessSnippet.length; w++) {
       for (var y = 0; y < serviceListSnippetState.businessSnippet[w].serviceList.length; y++) {
-        //debugPrint('INSIDE SERVICE PATH  => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath}');
+        //debugPrint('UI_U_booking_page => INSIDE SERVICE PATH  => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath}');
         if (serviceListSnippetState.businessSnippet[w].serviceList[y].serviceAbsolutePath.contains(serviceId) && serviceListSnippetState.businessSnippet[w].serviceList[y].serviceAbsolutePath.contains(categoryId)) {
-          //  debugPrint('INSIDE CATEGORY ROOT => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceName}');
-          //debugPrint('INSIDE SERVICE PATH  => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath}');
+          //  debugPrint('UI_U_booking_page => INSIDE CATEGORY ROOT => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceName}');
+          //debugPrint('UI_U_booking_page => INSIDE SERVICE PATH  => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath}');
           sub = true;
         }
       }
     }
 
-    debugPrint('BUSINESS LENGTH: ${serviceListSnippetListState.length}');
+    debugPrint('UI_U_booking_page => BUSINESS LENGTH: ${serviceListSnippetListState.length}');
     for (var z = 0; z < serviceListSnippetListState.length; z++) {
-      debugPrint('BUSINESS NAME => ${serviceListSnippetListState[z].businessName}');
-      debugPrint('BUSINESS NAME => ${serviceListSnippetListState[z].businessSnippet.length}');
-      debugPrint('BUSINESS ID: ${serviceListSnippetListState[z].businessId} - ${serviceListSnippetListState[z].businessName}');
+      debugPrint('UI_U_booking_page => BUSINESS NAME => ${serviceListSnippetListState[z].businessName}');
+      debugPrint('UI_U_booking_page => BUSINESS NAME => ${serviceListSnippetListState[z].businessSnippet.length}');
+      debugPrint('UI_U_booking_page => BUSINESS ID: ${serviceListSnippetListState[z].businessId} - ${serviceListSnippetListState[z].businessName}');
       for (var w = 0; w < serviceListSnippetListState[z].businessSnippet.length; w++) {
         for (var y = 0; y < serviceListSnippetListState[z].businessSnippet[w].serviceList.length; y++) {
-          //debugPrint('INSIDE SERVICE PATH  => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath}');
+          //debugPrint('UI_U_booking_page => INSIDE SERVICE PATH  => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath}');
           if (serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath.contains(serviceId) && serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath.contains(categoryId)) {
-            //  debugPrint('INSIDE CATEGORY ROOT => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceName}');
-            //debugPrint('INSIDE SERVICE PATH  => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath}');
+            //  debugPrint('UI_U_booking_page => INSIDE CATEGORY ROOT => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceName}');
+            //debugPrint('UI_U_booking_page => INSIDE SERVICE PATH  => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath}');
             sub = true;
           }
         }
@@ -287,7 +283,7 @@ class _BookingPageState extends State<BookingPage> {
         }
       },
       builder: (context, snapshot) {
-        debugPrint('UI_U_BookingPage => Order List LENGTH: ${snapshot.orderList.orderListState.length}');
+        debugPrint('UI_U_booking_page => Order List LENGTH: ${snapshot.orderList.orderListState.length}');
         //currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0).toUtc();
 
         /*bookingState = snapshot.booking;
@@ -297,9 +293,10 @@ class _BookingPageState extends State<BookingPage> {
         categoryListState = snapshot.categoryList;
         categoryList = categoryListState.categoryListState;*/
 
-        //debugPrint('UI_U_BookingPage: category list lenght => ${categoryList.length}');
-        //debugPrint('UI_U_BookingPage: business logo => ${businessState.logo}');
-        //debugPrint('UI_U_BookingPage: service list lenght => ${serviceList.length}');
+        //debugPrint('UI_U_booking_page => category list lenght => ${categoryList.length}');
+        //debugPrint('UI_U_booking_page => business logo => ${businessState.logo}');
+        //debugPrint('UI_U_booking_page => service list lenght => ${serviceList.length}');
+
 
         if (snapshot.categoryList.categoryListState.isNotEmpty && startRequest && rippleLoading) {
           rippleLoading = false;
@@ -315,6 +312,9 @@ class _BookingPageState extends State<BookingPage> {
           //grid(store.state.categoryList.categoryListState);
           categoryListState = snapshot.categoryList;
           serviceListState = snapshot.serviceList;
+          debugPrint('UI_U_booking_page =>  SERVICE STATE LENGTH: ${serviceListState.serviceListState.length}');
+          if(serviceListState.serviceListState.first.serviceId == null)
+            serviceListState.serviceListState.removeLast();
           /*categoryListState.categoryListState.forEach((element) {
 
           });*/
@@ -323,7 +323,7 @@ class _BookingPageState extends State<BookingPage> {
             if ((element.customTag == 'showcase' || element.showcase) && element.level == 0) {
               debugPrint('UI_U_booking_page => LEVEL 0 & SHOWCASE CATEGORY: ${element.name}');
               serviceListState.serviceListState.forEach((service) {
-                //debugPrint('CATAGORY ID: ${cLS.id} - CATEGORY LIST: ${service.categoryId}');
+                //debugPrint('UI_U_booking_page => CATAGORY ID: ${cLS.id} - CATEGORY LIST: ${service.categoryId}');
                 if (service.categoryId.contains(element.id) || searchCategoryAndServiceOnSnippetList(service.serviceId, element.id)) {
                   if (!categoryList.contains(element)) {
                     categoryList.add(element);
@@ -343,6 +343,7 @@ class _BookingPageState extends State<BookingPage> {
           });
           bookingState = snapshot.booking != null ? snapshot.booking : BookingState().toEmpty();
           businessState = snapshot.business != null ? snapshot.business : BusinessState().toEmpty();
+
           serviceList = serviceListState.serviceListState.length >= 5 ? serviceListState.serviceListState.sublist(0, 5) : serviceListState.serviceListState;
 
           String startMonth = DateFormat('MM').format(bookingState.start_date);
@@ -379,7 +380,7 @@ class _BookingPageState extends State<BookingPage> {
 
         order = snapshot.order.itemList != null ? (snapshot.order.itemList.length > 0 ? snapshot.order : OrderState().toEmpty()) : OrderState().toEmpty();
         debugPrint('UI_U_BookingPage => CART COUNT: ${order.cartCounter}');
-        debugPrint('UI_U_booking_page =>has notifications? $hasNotifications');
+        debugPrint('UI_U_booking_page => has notifications? $hasNotifications');
 
         return Stack(children: [
           Positioned.fill(
@@ -414,7 +415,7 @@ class _BookingPageState extends State<BookingPage> {
                                   Future.delayed(Duration.zero, () {
                                     //Navigator.of(context).pop();
                                     //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Landing()));
-                                    Navigator.of(context).pushReplacementNamed(Landing.route);
+                                    Navigator.of(context).pushReplacementNamed(AppRoutes.serviceExplorer);
                                   });
 
                                   //StoreProvider.of<AppState>(context).dispatch(NavigatePopAction());
@@ -643,7 +644,7 @@ class _BookingPageState extends State<BookingPage> {
                                             children: [
                                               ///Greetings
                                               Container(
-                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 3),
+                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * 3),
                                                 child: Text(
                                                   //AppLocalizations.of(context).hi + bookingState.user.first.name,
                                                   '${AppLocalizations.of(context).hi} ${Emojis.wavingHand}',
@@ -656,7 +657,7 @@ class _BookingPageState extends State<BookingPage> {
 
                                               ///Portfolio
                                               Container(
-                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * 2),
                                                 child: Text(
                                                   AppLocalizations.of(context).yourHolidayInSpace + ' ' + (businessState != null ? businessState.municipality : ""),
                                                   style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextMedium, fontWeight: FontWeight.w400, fontSize: 16
@@ -671,7 +672,7 @@ class _BookingPageState extends State<BookingPage> {
                                                 children: [
                                                   ///Date
                                                   Container(
-                                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 0.5),
+                                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * 0.5),
                                                     child: Text(
                                                       sameMonth
                                                           ? '${DateFormat('dd', Localizations.localeOf(context).languageCode).format(bookingState.start_date)} - ${DateFormat('dd MMMM', Localizations.localeOf(context).languageCode).format(bookingState.end_date)}'
@@ -714,7 +715,7 @@ class _BookingPageState extends State<BookingPage> {
                                               ///ECO Label
                                               businessState.business_type == 'ECO'?
                                               Container(
-                                                margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, bottom: SizeConfig.safeBlockVertical * 1),
+                                                margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, bottom: SizeConfig.safeBlockVertical * 1),
                                                 child: Row(
                                                   children: [
                                                     Image( image: AssetImage('assets/img/eco.png')),
@@ -732,7 +733,7 @@ class _BookingPageState extends State<BookingPage> {
 
                                               ///Search
                                               Container(
-                                                margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, bottom: SizeConfig.safeBlockVertical * 4),
+                                                margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, bottom: SizeConfig.safeBlockVertical * 4),
                                                 height: SizeConfig.safeBlockHorizontal * 20,
                                                 child: TextFormField(
                                                   key: Key('guest_search_field_key'),
@@ -758,7 +759,7 @@ class _BookingPageState extends State<BookingPage> {
                                                     suffixIcon: InkWell(
                                                       key: Key('guest_search_button_key'),
                                                       onTap: () {
-                                                        debugPrint('done');
+                                                        debugPrint('UI_U_booking_page => done');
                                                         FocusScope.of(context).unfocus();
                                                         setState(() {
                                                           searched = _searchController.text;
@@ -781,7 +782,7 @@ class _BookingPageState extends State<BookingPage> {
                                                   ),
                                                   style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextMedium, fontWeight: FontWeight.w400, fontSize: 16),
                                                   onEditingComplete: () {
-                                                    debugPrint('done');
+                                                    debugPrint('UI_U_booking_page => done');
                                                     FocusScope.of(context).unfocus();
                                                     setState(() {
                                                       searched = _searchController.text;
@@ -805,9 +806,86 @@ class _BookingPageState extends State<BookingPage> {
                                                     userOrderList.clear();
                                                     orderList.clear();
                                                     if (orderSnapshot.hasError || orderSnapshot.connectionState == ConnectionState.waiting) {
-                                                      return Row(
-                                                        mainAxisAlignment: MainAxisAlignment.center,
-                                                        children: [CircularProgressIndicator()],
+                                                      return Container(
+                                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
+                                                        child: Column(
+                                                          mainAxisAlignment: MainAxisAlignment.start,
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                          children: [
+                                                            Row(
+                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                              children: [
+                                                                ///My bookings
+                                                                Container(
+                                                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 1),
+                                                                  child: Text(
+                                                                    AppLocalizations.of(context).myReservation,
+                                                                    style: TextStyle(
+                                                                      //letterSpacing: SizeConfig.safeBlockVertical * .4,
+                                                                        fontFamily: BuytimeTheme.FontFamily,
+                                                                        color: BuytimeTheme.TextBlack,
+                                                                        fontWeight: FontWeight.w400,
+                                                                        fontSize: 18
+
+                                                                      ///SizeConfig.safeBlockHorizontal * 4
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                ///View All
+                                                                Container(
+                                                                    margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 2.5),
+                                                                    alignment: Alignment.center,
+                                                                    child: Material(
+                                                                      color: Colors.transparent,
+                                                                      child: InkWell(
+                                                                          onTap: () {
+                                                                            //Navigator.push(context, MaterialPageRoute(builder: (context) => RAllBookings(fromConfirm: false, tourist: false,)),);
+                                                                            //Navigator.push(context, MaterialPageRoute(builder: (context) => AllBookings(orderStateList: orderList, tourist: true,)),);
+                                                                          },
+                                                                          borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                                                          child: Container(
+                                                                            padding: EdgeInsets.all(5.0),
+                                                                            child: Text(
+                                                                              AppLocalizations.of(context).viewAll,
+                                                                              style: TextStyle(
+                                                                                  letterSpacing: SizeConfig.safeBlockHorizontal * .2,
+                                                                                  fontFamily: BuytimeTheme.FontFamily,
+                                                                                  color: BuytimeTheme.BackgroundCerulean,
+                                                                                  fontWeight: FontWeight.w400,
+                                                                                  fontSize: 16
+
+                                                                                ///SizeConfig.safeBlockHorizontal * 4
+                                                                              ),
+                                                                            ),
+                                                                          )),
+                                                                    ))
+                                                              ],
+                                                            ),
+                                                            ///List
+                                                            Container(
+                                                              height: 120,
+                                                              width: double.infinity,
+                                                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5),
+                                                              child: CustomScrollView(
+                                                                  physics: new ClampingScrollPhysics(),
+                                                                  shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
+                                                                SliverList(
+                                                                  delegate: SliverChildBuilderDelegate(
+                                                                        (context, index) {
+                                                                      return Container(
+                                                                        width: 151,
+                                                                        height: 100,
+                                                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1, right: SizeConfig.safeBlockHorizontal * 1),
+                                                                        child: Utils.imageShimmer(151, 100),
+                                                                      );
+                                                                    },
+                                                                    childCount: 5,
+                                                                  ),
+                                                                ),
+                                                              ]),
+                                                            ),
+                                                          ],
+                                                        ),
                                                       );
                                                     }
                                                     DateTime currentTime = DateTime.now();
@@ -817,13 +895,12 @@ class _BookingPageState extends State<BookingPage> {
                                                       if ((order.progress == Utils.enumToString(OrderStatus.paid) ||
                                                               order.progress == Utils.enumToString(OrderStatus.pending) ||
                                                               order.progress == Utils.enumToString(OrderStatus.toBePaidAtCheckout) ||
-                                                              order.progress == Utils.enumToString(OrderStatus.holding) ||
                                                               order.progress == Utils.enumToString(OrderStatus.accepted)) &&
                                                           (order.itemList.first.date.isAtSameMomentAs(currentTime) || order.itemList.first.date.isAfter(currentTime)) &&
                                                           order.itemList.first.time != null) userOrderList.add(order);
                                                       orderList.add(order);
                                                     });
-                                                    //debugPrint('asdsd');
+                                                    //debugPrint('UI_U_booking_page => asdsd');
                                                     userOrderList.sort((a, b) => a.itemList.first.date.isBefore(b.itemList.first.date)
                                                         ? -1
                                                         : a.itemList.first.date.isAtSameMomentAs(b.itemList.first.date)
@@ -844,7 +921,7 @@ class _BookingPageState extends State<BookingPage> {
                                                                 children: [
                                                                   ///My bookings
                                                                   Container(
-                                                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 1),
+                                                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 1),
                                                                     child: Text(
                                                                       AppLocalizations.of(context).myReservation,
                                                                       style: TextStyle(
@@ -897,8 +974,10 @@ class _BookingPageState extends State<BookingPage> {
                                                               Container(
                                                                 height: 120,
                                                                 width: double.infinity,
-                                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
-                                                                child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
+                                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5),
+                                                                child: CustomScrollView(
+                                                                    physics: new ClampingScrollPhysics(),
+                                                                    shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
                                                                   SliverList(
                                                                     delegate: SliverChildBuilderDelegate(
                                                                       (context, index) {
@@ -950,7 +1029,7 @@ class _BookingPageState extends State<BookingPage> {
                                             children: [
                                               ///Top Services
                                               Container(
-                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 3, bottom: SizeConfig.safeBlockVertical * 3),
+                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * 3, bottom: SizeConfig.safeBlockVertical * 3),
                                                 child: Text(
                                                   AppLocalizations.of(context).topServices,
                                                   style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w500, fontSize: 18
@@ -1001,6 +1080,7 @@ class _BookingPageState extends State<BookingPage> {
                                                                     order.business.name = snapshot.business.name;
                                                                     order.business.id = snapshot.business.id_firestore;
                                                                     order.user.name = snapshot.user.name;
+                                                                    order.user.email = snapshot.user.email;
                                                                     order.user.id = snapshot.user.uid;
                                                                     // order.addItem(service, snapshot.business.ownerId, context);
                                                                     if (!order.addingFromAnotherBusiness(service.businessId)) {
@@ -1058,7 +1138,7 @@ class _BookingPageState extends State<BookingPage> {
                                                               },
                                                               child: Column(
                                                                 children: [
-                                                                  BookingListServiceListItem(service, false),
+                                                                  ServiceListItem(service, false, index),
                                                                   Container(
                                                                     margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 30),
                                                                     height: SizeConfig.safeBlockVertical * .2,
@@ -1101,7 +1181,7 @@ class _BookingPageState extends State<BookingPage> {
                                                   ///No List
                                                   Container(
                                                       height: SizeConfig.safeBlockVertical * 8,
-                                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                                                       decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
                                                       child: Center(
                                                           child: Container(
@@ -1130,7 +1210,7 @@ class _BookingPageState extends State<BookingPage> {
                                             children: [
                                               ///Inspiration
                                               /*Container(
-                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
+                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * 1),
                                     child: Text(
                                       AppLocalizations.of(context).findYourInspirationHere,
                                       style: TextStyle(
@@ -1221,7 +1301,7 @@ class _BookingPageState extends State<BookingPage> {
                                     ),
                                   )*/
                                               Container(
-                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 3, bottom: SizeConfig.safeBlockVertical * 2),
+                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 3, bottom: SizeConfig.safeBlockVertical * 2),
                                                 child: Row(
                                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                   children: [
@@ -1293,7 +1373,7 @@ class _BookingPageState extends State<BookingPage> {
                                                   ///No Category
                                                   Container(
                                                       height: SizeConfig.safeBlockVertical * 8,
-                                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                                                       decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
                                                       child: Center(
                                                           child: Container(
@@ -1324,8 +1404,8 @@ class _BookingPageState extends State<BookingPage> {
                                                               borderRadius: BorderRadius.all(Radius.circular(10)),
                                                               onTap: () async {
                                                                 String url =
-                                                                    StoreProvider.of<AppState>(context).state.business.phoneConcierge.isNotEmpty ? StoreProvider.of<AppState>(context).state.business.phoneConcierge : BuytimeConfig.FlaviosNumber.trim();
-                                                                debugPrint('Restaurant phonenumber: ' + url);
+                                                                    StoreProvider.of<AppState>(context).state.business.phoneConcierge.isNotEmpty ? StoreProvider.of<AppState>(context).state.business.phoneConcierge : BuytimeConfig.ArunasNumber.trim();
+                                                                debugPrint('UI_U_booking_page => Restaurant phonenumber: ' + url);
                                                                 if (await canLaunch('tel:$url')) {
                                                                   await launch('tel:$url');
                                                                 } else {

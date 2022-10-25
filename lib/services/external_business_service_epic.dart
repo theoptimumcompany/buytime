@@ -38,7 +38,7 @@ class ExternalBusinessListRequestService implements EpicClass<AppState> {
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<ExternalBusinessListRequest>().asyncMap((event) async {
-      debugPrint("EXTERNAL_BUSINESS_SERVICE_EPIC - ExternalBusinessListRequestService => USER ID: ${event.userId}");
+      debugPrint("external_business_service_epic => ExternalBusinessListRequestService => USER ID: ${event.userId}");
       businessStateList = [];
       QuerySnapshot businessListFromFirebase;
       int businessListFromFirebaseDocs = 0;
@@ -95,10 +95,10 @@ class ExternalBusinessListRequestService implements EpicClass<AppState> {
       int reads = statisticsState.businessListRequestServiceRead;
       int writes = statisticsState.businessListRequestServiceWrite;
       int documents = statisticsState.businessListRequestServiceDocuments;
-      debugPrint('EXTERNAL_BUSINESS_SERVICE_EPIC - ExternalBusinessListRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('external_business_service_epic => ExternalBusinessListRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       ++reads;
       documents = documents + businessListFromFirebaseDocs;
-      debugPrint('EXTERNAL_BUSINESS_SERVICE_EPIC - ExternalBusinessListRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('external_business_service_epic => ExternalBusinessListRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       statisticsState.businessListRequestServiceRead = reads;
       statisticsState.businessListRequestServiceWrite = writes;
       statisticsState.businessListRequestServiceDocuments = documents;
@@ -119,7 +119,7 @@ class ExternalBusinessListRequestByIdsService implements EpicClass<AppState> {
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<ExternalBusinessListByIdsRequest>().asyncMap((event) async {
-      debugPrint("EXTERNAL_BUSINESS_SERVICE_EPIC - ExternalBusinessListRequestByIdsService => BUSINESS IDS LENGTH: ${event.businessIds.length}");
+      debugPrint("external_business_service_epic => ExternalBusinessListRequestByIdsService => BUSINESS IDS LENGTH: ${event.businessIds.length}");
       businessStateList = [];
 
       int businessListFromFirebaseDocs = 0;
@@ -144,10 +144,10 @@ class ExternalBusinessListRequestByIdsService implements EpicClass<AppState> {
       int reads = statisticsState.businessListRequestServiceRead;
       int writes = statisticsState.businessListRequestServiceWrite;
       int documents = statisticsState.businessListRequestServiceDocuments;
-      debugPrint('EXTERNAL_BUSINESS_SERVICE_EPIC - ExternalBusinessListRequestByIdsService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('external_business_service_epic => ExternalBusinessListRequestByIdsService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       ++reads;
       documents = documents + businessListFromFirebaseDocs;
-      debugPrint('EXTERNAL_BUSINESS_SERVICE_EPIC - ExternalBusinessListRequestByIdsService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('external_business_service_epic => ExternalBusinessListRequestByIdsService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       statisticsState.businessListRequestServiceRead = reads;
       statisticsState.businessListRequestServiceWrite = writes;
       statisticsState.businessListRequestServiceDocuments = documents;
@@ -170,7 +170,7 @@ class ExternalBusinessServiceSnippetListRequestService implements EpicClass<AppS
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<ExternalBusinessServiceSnippetListRequest>().asyncMap((event) async {
-      debugPrint("EXTERNAL_BUSINESS_SERVICE_EPIC - ExternalBusinessServiceSnippetListRequest => EXTERNAL_BUSINESS ID: ${event.businessId}");
+      debugPrint("external_business_service_epic => ExternalBusinessServiceSnippetListRequest => EXTERNAL_BUSINESS ID: ${event.businessId}");
       int serviceSnippetListFromFirebaseDocs = 0;
       businessServiceSnippetList = [];
       QuerySnapshot serviceSnippetListFromFirebase = await FirebaseFirestore.instance 
@@ -198,10 +198,10 @@ class ExternalBusinessServiceSnippetListRequestService implements EpicClass<AppS
     int reads = statisticsState.businessServiceSnippetListRequestServiceRead;
     int writes = statisticsState.businessServiceSnippetListRequestServiceWrite;
     int documents = statisticsState.businessServiceSnippetListRequestServiceDocuments;
-    debugPrint('EXTERNAL_BUSINESS_SERVICE_EPIC - ExternalBusinessServiceSnippetListRequest => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+    debugPrint('external_business_service_epic => ExternalBusinessServiceSnippetListRequest => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
     ++reads;
     documents = documents + serviceSnippetListFromFirebaseDocs;
-    debugPrint('EXTERNAL_BUSINESS_SERVICE_EPIC - ExternalBusinessServiceSnippetListRequest =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+    debugPrint('external_business_service_epic => ExternalBusinessServiceSnippetListRequest =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
     statisticsState.businessServiceSnippetListRequestServiceRead = reads;
     statisticsState.businessServiceSnippetListRequestServiceWrite = writes;
     statisticsState.businessServiceSnippetListRequestServiceDocuments = documents;
@@ -214,7 +214,7 @@ class ExternalBusinessAndNavigateRequestService implements EpicClass<AppState> {
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<ExternalBusinessServiceListAndNavigateRequest>().asyncMap((event) async {
-      debugPrint("EXTERNAL_BUSINESS_SERVICE_EPIC - ExternalBusinessAndNavigateRequestService => DOCUMENT ID: ${event.businessStateId}");
+      debugPrint("external_business_service_epic => ExternalBusinessAndNavigateRequestService => DOCUMENT ID: ${event.businessStateId}");
 
       DocumentSnapshot businessSnapshot = await FirebaseFirestore.instance /// 1 READ - 1 DOC
           .collection("business")
@@ -222,15 +222,15 @@ class ExternalBusinessAndNavigateRequestService implements EpicClass<AppState> {
           .get();
 
      businessState =  ExternalBusinessState.fromJson(businessSnapshot.data());
-      debugPrint("EXTERNAL_BUSINESS_SERVICE_EPIC - ExternalBusinessAndNavigateRequestService => DOCUMENT ID from Request: ${businessState.id_firestore}");
+      debugPrint("external_business_service_epic => ExternalBusinessAndNavigateRequestService => DOCUMENT ID from Request: ${businessState.id_firestore}");
       statisticsState = store.state.statistics;
       int reads = statisticsState.businessAndNavigateRequestServiceRead;
       int writes = statisticsState.businessAndNavigateRequestServiceWrite;
       int documents = statisticsState.businessAndNavigateRequestServiceDocuments;
-      debugPrint('EXTERNAL_BUSINESS_SERVICE_EPIC - ExternalBusinessAndNavigateRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('external_business_service_epic => ExternalBusinessAndNavigateRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       ++reads;
       ++documents;
-      debugPrint('EXTERNAL_BUSINESS_SERVICE_EPIC - ExternalBusinessAndNavigateRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('external_business_service_epic => ExternalBusinessAndNavigateRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       statisticsState.businessAndNavigateRequestServiceRead = reads;
       statisticsState.businessAndNavigateRequestServiceWrite = writes;
       statisticsState.businessAndNavigateRequestServiceDocuments = documents;
@@ -249,7 +249,7 @@ class ExternalBusinessAndNavigateOnConfirmRequestService implements EpicClass<Ap
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<ExternalBusinessAndNavigateOnConfirmRequest>().asyncMap((event) async {
-      debugPrint("EXTERNAL_BUSINESS_SERVICE_EPIC - ExternalBusinessAndNavigateOnConfirmRequestService => DOCUMENT ID: ${event.businessStateId}");
+      debugPrint("external_business_service_epic => ExternalBusinessAndNavigateOnConfirmRequestService => DOCUMENT ID: ${event.businessStateId}");
 
       DocumentSnapshot businessSnapshot = await FirebaseFirestore.instance /// 1 READ - 1 DOC
           .collection("business")
@@ -262,10 +262,10 @@ class ExternalBusinessAndNavigateOnConfirmRequestService implements EpicClass<Ap
       int reads = statisticsState.businessAndNavigateOnConfirmRequestServiceRead;
       int writes = statisticsState.businessAndNavigateOnConfirmRequestServiceWrite;
       int documents = statisticsState.businessAndNavigateOnConfirmRequestServiceDocuments;
-      debugPrint('EXTERNAL_BUSINESS_SERVICE_EPIC - ExternalBusinessAndNavigateOnConfirmRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('external_business_service_epic => ExternalBusinessAndNavigateOnConfirmRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       ++reads;
       ++documents;
-      debugPrint('EXTERNAL_BUSINESS_SERVICE_EPIC - ExternalBusinessAndNavigateOnConfirmRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('external_business_service_epic => ExternalBusinessAndNavigateOnConfirmRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       statisticsState.businessAndNavigateOnConfirmRequestServiceRead = reads;
       statisticsState.businessAndNavigateOnConfirmRequestServiceWrite = writes;
       statisticsState.businessAndNavigateOnConfirmRequestServiceDocuments = documents;
@@ -310,7 +310,7 @@ class ExternalBusinessRequestAndNavigateService implements EpicClass<AppState> {
 
 
 Future ExternalBusinessRequestMethod(dynamic event, EpicStore<AppState> store, ExternalBusinessState businessState, StatisticsState statisticsState) async {
-  debugPrint("EXTERNAL_BUSINESS_SERVICE_EPIC - ExternalBusinessRequestService => DOCUMENT ID: ${event.businessStateId}");
+  debugPrint("external_business_service_epic => ExternalBusinessRequestService => DOCUMENT ID: ${event.businessStateId}");
 
   DocumentSnapshot businessSnapshot = await FirebaseFirestore.instance /// 1 READ - 1 DOC
       .collection("business")
@@ -323,10 +323,10 @@ Future ExternalBusinessRequestMethod(dynamic event, EpicStore<AppState> store, E
   int reads = statisticsState.businessRequestServiceRead;
   int writes = statisticsState.businessRequestServiceWrite;
   int documents = statisticsState.businessRequestServiceDocuments;
-  debugPrint('EXTERNAL_BUSINESS_SERVICE_EPIC - ExternalBusinessRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+  debugPrint('external_business_service_epic => ExternalBusinessRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
   ++reads;
   ++documents;
-  debugPrint('EXTERNAL_BUSINESS_SERVICE_EPIC - ExternalBusinessRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+  debugPrint('external_business_service_epic => ExternalBusinessRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
   statisticsState.businessRequestServiceRead = reads;
   statisticsState.businessRequestServiceWrite = writes;
   statisticsState.businessRequestServiceDocuments = documents;
@@ -361,7 +361,7 @@ class ExternalBusinessUpdateService implements EpicClass<AppState> {
   StatisticsState statisticsState;
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-    debugPrint("EXTERNAL_BUSINESS_SERVICE_EPIC - ExternalBusinessUpdateService => CALL OF UPDATE");
+    debugPrint("external_business_service_epic => ExternalBusinessUpdateService => CALL OF UPDATE");
     return actions.whereType<UpdateExternalBusiness>().asyncMap((event) async {
       businessState = event.businessState;
 
@@ -375,16 +375,16 @@ class ExternalBusinessUpdateService implements EpicClass<AppState> {
           .doc(businessState.id_firestore)
           .update(businessState.toJson())
           .then((value) {
-        debugPrint("EXTERNAL_BUSINESS_SERVICE_EPIC - ExternalBusinessUpdateService => Should be updated online");
+        debugPrint("external_business_service_epic => ExternalBusinessUpdateService => Should be updated online");
       });
 
       statisticsState = store.state.statistics;
       int reads = statisticsState.businessUpdateServiceRead;
       int writes = statisticsState.businessUpdateServiceWrite;
       int documents = statisticsState.businessUpdateServiceDocuments;
-      debugPrint('EXTERNAL_BUSINESS_SERVICE_EPIC - ExternalBusinessUpdateService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('external_business_service_epic => ExternalBusinessUpdateService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       ++writes;
-      debugPrint('EXTERNAL_BUSINESS_SERVICE_EPIC - ExternalBusinessUpdateService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('external_business_service_epic => ExternalBusinessUpdateService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       statisticsState.businessUpdateServiceRead = reads;
       statisticsState.businessUpdateServiceWrite = writes;
       statisticsState.businessUpdateServiceDocuments = documents;
@@ -427,19 +427,19 @@ class ExternalBusinessCreateService implements EpicClass<AppState> {
       int reads = statisticsState.businessCreateServiceRead;
       int writes = statisticsState.businessCreateServiceWrite;
       int documents = statisticsState.businessCreateServiceDocuments;
-      debugPrint('EXTERNAL_BUSINESS_SERVICE_EPIC - ExternalBusinessCreateService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('external_business_service_epic => ExternalBusinessCreateService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       ++reads;
       ++writes;
       ++documents;
-      debugPrint('EXTERNAL_BUSINESS_SERVICE_EPIC - ExternalBusinessCreateService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('external_business_service_epic => ExternalBusinessCreateService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       statisticsState.businessCreateServiceRead = reads;
       statisticsState.businessCreateServiceWrite = writes;
       statisticsState.businessCreateServiceDocuments = documents;
 
       return docReference.set(businessState.toJson()).then((value) async{ /// 1 WRITE
-        debugPrint("EXTERNAL_BUSINESS_SERVICE_EPIC - ExternalBusinessCreateService => Has created new ExternalBusiness!");
+        debugPrint("external_business_service_epic => ExternalBusinessCreateService => Has created new ExternalBusiness!");
       }).catchError((error) {
-        debugPrint("EXTERNAL_BUSINESS_SERVICE_EPIC - ExternalBusinessCreateService => ERROR: $error");
+        debugPrint("external_business_service_epic => ExternalBusinessCreateService => ERROR: $error");
       }).then((value) {
         return null;
       });
@@ -456,7 +456,7 @@ Future<CreatedExternalBusiness> createExternalBusiness(ExternalBusinessState bus
   var docReference = FirebaseFirestore.instance.collection("business").doc();
   businessState.id_firestore = docReference.id;
   return docReference.set(businessState.toJson()).then((value) {
-    print("ExternalBusinessService has created new ExternalBusiness! ");
+    debugPrint("ExternalBusinessService has created new ExternalBusiness! ");
     return new CreatedExternalBusiness(businessState);
   });
 }
@@ -467,7 +467,7 @@ Future<UpdatedExternalBusiness> updateExternalBusiness(ExternalBusinessState bus
       .doc(businessState.id_firestore)
       .update(businessState.toJson())
       .then((value) {
-    print("ExternalBusinessService should be updated online ");
+    debugPrint("ExternalBusinessService should be updated online ");
     return new UpdatedExternalBusiness(businessState);
   });
 }

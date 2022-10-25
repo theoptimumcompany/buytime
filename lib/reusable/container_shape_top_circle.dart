@@ -33,10 +33,3 @@ class ContainerShapeTopCircle extends CustomPainter {
     path.lineTo(size.width, 0);
 
     path.close();
-
-    canvas.drawPath(path, paint);
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) => false;
-}

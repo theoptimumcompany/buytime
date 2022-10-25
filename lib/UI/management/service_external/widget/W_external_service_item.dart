@@ -19,7 +19,7 @@ import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:Buytime/reblox/model/business/external_business_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
-import 'package:Buytime/reusable/enterExitRoute.dart';
+import 'package:Buytime/reusable/animation/enterExitRoute.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/utils/utils.dart';
@@ -75,7 +75,7 @@ class _ExternalServiceItemState extends State<ExternalServiceItem> {
       duration = 'depends';
     }
 
-    //debugPrint('image: ${widget.serviceState.image1}');
+    //debugPrint('W_external_service_item => image: ${widget.serviceState.image1}');
     return Container(
         //margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 4, right: SizeConfig.safeBlockHorizontal * 4),
         margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 0),
@@ -111,7 +111,7 @@ class _ExternalServiceItemState extends State<ExternalServiceItem> {
                         ),
                         ///Service Name & Description
                         Container(
-                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1),
+                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1),
                           child:  Column(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -223,25 +223,25 @@ class _ExternalServiceItemState extends State<ExternalServiceItem> {
                       bool equalBusiness = false;
                       StoreProvider.of<AppState>(context).state.externalServiceImportedListState.externalServiceImported.forEach((element) {
                         if(element.externalServiceId == widget.serviceState.serviceId && element.imported == true){
-                          debugPrint('${ widget.serviceState.name} | service true');
+                          debugPrint('W_external_service_item => ${ widget.serviceState.name} | service true');
                           equalService = true;
                         }
                       });
                       StoreProvider.of<AppState>(context).state.externalBusinessImportedListState.externalBusinessImported.forEach((element) {
                         if(element.externalBusinessId == widget.serviceState.businessId && element.imported == true){
-                          debugPrint('${ widget.serviceState.name} | business true');
+                          debugPrint('W_external_service_item => ${ widget.serviceState.name} | business true');
                           equalBusiness = true;
                         }
                       });
                       if(equalBusiness){
-                        debugPrint('${ widget.serviceState.name} | if | business true');
+                        debugPrint('W_external_service_item => ${ widget.serviceState.name} | if | business true');
                         StoreProvider.of<AppState>(context).state.externalServiceImportedListState.externalServiceImported.forEach((element) {
                           if(element.externalServiceId == widget.serviceState.serviceId && element.imported == true){
                             debugPrint('${ widget.serviceState.name} | if | business true | service true');
                             equalService = true;
                           }
                           if(element.externalServiceId == widget.serviceState.serviceId && element.imported == false){
-                            debugPrint('${ widget.serviceState.name} | if | business true | service false');
+                            debugPrint('W_external_service_item => ${ widget.serviceState.name} | if | business true | service false');
                             equalService = false;
                             equalBusiness = false;
                           }
@@ -258,7 +258,7 @@ class _ExternalServiceItemState extends State<ExternalServiceItem> {
                           equalBusiness = false;
                         }
                       }
-                      debugPrint('${ widget.serviceState.name} | Business : $equalBusiness | Service: $equalService');
+                      debugPrint('W_external_service_item => ${ widget.serviceState.name} | Business : $equalBusiness | Service: $equalService');
                       if(equalService || equalBusiness){
                         return Icon(
                           Icons.settings_ethernet,
@@ -342,7 +342,7 @@ class _ExternalServiceItemState extends State<ExternalServiceItem> {
     }else{
       duration = 'depends';
     }
-    //debugPrint('image: ${widget.serviceState.image1}');
+    //debugPrint('W_external_service_item => image: ${widget.serviceState.image1}');
     return StoreConnector<AppState, AppState>(
       converter: (store) => store.state,
       onInit: (store){
@@ -409,7 +409,7 @@ class _ExternalServiceItemState extends State<ExternalServiceItem> {
                             ),
                             ///Service Name & Description
                             Container(
-                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1),
+                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1),
                               child:  Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,

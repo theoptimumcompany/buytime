@@ -14,7 +14,7 @@ import 'package:Buytime/UI/management/business/UI_M_business.dart';
 import 'package:Buytime/UI/management/service_external/UI_M_external_service_list.dart';
 import 'package:Buytime/UI/management/service_internal/UI_M_service_list.dart';
 import 'package:Buytime/reblox/model/category/category_state.dart';
-import 'package:Buytime/reusable/enterExitRoute.dart';
+import 'package:Buytime/reusable/animation/enterExitRoute.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:flutter/material.dart';
@@ -108,7 +108,7 @@ class ExternalServiceShowcaseState extends State<ExternalServiceShowcase> {
                   decoration: BoxDecoration(color: Colors.blueGrey.withOpacity(0.1)),
                   child: Container(
                     height: SizeConfig.screenHeight * 0.1,
-                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5),
+                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5),
                     child: Center(
                       child: Text(
                         AppLocalizations.of(context).thereAreNoExternalServicesAttached,
@@ -117,45 +117,6 @@ class ExternalServiceShowcaseState extends State<ExternalServiceShowcase> {
                     ),
                   ),
                 )
-                // widget.categoryRootList.length > 0
-                //     ?
-                //
-                //     ///Categories list
-                //     Positioned.fill(
-                //         child: Align(
-                //           alignment: Alignment.topCenter,
-                //           child: Container(
-                //             color: Colors.blueGrey.withOpacity(0.1),
-                //             // margin: EdgeInsets.only(bottom: 60.0),
-                //             padding: EdgeInsets.only(top: 10.0, bottom: 20.0),
-                //             child: CustomScrollView(shrinkWrap: true, slivers: [
-                //               SliverList(
-                //                 delegate: SliverChildBuilderDelegate(
-                //                   (context, index) {
-                //                     //MenuItemModel menuItem = menuItems.elementAt(index);
-                //                     CategoryState categoryItem = widget.categoryRootList.elementAt(index);
-                //                     return CategoryListItemWidget(categoryItem, BuytimeTheme.Indigo);
-                //                     // return InkWell(
-                //                     //   onTap: () {
-                //                     //     debugPrint('Category Item: ${categoryItem.name.toUpperCase()} Clicked!');
-                //                     //   },
-                //                     //   //child: MenuItemListItemWidget(menuItem),
-                //                     //   child: CategoryListItemWidget(categoryItem),
-                //                     // );
-                //                   },
-                //                   childCount: widget.categoryRootList.length,
-                //                 ),
-                //               ),
-                //             ]),
-                //           ),
-                //         ),
-                //       )
-                //     : Container(
-                //         height: SizeConfig.screenHeight * 0.1,
-                //         child: Center(
-                //           child: Text(AppLocalizations.of(context).thereAreNoExternalServicesAttached),
-                //         ),
-                //       ),
               ],
             ),
           ),

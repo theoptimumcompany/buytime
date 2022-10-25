@@ -49,7 +49,7 @@ ExternalServiceImportedListState externalServiceImportedListReducer(ExternalServ
 
   if (action is ExternalServiceImportedListRequestResponse) {
     externalServiceImportedListState = ExternalServiceImportedListState(externalServiceImported: action.externalServiceImportedList).copyWith();
-    //debugPrint('booking_reducer: ${bookingState.user.first.name}');
+    //debugPrint('external_service_imported_list_reducer => ${bookingState.user.first.name}');
     return externalServiceImportedListState;
   }
   return state;

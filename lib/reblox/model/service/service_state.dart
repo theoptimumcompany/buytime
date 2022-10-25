@@ -11,8 +11,11 @@ limitations under the License.
 ==============================================================================*/
 
 import 'package:Buytime/reblox/model/service/service_slot_time_state.dart';
+import 'package:Buytime/reblox/model/user/snippet/user_snippet_state.dart';
 import '../file/optimum_file_to_upload.dart';
 import 'package:json_annotation/json_annotation.dart';
+
+import 'convention_slot_state.dart';
 
 part 'service_state.g.dart';
 
@@ -20,7 +23,6 @@ part 'service_state.g.dart';
 class ServiceState {
   String serviceId;
   String businessId;
-  // String serviceCreatorId;
   List<String> categoryId;
   String image1;
   String image2;
@@ -34,6 +36,8 @@ class ServiceState {
   List<String> tag;
   @JsonKey(defaultValue: false)
   bool switchSlots = false;
+  @JsonKey(defaultValue: false)
+  bool hubConvention = false;
   @JsonKey(defaultValue: false)
   bool switchAutoConfirm = false;
   @JsonKey(defaultValue: [])
@@ -50,6 +54,8 @@ class ServiceState {
   String serviceBusinessCoordinates;
   String serviceAddress;
   String serviceCoordinates;
+  @JsonKey(defaultValue: '')
+  String originalLanguage;
   @JsonKey(defaultValue: true)
   bool paymentMethodRoom = true;
   @JsonKey(defaultValue: true)
@@ -58,6 +64,10 @@ class ServiceState {
   bool paymentMethodOnSite = false;
   @JsonKey(defaultValue: '')
   String condition;
+  UserSnippet contentCreator;
+
+  @JsonKey(defaultValue: [])
+  List<ConventionSlot> conventionSlotList;
 
   ///Out Database
   @JsonKey(ignore: true)
@@ -76,9 +86,11 @@ class ServiceState {
     this.price,
     this.vat,
     this.fileToUploadList,
+    this.conventionSlotList,
     this.timesSold,
     this.tag,
     this.switchSlots,
+    this.hubConvention,
     this.switchAutoConfirm,
     this.serviceSlot,
     this.spinnerVisibility,
@@ -87,12 +99,14 @@ class ServiceState {
     this.serviceCrossSell,
     this.serviceBusinessAddress,
     this.serviceBusinessCoordinates,
+    this.originalLanguage,
     this.serviceAddress,
     this.serviceCoordinates,
     this.paymentMethodRoom,
     this.paymentMethodCard,
     this.paymentMethodOnSite,
     this.condition,
+    this.contentCreator,
   });
 
   ServiceState toEmpty() {
@@ -109,9 +123,11 @@ class ServiceState {
       price: 0.00,
       vat: 22,
       fileToUploadList: [],
+      conventionSlotList: [],
       timesSold: 0,
       tag: [],
       switchSlots: false,
+      hubConvention: false,
       switchAutoConfirm: false,
       serviceSlot: [],
       spinnerVisibility: false,
@@ -120,12 +136,14 @@ class ServiceState {
       serviceCrossSell: false,
       serviceBusinessAddress: '',
       serviceBusinessCoordinates: '',
+      originalLanguage: '',
       serviceAddress: '',
       serviceCoordinates: '',
       paymentMethodRoom: true,
       paymentMethodCard: true,
       paymentMethodOnSite: false,
       condition: '',
+      contentCreator: UserSnippet().toEmpty(),
     );
   }
 
@@ -142,9 +160,11 @@ class ServiceState {
     this.price = service.price;
     this.vat = service.vat;
     this.fileToUploadList = service.fileToUploadList;
+    this.conventionSlotList = service.conventionSlotList;
     this.timesSold = service.timesSold;
     this.tag = service.tag;
     this.switchSlots = service.switchSlots;
+    this.hubConvention = service.hubConvention;
     this.switchAutoConfirm = service.switchAutoConfirm;
     this.serviceSlot = service.serviceSlot;
     this.spinnerVisibility = service.spinnerVisibility;
@@ -153,45 +173,50 @@ class ServiceState {
     this.serviceCrossSell = service.serviceCrossSell;
     this.serviceBusinessAddress = service.serviceBusinessAddress;
     this.serviceBusinessCoordinates = service.serviceBusinessCoordinates;
+    this.originalLanguage = service.originalLanguage;
     this.serviceAddress = service.serviceAddress;
     this.serviceCoordinates = service.serviceCoordinates;
     this.paymentMethodCard = service.paymentMethodCard;
     this.paymentMethodOnSite = service.paymentMethodOnSite;
     this.paymentMethodRoom = service.paymentMethodRoom;
     this.condition = service.condition;
+    this.contentCreator = service.contentCreator;
   }
 
-  ServiceState copyWith({
-    String serviceId,
-    String businessId,
-    List<String> categoryId,
-    String name,
-    String image1,
-    String image2,
-    String image3,
-    String description,
-    String visibility,
-    double price,
-    int vat,
-    List<OptimumFileToUpload> fileToUploadList,
-    int timesSold,
-    List<String> tag,
-    bool switchSlots,
-    bool switchAutoConfirm,
-    List<ServiceSlot> serviceSlot,
-    bool spinnerVisibility,
-    bool serviceCreated,
-    bool serviceEdited,
-    bool serviceCrossSell,
-    String serviceBusinessAddress,
-    String serviceBusinessCoordinates,
-    String serviceAddress,
-    String serviceCoordinates,
-    bool paymentMethodRoom,
-    bool paymentMethodCard,
-    bool paymentMethodOnSite,
-    String condition,
-  }) {
+  ServiceState copyWith(
+      {String serviceId,
+      String businessId,
+      List<String> categoryId,
+      String name,
+      String image1,
+      String image2,
+      String image3,
+      String description,
+      String visibility,
+      double price,
+      int vat,
+      List<OptimumFileToUpload> fileToUploadList,
+      List<ConventionSlot> conventionSlotList,
+      int timesSold,
+      List<String> tag,
+      bool switchSlots,
+      bool hubConvention,
+      bool switchAutoConfirm,
+      List<ServiceSlot> serviceSlot,
+      bool spinnerVisibility,
+      bool serviceCreated,
+      bool serviceEdited,
+      bool serviceCrossSell,
+      String serviceBusinessAddress,
+      String serviceBusinessCoordinates,
+      String originalLanguage,
+      String serviceAddress,
+      String serviceCoordinates,
+      bool paymentMethodRoom,
+      bool paymentMethodCard,
+      bool paymentMethodOnSite,
+      String condition,
+      UserSnippet contentCreator}) {
     return ServiceState(
       serviceId: serviceId ?? this.serviceId,
       businessId: businessId ?? this.businessId,
@@ -205,9 +230,11 @@ class ServiceState {
       price: price ?? this.price,
       vat: vat ?? this.vat,
       fileToUploadList: fileToUploadList ?? this.fileToUploadList,
+      conventionSlotList: conventionSlotList ?? this.conventionSlotList,
       timesSold: timesSold ?? this.timesSold,
       tag: tag ?? this.tag,
       switchSlots: switchSlots ?? this.switchSlots,
+      hubConvention: hubConvention ?? this.hubConvention,
       switchAutoConfirm: switchAutoConfirm ?? this.switchAutoConfirm,
       serviceSlot: serviceSlot ?? this.serviceSlot,
       spinnerVisibility: spinnerVisibility ?? this.spinnerVisibility,
@@ -216,12 +243,14 @@ class ServiceState {
       serviceCrossSell: serviceCrossSell ?? this.serviceCrossSell,
       serviceBusinessAddress: serviceBusinessAddress ?? this.serviceBusinessAddress,
       serviceBusinessCoordinates: serviceBusinessCoordinates ?? this.serviceBusinessCoordinates,
+      originalLanguage: originalLanguage ?? this.originalLanguage,
       serviceAddress: serviceAddress ?? this.serviceAddress,
       serviceCoordinates: serviceCoordinates ?? this.serviceCoordinates,
       paymentMethodRoom: paymentMethodRoom ?? this.paymentMethodRoom,
       paymentMethodCard: paymentMethodCard ?? this.paymentMethodCard,
       paymentMethodOnSite: paymentMethodOnSite ?? this.paymentMethodOnSite,
       condition: condition ?? this.condition,
+      contentCreator: contentCreator ?? this.contentCreator,
     );
   }
 

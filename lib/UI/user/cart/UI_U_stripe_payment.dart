@@ -16,7 +16,7 @@ limitations under the License.
 // import 'package:Buytime/reblox/reducer/order_reducer.dart';
 // import 'package:Buytime/reblox/reducer/stripe_list_payment_reducer.dart';
 // import 'package:Buytime/reblox/reducer/stripe_payment_reducer.dart';
-// import 'package:Buytime/reusable/order/order_total.dart';
+// import 'package:Buytime/reusable/order/w_order_total.dart';
 // import 'package:Buytime/reusable/stripe/optimum_credit_card_button.dart';
 // import 'package:flutter/material.dart';
 // import 'package:flutter_redux/flutter_redux.dart';
@@ -277,7 +277,7 @@ limitations under the License.
 //     }
 //
 //     Map<String, dynamic> paymentIntentRes = await createPaymentIntent(stripeCard, customerEmail);
-//     print("StripePayment payment method test");
+//     debugPrint("StripePayment payment method test");
 //
 //
 //
@@ -321,7 +321,7 @@ limitations under the License.
 //     // -Ask to the customer through a textfield.
 //     // -Get it from firebase Account.
 //     customerEmail = StoreProvider.of<AppState>(context).state.user.email;
-//     print("StripePayment user email: " + customerEmail);
+//     debugPrint("StripePayment user email: " + customerEmail);
 //     return customerEmail;
 //   }
 //
@@ -364,7 +364,7 @@ limitations under the License.
 //       //clientSecret = await postCreatePaymentIntent(customerEmail, paymentMethod['id']);
 //       //paymentIntentRes = await stripe.api.retrievePaymentIntent(clientSecret);
 //     } catch (e) {
-//       print("ERROR_CreatePaymentIntentAndSubmit: $e");
+//       debugPrint("ERROR_CreatePaymentIntentAndSubmit: $e");
 //       showAlertDialog(context, AppLocalizations.of(context).error, AppLocalizations.of(context).somethingWentWrong);
 //     }
 //     return paymentIntentRes;
@@ -392,7 +392,7 @@ limitations under the License.
 //       await stripe.confirmPayment(clientSecret, paymentMethodId: paymentMethodId);
 //       paymentIntentRes_3dSecure = await stripe.api.retrievePaymentIntent(clientSecret);
 //     } catch (e) {
-//       print("ERROR_ConfirmPayment3DSecure: $e");
+//       debugPrint("ERROR_ConfirmPayment3DSecure: $e");
 //       showAlertDialog(context, AppLocalizations.of(context).error, AppLocalizations.of(context).somethingWentWrong);
 //     }
 //     return paymentIntentRes_3dSecure;

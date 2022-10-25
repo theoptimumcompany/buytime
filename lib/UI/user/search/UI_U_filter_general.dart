@@ -21,10 +21,10 @@ import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/model/user/snippet/user_snippet_state.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reservable_list_reducer.dart';
-import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
-import 'package:Buytime/reusable/booking_page_service_list_item.dart';
-import 'package:Buytime/reusable/buytime_icons.dart';
-import 'package:Buytime/reusable/material_design_icons.dart';
+import 'package:Buytime/reusable/appbar/w_buytime_appbar.dart';
+import 'package:Buytime/reusable/w_service_list_item.dart';
+import 'package:Buytime/reusable/icon/buytime_icons.dart';
+import 'package:Buytime/reusable/icon/material_design_icons.dart';
 import 'package:Buytime/utils/globals.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
@@ -249,7 +249,7 @@ class _FilterGeneralState extends State<FilterGeneral> {
                           Container(
                             margin: EdgeInsets.only(
                                 top: SizeConfig.safeBlockVertical * 3,
-                                left: SizeConfig.safeBlockHorizontal * 5,
+                                left: SizeConfig.safeBlockHorizontal * 3.5,
                                 bottom: SizeConfig.safeBlockVertical * 1,
                                 right: _searchController.text.isNotEmpty ? SizeConfig.safeBlockHorizontal * .5 : SizeConfig.safeBlockHorizontal * 5),
                             child: Row(
@@ -284,7 +284,7 @@ class _FilterGeneralState extends State<FilterGeneral> {
                                         ),
                                         suffixIcon: InkWell(
                                           onTap: () {
-                                            debugPrint('done');
+                                            debugPrint('UI_U_filter_general => done');
                                             FocusScope.of(context).unfocus();
                                             search(snapshot.serviceList.serviceListState);
                                           },
@@ -297,7 +297,7 @@ class _FilterGeneralState extends State<FilterGeneral> {
                                       ),
                                       style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextMedium, fontWeight: FontWeight.w400, fontSize: 16),
                                       onEditingComplete: () {
-                                        debugPrint('done');
+                                        debugPrint('UI_U_filter_general => done');
                                         FocusScope.of(context).unfocus();
                                         search(snapshot.serviceList.serviceListState);
                                       },
@@ -460,7 +460,7 @@ class _FilterGeneralState extends State<FilterGeneral> {
                                                 });
                                                 if(StoreProvider.of<AppState>(context).state.user.getRole() == Role.user){
                                                   if (direction == DismissDirection.startToEnd) {
-                                                    debugPrint('UI_U_SearchPage => DX to DELETE');
+                                                    debugPrint('UI_U_filter_general => DX to DELETE');
                                                     // Show a snackbar. This snackbar could also contain "Undo" actions.
                                                     Scaffold.of(context).showSnackBar(SnackBar(
                                                         content: Text(service.name + AppLocalizations.of(context).spaceRemoved),
@@ -471,7 +471,7 @@ class _FilterGeneralState extends State<FilterGeneral> {
                                                               undoDeletion(index, service);
                                                             })));
                                                   } else {
-                                                    debugPrint('UI_U_SearchPage => SX to BOOK');
+                                                    debugPrint('UI_U_filter_general => SX to BOOK');
                                                     if (service.switchSlots) {
                                                       StoreProvider.of<AppState>(context).dispatch(OrderReservableListRequest(service.serviceId));
                                                       Navigator.push(
@@ -483,6 +483,7 @@ class _FilterGeneralState extends State<FilterGeneral> {
                                                       order.business.id = snapshot.business.id_firestore;
                                                       order.user.name = snapshot.user.name;
                                                       order.user.id = snapshot.user.uid;
+                                                      order.user.email = snapshot.user.email;
                                                       // order.addItem(service, snapshot.business.ownerId, context);
                                                       if (!order.addingFromAnotherBusiness(service.businessId)) {
                                                         order.addItem(service, snapshot.business.ownerId, context);
@@ -536,10 +537,10 @@ class _FilterGeneralState extends State<FilterGeneral> {
                                                   }
                                                 }else{
                                                   if (direction == DismissDirection.startToEnd) {
-                                                    debugPrint('UI_U_SearchPage => DX to DELETE');
+                                                    debugPrint('UI_U_filter_general => DX to DELETE');
 
                                                   } else {
-                                                    debugPrint('UI_U_SearchPage => SX to BOOK');
+                                                    debugPrint('UI_U_filter_general => SX to BOOK');
                                                     undoDeletion(index, service);
                                                   }
                                                 }
@@ -547,7 +548,7 @@ class _FilterGeneralState extends State<FilterGeneral> {
                                               },
                                               child: Column(
                                                 children: [
-                                                  BookingListServiceListItem(service, false),
+                                                  ServiceListItem(service, false, index),
                                                   Container(
                                                     margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 30),
                                                     height: SizeConfig.safeBlockVertical * .2,
@@ -612,7 +613,7 @@ class _FilterGeneralState extends State<FilterGeneral> {
                                         tmpServiceList.removeAt(index);
                                       });
                                       if(direction == DismissDirection.startToEnd){
-                                        debugPrint('UI_U_SearchPage => DX to DELETE');
+                                        debugPrint('UI_U_filter_general => DX to DELETE');
                                         // Show a snackbar. This snackbar could also contain "Undo" actions.
                                         Scaffold.of(context).showSnackBar(SnackBar(
                                             content: Text("${service.name} removed"),
@@ -623,11 +624,12 @@ class _FilterGeneralState extends State<FilterGeneral> {
                                                   undoDeletion(index, service);
                                                 })));
                                       }else{
-                                        debugPrint('UI_U_SearchPage => SX to BOOK');
+                                        debugPrint('UI_U_filter_general => SX to BOOK');
                                         order.business.name = snapshot.business.name;
                                         order.business.id = snapshot.business.id_firestore;
                                         order.user.name = snapshot.user.name;
                                         order.user.id = snapshot.user.uid;
+                                        order.user.email = snapshot.user.email;
                                         order.addItem(service, snapshot.business.ownerId);
                                         setState(() {
                                           cartCounter++;
@@ -678,7 +680,7 @@ class _FilterGeneralState extends State<FilterGeneral> {
                                   : _searchController.text.isNotEmpty
                                       ? Container(
                                           height: SizeConfig.safeBlockVertical * 8,
-                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                                           decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
                                           child: Center(
                                               child: Container(
@@ -693,7 +695,7 @@ class _FilterGeneralState extends State<FilterGeneral> {
                                       : tmpServiceList.isEmpty
                                           ? Container(
                                               height: SizeConfig.safeBlockVertical * 8,
-                                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                                               decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
                                               child: Center(
                                                   child: Container(

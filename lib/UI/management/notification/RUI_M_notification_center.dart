@@ -19,9 +19,9 @@ import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/service_reducer.dart';
-import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
-import 'package:Buytime/reusable/buytime_icons.dart';
-import 'package:Buytime/reusable/menu/UI_M_business_list_drawer.dart';
+import 'package:Buytime/reusable/appbar/w_buytime_appbar.dart';
+import 'package:Buytime/reusable/icon/buytime_icons.dart';
+import 'package:Buytime/reusable/menu/w_manager_drawer.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -77,7 +77,7 @@ class _RNotificationCenterState extends State<RNotificationCenter> {
     order = StoreProvider.of<AppState>(context).state.order;
     if(userId != null && userId.isNotEmpty) {
       if (notifications.isEmpty) {
-        debugPrint('RUI_U_notifications => ASKING FOR NOTIFICATIONS');
+        debugPrint('RUI_M_notification_center => ASKING FOR NOTIFICATIONS');
         /// first list
         _orderNotificationStream = FirebaseFirestore.instance.collection('notification')
             .where("userId", isEqualTo: userId)
@@ -104,49 +104,34 @@ class _RNotificationCenterState extends State<RNotificationCenter> {
             onWillPop: () async => false,
             child: Scaffold(
               key: _drawerKey,
-              appBar: BuytimeAppbar(
-                background: BuytimeTheme.ManagerPrimary,
-                width: media.width,
-                children: [
-                  ///Back Button
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
-                        child: IconButton(
-                          key: Key('business_drawer_key'),
-                          icon: const Icon(
-                            Icons.menu,
-                            color: Colors.white,
-                            size: 30.0,
-                          ),
-                          tooltip: AppLocalizations.of(context).openMenu,
-                          onPressed: () {
-                            _drawerKey.currentState.openDrawer();
-                          },
-                        ),
-                      ),
-                    ],
+              appBar: AppBar(
+                backgroundColor: Colors.white,
+                brightness: Brightness.dark,
+                elevation: 1,
+                title: Text(
+                  AppLocalizations.of(context).notificationCenter,
+                  style: TextStyle(
+                      fontFamily: BuytimeTheme.FontFamily,
+                      color: BuytimeTheme.TextBlack,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 16 ///SizeConfig.safeBlockHorizontal * 7
                   ),
-                  ///Title
-                  Container(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 10.0),
-                      child: Text(
-                        AppLocalizations.of(context).notificationCenter,
-                        textAlign: TextAlign.start,
-                        style: BuytimeTheme.appbarTitle,
-                      ),
-                    ),
+                ),
+                centerTitle: true,
+                leading: IconButton(
+                  key: Key('business_drawer_key'),
+                  icon: const Icon(
+                    Icons.menu,
+                    color: Colors.black,
+                    //size: 30.0,
                   ),
-                  SizedBox(
-                    width: 50.0,
-                  )
-
-                ],
+                  tooltip: AppLocalizations.of(context).openMenu,
+                  onPressed: () {
+                    _drawerKey.currentState.openDrawer();
+                  },
+                ),
               ),
-              drawer: UI_M_BusinessListDrawer(),
+              drawer: ManagerDrawer(),
               body: SafeArea(
                 child: SingleChildScrollView(
                   child: ConstrainedBox(
@@ -161,7 +146,7 @@ class _RNotificationCenterState extends State<RNotificationCenter> {
                             if (notificationSnapshot.hasError) {
                               return  Container(
                                 height: SizeConfig.safeBlockVertical * 8,
-                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                                 decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
                                 child: Center(
                                     child: Container(
@@ -182,10 +167,10 @@ class _RNotificationCenterState extends State<RNotificationCenter> {
 
                             for (int j = 0; j < notificationSnapshot.data.docs.length; j++) {
                               String idNotification = notificationSnapshot.data.docs[j].id;
-                              debugPrint('RUI_U_notifications => NOTIFICATION ID: $idNotification');
+                              debugPrint('RUI_M_notification_center => NOTIFICATION ID: $idNotification');
                               NotificationState notificationState = NotificationState.fromJson(notificationSnapshot.data.docs[j].data());
                               notificationState.notificationId = idNotification;
-                              debugPrint('RUI_U_notifications => SERVICE NAME: ${notificationState.serviceName}');
+                              debugPrint('RUI_M_notification_center => SERVICE NAME: ${notificationState.serviceName}');
                               notifications.add(notificationState);
                             }
 
@@ -198,7 +183,7 @@ class _RNotificationCenterState extends State<RNotificationCenter> {
 
           if(notifications.isNotEmpty){
             notifications.forEach((element) {
-              debugPrint('UI_U_notifications => ${element.timestamp}');
+              debugPrint('RUI_M_notification_center => ${element.timestamp}');
             });
             //notifications.sort((b,a) => a.timestamp != null ? a.timestamp : 0 .compareTo(b.timestamp != null ? b.timestamp : 0));
             notifications.sort((b,a) => a.timestamp.compareTo(b.timestamp));
@@ -216,7 +201,7 @@ class _RNotificationCenterState extends State<RNotificationCenter> {
                                 notifications.isNotEmpty ?
                                 Flexible(
                                   child: Container(
-                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
+                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0),
                                     padding: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 2),
                                     color: BuytimeTheme.BackgroundWhite,
                                     child: Column(
@@ -231,7 +216,7 @@ class _RNotificationCenterState extends State<RNotificationCenter> {
                                                 if (_scrollController.position.pixels >
                                                     triggerFetchMoreSize) {
                                                   /// qui triggera evento di fine scroll
-                                                  debugPrint('UI_U_notifications => fine scroll 90%');
+                                                  debugPrint('RUI_M_notification_center => fine scroll 90%');
                                                 }
                                               }),
                                             shrinkWrap: true,
@@ -251,13 +236,13 @@ class _RNotificationCenterState extends State<RNotificationCenter> {
                                                     });
                                                     // widget.orderStateList.forEach((element) {
                                                     //   if(notification.data.state != null && element.orderId == notification.data.state.orderId){
-                                                    //     debugPrint('UI_U_notification => ${element.orderId}');
+                                                    //     debugPrint('RUI_M_notification_center => ${element.orderId}');
                                                     //     orderState = element;
                                                     //   }
                                                     // });
                                                     // snapshot.serviceList.serviceListState.forEach((element) {
                                                     //   if(notification.data.state != null && element.serviceId == notification.data.state.serviceId){
-                                                    //     //debugPrint('UI_U_notification => ${element.orderId}');
+                                                    //     //debugPrint('RUI_M_notification_center => ${element.orderId}');
                                                     //     serviceState = element;
                                                     //   }
                                                     // });
@@ -266,7 +251,7 @@ class _RNotificationCenterState extends State<RNotificationCenter> {
                                                     // }
                                                     return Container();
 
-                                                    //debugPrint('booking_month_list: bookings booking status: ${booking.user.first.surname} ${booking.status}');
+                                                    //debugPrint('RUI_M_notification_center => booking_month_list: bookings booking status: ${booking.user.first.surname} ${booking.status}');
                                                   },
                                                   childCount: notifications.length,
                                                 ),
@@ -278,7 +263,7 @@ class _RNotificationCenterState extends State<RNotificationCenter> {
                                 ) :
                                 Container(
                                   height: SizeConfig.safeBlockVertical * 8,
-                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                                   decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
                                   child: Center(
                                       child: Container(

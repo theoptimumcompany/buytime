@@ -26,11 +26,11 @@ class SlotListSnippetRequestService implements EpicClass<AppState> {
 
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-    debugPrint("SLOT_SERVICE_EPIC - SlotListSnippetRequestService => ServiceListService CATCHED ACTION");
+    debugPrint("slot_service_epic => SlotListSnippetRequestService => ServiceListService CATCHED ACTION");
     //List<ServiceState> serviceStateList = [];
     return actions.whereType<SlotListSnippetRequest>().asyncMap((event) async {
-      //debugPrint("SERVICE_SERVICE_EPIC - SlotListSnippetRequestService => ServiceListService Firestore request");
-      debugPrint("SLOT_SERVICE_EPIC - SlotListSnippetRequestService => Service Id: ${event.serviceId}");
+      //debugPrint("slot_service_epic => SlotListSnippetRequestService => ServiceListService Firestore request");
+      debugPrint("slot_service_epic => SlotListSnippetRequestService => Service Id: ${event.serviceId}");
       int docs = 0;
       int read = 0;
       var slotFirebaseShadow = await FirebaseFirestore.instance.collection("service")
@@ -39,19 +39,19 @@ class SlotListSnippetRequestService implements EpicClass<AppState> {
 
       read++;
       docs++;
-      //debugPrint("SERVICE_SERVICE_EPIC - ServiceListSnippetRequest => MAP " + servicesFirebaseShadow.docs.first.data().toString());
+      //debugPrint("slot_service_epic => ServiceListSnippetRequest => MAP " + servicesFirebaseShadow.docs.first.data().toString());
       slotSnippetListState = SlotListSnippetState.fromJson(slotFirebaseShadow.docs.first.data());
 
-      debugPrint("SLOT_SERVICE_EPIC - SlotListSnippetRequestService => Epic ServiceListService return list with " + slotFirebaseShadow.docs.length.toString());
+      debugPrint("slot_service_epic => SlotListSnippetRequestService => Epic ServiceListService return list with " + slotFirebaseShadow.docs.length.toString());
 
       /*statisticsState = store.state.statistics;
       int reads = statisticsState.serviceListRequestServiceRead;
       int writes = statisticsState.serviceListRequestServiceWrite;
       int documents = statisticsState.serviceListRequestServiceDocuments;
-      debugPrint('SERVICE_SERVICE_EPIC - SlotListSnippetRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('slot_service_epic => SlotListSnippetRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       reads = reads + read;
       documents = documents + docs;
-      debugPrint('SERVICE_SERVICE_EPIC - SlotListSnippetRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('slot_service_epic => SlotListSnippetRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       statisticsState.serviceListRequestServiceRead = reads;
       statisticsState.serviceListRequestServiceWrite = writes;
       statisticsState.serviceListRequestServiceDocuments = documents;*/

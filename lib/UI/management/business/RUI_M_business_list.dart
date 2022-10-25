@@ -18,23 +18,28 @@ import 'package:Buytime/UI/management/business/UI_M_business.dart';
 import 'package:Buytime/UI/management/category/UI_M_manage_category.dart';
 import 'package:Buytime/reblox/model/business/business_list_state.dart';
 import 'package:Buytime/reblox/model/business/snippet/business_snippet_state.dart';
+import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/model/role/role.dart';
 import 'package:Buytime/reblox/model/service/snippet/service_snippet_state.dart';
 import 'package:Buytime/reblox/model/snippet/service_list_snippet_state.dart';
 import 'package:Buytime/reblox/reducer/booking_list_reducer.dart';
+import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reblox/reducer/service_list_snippet_list_reducer.dart';
-import 'package:Buytime/reusable/enterExitRoute.dart';
+import 'package:Buytime/reusable/animation/enterExitRoute.dart';
+import 'package:Buytime/helper/dynamic_links/dynamic_links_helper.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:Buytime/reblox/reducer/business_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/business_reducer.dart';
-import 'package:Buytime/reusable/business/optimum_business_card_medium_manager.dart';
-import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
-import 'package:Buytime/reusable/menu/UI_M_business_list_drawer.dart';
+import 'package:Buytime/UI/management/business/widget/w_optimum_business_card_medium_manager.dart';
+import 'package:Buytime/reusable/appbar/w_buytime_appbar.dart';
+import 'package:Buytime/reusable/menu/w_manager_drawer.dart';
 import 'package:Buytime/utils/utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -63,12 +68,18 @@ class RBusinessListState extends State<RBusinessList> {
   emptyCategoryInvite() async{
     await storage.write(key: 'categoryInvite', value: '');
   }
+  String orderId = '';
+  String userId = '';
+
 
   @override
   void initState() {
     super.initState();
     emptyCategoryInvite();
+    //initDynamicLinks();
+
   }
+
 
   List<int> networkServicesList = [];
 
@@ -77,6 +88,7 @@ class RBusinessListState extends State<RBusinessList> {
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context).size;
     var mediaHeight = media.height;
+    SizeConfig().init(context);
     Stream<QuerySnapshot> _businessStream;
     int limit = 150;
     Role userRole = StoreProvider.of<AppState>(context).state.user.getRole();
@@ -109,32 +121,33 @@ class RBusinessListState extends State<RBusinessList> {
       onWillPop: () async => false,
       child: Scaffold(
           key: _drawerKeyTabs,
-          appBar: BuytimeAppbar(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  ///Drawer
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
-                    child: IconButton(
-                      key: Key('business_drawer_key'),
-                      icon: const Icon(
-                        Icons.menu,
-                        color: BuytimeTheme.TextWhite,
-                        size: 30.0,
-                      ),
-                      tooltip: AppLocalizations.of(context).showMenu,
-                      onPressed: () {
-                        _drawerKeyTabs.currentState.openDrawer();
-                      },
-                    ),
-                  ),
-                ],
+          appBar: AppBar(
+            backgroundColor: Colors.white,
+            brightness: Brightness.dark,
+            elevation: 1,
+            title: Text(
+              AppLocalizations.of(context).businessManagement,
+              style: TextStyle(
+                  fontFamily: BuytimeTheme.FontFamily,
+                  color: BuytimeTheme.TextBlack,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16 ///SizeConfig.safeBlockHorizontal * 7
               ),
-              ///Title
-              Utils.barTitle(AppLocalizations.of(context).businessManagement),
-              ///Add Icon
+            ),
+            centerTitle: true,
+            leading: IconButton(
+              key: Key('business_drawer_key'),
+              icon: const Icon(
+                Icons.menu,
+                color: BuytimeTheme.TextBlack,
+                //size: 30.0,
+              ),
+              tooltip: AppLocalizations.of(context).showMenu,
+              onPressed: () {
+                _drawerKeyTabs.currentState.openDrawer();
+              },
+            ),
+            actions: [
               StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin ||
                   StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman ||
                   StoreProvider.of<AppState>(context).state.user.getRole() == Role.owner ? Padding(
@@ -142,8 +155,8 @@ class RBusinessListState extends State<RBusinessList> {
                 child: IconButton(
                   icon: const Icon(
                     Icons.add,
-                    color: BuytimeTheme.TextWhite,
-                    size: 30.0,
+                    color: BuytimeTheme.TextBlack,
+                    //size: 30.0,
                   ),
                   tooltip: AppLocalizations.of(context).createBusinessPlain,
                   onPressed: () {
@@ -151,12 +164,10 @@ class RBusinessListState extends State<RBusinessList> {
                     Navigator.push(context, EnterExitRoute(enterPage: UI_M_CreateBusiness(), exitPage: RBusinessList(), from: true));
                   },
                 ),
-              ) :  SizedBox(
-                width: 56.0,
-              ),
+              ) :  Container()
             ],
           ),
-          drawer: UI_M_BusinessListDrawer(),
+          drawer: ManagerDrawer(),
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -177,7 +188,7 @@ class RBusinessListState extends State<RBusinessList> {
                     if (businessSnippet.hasError || (businessSnippet.data != null && businessSnippet.data.docs.isEmpty)) {
                       return Container(
                         height: SizeConfig.safeBlockVertical * 8,
-                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                         decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
                         child: Center(
                             child: Container(
@@ -196,6 +207,7 @@ class RBusinessListState extends State<RBusinessList> {
                       businessListState.add(businesState);
                     });
                     businessListState.sort((a,b) => a.name.compareTo(b.name));
+                    //StoreProvider.of<AppState>(context).state.businessList.businessListState.clear();
                     StoreProvider.of<AppState>(context).dispatch(BusinessListReturned(businessListState));
 
 
@@ -208,7 +220,7 @@ class RBusinessListState extends State<RBusinessList> {
 
                     return Expanded(
                       child: Padding(
-                          padding: const EdgeInsets.only(top: 10.0),
+                          padding: const EdgeInsets.only(top: 0.0),
                           child: ListView.builder(
                               scrollDirection: Axis.vertical,
                               shrinkWrap: true,

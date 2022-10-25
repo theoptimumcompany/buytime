@@ -12,18 +12,14 @@ limitations under the License.
 
 import 'dart:async';
 
-import 'package:Buytime/UI/user/booking/UI_U_booking_page.dart';
-import 'package:Buytime/UI/user/landing/UI_U_landing.dart';
 import 'package:Buytime/UI/user/landing/invite_guest_form.dart';
+import 'package:Buytime/UI/user/turist/RUI_U_service_explorer.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reblox/reducer/booking_reducer.dart';
-import 'package:Buytime/reblox/reducer/business_reducer.dart';
-import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
-import 'package:Buytime/reusable/custom_bottom_button_widget.dart';
-import 'package:Buytime/reusable/booking_card_widget.dart';
-import 'package:Buytime/services/business_service_epic.dart';
-import 'package:Buytime/utils/b_cube_grid_spinner.dart';
+import 'package:Buytime/reusable/appbar/w_buytime_appbar.dart';
+import 'package:Buytime/reusable/w_custom_bottom_button.dart';
+import 'package:Buytime/UI/user/booking/widget/w_booking_card.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
@@ -34,7 +30,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class RMyBookings extends StatefulWidget {
@@ -72,7 +67,7 @@ class _RMyBookingsState extends State<RMyBookings> {
     super.dispose();
   }
 
-  List<BookingState> bookings;
+  List<BookingState> bookings = [];
 
   @override
   Widget build(BuildContext context) {
@@ -83,6 +78,7 @@ class _RMyBookingsState extends State<RMyBookings> {
     return StreamBuilder<QuerySnapshot>(
         stream: _bookingStream,
         builder: (context, AsyncSnapshot<QuerySnapshot> bookingSnapshot) {
+          bookings.clear();
           if(bookingSnapshot.hasError || bookingSnapshot.connectionState == ConnectionState.waiting){
             return Container(
                 margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3),
@@ -114,7 +110,7 @@ class _RMyBookingsState extends State<RMyBookings> {
             bookings.add(bookingState);
           });
 
-          debugPrint('RUI_U_MyBookings => bookings length: ${bookings.length}');
+          debugPrint('RUI_U_my_ookings => bookings length: ${bookings.length}');
           List<BookingState> tmpOpened = [];
           List<BookingState> tmpClosed = [];
 
@@ -125,7 +121,7 @@ class _RMyBookingsState extends State<RMyBookings> {
             DateTime endTime = element.end_date;
             endTime = new DateTime(endTime.year, endTime.month, endTime.day, 0, 0, 0, 0, 0);
             if(endTime.isBefore(currentTime) && element.status != 'closed'){
-              debugPrint('RUI_U_MyBookings => ${element.end_date}');
+              debugPrint('RUI_U_my_bookings => ${element.end_date}');
               element.status = Utils.enumToString(BookingStatus.closed);
               StoreProvider.of<AppState>(context).dispatch(UpdateBooking(element));
             }
@@ -136,6 +132,8 @@ class _RMyBookingsState extends State<RMyBookings> {
               tmpClosed.add(element);
             }
           });
+
+          debugPrint('RUI_U_my_bookings => OPENED BOOKINGS: ${tmpOpened.length}');
 
           tmpOpened.sort((a,b) => a.start_date.isBefore(b.start_date) ? -1 : a.start_date.isAtSameMomentAs(b.start_date) ? 0 : 1);
           tmpClosed.sort((a,b) => a.start_date.isBefore(b.start_date) ? -1 : a.start_date.isAtSameMomentAs(b.start_date) ? 0 : 1);
@@ -164,7 +162,7 @@ class _RMyBookingsState extends State<RMyBookings> {
                               //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_Business()),);
                               //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Landing()));
                               if(widget.fromLanding == null)
-                                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Landing()));
+                                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => RServiceExplorer()));
                               else
                                 Navigator.of(context).pop();
                             },
@@ -263,6 +261,7 @@ class _RMyBookingsState extends State<RMyBookings> {
                                           removeTop: true,
                                           context: context,
                                           child: CustomScrollView(
+                                            physics: new ClampingScrollPhysics(),
                                             shrinkWrap: true,
                                             slivers: [
                                               SliverList(
@@ -272,6 +271,7 @@ class _RMyBookingsState extends State<RMyBookings> {
                                                     return Container(
                                                       margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 8, right: SizeConfig.safeBlockHorizontal * 8, bottom: SizeConfig.safeBlockVertical * 3),
                                                       child: BookingCardWidget(
+                                                          number: index,
                                                           bookingState: booking,
                                                           call: (value){
                                                             setState(() {
@@ -332,8 +332,8 @@ class _RMyBookingsState extends State<RMyBookings> {
                                     color: Colors.transparent,
                                     child: InkWell(
                                       onTap: () async{
-                                        String url = BuytimeConfig.FlaviosNumber.trim();
-                                        debugPrint('Restaurant phonenumber: ' + url);
+                                        String url = BuytimeConfig.ArunasNumber.trim();
+                                        debugPrint('RUI_U_my_ookings => Restaurant phonenumber: ' + url);
                                         if (await canLaunch('tel:$url')) {
                                           await launch('tel:$url');
                                         } else {

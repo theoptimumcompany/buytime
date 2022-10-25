@@ -41,9 +41,9 @@ enum ExpanderModifier {
   squareOutlined,
 }
 
-/// Defines the appearance of the expander icons.
+/// Defines the appearance of the expander icon.
 ///
-/// Used by [TreeViewTheme] to control the appearance of the expander icons for a
+/// Used by [TreeViewTheme] to control the appearance of the expander icon for a
 /// parent tree node in the [TreeView] widget.
 class ExpanderThemeData {
   /// The [ExpanderPosition] for expander icon.

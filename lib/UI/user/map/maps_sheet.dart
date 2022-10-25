@@ -43,7 +43,9 @@ class MapsSheet {
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 Flexible(
-                  child: CustomScrollView(shrinkWrap: true, slivers: [
+                  child: CustomScrollView(
+                      physics: new ClampingScrollPhysics(),
+                      shrinkWrap: true, slivers: [
                     SliverList(
                       delegate: SliverChildBuilderDelegate(
                             (context, index) {
@@ -60,7 +62,7 @@ class MapsSheet {
                           );
                           // return InkWell(
                           //   onTap: () {
-                          //     debugPrint('Category Item: ${categoryItem.name.toUpperCase()} Clicked!');
+                          //     debugPrint('maps_sheet => Category Item: ${categoryItem.name.toUpperCase()} Clicked!');
                           //   },
                           //   //child: MenuItemListItemWidget(menuItem),
                           //   child: CategoryListItemWidget(categoryItem),

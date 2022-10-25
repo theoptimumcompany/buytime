@@ -11,12 +11,9 @@ limitations under the License.
 ==============================================================================*/
 
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
-import 'package:Buytime/UI/management/activity/UI_M_activity_management.dart';
-import 'package:Buytime/UI/user/landing/UI_U_landing.dart';
-import 'package:Buytime/UI/user/turist/UI_U_service_explorer.dart';
+import 'package:Buytime/environment_abstract.dart';
 import 'package:Buytime/reblox/model/autoComplete/auto_complete_state.dart';
 import 'package:Buytime/reblox/model/card/card_state.dart';
 import 'package:Buytime/reblox/model/role/role.dart';
@@ -30,13 +27,15 @@ import 'package:Buytime/reblox/reducer/order_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/promotion/promotion_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/card_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/stripe_list_payment_reducer.dart';
+import 'package:Buytime/helper/dynamic_links/dynamic_links_helper.dart';
+import 'package:Buytime/helper/messaging/messaging_helper.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/user/user_state.dart';
 import 'package:Buytime/reblox/reducer/user_reducer.dart';
 import 'package:Buytime/UI/user/login/UI_U_home.dart';
-import 'package:another_flushbar/flushbar.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:device_info/device_info.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -45,309 +44,114 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:http/http.dart' as http;
+import 'package:rxdart/rxdart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-// import 'package:stripe_payment/stripe_payment.dart';
 import 'package:package_info/package_info.dart';
+import 'UI/management/business/RUI_M_business_list.dart';
 import 'UI/user/booking/RUI_U_notifications.dart';
 import 'UI/user/turist/RUI_U_service_explorer.dart';
+import 'main.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
   _SplashScreenState createState() => _SplashScreenState();
 }
 
+class ReceivedNotification {
+  ReceivedNotification({
+    this.id,
+    this.title,
+    this.body,
+    this.payload,
+  });
+
+  final int id;
+  final String title;
+  final String body;
+  final String payload;
+}
+
+final BehaviorSubject<ReceivedNotification> didReceiveLocalNotificationSubject =
+BehaviorSubject<ReceivedNotification>();
+
+final BehaviorSubject<String> selectNotificationSubject =
+BehaviorSubject<String>();
+
 class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver {
-  // @override
-  // void didChangeAppLifecycleState(AppLifecycleState state) {
-  //   print('state = $state');
-  //   if (state == AppLifecycleState.paused) {
-  //     StatisticsState().log('PAUSED', StoreProvider.of<AppState>(context).state.statistics);
-  //     StatisticsState().writeToStorage(StoreProvider.of<AppState>(context).state.statistics);
-  //   }
-  // }
   StatisticsState statisticsState;
 
   readFromStorage() async {
     final prefs = await SharedPreferences.getInstance();
-    //prefs.setBool('first_run', true);
     if (prefs.getBool('first_run') ?? true) {
       FlutterSecureStorage storage = FlutterSecureStorage();
-
       await storage.deleteAll();
       await FirebaseAuth.instance.signOut();
       await GoogleSignIn().signOut();
-
       prefs.setBool('first_run', false);
     }
-    // statisticsState = await StatisticsState().readFromStorage();
-    // StatisticsState().log('INITIALIZE', statisticsState);
-    // StoreProvider.of<AppState>(context).dispatch(UpdateStatistics(statisticsState));
-
     List<CardState> cards = await CardState().readFromStorage();
     StoreProvider.of<AppState>(context).dispatch(AddCardToList(cards));
-
     List<AutoCompleteState> completes = await AutoCompleteState().readFromStorage();
     debugPrint('splash_screen => AUTO COMPLETE LENGTH: ${completes.length}');
-
     StoreProvider.of<AppState>(context).dispatch(AddAutoCompleteToList(completes));
   }
+
   String version = '';
   getAppInfo()async{
+    await Firebase.initializeApp();
+    RemoteMessage initialMessage = await FirebaseMessaging.instance.getInitialMessage();
+    //debugPrint('splash_screen => Initial MEssage: ${initialMessage.data}');
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
-
-    String appName = packageInfo.appName;
-    String packageName = packageInfo.packageName;
     version = packageInfo.version;
-    String buildNumber = packageInfo.buildNumber;
     debugPrint('splash_screen => VERSION: $version');
-
-    NotificationSettings settings = await FirebaseMessaging.instance.requestPermission(
-      alert: true,
-      announcement: false,
-      badge: true,
-      carPlay: false,
-      criticalAlert: false,
-      provisional: false,
-      sound: true,
-    );
-
-    print('User granted permission: ${settings.authorizationStatus}');
   }
+  MessagingHelper messagingHelper = MessagingHelper();
+  DynamicLinkHelper dynamicLinkHelper = DynamicLinkHelper();
 
-
-
+  //String serverToken = 'AAAA6xUtyfE:APA91bGHhEzVUY9fnj4FbTXJX57qcgF-8GBrfBbGIa8kEpEIdsXRgQxbtsvbhL-w-_MQYKIj0XVlSaDSf2s6O3D3SM3o-z_AZnHQwBNLiw1ygyZOuVAKa5YmXeu6Da9eBqRD9uwFHSPi';
+  String serverToken = '';
+  String token;
   @override
   void initState() {
     WidgetsBinding.instance.addObserver(this);
     super.initState();
-
-    Firebase.initializeApp().then((value) {
-
-      getAppInfo();
-
-      final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
-      if (!kIsWeb) {
-        //TODO: TEST Funzionamento notifiche dopo upgrade pacchetto firebase_messaging
-        firebaseMessaging.requestPermission();
-        StoreProvider.of<AppState>(context)..dispatch(AreaListRequest());
-
-        FirebaseMessaging.onMessage.first.then((message) => () {
-          debugPrint('ON MESSAGE FIRST');
-              print("onMessage: $message");
-              var data = message.data['data'] ?? message;
-              RemoteNotification notification = message.notification;
-              String orderId = data['orderId'];
-              //StoreProvider.of<AppState>(context).dispatch(new OrderRequest(orderId)); //TODO statistics
-              //StoreProvider.of<AppState>(context).state.notificationListState.notificationListState.clear();
-              StoreProvider.of<AppState>(context)..dispatch(UserOrderListRequest());
-              StoreProvider.of<AppState>(context).dispatch(RequestNotificationList(StoreProvider.of<AppState>(context).state.user.uid, StoreProvider.of<AppState>(context).state.business.id_firestore));
-              notifyFlushbar('OMF: ' + notification.title);
-              /*Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => UI_U_OrderDetail()),
-              );*/
-            });
-        FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-
-        /// Triggers to manage the messages when the app is in foreground (otherwise the notification is not displayed in android)
-        FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-          debugPrint('ON MESSAGE');
-          RemoteNotification notification = message.notification;
-          if(Platform.isAndroid)
-          {
-            AndroidNotification android = message.notification?.android;          // If `onMessage` is triggered with a notification, construct our own
-            // local notification to show to users using the created channel.
-            if (notification != null && android != null) {
-              //String messages = AppLocalizations.of(context).sendEmail;
-              //StoreProvider.of<AppState>(context).state.notificationListState.notificationListState.clear();
-              StoreProvider.of<AppState>(context)..dispatch(UserOrderListRequest());
-              StoreProvider.of<AppState>(context).dispatch(RequestNotificationList(StoreProvider.of<AppState>(context).state.user.uid, StoreProvider.of<AppState>(context).state.business.id_firestore));
-              notifyFlushbar('OM: ' + notification.title);
-              /*Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => ActivityManagement()), /// TODO: @nipuna, redirect the user to the right UI (notification list?)
-            );*/
-            }
-
-          }
-          else if(Platform.isIOS)
-          {
-            AppleNotification apple = message.notification?.apple;
-            if (notification != null && apple != null) {
-              //String messages = AppLocalizations.of(context).sendEmail;
-              //StoreProvider.of<AppState>(context).state.notificationListState.notificationListState.clear();
-              StoreProvider.of<AppState>(context)..dispatch(UserOrderListRequest());
-              StoreProvider.of<AppState>(context).dispatch(RequestNotificationList(StoreProvider.of<AppState>(context).state.user.uid, StoreProvider.of<AppState>(context).state.business.id_firestore));
-              notifyFlushbar('OM : ' + notification.title);
-              /*Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => ActivityManagement()), /// TODO: @nipuna, redirect the user to the right UI (notification list?)
-            );*/
-            }
-          }
-        });
-        FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-          debugPrint('ON MESSAGE OPENED APP');
-          var data = message.data['data'] ?? message;
-          RemoteNotification notification = message.notification;
-          String orderId = data['orderId'];
-          //StoreProvider.of<AppState>(context).dispatch(new OrderRequest(orderId)); //TODO statistics
-         // StoreProvider.of<AppState>(context).state.notificationListState.notificationListState.clear();
-          StoreProvider.of<AppState>(context)..dispatch(UserOrderListRequest());
-          StoreProvider.of<AppState>(context).dispatch(RequestNotificationList(StoreProvider.of<AppState>(context).state.user.uid, StoreProvider.of<AppState>(context).state.business.id_firestore));
-          notifyFlushbar('OMOA: ' + notification.title);
-          /*Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => UI_U_OrderDetail()),
-          );*/
-        });
-
-        firebaseMessaging.requestPermission(sound: true, badge: true, alert: true, provisional: true);
-
-        firebaseMessaging.getToken().then((String token) {
-          assert(token != null);
-          print("Token " + token);
-          serverToken = token;
-        });
-      }
-
-      firebaseMessaging.onTokenRefresh.listen((newToken) {
-        // Save newToken
-        serverToken = newToken;
-      });
+    getAppInfo();
+    final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
+    messagingHelper.init(context);
+    messagingHelper.messagingManagement(firebaseMessaging, context);
+    dynamicLinkHelper.initDynamicLinks(context);
+    getToken();
+    //getTopics();
       readFromStorage();
       Timer(Duration(seconds: 1), () => check_logged());
-    }).catchError((onError) {
-      print("error on firebase application start: " + onError.toString());
-    });
+
     checkIfNativePayReady();
     initPlatformState();
   }
 
-
-  Flushbar notifyFlushbar(String message) {
-    return Flushbar(
-      flushbarPosition: FlushbarPosition.TOP,
-      padding: EdgeInsets.all(SizeConfig.safeBlockVertical * 2),
-      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5, left: SizeConfig.blockSizeHorizontal * 20, right: SizeConfig.blockSizeHorizontal * 20),
-
-      ///2% - 20% - 20%
-      borderRadius: BorderRadius.all(Radius.circular(8)),
-      backgroundColor: BuytimeTheme.SymbolLightGrey,
-      //onTap: tapFlushbar(),
-      onTap: (ciao) {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => RNotifications(orderStateList: StoreProvider.of<AppState>(context).state.orderList.orderListState, tourist: false,)));
-      },
-      /*mainButton: Container(
-              margin: EdgeInsets.only(left: 5, right: 5),
-              child: MaterialButton(
-                color: BuytimeTheme.Secondary,
-                onPressed: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => Notifications(orderStateList: StoreProvider.of<AppState>(context).state.orderList.orderListState)));
-                },
-                child: Text(
-                  'OPEN',
-                  style: TextStyle(
-                      color: BuytimeTheme.TextBlack
-                  ),
-                ),
-              ),
-            ),*/
-      boxShadows: [
-        BoxShadow(
-          color: Colors.black45,
-          offset: Offset(3, 3),
-          blurRadius: 3,
-        ),
-      ],
-      // All of the previous Flushbars could be dismissed by swiping down
-      // now we want to swipe to the sides
-      dismissDirection: FlushbarDismissDirection.HORIZONTAL,
-      // The default curve is Curves.easeOut
-    //  duration: Duration(seconds: 10),
-      forwardAnimationCurve: Curves.fastLinearToSlowEaseIn,
-      messageText: Text(
-        message,
-        style: TextStyle(color: BuytimeTheme.TextBlack, fontWeight: FontWeight.bold),
-        textAlign: TextAlign.center,
-      ),
-    )..show(context);
+  getToken() async {
+    token = await FirebaseMessaging.instance.getToken();
+    setState(() {
+      token = token;
+    });
+    debugPrint('splash_screen => DEVICE TOKEN: $token');
   }
 
   void checkIfNativePayReady() async {
-    // String stripeTestKey = "pk_test_51HS20eHr13hxRBpCZl1V0CKFQ7XzJbku7UipKLLIcuNGh3rp4QVsEDCThtV0l2AQ3jMtLsDN2zdC0fQ4JAK6yCOp003FIf3Wjz";
-    // String stripeKey = "pk_live_51HS20eHr13hxRBpCLHzfi0SXeqw8Efu911cWdYEE96BAV0zSOesvE83OiqqzRucKIxgCcKHUvTCJGY6cXRtkDVCm003CmGXYzy";
-    Stripe.publishableKey = "pk_live_51HS20eHr13hxRBpCLHzfi0SXeqw8Efu911cWdYEE96BAV0zSOesvE83OiqqzRucKIxgCcKHUvTCJGY6cXRtkDVCm003CmGXYzy";
-    // Stripe.merchantIdentifier = "merchant.theoptimumcompany.buytime";
-    // StripePayment.setOptions(
-    //     StripeOptions(
-    //       publishableKey: stripeKey,
-    //       merchantId: "merchant.theoptimumcompany.buytime",
-    //       androidPayMode: 'production'
-    //     ));
-    //
-    // debugPrint('splash_screen: started to check if native pay ready');
+    // Stripe.publishableKey = "pk_live_51HS20eHr13hxRBpCLHzfi0SXeqw8Efu911cWdYEE96BAV0zSOesvE83OiqqzRucKIxgCcKHUvTCJGY6cXRtkDVCm003CmGXYzy";
+    // Stripe.publishableKey = "pk_test_51HS20eHr13hxRBpCZl1V0CKFQ7XzJbku7UipKLLIcuNGh3rp4QVsEDCThtV0l2AQ3jMtLsDN2zdC0fQ4JAK6yCOp003FIf3Wjz";
+    Stripe.publishableKey = StripeConfig().keyToUse;
     Stripe.instance.isApplePaySupported.addListener(() {
     });
     bool isApplePaySupported = await Stripe.instance.checkApplePaySupport();
-    debugPrint('splash_screen: isApplePaySupported, ' + isApplePaySupported.toString() );
+    debugPrint('splash_screen => isApplePaySupported, ' + isApplePaySupported.toString() );
   }
-
-
-  String serverToken = 'AAAA6xUtyfE:APA91bGHhEzVUY9fnj4FbTXJX57qcgF-8GBrfBbGIa8kEpEIdsXRgQxbtsvbhL-w-_MQYKIj0XVlSaDSf2s6O3D3SM3o-z_AZnHQwBNLiw1ygyZOuVAKa5YmXeu6Da9eBqRD9uwFHSPi';
-
   static final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
-  Map<String, dynamic> _deviceData = <String, dynamic>{};
-
-  Future<Map<String, dynamic>> sendAndRetrieveMessage(FirebaseMessaging firebaseMessaging) async {
-    await firebaseMessaging.requestPermission(sound: true, badge: true, alert: true, provisional: false);
-
-    await http.post(
-      Uri.parse('https://fcm.googleapis.com/fcm/send'),
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': 'key=$serverToken',
-      },
-      body: jsonEncode(
-        <String, dynamic>{
-          'notification': <String, dynamic>{'body': 'this is a body', 'title': 'this is a title'},
-          'priority': 'high',
-          'data': <String, dynamic>{'click_action': 'FLUTTER_NOTIFICATION_CLICK', 'id': '1', 'status': 'done'},
-          'to': await firebaseMessaging.getToken(),
-        },
-      ),
-    );
-
-    final Completer<Map<String, dynamic>> completer = Completer<Map<String, dynamic>>();
-
-    // firebaseMessaging.configure(
-    //   onMessage: (Map<String, dynamic> message) async {
-    //     completer.complete(message);
-    //   },
-    // );
-
-    return completer.future;
-  }
-
-  static Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-    if (message.data.containsKey('data')) {
-      // Handle data message
-      final dynamic data = message.data['data'];
-      print("Data");
-    }
-
-    if (message.data.containsKey('notification')) {
-      // Handle notification message
-      final dynamic notification = message.data['notification'];
-    }
-
-    // Or do other work.
-  }
 
   Future<void> initPlatformState() async {
     Map<String, dynamic> deviceData;
@@ -365,9 +169,6 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
 
     if (!mounted) return;
 
-    setState(() {
-      _deviceData = deviceData;
-    });
   }
 
   Map<String, dynamic> _readAndroidBuildData(AndroidDeviceInfo build) {
@@ -420,12 +221,12 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
   }
 
   void check_logged() async {
+    StoreProvider.of<AppState>(context).dispatch(AreaListRequest());
+    StoreProvider.of<AppState>(context).dispatch(PromotionListRequest());
     if (auth.FirebaseAuth != null && auth.FirebaseAuth.instance != null && auth.FirebaseAuth.instance.currentUser != null) {
       auth.User user = auth.FirebaseAuth.instance.currentUser;
       if (user != null) {
-        // Sign out with google
-        // Loggato e lo mando alla View Principale
-        print("Ecco l'utente ----->>> " + user.email + ' id: ' + user.uid);
+        debugPrint("splash_screen => USER LOGGED IN IS: " + user.email + ' id: ' + user.uid);
         String deviceId = "web";
         if (!kIsWeb) {
           try {
@@ -437,45 +238,47 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
               deviceId = data.identifierForVendor; //UUID for iOS
             }
           } on PlatformException {
-            print('Failed to get platform version');
+            debugPrint('splash_screen => Failed to get platform version');
           }
         }
-
-        UserState tmpUser = UserState.fromFirebaseUser(user, deviceId, [serverToken]);
+        UserState tmpUser = UserState.fromFirebaseUser(user, deviceId, [MessagingHelper.serverToken]);
         StoreProvider.of<AppState>(context).dispatch(new LoggedUser(tmpUser));
         Device device = Device(name: "device", id: deviceId, user_uid: user.uid);
         StoreProvider.of<AppState>(context).dispatch(new UpdateUserDevice(device));
-        TokenB token = TokenB(name: "token", id: serverToken, user_uid: user.uid);
+        TokenB token = TokenB(name: "token", id: MessagingHelper.serverToken, user_uid: user.uid);
+        /// TODO update user language
+        /// Locale myLocale = Localizations.localeOf(context);
+        /// myLocale.languageCode
+        /// fill the db
+
+
         StoreProvider.of<AppState>(context).dispatch(new UpdateUserToken(token));
         StoreProvider.of<AppState>(context).dispatch(StripeCardListRequest(user.uid));
-        Future.delayed(Duration(seconds: 1), (){
-          print("Device ID : " + deviceId + 'USER ROLE: ${StoreProvider.of<AppState>(context).state.user.getRole()}');
-          //StoreProvider.of<AppState>(context).dispatch(new UserBookingRequest(user.email));
+        Future.delayed(Duration(milliseconds: 1500), (){
+          debugPrint("splash_screen => Device ID : " + deviceId + 'USER ROLE: ${StoreProvider.of<AppState>(context).state.user.getRole()}');
           if(StoreProvider.of<AppState>(context).state.user.getRole() != Role.user)
-            Navigator.push(context, MaterialPageRoute(builder: (context) => Landing()));
+            Navigator.push(context, MaterialPageRoute(builder: (context) => RBusinessList()));
           else
-            Navigator.push(context, MaterialPageRoute(builder: (context) => RServiceExplorer()));
+           Navigator.push(context, MaterialPageRoute(builder: (context) => RServiceExplorer()));
         });
-
       } else {
-        //Navigator.push(context, MaterialPageRoute(builder: (context) => Home()),);
-        //Navigator.of(context).pushNamed(Home.route);
-        Navigator.push(context, MaterialPageRoute(builder: (context) => RServiceExplorer()));
+        Navigator.of(context).pushNamed(Home.route);
       }
     } else {
-      //Navigator.push(context, MaterialPageRoute(builder: (context) => Home()),);
-      //Navigator.of(context).pushNamed(Home.route);
-      Navigator.push(context, MaterialPageRoute(builder: (context) => RServiceExplorer()));
+      Navigator.of(context).pushNamed(Home.route);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    // double spinnerX = 120;
-    // double spinnerY = 120;
-    double height = MediaQuery.of(context).size.height;
-    double width = MediaQuery.of(context).size.width;
-
+    dynamicLinkHelper.onSitePaymentFound(context);
+    dynamicLinkHelper.bookingCodeFound(context);
+    dynamicLinkHelper.selfCheckInFound(context);
+    dynamicLinkHelper.categoryInviteFound(context);
+    dynamicLinkHelper.onSitePaymentFound(context);
+    dynamicLinkHelper.serviceManagerDetailsFound(context);
+    dynamicLinkHelper.busienssDetailsFound(context);
+    dynamicLinkHelper.searchBusiness();
     return Scaffold(
       backgroundColor: Color(0xFF207CC3),
       body: Center(
@@ -508,79 +311,6 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
         ),
       ),
     );
-    /*Scaffold(
-      // body: OldSplashScreen(spinnerX: spinnerX, spinnerY: spinnerY, arrowAnimationController: _arrowAnimationController, arrowAnimation: _arrowAnimation),
-      body: ,
-    )*/
-    ;
   }
 }
 
-class OldSplashScreen extends StatelessWidget {
-  const OldSplashScreen({
-    Key key,
-    @required this.spinnerX,
-    @required this.spinnerY,
-    @required AnimationController arrowAnimationController,
-    @required Animation arrowAnimation,
-  })  : _arrowAnimationController = arrowAnimationController,
-        _arrowAnimation = arrowAnimation,
-        super(key: key);
-
-  final double spinnerX;
-  final double spinnerY;
-  final AnimationController _arrowAnimationController;
-  final Animation _arrowAnimation;
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      fit: StackFit.expand,
-      children: <Widget>[
-        Container(
-          decoration: BoxDecoration(color: BuytimeTheme.BackgroundWhite),
-        ),
-        Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            Container(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Image.asset('assets/img/img_buytime.png', width: 225),
-                  Padding(
-                    padding: EdgeInsets.only(top: 10.0),
-                  ),
-                  Text(
-                    "Buytime",
-                    style: TextStyle(color: BuytimeTheme.UserPrimary, fontWeight: FontWeight.bold, fontSize: 24.0),
-                  )
-                ],
-              ),
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                /*BuytimeSpinner(
-                    spinnerX: spinnerX,
-                    spinnerY: spinnerY,
-                    arrowAnimationController: _arrowAnimationController,
-                    arrowAnimation: _arrowAnimation),*/
-                Padding(
-                  padding: EdgeInsets.only(top: 30.0),
-                ),
-                Text(
-                  //Flutkart.store,
-                  "Some Time to Buy",
-                  softWrap: true,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0, color: BuytimeTheme.UserPrimary),
-                )
-              ],
-            )
-          ],
-        )
-      ],
-    );
-  }
-}

@@ -22,7 +22,7 @@ import 'package:Buytime/reblox/reducer/order_detail_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reblox/reducer/statistics_reducer.dart';
-import 'package:Buytime/services/statistic/util.dart';
+import 'package:Buytime/helper/statistic/util.dart';
 import 'package:Buytime/services/stripe_payment_service_epic.dart';
 import 'package:Buytime/utils/utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -31,7 +31,7 @@ import 'package:intl/intl.dart';
 import 'package:redux_epics/redux_epics.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:uuid/uuid.dart';
-import 'order/util.dart';
+import '../helper/order/util.dart';
 
 List<DateTime> getPeriod(DateTime dateTime, context) {
   //String weekdayDate = DateFormat('E d M y').format(dateTime);
@@ -58,7 +58,7 @@ List<DateTime> getPeriod(DateTime dateTime, context) {
     period = getStringPeriod(unix, 6, 0);
   }
 
-  debugPrint('ORDER_SERVICE_EPIC => Period: $period');
+  debugPrint('order_service_epic => Period: $period');
 
   return period;
 }
@@ -66,7 +66,7 @@ List<DateTime> getPeriod(DateTime dateTime, context) {
 List<DateTime> getStringPeriod(int unix, startValue, endValue) {
   int startUnix = unix - (86400000 * startValue);
   int endUnix = unix + (86400000 * endValue);
-  debugPrint('startUnix: $startUnix - endUnix: $endUnix');
+  debugPrint('order_service_epic => startUnix: $startUnix - endUnix: $endUnix');
   DateTime startStringUnix = DateTime.fromMillisecondsSinceEpoch(startUnix, isUtc: true);
   DateTime endStringUnix = DateTime.fromMillisecondsSinceEpoch(endUnix, isUtc: true);
   return [startStringUnix, endStringUnix];
@@ -78,33 +78,31 @@ class OrderListRequestService implements EpicClass<AppState> {
 
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-    debugPrint("ORDER_SERVICE_EPIC - OrderListRequestService =>  CATCHED ACTION");
+    debugPrint("order_service_epic => OrderListRequestService =>  CATCHED ACTION");
     return actions.whereType<OrderListRequest>().asyncMap((event) async {
-      debugPrint("ORDER_SERVICE_EPIC - OrderListRequestService =>  USER ID: ${store.state.user.uid}");
-      debugPrint("ORDER_SERVICE_EPIC - OrderListRequestService =>  BUSINESS ID: ${store.state.business.id_firestore}");
+      debugPrint("order_service_epic => OrderListRequestService =>  USER ID: ${store.state.user.uid}");
+      debugPrint("order_service_epic => OrderListRequestService =>  BUSINESS ID: ${store.state.business.id_firestore}");
       List<BusinessState> businessList = store.state.businessList.businessListState;
       DateTime currentTime = DateTime.now();
       currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0).toUtc();
       DateTime sevenDaysFromNow = new DateTime(currentTime.year, currentTime.month, currentTime.day + 7, 0, 0, 0, 0, 0).toUtc();
-      debugPrint('ORDER_SERVICE_EPIC => current Time: $currentTime, in 7 days: $sevenDaysFromNow');
+      debugPrint('order_service_epic => current Time: $currentTime, in 7 days: $sevenDaysFromNow');
       orderStateList = [];
       for (int i = 0; i < businessList.length; i++) {
-        debugPrint("ORDER_SERVICE_EPIC - OrderListRequestService =>  BUSINESS ID: ${businessList[i].id_firestore}");
+        debugPrint("order_service_epic => OrderListRequestService =>  BUSINESS ID: ${businessList[i].id_firestore}");
         QuerySnapshot ordersFirebase = await FirebaseFirestore.instance
             .collection("order")
-
-            /// 1 READ - ? DOC
             .where("businessId", isEqualTo: businessList[i].id_firestore)
             .where("date", isGreaterThanOrEqualTo: currentTime)
             .where("date", isLessThanOrEqualTo: sevenDaysFromNow)
             .get();
-        debugPrint("ORDER_SERVICE_EPIC - OrderListRequestService => OrderListService Firestore request");
+        debugPrint("order_service_epic => OrderListRequestService => OrderListService Firestore request");
         ordersFirebase.docs.forEach((element) {
           OrderState orderState = OrderState.fromJson(element.data());
           orderStateList.add(orderState);
         });
       }
-      debugPrint("ORDER_SERVICE_EPIC - OrderListRequestService => OrderListService return list with " + orderStateList.length.toString());
+      debugPrint("order_service_epic => OrderListRequestService => OrderListService return list with " + orderStateList.length.toString());
       if (orderStateList.isEmpty) orderStateList.add(OrderState());
       statisticsComputation();
 
@@ -123,9 +121,9 @@ class UserOrderListRequestService implements EpicClass<AppState> {
 
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-    debugPrint("ORDER_SERVICE_EPIC - UserOrderListRequestService =>  CATCHED ACTION");
+    debugPrint("order_service_epic => UserOrderListRequestService =>  CATCHED ACTION");
     return actions.whereType<UserOrderListRequest>().asyncMap((event) async {
-      debugPrint("ORDER_SERVICE_EPIC - UserOrderListRequestService =>  BUSINESS ID: ${store.state.business.id_firestore}");
+      debugPrint("order_service_epic => UserOrderListRequestService =>  BUSINESS ID: ${store.state.business.id_firestore}");
       DateTime currentTime = DateTime.now();
       //currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0).toUtc();
       debugPrint('order_service_epic => current Time: $currentTime');
@@ -139,12 +137,12 @@ class UserOrderListRequestService implements EpicClass<AppState> {
           .where("date", isGreaterThanOrEqualTo: currentTime)
           .limit(50)
           .get();
-      debugPrint("ORDER_SERVICE_EPIC - UserOrderListRequestService => OrderListService Firestore request");
+      debugPrint("order_service_epic => UserOrderListRequestService => OrderListService Firestore request");
       ordersFirebase.docs.forEach((element) {
         OrderState orderState = OrderState.fromJson(element.data());
         orderStateList.add(orderState);
       });
-      debugPrint("ORDER_SERVICE_EPIC - UserOrderListRequestService => OrderListService return list with " + orderStateList.length.toString());
+      debugPrint("order_service_epic => UserOrderListRequestService => OrderListService return list with " + orderStateList.length.toString());
       statisticsComputation();
     }).expand((element) => [
           OrderListReturned(orderStateList),
@@ -160,7 +158,7 @@ class OrderRequestService implements EpicClass<AppState> {
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<OrderRequest>().asyncMap((event) async {
-      debugPrint("ORDER_SERVICE_EPIC - OrderRequestService => OrderRequest requests document id:" + event.orderStateId);
+      debugPrint("order_service_epic => OrderRequestService => OrderRequest requests document id:" + event.orderStateId);
       DocumentSnapshot snapshot = await FirebaseFirestore.instance.collection("order").doc(event.orderStateId).get();
       orderState = OrderState.fromJson(snapshot.data());
       statisticsComputation();
@@ -175,7 +173,7 @@ class OrderRefundByUserService implements EpicClass<AppState> {
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<RefundOrderByUser>().asyncMap((event) async {
-      print("ORDER_SERVICE_EPIC - OrderRefundByUserService => ORDER ID: ${event.orderStateId}");
+      debugPrint("order_service_epic => OrderRefundByUserService => ORDER ID: ${event.orderStateId}");
       String orderId = event.orderStateId;
       /// awaited promise
       await FirebaseFirestore.instance
@@ -185,10 +183,10 @@ class OrderRefundByUserService implements EpicClass<AppState> {
             'progress': 'canceled'
             })
           .then((value) {
-         print("ORDER_SERVICE_EPIC - OrderRefundByUserService, successfully set order to canceled");
+         debugPrint("order_service_epic => OrderRefundByUserService, successfully set order to canceled");
       }).catchError((error) {
         /// TODO send error
-        print("ORDER_SERVICE_EPIC - OrderRefundByUserService, error in setting the order to canceled");
+        debugPrint("order_service_epic => OrderRefundByUserService, error in setting the order to canceled");
       });
     }).expand((element) => [RefundedRequestDone()]);
   }
@@ -201,7 +199,7 @@ class OrderUpdateByManagerService implements EpicClass<AppState> {
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<UpdateOrderByManager>().asyncMap((event) async {
-      print("ORDER_SERVICE_EPIC - OrderUpdateService => ORDER ID: ${event.orderState.orderId}");
+      debugPrint("order_service_epic => OrderUpdateService => ORDER ID: ${event.orderState.orderId}");
       orderState = event.orderState;
       orderState.progress = Utils.enumToString(event.orderStatus);
       orderState.cancellationReason = event.cancellationReason;
@@ -329,6 +327,7 @@ class OrderCreateCardAndPayService implements EpicClass<AppState> {
           String timeBasedId = Uuid().v1();
           orderState = configureOrder(event.orderState, store.state);
           orderState.orderId = timeBasedId;
+          orderState.cardType = Utils.enumToString(event.paymentType);
 
           /// send document to orders collection
           var addedOrder = await FirebaseFirestore.instance.collection("order").doc(timeBasedId).set(orderState.toJson());
@@ -343,7 +342,7 @@ class OrderCreateCardAndPayService implements EpicClass<AppState> {
             'booking_id': store.state.booking.booking_id
           });
           StripePaymentService stripePaymentService = StripePaymentService();
-          paymentResult = await stripePaymentService.processPaymentAsDirectCharge(orderState.orderId, event.businessStripeAccount);
+          //paymentResult = await stripePaymentService.processPaymentAsDirectCharge(orderState.orderId, event.businessStripeAccount);
         }
         statisticsComputation();
     }).expand((element) {
@@ -451,6 +450,55 @@ class OrderCreateOnSiteAndPayService implements EpicClass<AppState> {
   }
 }
 
+class OrderCreatePaypalAndPayService implements EpicClass<AppState> {
+  StatisticsState statisticsState;
+  String state = '';
+  String paymentResult = '';
+  OrderState orderState;
+
+  @override
+  Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
+    return actions.whereType<CreateOrderPaypalAndPay>().asyncMap((event) async {
+      /// add needed data to the order state
+      orderState = configureOrder(event.orderState, store.state);
+      orderState.cardType = Utils.enumToString(PaymentType.paypal);
+      // orderState.progress = Utils.enumToString(OrderStatus.paid); ///TODO CLOUD: Change not paid to paid,
+
+      /// This is a time based id, meaning that even if 2 users are going to generate a document at the same moment in time
+      /// there are really low chances that the rest of the id is also colliding.
+      String timeBasedId = Uuid().v1();
+      orderState.orderId = timeBasedId;
+
+      /// send document to orders collection
+      var addedOrder = await FirebaseFirestore.instance.collection("order").doc(timeBasedId).set(orderState.toJson());
+
+      String bookingId = '';
+      if(store.state.booking != null && store.state.booking.booking_id != null && store.state.booking.booking_id.isNotEmpty) {
+        bookingId = store.state.booking.booking_id;
+      }
+
+      /// add the payment method to the order sub collection on firebase
+      var addedPaymentMethod = await FirebaseFirestore.instance.collection("order/" + orderState.orderId + "/orderPaymentMethod").add({
+        'paymentMethodId': '',
+        'last4': '',
+        'brand': '',
+        'type': Utils.enumToString(event.paymentType),
+        'country': '',
+        'bookingId': bookingId
+      });
+      statisticsComputation();
+    }).expand((element) {
+      var actionArray = [];
+      actionArray.add(CreatedOrder());
+      actionArray.add(UpdateStatistics(statisticsState));
+      actionArray.add(SetOrderOrderId(orderState.orderId));
+      actionArray.add(SetOrderDetail(OrderDetailState.fromOrderState(orderState)));
+      actionArray.add(NavigatePushAction(AppRoutes.orderDetailsRealtime));
+      return actionArray;
+    });
+  }
+}
+
 /// an order always have to be created with a payment method attached in its subcollection
 /// TODO: research if there is a way to make this two operations in an atomic way
 class OrderCreateNativePendingService implements EpicClass<AppState> {
@@ -462,7 +510,7 @@ class OrderCreateNativePendingService implements EpicClass<AppState> {
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<CreateOrderNativePending>().asyncMap((event) async {
-      debugPrint('CreateOrderPending start');
+      debugPrint('order_service_epic => CreateOrderPending start');
 
         /// add needed data to the order state
         orderState = configureOrder(event.orderState, store.state);
@@ -486,7 +534,7 @@ class OrderCreateNativePendingService implements EpicClass<AppState> {
           'booking_id': store.state.booking.booking_id
         });
         statisticsComputation();
-        debugPrint('CreateOrderPending done');
+        debugPrint('order_service_epic => CreateOrderPending done');
     }).expand((element) {
       var actionArray = [];
       actionArray.add(CreatedOrder());
@@ -510,7 +558,7 @@ class OrderCreateCardPendingService implements EpicClass<AppState> {
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<CreateOrderCardPending>().asyncMap((event) async {
-      debugPrint('CreateOrderPending start');
+      debugPrint('order_service_epic => CreateOrderPending start');
 
         /// add needed data to the order state
         orderState = configureOrder(event.orderState, store.state);
@@ -534,7 +582,7 @@ class OrderCreateCardPendingService implements EpicClass<AppState> {
         'booking_id': store.state.booking.booking_id
       });
       statisticsComputation();
-      debugPrint('CreateOrderPending done');
+      debugPrint('order_service_epic => CreateOrderPending done');
     }).expand((element) {
       var actionArray = [];
       actionArray.add(CreatedOrder());
@@ -559,7 +607,7 @@ class OrderCreateRoomPendingService implements EpicClass<AppState> {
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<CreateOrderRoomPending>().asyncMap((event) async {
-      debugPrint('CreateOrderPending start');
+      debugPrint('order_service_epic => CreateOrderPending start');
 
       /// add needed data to the order state
       orderState = configureOrder(event.orderState, store.state);
@@ -585,7 +633,7 @@ class OrderCreateRoomPendingService implements EpicClass<AppState> {
       });
 
       statisticsComputation();
-      debugPrint('CreateOrderPending done');
+      debugPrint('order_service_epic => CreateOrderPending done');
     }).expand((element) {
       var actionArray = [];
       actionArray.add(SetOrderOrderId(orderId));
@@ -612,7 +660,7 @@ class OrderCreateOnSitePendingService implements EpicClass<AppState> {
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<CreateOrderOnSitePending>().asyncMap((event) async {
-      debugPrint('CreateOrderPending start');
+      debugPrint('order_service_epic => CreateOrderPending start');
 
       /// add needed data to the order state
       orderState = configureOrder(event.orderState, store.state);
@@ -643,7 +691,65 @@ class OrderCreateOnSitePendingService implements EpicClass<AppState> {
       });
 
       statisticsComputation();
-      debugPrint('CreateOrderPending done');
+      debugPrint('order_service_epic => CreateOrderPending done');
+    }).expand((element) {
+      var actionArray = [];
+      actionArray.add(SetOrderOrderId(orderId));
+      return actionArray;
+    }).expand((element) {
+      var actionArray = [];
+      actionArray.add(CreatedOrder());
+      actionArray.add(SetOrderOrderId(orderId));
+      actionArray.add(UpdateStatistics(statisticsState));
+      actionArray.add(SetOrderDetail(OrderDetailState.fromOrderState(orderState)));
+      actionArray.add(NavigatePushAction(AppRoutes.orderDetailsRealtime));
+      return actionArray;
+    });
+  }
+}
+
+class OrderCreatePaypalPendingService implements EpicClass<AppState> {
+  StatisticsState statisticsState;
+  String state = '';
+  String paymentResult = '';
+  String orderId = '';
+  OrderState orderState;
+
+  @override
+  Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
+    return actions.whereType<CreateOrderPaypalPending>().asyncMap((event) async {
+      debugPrint('order_service_epic => CreateOrderPending start');
+
+      /// add needed data to the order state
+      orderState = configureOrder(event.orderState, store.state);
+      orderState.cardType = Utils.enumToString(PaymentType.paypal);
+      orderState.progress = Utils.enumToString(OrderStatus.pending);
+
+      /// send document to orders collection
+      /// This is a time based id, meaning that even if 2 users are going to generate a document at the same moment in time
+      /// there are really low chances that the rest of the id is also colliding.
+      String timeBasedId = Uuid().v1();
+      orderState.orderId = timeBasedId;
+      orderId = timeBasedId;
+      var addedOrder = await FirebaseFirestore.instance.collection("order").doc(timeBasedId).set(orderState.toJson());
+
+      var bookingId = '';
+      if (store.state.booking != null && store.state.booking.booking_id != null && store.state.booking.booking_id.isNotEmpty) {
+        bookingId = store.state.booking.booking_id;
+      }
+
+      /// add the payment method to the order sub collection on firebase
+      var addedPaymentMethod = await FirebaseFirestore.instance.collection("order/" + orderState.orderId + "/orderPaymentMethod").add({
+        'paymentMethodId': '',
+        'last4': '',
+        'brand': '',
+        'type': Utils.enumToString(event.paymentType),
+        'country': '',
+        'bookingId': bookingId
+      });
+
+      statisticsComputation();
+      debugPrint('order_service_epic => CreateOrderPending done');
     }).expand((element) {
       var actionArray = [];
       actionArray.add(SetOrderOrderId(orderId));

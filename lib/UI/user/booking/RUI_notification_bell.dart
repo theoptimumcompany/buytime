@@ -44,8 +44,8 @@ class RNotificationBell extends StatelessWidget {
                     child: IconButton(
                       icon: Icon(
                         Icons.notifications_none_outlined,
-                        color: BuytimeTheme.TextWhite,
-                        size: 30.0,
+                        color: BuytimeTheme.TextBlack,
+                        size: 25.0,
                       ),
                       onPressed: () async{
                         if(userNotificationSnapshot.data.get('hasNotification')){
@@ -60,15 +60,15 @@ class RNotificationBell extends StatelessWidget {
                 ),
                 userNotificationSnapshot.data != null && userNotificationSnapshot.data.get('hasNotification') ?
                 Positioned.fill(
-                  bottom: 20,
-                  left: 15,
+                  bottom: 10,
+                  left: 10,
                   child: Align(
                     alignment: Alignment.center,
                     child: Container(
-                      width: 15,
-                      height: 15,
+                      width: 8,
+                      height: 8,
                       decoration: BoxDecoration(
-                          color: BuytimeTheme.AccentRed,
+                          color: BuytimeTheme.TextBlack,
                           borderRadius: BorderRadius.all(Radius.circular(7.5))
                       ),
                     ),

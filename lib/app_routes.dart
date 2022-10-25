@@ -11,22 +11,18 @@ limitations under the License.
 ==============================================================================*/
 
 import 'package:Buytime/UI/management/business/UI_M_business.dart';
-import 'package:Buytime/UI/management/business/UI_M_business_list.dart';
 import 'package:Buytime/UI/management/category/UI_M_manage_category.dart';
 import 'package:Buytime/UI/management/invite/UI_M_booking_details.dart';
 import 'package:Buytime/UI/management/invite/UI_M_booking_list.dart';
-import 'package:Buytime/UI/management/service_internal/UI_M_service_list.dart';
 import 'package:Buytime/UI/user/booking/UI_U_booking_page.dart';
 import 'package:Buytime/UI/user/booking/UI_U_booking_self_creation.dart';
 import 'package:Buytime/UI/user/booking/UI_U_confirm_booking.dart';
 import 'package:Buytime/UI/user/booking/UI_U_my_bookings.dart';
 import 'package:Buytime/UI/user/cart/UI_U_ConfirmOrder.dart';
-import 'package:Buytime/UI/user/landing/UI_U_landing.dart';
 import 'package:Buytime/UI/user/login/UI_U_login.dart';
 import 'package:Buytime/UI/user/login/UI_U_registration.dart';
 import 'package:Buytime/UI/user/booking/RUI_U_order_detail.dart';
 import 'package:Buytime/UI/user/service/UI_U_service_details.dart';
-import 'package:Buytime/UI/user/turist/UI_U_service_explorer.dart';
 import 'package:Buytime/UI/user/login/UI_U_home.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/navigation/route_aware_widget.dart';
@@ -41,11 +37,11 @@ MaterialPageRoute<dynamic> appRoutes(RouteSettings settings) {
     case AppRoutes.home:
       return MainRoute(Home(), settings: settings);
     case AppRoutes.registration:
-      return SlideInEnterRoute(Registration(), settings: settings);
+      return SlideInEnterRoute(Registration(false), settings: settings);
     case AppRoutes.login:
-      return SlideInEnterRoute(Login(), settings: settings);
-    case AppRoutes.landing:
-      return FabRoute(Landing(), settings: settings);
+      return SlideInEnterRoute(Login(false), settings: settings);
+    /*case AppRoutes.landing:
+      return FabRoute(Landing(), settings: settings);*/
     case AppRoutes.bookingDetails:
       return FabRoute(BookingDetails(), settings: settings);
     case AppRoutes.bookingSelfCreation:

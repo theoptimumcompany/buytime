@@ -11,19 +11,14 @@ limitations under the License.
 ==============================================================================*/
 
 import 'dart:async';
-
-import 'package:Buytime/UI/user/booking/UI_U_booking_page.dart';
-import 'package:Buytime/UI/user/landing/UI_U_landing.dart';
+import 'dart:io';
 import 'package:Buytime/UI/user/landing/invite_guest_form.dart';
+import 'package:Buytime/UI/user/turist/RUI_U_service_explorer.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reblox/reducer/booking_reducer.dart';
-import 'package:Buytime/reblox/reducer/business_reducer.dart';
-import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
-import 'package:Buytime/reusable/custom_bottom_button_widget.dart';
-import 'package:Buytime/reusable/booking_card_widget.dart';
-import 'package:Buytime/services/business_service_epic.dart';
-import 'package:Buytime/utils/b_cube_grid_spinner.dart';
+import 'package:Buytime/reusable/appbar/w_buytime_appbar.dart';
+import 'package:Buytime/UI/user/booking/widget/w_booking_card.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
@@ -33,7 +28,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MyBookings extends StatefulWidget {
@@ -141,7 +135,7 @@ class _MyBookingsState extends State<MyBookings> {
                             //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_Business()),);
                             //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Landing()));
                             if(widget.fromLanding == null)
-                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Landing()));
+                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => RServiceExplorer()));
                             else
                               Navigator.of(context).pop();
                           },
@@ -240,6 +234,7 @@ class _MyBookingsState extends State<MyBookings> {
                                         removeTop: true,
                                         context: context,
                                         child: CustomScrollView(
+                                          physics: new ClampingScrollPhysics(),
                                           shrinkWrap: true,
                                           slivers: [
                                             SliverList(
@@ -302,46 +297,96 @@ class _MyBookingsState extends State<MyBookings> {
                               ),
                               ///Contact
                               Container(
-                                color: Colors.white,
-                                height: 64,
-                                padding: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 1),
-                                child: Material(
-                                  color: Colors.transparent,
-                                  child: InkWell(
-                                    onTap: () async{
-                                      String url = BuytimeConfig.FlaviosNumber.trim();
-                                      debugPrint('Restaurant phonenumber: ' + url);
-                                      if (await canLaunch('tel:$url')) {
-                                        await launch('tel:$url');
-                                      } else {
-                                        throw 'Could not launch $url';
-                                      }
-                                    },
-                                    child: CustomBottomButtonWidget(
-                                        Container(
-                                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1.5),
-                                          child: Text(
-                                            AppLocalizations.of(context).contactUs,
-                                            style: TextStyle(
-                                                fontFamily: BuytimeTheme.FontFamily,
-                                                color: Colors.black.withOpacity(.7),
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: 16
-                                            ),
-                                          ),
-                                        ),
-                                        AppLocalizations.of(context).haveAnyQuestion,
-                                        Container(
-                                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1.5),
-                                          child: Icon(
-                                            Icons.call,
-                                            color: BuytimeTheme.SymbolLightGrey,
+                                  color: Colors.white,
+                                  height: 64,
+                                  margin: EdgeInsets.only(top: 10),
+                                  // width:SizeConfig.safeBlockVertical * 50 ,
+                                  child: Material(
+                                    color: Colors.transparent,
+                                    child: InkWell(
+                                        onTap: () async {
+                                          String url = BuytimeConfig.ArunasNumber.trim();
+                                          debugPrint('Restaurant phonenumber: ' + url);
+                                          if (await canLaunch('tel:$url')) {
+                                            await launch('tel:$url');
+                                          } else {
+                                            throw 'Could not launch $url';
+                                          }
+                                        },
+                                        child: Container(
+                                          //width: 375,
+                                          height: 64,
+                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5),
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Row(
+                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                children: [
+                                                  Expanded(
+                                                    flex: 8,
+                                                    child: Column(
+                                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: [
+                                                        Container(
+                                                          margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1.5),
+                                                          child: Text(
+                                                            AppLocalizations.of(context).contactUs,
+                                                            style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w400, fontSize: 16),
+                                                          ),
+                                                        ),
+                                                        Text(
+                                                          AppLocalizations.of(context).haveAnyQuestion,
+                                                          style: TextStyle(
+                                                              fontFamily: BuytimeTheme.FontFamily,
+                                                              color: BuytimeTheme.TextBlack,
+                                                              fontWeight: FontWeight.w400,
+                                                              fontSize: 14
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  Expanded(
+                                                      flex: 1,
+                                                      child: Container(
+                                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1.5),
+                                                        child: Icon(
+                                                          Icons.call,
+                                                          color: BuytimeTheme.SymbolGrey,
+                                                        ),
+                                                      )),
+                                                  Expanded(
+                                                      flex: 1,
+                                                      child: GestureDetector(
+                                                        onTap: (){
+                                                          openwhatsapp();
+                                                        },
+                                                        child: Container(
+                                                          margin: EdgeInsets.only(top: 10),
+                                                          height: 24,
+                                                          width: 24,
+                                                          decoration: BoxDecoration(
+                                                            image: DecorationImage(
+                                                                image: AssetImage('assets/img/whatsapp.png'),
+                                                                fit: BoxFit.contain
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ))
+                                                ],
+                                              ),
+                                              Container(
+                                                width: double.infinity,
+                                                //margin: EdgeInsets.only(bottom: SizeConfig.safeBlockVertical * 1),
+                                                height: SizeConfig.safeBlockVertical * .2,
+                                                color: BuytimeTheme.DividerGrey,
+                                              )
+                                            ],
                                           ),
                                         )
-                                    ),
-                                  ),
-                                ),
-                              )
+                                    ),))
                             ],
                           ),
                         )
@@ -387,6 +432,35 @@ class _MyBookingsState extends State<MyBookings> {
         ]);
       },
     );
+  }
+
+  openwhatsapp() async{
+    var whatsapp ="+447411204508";
+    var whatsappURl_android = "whatsapp://send?phone="+whatsapp+"&text=hello";
+    var whatappURL_ios ="https://wa.me/$whatsapp?text=${Uri.parse("hello")}";
+    if(Platform.isIOS){
+      // for iOS phone only
+      if( await canLaunch(whatappURL_ios)){
+        await launch(whatappURL_ios, forceSafariVC: false);
+      }else{
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: new Text("whatsapp no installed")));
+
+      }
+
+    }else{
+      // android , web
+      if( await canLaunch(whatsappURl_android)){
+        await launch(whatsappURl_android);
+      }else{
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: new Text("whatsapp no installed")));
+
+      }
+
+
+    }
+
   }
 }
 

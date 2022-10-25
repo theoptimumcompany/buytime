@@ -14,7 +14,6 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 import 'package:Buytime/UI/user/turist/RUI_U_service_explorer.dart';
-import 'package:Buytime/UI/user/turist/UI_U_service_explorer.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:Buytime/UI/user/login/UI_U_t_o_s_terms_conditons.dart';
@@ -37,11 +36,10 @@ class Home extends StatefulWidget {
   @override
   createState() => _HomeState();
 }
-
+VideoPlayerController controller;
 class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   ///Controllers
   AnimationController _animationController;
-  VideoPlayerController _controller;
   VideoPlayerOptions videoPlayerOptions = VideoPlayerOptions(mixWithOthers: true);
 
   ///Animations
@@ -106,12 +104,12 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     Random random = new Random();
     randomNumber = random.nextInt(backgroundVideoList.length); // from 0 upto 99 included
     // Pointing the video controller to our local asset.
-    _controller = VideoPlayerController.asset("assets/video/${backgroundVideoList[randomNumber]}", videoPlayerOptions: videoPlayerOptions)
+    controller = VideoPlayerController.asset("assets/video/${backgroundVideoList[randomNumber]}", videoPlayerOptions: videoPlayerOptions)
       ..initialize().then((_) {
         // Once the video has been loaded we play the video and set looping to true.
-        _controller.play();
-        _controller.setLooping(true);
-        _controller.setVolume(0.0);
+        controller.play();
+        controller.setLooping(true);
+        controller.setVolume(0.0);
         // Ensure the first frame is shown after the video is initialized.
         setState(() {});
       });
@@ -120,28 +118,28 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     getFileFromAssets("assets/documents/Buytime_t_c.pdf", 'Buytime_t_c.pdf').then((f) {
       setState(() {
         tcPdfPath = f.path;
-        debugPrint('UI_U_Home - full path tc: ' + tcPdfPath);
+        debugPrint('UI_U_home => full path tc: ' + tcPdfPath);
       });
     });
 
     getFileFromAssets("assets/documents/Buytime_p_p.pdf", 'Buytime_p_p.pdf').then((f) {
       setState(() {
         tosPdfPath = f.path;
-        debugPrint('UI_U_Home - full path tos: ' + tosPdfPath);
+        debugPrint('UI_U_home => full path tos: ' + tosPdfPath);
       });
     });
 
     /*createFileOfPdfUrl().then((f) {
       setState(() {
         urlPdf = f.path;
-        debugPrint('full path url: ' + urlPdf);
+        debugPrint('UI_U_home => full path url: ' + urlPdf);
       });
     });*/
   }
 
   Future<File> createFileOfPdfUrl() async {
     Completer<File> completer = Completer();
-    debugPrint("UI_U_Home - Start download file from internet!");
+    debugPrint("UI_U_home => Start download file from internet!");
     try {
       // "https://berlin2017.droidcon.cod.newthinking.net/sites/global.droidcon.cod.newthinking.net/files/media/documents/Flutter%20-%2060FPS%20UI%20of%20the%20future%20%20-%20DroidconDE%2017.pdf";
       // final url = "https://pdfkit.org/docs/guide.pdf";
@@ -151,7 +149,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       var response = await request.close();
       var bytes = await consolidateHttpClientResponseBytes(response);
       var dir = await getApplicationDocumentsDirectory();
-      debugPrint("UI_U_Home - Download files");
+      debugPrint("UI_U_home => Download files");
       print("${dir.path}/$filename");
       File file = File("${dir.path}/$filename");
 
@@ -185,8 +183,10 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   @override
   void dispose() {
     _animationController.dispose();
-    _controller.dispose();
+
     super.dispose();
+    controller.dispose();
+    debugPrint('UI_U_home => home dispose');
   }
 
   @override
@@ -194,7 +194,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     // the media containing information on width and height
     var media = MediaQuery.of(context).size;
     _animationController.forward();
-    _controller.play();
 
     SizeConfig().init(context);
     //ScreenUtil.init(context);
@@ -215,17 +214,17 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                     Positioned.fill(
                       child: Align(
                           alignment: Alignment.center,
-                          child: _controller.value.isInitialized
+                          child: controller.value.isInitialized
                               ? SizedBox.expand(
                                   child: FittedBox(
                                     // If your background video doesn't look right, try changing the BoxFit property.
                                     // BoxFit.fill created the look I was going for.
                                     fit: BoxFit.cover,
                                     child: SizedBox(
-                                      width: _controller.value.size?.width ?? 0,
-                                      height: _controller.value.size?.height ?? 0,
+                                      width: controller.value.size?.width ?? 0,
+                                      height: controller.value.size?.height ?? 0,
                                       child: VideoPlayer(
-                                        _controller,
+                                        controller,
                                       ),
                                     ),
                                   ),
@@ -510,7 +509,9 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                               focusElevation: 0,
                               highlightElevation: 0,
                               onPressed: () {
-                                _controller.pause();
+                                setState(() {
+                                  controller.pause();
+                                });
                                 //Navigator.push(context, MaterialPageRoute(builder: (context) => Registration()),);
                                 Navigator.of(context).pushNamed(Registration.route);
                               },
@@ -563,7 +564,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                   );
                                 },*/
                               onPressed: () {
-                                _controller.pause();
+                                controller.pause();
                                 //Navigator.push(context, MaterialPageRoute(builder: (context) => Login()),;
                                 Navigator.of(context).pushNamed(Login.route);
                               },
@@ -598,6 +599,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                 child: InkWell(
                                   key: Key('free_access_key'),
                                     onTap: () {
+                                      controller.pause();
                                       Navigator.of(context).pushNamed(RServiceExplorer.route);
                                     },
                                     borderRadius: BorderRadius.all(Radius.circular(5.0)),
@@ -638,7 +640,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                   text: AppLocalizations.of(context).tos,
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = () {
-                                      debugPrint('UI_U_Home - ToS Clicked: ' + tcPdfPath);
+                                      debugPrint('UI_U_home => ToS Clicked: ' + tcPdfPath);
                                       Navigator.push(context, MaterialPageRoute(builder: (context) => TosTermsConditons(tcPdfPath)));
                                     },
                                 ),
@@ -659,7 +661,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                   text: AppLocalizations.of(context).privacyPolicy,
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = () {
-                                      debugPrint('UI_U_Home - Privacy Policy Clicked: ' + tosPdfPath);
+                                      debugPrint('UI_U_home => Privacy Policy Clicked: ' + tosPdfPath);
                                       Navigator.push(context, MaterialPageRoute(builder: (context) => TosTermsConditons(tosPdfPath)));
                                     },
                                 ),

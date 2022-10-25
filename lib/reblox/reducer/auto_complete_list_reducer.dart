@@ -32,7 +32,7 @@ AutoCompleteListState autoCompleteListReducer(AutoCompleteListState state, actio
 
   if (action is AddAutoCompleteToList) {
     autoCompleteListState = AutoCompleteListState(autoCompleteListState: action.autoCompleteListState).copyWith();
-    debugPrint('auto_complete_list_reducer: LENGTH: ${autoCompleteListState.autoCompleteListState.length}');
+    debugPrint('auto_complete_list_reducer => LENGTH: ${autoCompleteListState.autoCompleteListState.length}');
     return autoCompleteListState;
   }
 

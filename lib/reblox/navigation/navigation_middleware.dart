@@ -12,6 +12,7 @@ limitations under the License.
 
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/navigation/navigation_reducer.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:redux/redux.dart';
 import 'package:redux_epics/redux_epics.dart';
 
@@ -44,7 +45,7 @@ _navigateReplace(Store<AppState> store, action, NextDispatcher next) {
 
 _navigate(Store<AppState> store, action, NextDispatcher next) {
   final routeName = (action as NavigatePushAction).routeName;
-  print("ROUTE NAVIGATE : " + routeName);
+  debugPrint("navigation_middleware => ROUTE NAVIGATE : " + routeName);
   navigatorKey.currentState.pushNamed(routeName);
   next(action); //This need to be after name checks
 }

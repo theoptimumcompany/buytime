@@ -26,8 +26,8 @@ import 'package:Buytime/reblox/model/snippet/service_list_snippet_state.dart';
 import 'package:Buytime/reblox/reducer/category_reducer.dart';
 import 'package:Buytime/reblox/reducer/category_tree_reducer.dart';
 import 'package:Buytime/reblox/reducer/service_list_snippet_reducer.dart';
-import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
-import 'package:Buytime/reusable/enterExitRoute.dart';
+import 'package:Buytime/reusable/appbar/w_buytime_appbar.dart';
+import 'package:Buytime/reusable/animation/enterExitRoute.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/utils/tree_view/expander_theme_data.dart';
@@ -531,7 +531,7 @@ class ManageCategoryState extends State<ManageCategory> with SingleTickerProvide
         padding: const EdgeInsets.all(10.0),
         child: Container(
           height: SizeConfig.safeBlockVertical * 8,
-          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * .5),
+          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * .5),
           decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
           child: Center(
               child: Container(
@@ -764,46 +764,54 @@ class ManageCategoryState extends State<ManageCategory> with SingleTickerProvide
             },
             child: Scaffold(
                 key: widget._keyScaffoldCategory,
-                appBar: BuytimeAppbar(
-                  children: [
-                    IconButton(
-                      icon: Icon(Icons.keyboard_arrow_left, color: Colors.white, size: 24),
-                      tooltip: AppLocalizations.of(context).comeBack,
-                      onPressed: () {
-                        snapshot.serviceListSnippetState = ServiceListSnippetState();
-                        StoreProvider.of<AppState>(context).dispatch(ServiceListSnippetRequest(snapshot.business.id_firestore));
-                        Navigator.pushReplacement(context, EnterExitRoute(enterPage: RServiceList(), exitPage: ManageCategory(), from: false));
-                        //Navigator.of(context).pop();
-                      },
+                appBar: AppBar(
+                  backgroundColor: Colors.white,
+                  brightness: Brightness.dark,
+                  elevation: 1,
+                  title: Text(
+                    AppLocalizations.of(context).categories,
+                    style: TextStyle(
+                        fontFamily: BuytimeTheme.FontFamily,
+                        color: BuytimeTheme.TextBlack,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 16 ///SizeConfig.safeBlockHorizontal * 7
                     ),
-
-                    ///Title
-                    Utils.barTitle(AppLocalizations.of(context).categories),
+                  ),
+                  centerTitle: true,
+                  leading: IconButton(
+                    icon: Icon(Icons.keyboard_arrow_left, color: Colors.black,),
+                    tooltip: AppLocalizations.of(context).comeBack,
+                    onPressed: () {
+                      snapshot.serviceListSnippetState = ServiceListSnippetState();
+                      StoreProvider.of<AppState>(context).dispatch(ServiceListSnippetRequest(snapshot.business.id_firestore));
+                      Navigator.pushReplacement(context, EnterExitRoute(enterPage: RServiceList(), exitPage: ManageCategory(), from: false));
+                      //Navigator.of(context).pop();
+                    },
+                  ),
+                  actions: [
                     StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin || StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman
                         ? IconButton(
-                            icon: const Icon(
-                              Icons.add,
-                              color: BuytimeTheme.SymbolWhite,
-                              size: 24.0,
-                            ),
-                            tooltip: AppLocalizations.of(context).createCategory,
-                            onPressed: () {
-                              Navigator.push(context, EnterExitRoute(enterPage: UI_M_CreateCategory(empty: true), exitPage: ManageCategory(), from: true));
-                              // : showDialog(
-                              //     context: context,
-                              //     builder: (BuildContext context) {
-                              //       // return object of type Dialog
-                              //       return AlertDialog(
-                              //         title: new Text(AppLocalizations.of(context).caution),
-                              //         content: new Text(AppLocalizations.of(context).noCategoriesForBusiness),
-                              //       );
-                              //     },
-                              //   );
-                            },
-                          )
-                        : SizedBox(
-                            width: 50.0,
-                          ),
+                      icon: const Icon(
+                        Icons.add,
+                        color: BuytimeTheme.TextBlack,
+                        size: 24.0,
+                      ),
+                      tooltip: AppLocalizations.of(context).createCategory,
+                      onPressed: () {
+                        Navigator.push(context, EnterExitRoute(enterPage: UI_M_CreateCategory(empty: true), exitPage: ManageCategory(), from: true));
+                        // : showDialog(
+                        //     context: context,
+                        //     builder: (BuildContext context) {
+                        //       // return object of type Dialog
+                        //       return AlertDialog(
+                        //         title: new Text(AppLocalizations.of(context).caution),
+                        //         content: new Text(AppLocalizations.of(context).noCategoriesForBusiness),
+                        //       );
+                        //     },
+                        //   );
+                      },
+                    )
+                        : Container()
                   ],
                 ),
                 body: SafeArea(
@@ -876,7 +884,7 @@ class ManageCategoryState extends State<ManageCategory> with SingleTickerProvide
                             ///No List
                             Container(
                                 height: SizeConfig.safeBlockVertical * 8,
-                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2.5),
+                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2.5),
                                 decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
                                 child: Center(
                                     child: Container(

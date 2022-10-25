@@ -11,7 +11,6 @@ limitations under the License.
 ==============================================================================*/
 
 import 'dart:convert';
-import 'dart:io';
 import 'dart:math';
 
 import 'package:Buytime/environment_abstract.dart';
@@ -22,26 +21,24 @@ import 'package:Buytime/reblox/model/notification/id_state.dart';
 import 'package:Buytime/reblox/model/order/order_reservable_state.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
-import 'package:Buytime/reblox/model/promotion/promotion_list_state.dart';
 import 'package:Buytime/reblox/model/promotion/promotion_state.dart';
-import 'package:Buytime/reblox/reducer/promotion/promotion_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/service_reducer.dart';
 import 'package:Buytime/utils/size_config.dart';
-import 'package:Buytime/utils/theme/buytime_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:emojis/emoji.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:google_place/google_place.dart';
 import 'package:html_unescape/html_unescape.dart';
+import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
 
 typedef OnTranslatingCallback = void Function(bool translated);
 typedef OnPlaceDetailsCallback = void Function(List<dynamic> placeDetails);
+typedef OnDateValueCallback = void Function(String month, String year);
 
 class Utils {
   ///Image sizes
@@ -50,41 +47,93 @@ class Utils {
   static String imageSizing1000 = "_1000x1000";
 
   ///Calculate Promo Discount
-  static double calculatePromoDiscount(double fullPrice, context) {
+  static double calculatePromoDiscount(double fullPrice, context, String businessId, int addRemove, int itemNumber) {
     double promoPrice = 0.0;
-
-    debugPrint('START CALCULATE PROMO');
-
-    if (StoreProvider.of<AppState>(context).state.promotionState != null) {
-      PromotionState promotionState = StoreProvider.of<AppState>(context).state.promotionState;
-      debugPrint('PROMO ' + promotionState.promotionId);
-      switch (promotionState.discountType) {
-        case 'fixedAmount':
-          promoPrice = (promotionState.discount).toDouble();
-          break;
-        case 'percentageAmount':
-          promoPrice = ((fullPrice * promotionState.discount)/100);
-          break;
-        default:
-          promoPrice = 0.0;
+    bool promoForSpecificBusiness = StoreProvider.of<AppState>(context).state.promotionState != null &&
+        StoreProvider.of<AppState>(context).state.promotionState.businessIdList != null &&
+        StoreProvider.of<AppState>(context).state.promotionState.businessIdList.isNotEmpty &&
+        StoreProvider.of<AppState>(context).state.promotionState.businessIdList.contains(businessId);
+    bool promoForAllServices = StoreProvider.of<AppState>(context).state.promotionState != null &&
+        (StoreProvider.of<AppState>(context).state.promotionState.businessIdList == null ||
+            StoreProvider.of<AppState>(context).state.promotionState.businessIdList.isEmpty);
+    if(itemNumber < StoreProvider.of<AppState>(context).state.promotionState.limit) {
+      if (addRemove == 2 ) {
+        StoreProvider.of<AppState>(context).state.promotionState.timesUsed -= 1;
+        promoPrice = applyPromotion(context, fullPrice, promoPrice, addRemove);
       }
     }
-    debugPrint('PROMO ' + promoPrice.toString());
+    if(StoreProvider.of<AppState>(context).state.promotionState.timesUsed < StoreProvider.of<AppState>(context).state.promotionState.limit) {
+      if(promoForSpecificBusiness || promoForAllServices) {
+        if (addRemove == 1) {
+          StoreProvider.of<AppState>(context).state.promotionState.timesUsed += 1;
+          promoPrice = applyPromotion(context, fullPrice, promoPrice, addRemove);
+        }
+      }
+    }
+    if (StoreProvider.of<AppState>(context).state.promotionState.timesUsed < 0) {
+      StoreProvider.of<AppState>(context).state.promotionState.timesUsed = 0;
+    }
+    debugPrint('calculatePromoDiscount timesUsed: ' + StoreProvider.of<AppState>(context).state.promotionState.timesUsed.toString() + ' itemNumber ' + itemNumber.toString());
     return promoPrice;
   }
 
-  ///Check Promo Discount
-  static PromotionState checkPromoDiscount(String promoName, context) {
-    debugPrint('START CHECK PROMO');
-
-    if (StoreProvider.of<AppState>(context).state.promotionListState.promotionListState.isNotEmpty && StoreProvider.of<AppState>(context).state.promotionListState != null) {
-      List<PromotionState> promotionListState = StoreProvider.of<AppState>(context).state.promotionListState.promotionListState;
-      for (var a = 0; a < promotionListState.length; a++) {
-        if (promotionListState[a].promotionId == promoName) {
-          debugPrint('PROMO NAME ' + promotionListState[a].promotionId);
-          return promotionListState[a];
+  static double applyPromotion(context, double fullPrice, double promoPrice, int addRemove) {
+    PromotionState promotionState = StoreProvider.of<AppState>(context).state.promotionState;
+    switch (promotionState.discountType) {
+      case 'fixedAmount':
+        if ((fullPrice - (promotionState.discount).toDouble()) >= 3.0) {
+          promoPrice = (promotionState.discount).toDouble();
+        } else {
+          if (fullPrice - (promotionState.discount).toDouble() >= 0) { // 4 5 6 7
+            promoPrice = fullPrice - 3;
+          } else { // 1
+            promoPrice = 0.0;
+          }
         }
-      }
+        break;
+      case 'percentageAmount':
+        promoPrice = ((fullPrice * promotionState.discount)/100);
+        break;
+      default:
+        promoPrice = 0.0;
+    }
+    return double.parse(promoPrice.toStringAsFixed(2));
+  }
+
+  ///Check Promo Discount (gestisce principalmente le label rosse)
+  static PromotionState checkPromoDiscount(String promoName, context, String businessId) {
+    if(
+    StoreProvider.of<AppState>(context).state.promotionState != null &&
+        (StoreProvider.of<AppState>(context).state.promotionState.timesUsed < StoreProvider.of<AppState>(context).state.promotionState.limit) &&
+        StoreProvider.of<AppState>(context).state.promotionState.businessIdList != null &&
+        StoreProvider.of<AppState>(context).state.promotionState.businessIdList.isNotEmpty &&
+        StoreProvider.of<AppState>(context).state.promotionState.businessIdList.contains(businessId)) {
+      return StoreProvider.of<AppState>(context).state.promotionState;
+    } else if (
+    StoreProvider.of<AppState>(context).state.promotionState != null &&
+        (StoreProvider.of<AppState>(context).state.promotionState.timesUsed < StoreProvider.of<AppState>(context).state.promotionState.limit) &&
+        (StoreProvider.of<AppState>(context).state.promotionState.businessIdList == null || StoreProvider.of<AppState>(context).state.promotionState.businessIdList.isEmpty)
+    ) {
+      PromotionState(promotionId: 'empty');
+      // return StoreProvider.of<AppState>(context).state.promotionState;
+    }
+    return PromotionState(promotionId: 'empty');
+  }
+
+  ///Check Promo Discount (gestisce principalmente le label rosse)
+  static PromotionState checkPromoDiscountTotal(String promoName, context, String businessId) {
+    if(
+    StoreProvider.of<AppState>(context).state.promotionState != null &&
+        StoreProvider.of<AppState>(context).state.promotionState.businessIdList != null &&
+        StoreProvider.of<AppState>(context).state.promotionState.businessIdList.isNotEmpty &&
+        StoreProvider.of<AppState>(context).state.promotionState.businessIdList.contains(businessId)) {
+      return StoreProvider.of<AppState>(context).state.promotionState;
+    } else if (
+    StoreProvider.of<AppState>(context).state.promotionState != null &&
+        (StoreProvider.of<AppState>(context).state.promotionState.businessIdList == null || StoreProvider.of<AppState>(context).state.promotionState.businessIdList.isEmpty)
+    ) {
+      PromotionState(promotionId: 'empty');
+      // return StoreProvider.of<AppState>(context).state.promotionState;
     }
     return PromotionState(promotionId: 'empty');
   }
@@ -391,6 +440,31 @@ class Utils {
     return controllers;
   }
 
+  static Future<String> singleGoogleTranslate(String translateFrom, String translateTo, String ogText) async {
+    //debugPrint('LanguageCode: ${language[i]} | Flag: ${flags[i]}');
+    //var url = Uri.https('translation.googleapis.com', '/language/translate/v2', {'source': '${translateFrom}', 'target': '${translateTo}', 'key': '${Environment().config.googleApiKey}', 'q': '${ogText}'});
+    var url = Uri.https('translation.googleapis.com', '/language/translate/v2', { 'target': '${translateTo}', 'key': '${Environment().config.googleApiKey}', 'q': '${ogText}'});
+    final http.Response response = await http.get(url, headers: {
+      //HttpHeaders.contentTypeHeader : "utf-8",
+      'charset': "utf-8"
+    });
+    debugPrint('Response code: ${response.statusCode} | Response Body: ${response.body}');
+    var text = '';
+    if (response.statusCode == 200) {
+      //var langResponseMap = jsonDecode(utf8.decode(response.bodyBytes));
+      var langResponseMap = jsonDecode(response.body);
+      //var langResponseMap = jsonDecode(Html.decode(response.bodyBytes));
+      debugPrint('${translateTo} DONE | Decode: $langResponseMap');
+      debugPrint('${translateTo} ${langResponseMap['data']['translations'][0]['translatedText']}');
+      var unescape = HtmlUnescape();
+      text = unescape.convert(langResponseMap['data']['translations'][0]['translatedText']);
+      debugPrint('Convert: $text');
+      //controllers[i].text = text;
+    }
+
+    return text.toString();
+  }
+
   static OrderTimeInterval getTimeInterval(OrderReservableState orderReservableState) {
     OrderTimeInterval orderTimeIntervalResult;
     DateTime closestTimeSlot;
@@ -503,7 +577,7 @@ class Utils {
           physics: ClampingScrollPhysics(),
           child: Padding(
             padding: EdgeInsets.only(
-                //top: SizeConfig.safeBlockVertical * 5,
+              //top: SizeConfig.safeBlockVertical * 5,
                 bottom: MediaQuery.of(context).viewInsets.bottom),
             child: SafeArea(
               child: Container(
@@ -553,7 +627,7 @@ class Utils {
                           },
                           style: TextStyle(color: BuytimeTheme.TextGrey, fontFamily: BuytimeTheme.FontFamily),
                           decoration: InputDecoration(
-                              //labelText: field,
+                            //labelText: field,
                               enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
                               border: OutlineInputBorder(borderSide: BorderSide(color: Color(0xffe0e0e0)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
                               focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xff666666)), borderRadius: BorderRadius.all(Radius.circular(8.0))),
@@ -583,18 +657,19 @@ class Utils {
                         height: SizeConfig.safeBlockVertical * 50,
                         margin: EdgeInsets.only(bottom: 10),
                         child: CustomScrollView(
+                            physics: new ClampingScrollPhysics(),
                             //physics: NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
                             slivers: [
                               SliverList(
                                 delegate: SliverChildBuilderDelegate(
-                                  (context, index) {
+                                      (context, index) {
                                     String flag = flags.elementAt(index);
                                     if (myLocaleCharCode != flag)
                                       return Container(
                                         margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 6, right: SizeConfig.safeBlockHorizontal * 6, top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1),
                                         child: TextFormField(
-                                            //initialValue: _serviceName,
+                                          //initialValue: _serviceName,
                                             controller: controllers.elementAt(index),
                                             keyboardType: TextInputType.multiline,
                                             textInputAction: TextInputAction.done,
@@ -659,8 +734,11 @@ class Utils {
                           debugPrint('MultiLingualTranslate => $serviceField');
                           if (isName)
                             StoreProvider.of<AppState>(context).dispatch(SetServiceName(serviceField));
-                          else if (isDescription)
+                          else if (isDescription){
                             StoreProvider.of<AppState>(context).dispatch(SetServiceDescription(serviceField));
+                            if(StoreProvider.of<AppState>(context).state.serviceState.originalLanguage.isEmpty || StoreProvider.of<AppState>(context).state.serviceState.originalLanguage == myLanguage)
+                              StoreProvider.of<AppState>(context).dispatch(SetServiceOriginalLanguage(myLanguage));
+                          }
                           else
                             StoreProvider.of<AppState>(context).dispatch(SetServiceCondition(serviceField));
                           //nextPage();
@@ -697,6 +775,215 @@ class Utils {
         );
       },
     );
+  }
+
+  static void dashboardDateSelection(BuildContext context, bool month, bool year, OnDateValueCallback callback) async {
+    Locale myLocale = Localizations.localeOf(context);
+
+    ///Year
+    int startDate = 2020;
+    int yearsLength = DateTime.now().year - startDate;
+    List<int> yearsList = List.generate(yearsLength == 0 ? 1 : yearsLength+1, (index) => startDate++);
+    yearsList = yearsList.reversed.toList();
+
+    ///Month
+    Map<int, List<String>> monthMap = Map();
+    yearsList.forEach((y) {
+      int month = DateTime.now().month;
+      monthMap.putIfAbsent(y, () => List.generate(y == DateTime.now().year ? month : 12, (index) => DateFormat('MMMM').format(DateTime(DateTime.now().year, index+1, DateTime.now().day))).reversed.toList());
+    });
+
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(topRight: Radius.circular(10), topLeft: Radius.circular(10))),
+      builder: (BuildContext context) {
+        return SingleChildScrollView(
+          physics: ClampingScrollPhysics(),
+          child: Padding(
+            padding: EdgeInsets.only(
+              //top: SizeConfig.safeBlockVertical * 5,
+                bottom: MediaQuery.of(context).viewInsets.bottom),
+            child: SafeArea(
+              child: Container(
+                decoration: BoxDecoration(borderRadius: BorderRadius.only(topRight: Radius.circular(10), topLeft: Radius.circular(10))),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Container(
+                      margin: EdgeInsets.only(top: 11),
+                      //height: 24,
+                      alignment: Alignment.centerRight,
+                      child: IconButton(
+                        onPressed: (){
+                          Navigator.of(context).pop();
+                        },
+                        icon: Icon(
+                            Icons.close
+                        ),
+                      ),
+                    ),
+                    month ? Flexible(
+                      child: Container(
+                        //height: SizeConfig.safeBlockVertical * 50,
+                        margin: EdgeInsets.only(bottom: 39, top: 0, left: 16, right: 16),
+                        child: CustomScrollView(
+                            physics: new ClampingScrollPhysics(),
+                            //physics: NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            slivers: [
+                              SliverList(
+                                delegate: SliverChildBuilderDelegate(
+                                      (context, index) {
+                                    int year = yearsList.elementAt(index);
+                                    return Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Container(
+                                            margin: EdgeInsets.only(top: 16),
+                                            height: 42,
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                              //color: BuytimeTheme.SymbolLightGrey.withOpacity(.3),
+                                            ),
+                                            child: Text(
+                                              '$year',
+                                              style: TextStyle(
+                                                //letterSpacing: .25,
+                                                  fontFamily: BuytimeTheme.FontFamily,
+                                                  color: BuytimeTheme.TextBlack,
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 18
+
+                                                ///SizeConfig.safeBlockHorizontal * 4
+                                              ),
+                                            )),
+                                        Flexible(
+                                          child: GridView.count(
+                                            // Create a grid with 2 columns. If you change the scrollDirection to
+                                            // horizontal, this produces 2 rows.
+                                            physics: NeverScrollableScrollPhysics(),
+                                              shrinkWrap: true,
+                                              crossAxisCount: 2,
+                                              mainAxisSpacing: 16.0,
+                                              crossAxisSpacing: 9.0,
+                                              childAspectRatio: (167 / 42),
+                                              // Generate 100 widgets that display their index in the List.
+                                              children: monthMap[year].map((m) =>
+                                                  Container(
+                                                  //margin: EdgeInsets.only(top: ),
+                                                  height: 42,
+                                                  decoration: BoxDecoration(
+                                                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                                    color: BuytimeTheme.SymbolLightGrey.withOpacity(.3),
+                                                  ),
+                                                  child: Material(
+                                                    color: Colors.transparent,
+                                                    child: InkWell(
+                                                        onTap: () {
+                                                          callback('$m', '$year');
+                                                          Navigator.of(context).pop();
+                                                        },
+                                                        borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                                        child: Container(
+                                                          alignment: Alignment.center,
+                                                          child: Text(
+                                                            '$m',
+                                                            style: TextStyle(
+                                                              //letterSpacing: .25,
+                                                                fontFamily: BuytimeTheme.FontFamily,
+                                                                color: BuytimeTheme.TextBlack,
+                                                                fontWeight: FontWeight.w500,
+                                                                fontSize: 18
+
+                                                              ///SizeConfig.safeBlockHorizontal * 4
+                                                            ),
+                                                          ),
+                                                        )),
+                                                  ))
+                                              ).toList()),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                  childCount: yearsList.length,
+                                ),
+                              ),
+                            ]),
+                      ),
+                    ) :
+                        year ?
+                    Flexible(
+                      child: Container(
+                        //height: SizeConfig.safeBlockVertical * 50,
+                        margin: EdgeInsets.only(bottom: 39, top: 19, left: 16, right: 16),
+                        child: CustomScrollView(
+                            physics: new ClampingScrollPhysics(),
+                            //physics: NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            slivers: [
+                              SliverList(
+                                delegate: SliverChildBuilderDelegate(
+                                      (context, index) {
+                                        int year = yearsList.elementAt(index);
+                                    return Container(
+                                      margin: EdgeInsets.only(top: 16),
+                                        height: 42,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                          color: BuytimeTheme.SymbolLightGrey.withOpacity(.3),
+                                        ),
+                                        child: Material(
+                                          color: Colors.transparent,
+                                          child: InkWell(
+                                              onTap: () {
+                                                callback('', '$year');
+                                                Navigator.of(context).pop();
+                                              },
+                                              borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                              child: Container(
+                                                alignment: Alignment.center,
+                                                child: Text(
+                                                  '$year',
+                                                  style: TextStyle(
+                                                      //letterSpacing: .25,
+                                                      fontFamily: BuytimeTheme.FontFamily,
+                                                      color: BuytimeTheme.TextBlack,
+                                                      fontWeight: FontWeight.w500,
+                                                      fontSize: 18
+
+                                                    ///SizeConfig.safeBlockHorizontal * 4
+                                                  ),
+                                                ),
+                                              )),
+                                        ));
+                                  },
+                                  childCount: yearsList.length,
+                                ),
+                              ),
+                            ]),
+                      ),
+                    )
+                            : Container(),
+
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  static int getMonthNumber(String locale, String monthString){
+    int month = DateTime.now().month - 1;
+    for(int i = 1; i <= 12; i++){
+      if(DateFormat('MMMM',locale).format(DateTime(DateTime.now().year, i)) == monthString)
+        return i - 1;
+    }
+    return month;
   }
 
   static void googleSearch(BuildContext context, OnPlaceDetailsCallback detailsCallback) {
@@ -821,21 +1108,21 @@ class Utils {
                         ),
                         addressController.text.isNotEmpty && predictions.isNotEmpty
                             ? Flexible(
-                                child: ListView.builder(
-                                  shrinkWrap: true,
-                                  itemCount: predictions.length,
-                                  itemBuilder: (context, index) {
-                                    debugPrint('data found');
-                                    return ListTile(
-                                      leading: Icon(
-                                        Icons.place,
-                                        color: BuytimeTheme.ManagerPrimary,
-                                      ),
-                                      title: Text(predictions[index][0]),
-                                      onTap: () async {
-                                        debugPrint(predictions[index][1]);
-                                        getDetails(predictions[index][1], context);
-                                        /*Navigator.push(
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: predictions.length,
+                            itemBuilder: (context, index) {
+                              debugPrint('data found');
+                              return ListTile(
+                                leading: Icon(
+                                  Icons.place,
+                                  color: BuytimeTheme.ManagerPrimary,
+                                ),
+                                title: Text(predictions[index][0]),
+                                onTap: () async {
+                                  debugPrint(predictions[index][1]);
+                                  getDetails(predictions[index][1], context);
+                                  /*Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => DetailsPage(
@@ -844,11 +1131,11 @@ class Utils {
                                 ),
                               ),
                             );*/
-                                      },
-                                    );
-                                  },
-                                ),
-                              )
+                                },
+                              );
+                            },
+                          ),
+                        )
                             : Container(),
                         /*Container(
                   margin: EdgeInsets.only(top: 10, bottom: 10),
@@ -867,115 +1154,79 @@ class Utils {
   }
 
   static String translateOrderStatus(BuildContext context, String progress) {
-    return progress == Utils.enumToString(OrderStatus.progress)
-        ? '${AppLocalizations.of(context).progress}'
-        : progress == Utils.enumToString(OrderStatus.unpaid)
-            ? '${AppLocalizations.of(context).unpaid}'
-            : progress == Utils.enumToString(OrderStatus.accepted)
-                ? '${AppLocalizations.of(context).accepted}'
-                : progress == Utils.enumToString(OrderStatus.paid)
-                    ? '${AppLocalizations.of(context).paid}'
-                    : progress == Utils.enumToString(OrderStatus.pending)
-                        ? '${AppLocalizations.of(context).pending}'
-                        : progress == Utils.enumToString(OrderStatus.created)
-                            ? '${AppLocalizations.of(context).created}'
-                            : progress == Utils.enumToString(OrderStatus.toBePaidAtCheckout)
-                                ? '${AppLocalizations.of(context).toBePaidAtCheckout}'
-                                : progress == Utils.enumToString(OrderStatus.canceled)
-                                    ? '${AppLocalizations.of(context).canceled}'
-                                    : progress == Utils.enumToString(OrderStatus.frozen)
-                                        ? '${AppLocalizations.of(context).frozen}'
-                                        : progress == Utils.enumToString(OrderStatus.declined)
-                                            ? '${AppLocalizations.of(context).declined}'
-                                            : progress == Utils.enumToString(OrderStatus.holding)
-                                                ? '${AppLocalizations.of(context).holding}'
-                                                : progress == Utils.enumToString(OrderStatus.creating)
-                                                    ? '${AppLocalizations.of(context).creating}'
-                                                    : '???';
+    if (progress == Utils.enumToString(OrderStatus.accepted)) {
+      return '${AppLocalizations.of(context).accepted}';
+    }
+    if (progress == Utils.enumToString(OrderStatus.paid)) {
+      return '${AppLocalizations.of(context).paid}';
+    }
+    if (progress == Utils.enumToString(OrderStatus.pending)) {
+      return '${AppLocalizations.of(context).pending}';
+    }
+    if (progress == Utils.enumToString(OrderStatus.toBePaidAtCheckout)) {
+      return '${AppLocalizations.of(context).toBePaidAtCheckout}';
+    }
+    if (progress == Utils.enumToString(OrderStatus.canceled)) {
+      return '${AppLocalizations.of(context).canceled}';
+    }
+    return '???';
   }
 
   static String translateOrderStatusUser(BuildContext context, String progress) {
-    return progress == Utils.enumToString(OrderStatus.progress)
-        ? '${AppLocalizations.of(context).pending}'
-        : progress == Utils.enumToString(OrderStatus.unpaid)
-            ? '${AppLocalizations.of(context).pending}'
-            : progress == Utils.enumToString(OrderStatus.accepted)
-                ? '${AppLocalizations.of(context).accepted}'
-                : progress == Utils.enumToString(OrderStatus.paid)
-                    ? '${AppLocalizations.of(context).paid}'
-                    : progress == Utils.enumToString(OrderStatus.pending)
-                        ? '${AppLocalizations.of(context).pending}'
-                        : progress == Utils.enumToString(OrderStatus.created)
-                            ? '${AppLocalizations.of(context).created}'
-                            : progress == Utils.enumToString(OrderStatus.toBePaidAtCheckout)
-                                ? '${AppLocalizations.of(context).accepted}'
-                                : progress == Utils.enumToString(OrderStatus.canceled)
-                                    ? '${AppLocalizations.of(context).canceled}'
-                                    : progress == Utils.enumToString(OrderStatus.frozen)
-                                        ? '${AppLocalizations.of(context).canceled}'
-                                        : progress == Utils.enumToString(OrderStatus.declined)
-                                            ? '${AppLocalizations.of(context).canceled}'
-                                            : progress == Utils.enumToString(OrderStatus.holding)
-                                                ? '${AppLocalizations.of(context).accepted}'
-                                                : progress == Utils.enumToString(OrderStatus.creating)
-                                                    ? '${AppLocalizations.of(context).pending}'
-                                                    : '???';
+    if (progress == Utils.enumToString(OrderStatus.accepted)) {
+      return '${AppLocalizations.of(context).accepted}';
+    }
+    if (progress == Utils.enumToString(OrderStatus.paid)) {
+      return '${AppLocalizations.of(context).pending}';
+    }
+    if (progress == Utils.enumToString(OrderStatus.pending)) {
+      return '${AppLocalizations.of(context).pending}';
+    }
+    if (progress == Utils.enumToString(OrderStatus.toBePaidAtCheckout)) {
+      return '${AppLocalizations.of(context).accepted}';
+    }
+    if (progress == Utils.enumToString(OrderStatus.canceled)) {
+      return '${AppLocalizations.of(context).canceled}';
+    }
+    return '???';
   }
 
   static Color colorOrderStatus(BuildContext context, String progress) {
-    return progress == Utils.enumToString(OrderStatus.progress)
-        ? BuytimeTheme.Secondary
-        : progress == Utils.enumToString(OrderStatus.unpaid)
-            ? BuytimeTheme.BackgroundCerulean
-            : progress == Utils.enumToString(OrderStatus.accepted)
-                ? BuytimeTheme.ActionButton
-                : progress == Utils.enumToString(OrderStatus.created)
-                    ? BuytimeTheme.ActionButton
-                    : progress == Utils.enumToString(OrderStatus.paid)
-                        ? BuytimeTheme.ActionButton
-                        : progress == Utils.enumToString(OrderStatus.pending)
-                            ? BuytimeTheme.Secondary
-                            : progress == Utils.enumToString(OrderStatus.toBePaidAtCheckout)
-                                ? BuytimeTheme.Secondary
-                                : progress == Utils.enumToString(OrderStatus.canceled)
-                                    ? BuytimeTheme.AccentRed
-                                    : progress == Utils.enumToString(OrderStatus.frozen)
-                                        ? BuytimeTheme.BackgroundLightBlue
-                                        : progress == Utils.enumToString(OrderStatus.declined)
-                                            ? BuytimeTheme.AccentRed
-                                            : progress == Utils.enumToString(OrderStatus.holding)
-                                                ? BuytimeTheme.Secondary
-                                                : progress == Utils.enumToString(OrderStatus.creating)
-                                                    ? BuytimeTheme.Secondary
-                                                    : BuytimeTheme.TextBlack;
+    if (progress == Utils.enumToString(OrderStatus.accepted)) {
+      return BuytimeTheme.ActionButton;
+    }
+    if (progress == Utils.enumToString(OrderStatus.paid)) {
+      return BuytimeTheme.ActionButton;
+    }
+    if (progress == Utils.enumToString(OrderStatus.pending)) {
+      return BuytimeTheme.Secondary;
+    }
+    if (progress == Utils.enumToString(OrderStatus.toBePaidAtCheckout)) {
+      return BuytimeTheme.Secondary;
+    }
+    if (progress == Utils.enumToString(OrderStatus.canceled)) {
+      return BuytimeTheme.AccentRed;
+    }
+    return BuytimeTheme.TextBlack;
   }
 
   static Color colorOrderStatusUser(BuildContext context, String progress) {
-    return progress == Utils.enumToString(OrderStatus.progress)
-        ? BuytimeTheme.Secondary
-        : progress == Utils.enumToString(OrderStatus.unpaid)
-            ? BuytimeTheme.Secondary
-            : progress == Utils.enumToString(OrderStatus.accepted)
-                ? BuytimeTheme.ActionButton
-                : progress == Utils.enumToString(OrderStatus.created)
-                    ? BuytimeTheme.Secondary
-                    : progress == Utils.enumToString(OrderStatus.paid)
-                        ? BuytimeTheme.ActionButton
-                        : progress == Utils.enumToString(OrderStatus.pending)
-                            ? BuytimeTheme.Secondary
-                            : progress == Utils.enumToString(OrderStatus.toBePaidAtCheckout)
-                                ? BuytimeTheme.ActionButton
-                                : progress == Utils.enumToString(OrderStatus.canceled)
-                                    ? BuytimeTheme.AccentRed
-                                    : progress == Utils.enumToString(OrderStatus.frozen)
-                                        ? BuytimeTheme.AccentRed
-                                        : progress == Utils.enumToString(OrderStatus.declined)
-                                            ? BuytimeTheme.AccentRed
-                                            : progress == Utils.enumToString(OrderStatus.holding)
-                                                ? BuytimeTheme.ActionButton
-                                                : progress == Utils.enumToString(OrderStatus.creating)
-                                                    ? BuytimeTheme.Secondary
-                                                    : BuytimeTheme.TextBlack;
+    if (progress == Utils.enumToString(OrderStatus.accepted)) {
+      return BuytimeTheme.ActionButton;
+    }
+    if (progress == Utils.enumToString(OrderStatus.paid)) {
+      return BuytimeTheme.Secondary;
+    }
+    if (progress == Utils.enumToString(OrderStatus.pending)) {
+      return BuytimeTheme.Secondary;
+    }
+    if (progress == Utils.enumToString(OrderStatus.toBePaidAtCheckout)) {
+      return BuytimeTheme.ActionButton;
+    }
+    if (progress == Utils.enumToString(OrderStatus.canceled)) {
+      return BuytimeTheme.AccentRed;
+    }
+    return BuytimeTheme.TextBlack;
   }
 
   /// DISTANCE IS CALCULATED IN KM
@@ -1049,6 +1300,173 @@ class Utils {
       }
     }
     return areaFound;
+  }
+
+  static String translateCategory(BuildContext context, String categoryName){
+    String localeCategory = '';
+    switch(categoryName){
+      case 'Adrenaline Activities':
+        localeCategory = AppLocalizations.of(context).defaultCategory_AdrenalineActivities.toString();
+        break;
+      case 'Adults Sailing':
+        localeCategory = AppLocalizations.of(context).defaultCategory_AdultsSailing.toString();
+        break;
+      case 'Advanced Diving':
+        localeCategory = AppLocalizations.of(context).defaultCategory_AdvancedDiving.toString();
+        break;
+      case 'Alcoholic Drinks':
+        localeCategory = AppLocalizations.of(context).defaultCategory_AlcoholicDrinks.toString();
+        break;
+      case 'Archeology Museum':
+        localeCategory = AppLocalizations.of(context).defaultCategory_ArcheologyMuseum.toString();
+        break;
+      case 'Art Museum':
+        localeCategory = AppLocalizations.of(context).defaultCategory_ArtMuseum.toString();
+        break;
+      case 'Base Diving':
+        localeCategory = AppLocalizations.of(context).defaultCategory_BaseDiving.toString();
+        break;
+      case 'Beach':
+        localeCategory = AppLocalizations.of(context).defaultCategory_Beach.toString();
+        break;
+      case 'Bike':
+        localeCategory = AppLocalizations.of(context).defaultCategory_Bike.toString();
+        break;
+      case 'Bike Course':
+        localeCategory = AppLocalizations.of(context).defaultCategory_BikeCourse.toString();
+        break;
+      case 'Bike Rental':
+        localeCategory = AppLocalizations.of(context).defaultCategory_BikeRental.toString();
+        break;
+      case 'Bike Tours':
+        localeCategory = AppLocalizations.of(context).defaultCategory_BikeTours.toString();
+        break;
+      case 'Car Rental':
+        localeCategory = AppLocalizations.of(context).defaultCategory_CarRental.toString();
+        break;
+      case 'Concerts And Venues':
+        localeCategory = AppLocalizations.of(context).defaultCategory_ConcertsAndVenues.toString();
+        break;
+      case 'Concierge':
+        localeCategory = AppLocalizations.of(context).defaultCategory_Concierge.toString();
+        break;
+      case 'Conference':
+        localeCategory = AppLocalizations.of(context).defaultCategory_Conference.toString();
+        break;
+      case 'Diving':
+        localeCategory = AppLocalizations.of(context).defaultCategory_Diving.toString();
+        break;
+      case 'Diving Certification':
+        localeCategory = AppLocalizations.of(context).defaultCategory_DivingCertification.toString();
+        break;
+      case 'Drink':
+        localeCategory = AppLocalizations.of(context).defaultCategory_Drink.toString();
+        break;
+      case 'eBike Rental':
+        localeCategory = AppLocalizations.of(context).defaultCategory_eBikeRental.toString();
+        break;
+      case 'Entertainment':
+        localeCategory = AppLocalizations.of(context).defaultCategory_Entertainment.toString();
+        break;
+      case 'Exhibitions':
+        localeCategory = AppLocalizations.of(context).defaultCategory_Exhibitions.toString();
+        break;
+      case 'Exotic Food':
+        localeCategory = AppLocalizations.of(context).defaultCategory_ExoticFood.toString();
+        break;
+      case 'Family':
+        localeCategory = AppLocalizations.of(context).defaultCategory_Family.toString();
+        break;
+      case 'Fast Food':
+        localeCategory = AppLocalizations.of(context).defaultCategory_FastFood.toString();
+        break;
+      case 'Food':
+        localeCategory = AppLocalizations.of(context).defaultCategory_Food.toString();
+        break;
+      case 'Golf':
+        localeCategory = AppLocalizations.of(context).defaultCategory_Golf.toString();
+        break;
+      case 'History Museum':
+        localeCategory = AppLocalizations.of(context).defaultCategory_HistoryMuseum.toString();
+        break;
+      case 'Kids Diving':
+        localeCategory = AppLocalizations.of(context).defaultCategory_KidsDiving.toString();
+        break;
+      case 'Kids Sailing':
+        localeCategory = AppLocalizations.of(context).defaultCategory_KidsSailing.toString();
+        break;
+      case 'Local Events':
+        localeCategory = AppLocalizations.of(context).defaultCategory_LocalEvents.toString();
+        break;
+      case 'Local Food':
+        localeCategory = AppLocalizations.of(context).defaultCategory_LocalFood.toString();
+        break;
+      case 'Massage':
+        localeCategory = AppLocalizations.of(context).defaultCategory_Massage.toString();
+        break;
+      case 'Mbk Bike':
+        localeCategory = AppLocalizations.of(context).defaultCategory_MbkBike.toString();
+        break;
+      case 'Medium Car Rental':
+        localeCategory = AppLocalizations.of(context).defaultCategory_MediumCarRental.toString();
+        break;
+      case 'Moto Rental':
+        localeCategory = AppLocalizations.of(context).defaultCategory_MotoRental.toString();
+        break;
+      case 'Museum':
+        localeCategory = AppLocalizations.of(context).defaultCategory_Museum.toString();
+        break;
+      case 'Nature & Wildlife':
+        localeCategory = AppLocalizations.of(context).defaultCategory_NatureWildlife.toString();
+        break;
+      case 'Other Sport':
+        localeCategory = AppLocalizations.of(context).defaultCategory_OtherSport.toString();
+        break;
+      case 'Pool':
+        localeCategory = AppLocalizations.of(context).defaultCategory_Pool.toString();
+        break;
+      case 'Premium Car Rental':
+        localeCategory = AppLocalizations.of(context).defaultCategory_PremiumCarRental.toString();
+        break;
+      case 'Room Service Food':
+        localeCategory = AppLocalizations.of(context).defaultCategory_RoomServiceFood.toString();
+        break;
+      case 'Sailing':
+        localeCategory = AppLocalizations.of(context).defaultCategory_Sailing.toString();
+        break;
+      case 'Shuttle Taxi':
+        localeCategory = AppLocalizations.of(context).defaultCategory_ShuttleTaxi.toString();
+        break;
+      case 'Small Car Rental':
+        localeCategory = AppLocalizations.of(context).defaultCategory_SmallCarRental.toString();
+        break;
+      case 'Soft Drinks':
+        localeCategory = AppLocalizations.of(context).defaultCategory_SoftDrinks.toString();
+        break;
+      case 'SPA':
+        localeCategory = AppLocalizations.of(context).defaultCategory_Spa.toString();
+        break;
+      case 'Special Bikes':
+        localeCategory = AppLocalizations.of(context).defaultCategory_SpecialBikes.toString();
+        break;
+      case 'Sport':
+        localeCategory = AppLocalizations.of(context).defaultCategory_Sport.toString();
+        break;
+      case 'Tennis':
+        localeCategory = AppLocalizations.of(context).defaultCategory_Tennis.toString();
+        break;
+      case 'Tours':
+        localeCategory = AppLocalizations.of(context).defaultCategory_Tours.toString();
+        break;
+      case 'Wellness':
+        localeCategory = AppLocalizations.of(context).defaultCategory_Wellness.toString();
+        break;
+      default:
+        localeCategory = categoryName;
+        break;
+    }
+    return localeCategory;
+
   }
 }
 

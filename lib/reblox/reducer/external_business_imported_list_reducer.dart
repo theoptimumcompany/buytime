@@ -47,7 +47,6 @@ ExternalBusinessImportedListState externalBusinessImportedListReducer(ExternalBu
 
   if (action is ExternalBusinessImportedListRequestResponse) {
     externalBusinessImportedListState = ExternalBusinessImportedListState(externalBusinessImported: action.externalBusinessImportedList).copyWith();
-    //debugPrint('booking_reducer: ${bookingState.user.first.name}');
     return externalBusinessImportedListState;
   }
   return state;

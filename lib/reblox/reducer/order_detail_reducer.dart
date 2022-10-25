@@ -163,7 +163,6 @@ class CreateOrderDetailRoomPending {
 }
 
 class CreatedOrderDetail {}
-class CreatingOrderDetail {}
 class ResetOrderDetailIfPaidOrCanceled {}
 class DeleteOrderDetail {
   String _orderId;
@@ -239,9 +238,10 @@ class ConfirmOrderDetailWait
 class AddingStripePaymentMethod {
   AddingStripePaymentMethod();
 }
-class AddingStripePaymentMethodReset {
-  AddingStripePaymentMethodReset();
-}
+///TODO: Check Delete
+// class AddingStripePaymentMethodReset {
+//   AddingStripePaymentMethodReset();
+// }
 class DeletingStripePaymentMethod {
   DeletingStripePaymentMethod();
 }
@@ -290,12 +290,8 @@ OrderDetailState orderDetailReducer(OrderDetailState state, action) {
     orderState = action.orderState.copyWith();
     return orderState;
   }
-  if (action is CreatingOrderDetail) {
-    orderState.progress = Utils.enumToString(OrderStatus.creating);
-    return orderState;
-  }
   if (action is CreatedOrderDetail) {
-    orderState.progress = Utils.enumToString(OrderStatus.unpaid);
+    orderState.progress = Utils.enumToString(OrderStatus.pending);
     return orderState;
   }
   if (action is SetOrderDetailCartCounter) {
@@ -310,10 +306,11 @@ OrderDetailState orderDetailReducer(OrderDetailState state, action) {
     orderState.addCardProgress = Utils.enumToString(AddCardStatus.inProgress);
     return orderState;
   }
-  if (action is AddingStripePaymentMethodReset) {
-    orderState.addCardProgress = Utils.enumToString(AddCardStatus.notStarted);
-    return orderState;
-  }
+  ///TODO: Check Delete
+  // if (action is AddingStripePaymentMethodReset) {
+  //   orderState.addCardProgress = Utils.enumToString(AddCardStatus.notStarted);
+  //   return orderState;
+  // }
   if (action is AddedStripePaymentMethod) {
     orderState.addCardProgress = Utils.enumToString(AddCardStatus.done);
     return orderState;
@@ -335,13 +332,13 @@ OrderDetailState orderDetailReducer(OrderDetailState state, action) {
   }
   if (action is AddItemToOrderDetail) {
     if (state.itemList != null) {
-      print("order_reducer: itemList != null");
+      debugPrint("order_reducer: itemList != null");
       orderState.itemList
       = []
         ..addAll(state.itemList)
         ..add(action.orderEntry);
     } else {
-      print("order_reducer: itemList == null");
+      debugPrint("order_reducer: itemList == null");
       orderState.itemList
       = []
         ..add(action.orderEntry);

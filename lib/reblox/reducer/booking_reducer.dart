@@ -143,19 +143,19 @@ BookingState bookingReducer(BookingState state, action) {
   
   if (action is AddBooking) {
     bookingState = action.bookingState.copyWith();
-    debugPrint('booking_reducer: ${bookingState.user.first.name}');
+    debugPrint('booking_reducer => ${bookingState.user.first.name}');
     return bookingState;
   }
 
   if (action is BookingRequestResponse) {
     bookingState = action.bookingState.copyWith();
-    //debugPrint('booking_reducer: ${bookingState.user.first.name}');
+    //debugPrint('booking_reducer => ${bookingState.user.first.name}');
     return bookingState;
   }
 
   if (action is ConfirmedBookingRequest) {
     bookingState = action.bookingState.copyWith();
-    debugPrint('booking_reducer: ${bookingState.user.first.name}');
+    debugPrint('booking_reducer => ${bookingState.user.first.name}');
     return bookingState;
   }
 
@@ -165,9 +165,9 @@ BookingState bookingReducer(BookingState state, action) {
   }
 
   if (action is UpdatedBooking) {
-    //debugPrint('booking_reducer: action: ${action.bookingStatus}');
+    //debugPrint('booking_reducer => action: ${action.bookingStatus}');
     bookingState = action.bookingState.copyWith();
-    debugPrint('booking_reducer: booking status: ${bookingState.status}');
+    debugPrint('booking_reducer => booking status: ${bookingState.status}');
     return bookingState;
   }
   if (action is SetBookingToEmpty) {

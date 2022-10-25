@@ -17,8 +17,8 @@ import 'package:Buytime/reblox/model/notification/notification_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
-import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
-import 'package:Buytime/reusable/buytime_icons.dart';
+import 'package:Buytime/reusable/appbar/w_buytime_appbar.dart';
+import 'package:Buytime/reusable/icon/buytime_icons.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:flutter/material.dart';
@@ -243,6 +243,7 @@ class _NotificationsState extends State<Notifications> {
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         CustomScrollView(
+
                                             shrinkWrap: true,
                                             physics: NeverScrollableScrollPhysics(),
                                             slivers: [
@@ -266,7 +267,7 @@ class _NotificationsState extends State<Notifications> {
                                                         }
                                                       });
                                                       if (orderState != null) {
-                                                        return UserNotificationListItem(notification, serviceState, widget.tourist);
+                                                        return UserNotificationListItem(notification, serviceState, widget.tourist, orderState);
                                                       }
                                                       return Container();
 
@@ -281,7 +282,7 @@ class _NotificationsState extends State<Notifications> {
                                   ),
                                 ) : Container(
                                   height: SizeConfig.safeBlockVertical * 8,
-                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                                   decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
                                   child: Center(
                                       child: Container(

@@ -26,15 +26,15 @@ import 'package:Buytime/reblox/reducer/external_business_imported_list_reducer.d
 import 'package:Buytime/reblox/reducer/external_service_imported_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/service_list_snippet_reducer.dart';
 import 'package:Buytime/reblox/reducer/user_reducer.dart';
-import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
+import 'package:Buytime/reusable/appbar/w_buytime_appbar.dart';
 import 'package:Buytime/UI/management/service_internal/UI_M_service_list.dart';
 import 'package:Buytime/UI/model/manager_model.dart';
 import 'package:Buytime/UI/model/service_model.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reblox/model/category/category_state.dart';
-import 'package:Buytime/reusable/enterExitRoute.dart';
-import 'package:Buytime/reusable/menu/UI_M_business_list_drawer.dart';
+import 'package:Buytime/reusable/animation/enterExitRoute.dart';
+import 'package:Buytime/reusable/menu/w_manager_drawer.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/utils/utils.dart';
@@ -77,14 +77,14 @@ class _RBusinessState extends State<RBusiness> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       StoreProvider.of<AppState>(context).dispatch(ExternalServiceImportedListRequest(StoreProvider.of<AppState>(context).state.business.id_firestore));
       StoreProvider.of<AppState>(context).dispatch(ExternalBusinessImportedListRequest(StoreProvider.of<AppState>(context).state.business.id_firestore));
-     // debugPrint('RUI_M_business_list => BUSIENSS ID: ${StoreProvider.of<AppState>(context).state.business.id_firestore}');
+     // debugPrint('RUI_M_business => BUSIENSS ID: ${StoreProvider.of<AppState>(context).state.business.id_firestore}');
       var urlManager = Uri.https(Environment().config.cloudFunctionLink, '/getCategoriesForManagerInBusiness', {'businessId': '${StoreProvider.of<AppState>(context).state.business.id_firestore}', 'userEmail': '${StoreProvider.of<AppState>(context).state.user.email}'});
       var urlWorker = Uri.https(Environment().config.cloudFunctionLink, '/getCategoriesForWorkerInBusiness', {'businessId': '${StoreProvider.of<AppState>(context).state.business.id_firestore}', 'userEmail': '${StoreProvider.of<AppState>(context).state.user.email}'});
       final http.Response responseManager = await http.get(urlManager);
       if(responseManager.statusCode == 200){
-        //debugPrint('RUI_M_business_list => RESPONSE MANAGER: ${responseManager.body}');
-        //debugPrint('RUI_M_business_list => RESPONSE FROM JSON MANAGER: ${jsonDecode(responseManager.body)}');
-       // debugPrint('RUI_M_business_list => RESPONSE JSON MANAGER: ${jsonDecode(responseManager.body)['accessTo']}');
+        //debugPrint('RUI_M_business => RESPONSE MANAGER: ${responseManager.body}');
+        //debugPrint('RUI_M_business => RESPONSE FROM JSON MANAGER: ${jsonDecode(responseManager.body)}');
+       // debugPrint('RUI_M_business => RESPONSE JSON MANAGER: ${jsonDecode(responseManager.body)['accessTo']}');
         //store.state.user.accessTo = jsonDecode(response.body)['accessTo'];
         var tmpJson = jsonDecode(responseManager.body)['accessTo'];
         List<String> accessList = [];
@@ -95,13 +95,13 @@ class _RBusinessState extends State<RBusiness> {
         isManagerComplete = true;
         StoreProvider.of<AppState>(context).dispatch(SetUserManagerAccessTo(accessList));
       }else{
-       // debugPrint('RUI_M_business_list => RESPONSE MANAGER: ${responseManager.body}');
+       // debugPrint('RUI_M_business => RESPONSE MANAGER: ${responseManager.body}');
       }
       final http.Response responseWorker = await http.get(urlWorker);
       if(responseWorker.statusCode == 200){
-       // debugPrint('RUI_M_business_list => RESPONSE WORKER: ${responseWorker.body}');
-        //debugPrint('RUI_M_business_list => RESPONSE FROM JSON WORKER: ${jsonDecode(responseWorker.body)}');
-       // debugPrint('RUI_M_business_list => RESPONSE JSON WORKER: ${jsonDecode(responseWorker.body)['accessTo']}');
+       // debugPrint('RUI_M_business => RESPONSE WORKER: ${responseWorker.body}');
+        //debugPrint('RUI_M_business => RESPONSE FROM JSON WORKER: ${jsonDecode(responseWorker.body)}');
+       // debugPrint('RUI_M_business => RESPONSE JSON WORKER: ${jsonDecode(responseWorker.body)['accessTo']}');
         //store.state.user.accessTo = jsonDecode(response.body)['accessTo'];
         var tmpJson = jsonDecode(responseWorker.body)['accessTo'];
         List<String> accessList = [];
@@ -112,7 +112,7 @@ class _RBusinessState extends State<RBusiness> {
         isWorkerComplete = true;
         StoreProvider.of<AppState>(context).dispatch(SetUserWorkerAccessTo(accessList));
       }else{
-      // debugPrint('RUI_M_business_list => RESPONSE WORKER: ${responseWorker.body}');
+      // debugPrint('RUI_M_business => RESPONSE WORKER: ${responseWorker.body}');
       }
     });
   }
@@ -164,75 +164,77 @@ class _RBusinessState extends State<RBusiness> {
           drawerEnableOpenDragGesture: false,
           key: _drawerKey,
           ///Appbar
-          appBar: BuytimeAppbar(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
-                    child: IconButton(
-                      key: Key('business_drawer_key'),
-                      icon: const Icon(
-                        Icons.menu,
-                        color: Colors.white,
-                        size: 30.0,
-                      ),
-                      tooltip: AppLocalizations.of(context).openMenu,
-                      onPressed: () {
-                        _drawerKey.currentState.openDrawer();
-                      },
-                    ),
-                  ),
-                ],
+          appBar: AppBar(
+            backgroundColor: Colors.white,
+            brightness: Brightness.dark,
+            elevation: 1,
+            title: Text(
+              StoreProvider.of<AppState>(context).state.business.name,
+              style: TextStyle(
+                  fontFamily: BuytimeTheme.FontFamily,
+                  color: BuytimeTheme.TextBlack,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16 ///SizeConfig.safeBlockHorizontal * 7
               ),
-              ///Title
-              //Utils.barTitle(AppLocalizations.of(context).dashboard),
-              Utils.barTitle('${StoreProvider.of<AppState>(context).state.business.name}'),
+            ),
+            centerTitle: true,
+            leading: IconButton(
+              key: Key('business_drawer_key'),
+              icon: const Icon(
+                Icons.menu,
+                color: Colors.black,
+                //size: 30.0,
+              ),
+              tooltip: AppLocalizations.of(context).openMenu,
+              onPressed: () {
+                _drawerKey.currentState.openDrawer();
+              },
+            ),
+            actions: [
               StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin ||
                   StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman ||
-                  StoreProvider.of<AppState>(context).state.user.getRole() == Role.owner ? Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
-                  child: InkWell(
-                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                    onTap: () {
-                      //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_EditBusiness()),);
-                      Navigator.push(context, EnterExitRoute(enterPage: UI_M_EditBusiness(), exitPage: RBusiness(), from: true));
-                      Navigator.of(context).push(PageRouteBuilder(
-                          pageBuilder: (context, animation, anotherAnimation) {
-                            return UI_M_EditBusiness();
-                          },
-                          transitionDuration: Duration(milliseconds: 500),
-                          transitionsBuilder:
-                              (context, animation, anotherAnimation, child) {
-                            return  SlideTransition(
-                              position: Tween(
-                                  begin: Offset(1.0, 0.0),
-                                  end: Offset(0.0, 0.0))
-                                  .animate(animation),
-                              child: child,
-                            );
-                          }));
+                  StoreProvider.of<AppState>(context).state.user.getRole() == Role.owner ?
+                  Container(
+                    margin: EdgeInsets.only(top: 13.5),
+                    child: InkWell(
+                      borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                      onTap: () {
+                        //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_EditBusiness()),);
+                        Navigator.push(context, EnterExitRoute(enterPage: UI_M_EditBusiness(), exitPage: RBusiness(), from: true));
+                        Navigator.of(context).push(PageRouteBuilder(
+                            pageBuilder: (context, animation, anotherAnimation) {
+                              return UI_M_EditBusiness();
+                            },
+                            transitionDuration: Duration(milliseconds: 500),
+                            transitionsBuilder:
+                                (context, animation, anotherAnimation, child) {
+                              return  SlideTransition(
+                                position: Tween(
+                                    begin: Offset(1.0, 0.0),
+                                    end: Offset(0.0, 0.0))
+                                    .animate(animation),
+                                child: child,
+                              );
+                            }));
 
-                    },
-                    child: Container(
-                      padding: EdgeInsets.all(5.0),
-                      margin: EdgeInsets.only(right: SizeConfig.blockSizeHorizontal * 1),
-                      child: Text(
-                        AppLocalizations.of(context).edit,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
+                      },
+                      child: Container(
+                        padding: EdgeInsets.all(5.0),
+                        margin: EdgeInsets.only(right: SizeConfig.blockSizeHorizontal * 1),
+                        child: Text(
+                          AppLocalizations.of(context).edit,
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                          ),
                         ),
                       ),
                     ),
-                  )) :  SizedBox(
-                width: 50.0,
-              ),
+                  ):  Container()
             ],
           ),
-          drawer: UI_M_BusinessListDrawer(),
+          drawer: ManagerDrawer(),
           body: ConstrainedBox(
             constraints: BoxConstraints(),
             child: Center(
@@ -408,7 +410,7 @@ class _RBusinessState extends State<RBusiness> {
                                   externalCategories.add(element);
                                 element.serviceList.forEach((service) { 
                                   if(service.serviceAbsolutePath.split('/').first != StoreProvider.of<AppState>(context).state.business.id_firestore){
-                                    debugPrint('EXTERNAL: ${element.categoryName}');
+                                    debugPrint('RUI_M_business => EXTERNAL: ${element.categoryName}');
                                     if(!externalCategories.contains(element))
                                       externalCategories.add(element);
                                   }
@@ -587,7 +589,7 @@ class _RBusinessState extends State<RBusiness> {
                                                   return CategoryListItemWidget(categoryItem, BuytimeTheme.SymbolLime);
                                                   // return InkWell(
                                                   //   onTap: () {
-                                                  //     debugPrint('Category Item: ${categoryItem.name.toUpperCase()} Clicked!');
+                                                  //     debugPrint('RUI_M_business => Category Item: ${categoryItem.name.toUpperCase()} Clicked!');
                                                   //   },
                                                   //   //child: MenuItemListItemWidget(menuItem),
                                                   //   child: CategoryListItemWidget(categoryItem),
@@ -717,7 +719,7 @@ class _RBusinessState extends State<RBusiness> {
                                                     return CategoryListItemWidget(categoryItem, BuytimeTheme.Indigo);
                                                     // return InkWell(
                                                     //   onTap: () {
-                                                    //     debugPrint('Category Item: ${categoryItem.name.toUpperCase()} Clicked!');
+                                                    //     debugPrint('RUI_M_business => Category Item: ${categoryItem.name.toUpperCase()} Clicked!');
                                                     //   },
                                                     //   //child: MenuItemListItemWidget(menuItem),
                                                     //   child: CategoryListItemWidget(categoryItem),
@@ -744,7 +746,7 @@ class _RBusinessState extends State<RBusiness> {
                                             decoration: BoxDecoration(color: Colors.blueGrey.withOpacity(0.1)),
                                             child: Container(
                                               height: SizeConfig.screenHeight * 0.1,
-                                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5),
+                                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5),
                                               child: Center(
                                                 child: Text(
                                                   AppLocalizations.of(context).thereAreNoExternalServicesAttached,

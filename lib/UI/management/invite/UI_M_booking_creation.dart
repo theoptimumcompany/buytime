@@ -17,7 +17,7 @@ import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:Buytime/reblox/model/user/snippet/user_snippet_state.dart';
 import 'package:Buytime/reblox/reducer/booking_reducer.dart';
-import 'package:Buytime/reusable/menu/UI_M_business_list_drawer.dart';
+import 'package:Buytime/reusable/menu/w_manager_drawer.dart';
 import 'package:Buytime/services/business_service_epic.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
@@ -93,7 +93,7 @@ class _BookingCreationState extends State<BookingCreation> {
         }
     );
     if (picked != null && picked.start != null && picked.end != null) {
-      print(picked);
+      debugPrint('UI_M_booking_creation => $picked');
       _checkInController.text = DateFormat('dd/MM/yyyy').format(picked.start);
       _checkOutController.text = DateFormat('dd/MM/yyyy').format(picked.end);
       setState(() {
@@ -139,7 +139,7 @@ class _BookingCreationState extends State<BookingCreation> {
               key: _drawerKey,
               ///Appbar
               appBar: AppBar(
-                backgroundColor: BuytimeTheme.ManagerPrimary,
+                backgroundColor: BuytimeTheme.TextWhite,
                 title: Container(
                   child: Padding(
                     padding: const EdgeInsets.only(left: 0.0),
@@ -148,22 +148,24 @@ class _BookingCreationState extends State<BookingCreation> {
                       AppLocalizations.of(context).createInvite,
                       textAlign: TextAlign.start,
                       style: TextStyle(
-                        color: Colors.white,
-                        fontSize: media.height * 0.025,
+                        color: Colors.black,
+                        fontSize: 16,
                         fontWeight: FontWeight.w400,
                       ),
                     ),
                   ),
                 ),
+                centerTitle: true,
                 leading: IconButton(
                   icon: Icon(
                     Icons.keyboard_arrow_left,
-                    color: Colors.white,
+                    color: Colors.black,
                   ),
                   onPressed: () async{
                     Navigator.of(context).pop();
                   },
                 ),
+                elevation: 1,
               ),
               //drawer: UI_M_BusinessListDrawer(),
               body: SafeArea(
@@ -213,7 +215,7 @@ class _BookingCreationState extends State<BookingCreation> {
                                             children: [
                                               ///Booking code
                                               /*Container(
-                                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 4, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.blockSizeHorizontal * 5),
+                                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 4, left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.blockSizeHorizontal * 5),
                                               child:  Row(
                                                 crossAxisAlignment: CrossAxisAlignment.end,
                                                 children: [
@@ -256,7 +258,7 @@ class _BookingCreationState extends State<BookingCreation> {
                                               ///Email address
                                               Expanded(
                                                 child: Container(
-                                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.blockSizeHorizontal * 5),
+                                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.blockSizeHorizontal * 5),
                                                     child: TextFormField(
                                                       key: Key('create_email_key'),
                                                       controller: _emailToInviteController,
@@ -317,7 +319,7 @@ class _BookingCreationState extends State<BookingCreation> {
                                               ///Name
                                               Expanded(
                                                 child: Container(
-                                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.blockSizeHorizontal * 5),
+                                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.blockSizeHorizontal * 5),
                                                     child: TextFormField(
                                                       key: Key('create_name_key'),
                                                       controller: _nameController,
@@ -366,7 +368,7 @@ class _BookingCreationState extends State<BookingCreation> {
                                               ///Surname
                                               Expanded(
                                                 child: Container(
-                                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.blockSizeHorizontal * 5),
+                                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.blockSizeHorizontal * 5),
                                                     child: TextFormField(
                                                       key: Key('create_surname_key'),
                                                       controller: _surnameController,
@@ -415,7 +417,7 @@ class _BookingCreationState extends State<BookingCreation> {
                                               ///Check In & Check Out
                                               Expanded(
                                                 child: Container(
-                                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.blockSizeHorizontal * 5),
+                                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.blockSizeHorizontal * 5),
                                                     child: Row(
                                                       mainAxisAlignment: MainAxisAlignment.start,
                                                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -534,7 +536,7 @@ class _BookingCreationState extends State<BookingCreation> {
                                                                   await _selectDate(context, checkIn, checkOut);
                                                                 },
                                                                 validator: (String value) {
-                                                                  debugPrint('${checkIn.compareTo(checkOut)}');
+                                                                  debugPrint('UI_M_booking_creation => ${checkIn.compareTo(checkOut)}');
                                                                   if (value.isEmpty || checkIn.compareTo(checkOut) > 0) {
                                                                     debugPrint('UI_M_booking_creation => Check Out Is Empty');
                                                                     return AppLocalizations.of(context).pleaseEnterAValidDateInterval;
@@ -551,7 +553,7 @@ class _BookingCreationState extends State<BookingCreation> {
                                               ///Number of guests
                                               Expanded(
                                                 child: Container(
-                                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.blockSizeHorizontal * 5),
+                                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.blockSizeHorizontal * 5),
                                                     child: TextFormField(
                                                       key: Key('create_guests_key'),
                                                       controller: _numberOfGuestsController,
@@ -608,6 +610,7 @@ class _BookingCreationState extends State<BookingCreation> {
                                                   focusElevation: 0,
                                                   highlightElevation: 0,
                                                   onPressed: () {
+                                                    bookingState = BookingState().toEmpty();
                                                     if (_formKey.currentState.validate()) {
 
                                                       setState(() {
@@ -637,6 +640,14 @@ class _BookingCreationState extends State<BookingCreation> {
                                                       bookingState.status = Utils.enumToString(BookingStatus.created);
 
                                                       bookingState.userEmail.add(_emailToInviteController.text);
+
+                                                      _emailToInviteController.clear();
+                                                      _nameController.clear();
+                                                      _surnameController.clear();
+                                                      _checkInController.clear();
+                                                      _checkOutController.clear();
+                                                      _numberOfGuestsController.text = '1';
+
 
                                                       StoreProvider.of<AppState>(context).dispatch(CreateBookingRequest(bookingState));
 

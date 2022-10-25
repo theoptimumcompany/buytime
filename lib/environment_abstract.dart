@@ -10,6 +10,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ==============================================================================*/
 
+
+class StripeConfig {
+  String keyToUse = 'pk_live_51HS20eHr13hxRBpCLHzfi0SXeqw8Efu911cWdYEE96BAV0zSOesvE83OiqqzRucKIxgCcKHUvTCJGY6cXRtkDVCm003CmGXYzy';
+  // String keyToUse = 'pk_test_51HS20eHr13hxRBpCZl1V0CKFQ7XzJbku7UipKLLIcuNGh3rp4QVsEDCThtV0l2AQ3jMtLsDN2zdC0fQ4JAK6yCOp003FIf3Wjz';
+  String suffixToUse = '';
+  // String suffixToUse = '';
+}
+
 abstract class BaseConfig {
   String stripePublicKey;
   String stripeSuffix;
@@ -39,7 +47,7 @@ class DevConfig implements BaseConfig {
   String get fireStorageServiceProjectId => 'buytimedev-2e17a';
   String get fireStorageServiceStorageBucket => 'buytimedev-2e17a.appspot.com';
   String get googleApiKey => 'AIzaSyBwDB1i6FveSGC0rFar4ZYcJM3xacQqZ1g';
-  String get serverToken => 'AAAAEednpAc:APA91bEoNyQrUKghz6Mlrg7kA6kMaXM2DqDCkFmGnDJSiNXD6T3jgtfbDbl1Dm4QeJ6uzfg0H888YAqa2tIOLM4VhLp3CmuzOXaxe3v3sIWABGmyxi_nm73g1vfDHoFv9PQj2YhG1A9o';
+  String get serverToken => '';
   String get stripePublicKey => 'pk_test_51HS20eHr13hxRBpCZl1V0CKFQ7XzJbku7UipKLLIcuNGh3rp4QVsEDCThtV0l2AQ3jMtLsDN2zdC0fQ4JAK6yCOp003FIf3Wjz';
   String get stripeSuffix => '_test';
 
@@ -115,9 +123,10 @@ class ProdConfig implements BaseConfig {
   String get fireStorageServiceProjectId => 'buytime-458a1';
   String get fireStorageServiceStorageBucket => 'buytime-458a1.appspot.com';
   String get googleApiKey => 'AIzaSyBwDB1i6FveSGC0rFar4ZYcJM3xacQqZ1g';
-  String get serverToken => 'AAAA6xUtyfE:APA91bGHhEzVUY9fnj4FbTXJX57qcgF-8GBrfBbGIa8kEpEIdsXRgQxbtsvbhL-w-_MQYKIj0XVlSaDSf2s6O3D3SM3o-z_AZnHQwBNLiw1ygyZOuVAKa5YmXeu6Da9eBqRD9uwFHSPi';
-  String get stripePublicKey => 'pk_live_51HS20eHr13hxRBpCLHzfi0SXeqw8Efu911cWdYEE96BAV0zSOesvE83OiqqzRucKIxgCcKHUvTCJGY6cXRtkDVCm003CmGXYzy';
-  String get stripeSuffix => '';
+  String get serverToken => '';
+  // String get stripePublicKey => 'pk_live_51HS20eHr13hxRBpCLHzfi0SXeqw8Efu911cWdYEE96BAV0zSOesvE83OiqqzRucKIxgCcKHUvTCJGY6cXRtkDVCm003CmGXYzy';
+  String get stripePublicKey => 'pk_test_51HS20eHr13hxRBpCZl1V0CKFQ7XzJbku7UipKLLIcuNGh3rp4QVsEDCThtV0l2AQ3jMtLsDN2zdC0fQ4JAK6yCOp003FIf3Wjz';
+  String get stripeSuffix => '_test';
 
   @override
   set cloudFunctionLink(String _cloudFunctionLink) {

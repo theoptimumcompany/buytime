@@ -12,6 +12,7 @@ limitations under the License.
 
 import 'package:Buytime/UI/management/service_internal/class/service_slot_classes.dart';
 import 'package:Buytime/reblox/model/file/optimum_file_to_upload.dart';
+import 'package:Buytime/reblox/model/service/convention_slot_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/model/service/service_slot_time_state.dart';
 import 'package:Buytime/reblox/model/slot/slot_list_snippet_state.dart';
@@ -51,6 +52,14 @@ class SetServiceServiceCrossSell {
   SetServiceServiceCrossSell(this._serviceCrossSell);
 
   bool get serviceCrossSell => _serviceCrossSell;
+}
+
+class SetServiceHubConvention {
+  bool _serviceHubConvention;
+
+  SetServiceHubConvention(this._serviceHubConvention);
+
+  bool get serviceHubConvention => _serviceHubConvention;
 }
 
 class ServiceRequestByID {
@@ -188,6 +197,14 @@ class SetServiceName {
   String get name => _name;
 }
 
+class SetServiceOriginalLanguage {
+  String _originalLanguage;
+
+  SetServiceOriginalLanguage(this._originalLanguage);
+
+  String get originalLanguage => _originalLanguage;
+}
+
 class SetServiceImage1 {
   String _image;
 
@@ -306,6 +323,14 @@ class SetServiceSelectedCategories {
   List<Parent> get selectedCategories => _selectedCategories;
 }
 
+class SetServiceConventionSlotList {
+  List<ConventionSlot> _conventionSlotList;
+
+  SetServiceConventionSlotList(this._conventionSlotList);
+
+  List<ConventionSlot> get conventionSlotList => _conventionSlotList;
+}
+
 class SetServiceSwitchSlots {
   bool _enabled;
 
@@ -342,6 +367,14 @@ class DeleteServiceSlot {
   int get index => _index;
 }
 
+class DeleteConventionSlot {
+  int _index;
+  DeleteConventionSlot(this._index);
+  int get index => _index;
+}
+
+
+
 ServiceState serviceReducer(ServiceState state, action) {
   ServiceState serviceState = ServiceState.fromState(state);
   if (action is SetCreatedService) {
@@ -358,7 +391,12 @@ ServiceState serviceReducer(ServiceState state, action) {
   }
   if (action is SetServiceName) {
     serviceState.name = action.name;
-    debugPrint('service_reducer: state value: ${serviceState.name} | action value: ${action.name}');
+    debugPrint('service_reducer => state value: ${serviceState.name} | action value: ${action.name}');
+    return serviceState;
+  }
+  if (action is SetServiceOriginalLanguage) {
+    serviceState.originalLanguage = action.originalLanguage;
+    //debugPrint('service_reducer => state value: ${serviceState.name} | action value: ${action.name}');
     return serviceState;
   }
   if (action is SetServiceImage1) {
@@ -377,6 +415,11 @@ ServiceState serviceReducer(ServiceState state, action) {
     serviceState.serviceCrossSell = action.serviceCrossSell;
     return serviceState;
   }
+  if (action is SetServiceHubConvention) {
+    serviceState.hubConvention = action.serviceHubConvention;
+    return serviceState;
+  }
+
   if (action is SetServiceDescription) {
     serviceState.description = action.description;
     return serviceState;
@@ -446,6 +489,7 @@ ServiceState serviceReducer(ServiceState state, action) {
     serviceState.serviceSlot.removeAt(action.index);
     return serviceState;
   }
+
   if (action is SetServiceSelectedCategories) {
     List<String> selCat = [];
 
@@ -463,6 +507,14 @@ ServiceState serviceReducer(ServiceState state, action) {
   }
   if (action is ServiceChanged) {
     serviceState = action.serviceState.copyWith();
+    return serviceState;
+  }
+  if (action is SetServiceConventionSlotList) {
+    serviceState.conventionSlotList = action.conventionSlotList;
+    return serviceState;
+  }
+  if (action is DeleteConventionSlot) {
+    serviceState.conventionSlotList.removeAt(action.index);
     return serviceState;
   }
   if (action is CreatedService) {

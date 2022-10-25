@@ -17,6 +17,7 @@ import 'package:Buytime/reblox/model/business/external_business_list_state.dart'
 import 'package:Buytime/reblox/model/business/external_business_state.dart';
 import 'package:Buytime/reblox/model/role/role.dart';
 import 'package:Buytime/reblox/model/service/snippet/service_snippet_state.dart';
+import 'package:flutter/cupertino.dart';
 
 class ExternalBusinessListRequest {
   String _userId;
@@ -66,7 +67,7 @@ ExternalBusinessListState externalBusinessListReducer(ExternalBusinessListState 
   }
   if (action is ExternalBusinessListReturned) {
     externalBusinessListState = ExternalBusinessListState(externalBusinessListState: action.businessListState).copyWith();
-    print("Nel reducer business List");
+    debugPrint("external_business-list_reducer => Nel reducer business List");
     return externalBusinessListState;
   }
   return state;

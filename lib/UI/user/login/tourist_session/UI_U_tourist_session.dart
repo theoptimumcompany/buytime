@@ -15,20 +15,15 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 import 'package:Buytime/UI/user/cart/UI_U_ConfirmOrder.dart';
-import 'package:Buytime/UI/user/landing/UI_U_landing.dart';
 import 'package:Buytime/UI/user/login/tourist_session/UI_U_tourist_session_register.dart';
-import 'package:Buytime/UI/user/turist/UI_U_service_explorer.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/autoComplete/auto_complete_state.dart';
-import 'package:Buytime/reblox/model/role/role.dart';
 import 'package:Buytime/reblox/model/snippet/device.dart';
 import 'package:Buytime/reblox/model/snippet/token.dart';
 import 'package:Buytime/reblox/model/user/user_state.dart';
 import 'package:Buytime/reblox/reducer/auto_complete_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/user_reducer.dart';
-import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
-import 'package:Buytime/reusable/branded_button.dart';
-import 'package:Buytime/reusable/branded_button_tourist.dart';
+import 'package:Buytime/reusable/w_branded_button.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:crypto/crypto.dart';
 import 'package:device_info/device_info.dart';
@@ -36,9 +31,6 @@ import 'package:email_validator/email_validator.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:Buytime/UI/user/login/UI_U_t_o_s_terms_conditons.dart';
-import 'package:Buytime/UI/user/login/UI_U_login.dart';
-import 'package:Buytime/UI/user/login/UI_U_registration.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
@@ -317,7 +309,7 @@ class _TouristSessionState extends State<TouristSession> with SingleTickerProvid
       });
     } else {
       Navigator.of(context).pop();
-      debugPrint('response: $responseMessage');
+      debugPrint('UI_U_tourist_session => response: $responseMessage');
       if (responseMessage.isEmpty) {
         setState(() {
           _success = false;
@@ -507,7 +499,7 @@ class _TouristSessionState extends State<TouristSession> with SingleTickerProvid
 
   void checkAuth() async {
     bool didAuthenticate = await localAuth.authenticateWithBiometrics(localizedReason: AppLocalizations.of(context).pleaseAuthenticateShowAccountBalance);
-    debugPrint('UI_U_Login => $didAuthenticate');
+    debugPrint('UI_U_tourist_session => $didAuthenticate');
   }
 
   ///Validation
@@ -615,7 +607,7 @@ class _TouristSessionState extends State<TouristSession> with SingleTickerProvid
                           ),
                         ),
                         child: CustomScrollView(
-                            //physics: ClampingScrollPhysics(),
+                            physics: ClampingScrollPhysics(),
                             shrinkWrap: true,
                             slivers: [
                               SliverList(
@@ -702,7 +694,7 @@ class _TouristSessionState extends State<TouristSession> with SingleTickerProvid
       converter: (store) => store.state,
       builder: (context, snapshot) {
         autoCompleteList = snapshot.autoCompleteListState.autoCompleteListState;
-        debugPrint('UI_U_Login => Auto complete List LENGTH: ${autoCompleteList.length}');
+        debugPrint('UI_U_tourist_session => Auto complete List LENGTH: ${autoCompleteList.length}');
         return GestureDetector(
           onTap: () {
             FocusScopeNode currentFocus = FocusScope.of(context);
@@ -732,6 +724,7 @@ class _TouristSessionState extends State<TouristSession> with SingleTickerProvid
               //resizeToAvoidBottomInset: false,
               appBar: AppBar(
                 leading: IconButton(
+                  key: Key('tourist_login_back'),
                   icon: Icon(
                     Icons.keyboard_arrow_left,
                     color: BuytimeTheme.UserPrimary,
@@ -833,6 +826,7 @@ class _TouristSessionState extends State<TouristSession> with SingleTickerProvid
                                                 ///SizeConfig.safeBlockHorizontal * 14
                                                 //width: 2,
                                                 child: TextFormField(
+                                                  key: Key('email_key'),
                                                   //autofillHints: [AutofillHints.username],
                                                   controller: _emailController,
                                                   textAlign: TextAlign.start,
@@ -914,6 +908,7 @@ class _TouristSessionState extends State<TouristSession> with SingleTickerProvid
                                             ///SizeConfig.safeBlockHorizontal * 14
                                             //width: 328,
                                             child: TextFormField(
+                                              key: Key('password_key'),
                                               controller: _passwordController,
                                               textAlign: TextAlign.start,
                                               obscureText: passwordVisible,
@@ -1086,6 +1081,7 @@ class _TouristSessionState extends State<TouristSession> with SingleTickerProvid
                                           crossAxisAlignment: CrossAxisAlignment.center,
                                           children: [
                                             FloatingActionButton(
+                                              key: Key('login_key'),
                                               onPressed: () async {
                                                 if (_formKey.currentState.validate() && !_isRequestFlying) {
                                                   _signInWithEmailAndPassword();

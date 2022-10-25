@@ -204,7 +204,7 @@ class CalendarAvailabilityState extends State<CalendarAvailability> {
                           fontWeight: FontWeight.w800,
                         ),
                         validator: (String value) {
-                          debugPrint('${checkIn.compareTo(checkOut)}');
+                          debugPrint('W_service_step_calendar_availability => ${checkIn.compareTo(checkOut)}');
                           if (value.isEmpty || checkIn.compareTo(checkOut) > 0) {
                             return AppLocalizations.of(context).pleaseEnterAValidDateInterval;
                           }

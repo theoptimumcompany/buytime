@@ -14,10 +14,10 @@ import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_list_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reblox/reducer/booking_list_reducer.dart';
-import 'package:Buytime/reusable/booking_list_item.dart';
-import 'package:Buytime/reusable/booking_month_list.dart';
-import 'package:Buytime/reusable/custom_bottom_button_widget.dart';
-import 'package:Buytime/reusable/menu/UI_M_business_list_drawer.dart';
+import 'package:Buytime/UI/management/invite/widget/w_booking_list_item.dart';
+import 'package:Buytime/UI/management/invite/widget/w_booking_month_list.dart';
+import 'package:Buytime/reusable/w_custom_bottom_button.dart';
+import 'package:Buytime/reusable/menu/w_manager_drawer.dart';
 import 'package:Buytime/services/booking_service_epic.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
@@ -66,13 +66,21 @@ class _CheckedOutBookingListState extends State<CheckedOutBookingList> {
         key: _drawerKey,
         ///Appbar
         appBar: AppBar(
-          backgroundColor: BuytimeTheme.ManagerPrimary,
-          title: Utils.barTitle(AppLocalizations.of(context).checkedOutBookings),
+          backgroundColor: BuytimeTheme.TextWhite,
+          title: Text(
+            AppLocalizations.of(context).checkedOutBookings,
+            textAlign: TextAlign.start,
+            style: TextStyle(
+              color: BuytimeTheme.TextBlack,
+              fontSize: 16,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
           centerTitle: true,
           leading: IconButton(
             icon: Icon(
               Icons.keyboard_arrow_left,
-              color: Colors.white,
+              color: Colors.black,
             ),
             onPressed: () async{
               Navigator.of(context).pop();
@@ -101,13 +109,15 @@ class _CheckedOutBookingListState extends State<CheckedOutBookingList> {
                               //color: Colors.blueGrey.withOpacity(0.1),
                               //margin: EdgeInsets.only(bottom: 60.0),
                               padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
-                              child: CustomScrollView(shrinkWrap: true, slivers: [
+                              child: CustomScrollView(
+                                  physics: new ClampingScrollPhysics(),
+                                  shrinkWrap: true, slivers: [
                                 SliverList(
                                   delegate: SliverChildBuilderDelegate((context, index) {
                                     //MenuItemModel menuItem = menuItems.elementAt(index);
                                     List<BookingState> bookings = widget.checkedOutBookingsList.elementAt(index);
                                     /*bookings.forEach((element) {
-                                      debugPrint('UI_M_BookingList: bookings booking status: ${element.user.first.surname} ${element.status}');
+                                      debugPrint('UI_M_checked_out_booking_list => bookings booking status: ${element.user.first.surname} ${element.status}');
                                     });*/
                                     return BookingMonthList(bookings);
                                   },
@@ -121,7 +131,7 @@ class _CheckedOutBookingListState extends State<CheckedOutBookingList> {
                         ///No Bookings
                         Container(
                           height: SizeConfig.safeBlockVertical * 8,
-                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                           decoration: BoxDecoration(
                               color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2),
                               borderRadius: BorderRadius.circular(10)

@@ -22,7 +22,8 @@ enum PaymentType {
   applePay,
   googlePay,
   onSite,
-  noPaymentMethod
+  noPaymentMethod,
+  paypal
 }
 
 

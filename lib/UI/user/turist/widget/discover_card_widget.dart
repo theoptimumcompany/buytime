@@ -47,7 +47,7 @@ class _DiscoverCardWidgetState extends State<DiscoverCardWidget> {
   @override
   Widget build(BuildContext context) {
 
-    return  CachedNetworkImage(
+    return CachedNetworkImage(
       imageUrl: Utils.version200(widget.categoryState.categoryImage),
       imageBuilder: (context, imageProvider) => Container(
         margin: EdgeInsets.all(SizeConfig.safeBlockVertical*.0),
@@ -72,10 +72,10 @@ class _DiscoverCardWidgetState extends State<DiscoverCardWidget> {
               FirebaseAnalytics().logEvent(
                   name: 'category_discover',
                   parameters: {
-                    'userEmail': StoreProvider.of<AppState>(context).state.user.email,
-                    'date': DateTime.now(),
-                    'categoryName': widget.categoryState.name,
-                    'categoryPosition': widget.index,
+                    'user_email': StoreProvider.of<AppState>(context).state.user.email,
+                    'date': DateTime.now().toString(),
+                    'category_name': widget.categoryState.name.isNotEmpty ? widget.categoryState.name : 'no name found',
+                    'category_position': widget.index,
                   });
               List<ServiceListSnippetState> serviceListSnippetListState = StoreProvider.of<AppState>(context).state.serviceListSnippetListState.serviceListSnippetListState;
               for (var z = 0; z < serviceListSnippetListState.length; z++) {
@@ -92,15 +92,15 @@ class _DiscoverCardWidgetState extends State<DiscoverCardWidget> {
             child: Container(
               width: widget.width,
               height: widget.heigth,
-              alignment: Alignment.bottomLeft,
+              alignment: Alignment.center,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(5)),
                   color: Colors.black.withOpacity(.4)
               ),
               child: Container(
-                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2, right: SizeConfig.safeBlockHorizontal * 1, bottom: SizeConfig.safeBlockVertical * 1),
+                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2, right: SizeConfig.safeBlockHorizontal * 1),
                 child: Text(
-                  widget.categoryState.name,
+                  widget.categoryState.name.toUpperCase(),
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                       fontFamily: BuytimeTheme.FontFamily,

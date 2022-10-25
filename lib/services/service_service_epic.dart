@@ -40,11 +40,11 @@ class ServiceListSnippetRequestService implements EpicClass<AppState> {
 
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-    debugPrint("SERVICE_SERVICE_EPIC - ServiceListRequestService => ServiceListService CATCHED ACTION");
+    debugPrint("service_service_epic => ServiceListRequestService => ServiceListService CATCHED ACTION");
     List<ServiceState> serviceStateList = [];
     return actions.whereType<ServiceListSnippetRequest>().asyncMap((event) async {
-      debugPrint("SERVICE_SERVICE_EPIC - ServiceListSnippetRequest => ServiceListService Firestore request");
-      debugPrint("SERVICE_SERVICE_EPIC - ServiceListSnippetRequest => Business Id: ${event.businessId}");
+      debugPrint("service_service_epic => ServiceListSnippetRequest => ServiceListService Firestore request");
+      debugPrint("service_service_epic => ServiceListSnippetRequest => Business Id: ${event.businessId}");
       int docs = 0;
       int read = 0;
       var servicesFirebaseShadow = await FirebaseFirestore.instance.collection("business")
@@ -53,19 +53,19 @@ class ServiceListSnippetRequestService implements EpicClass<AppState> {
 
       read++;
       docs++;
-      //debugPrint("SERVICE_SERVICE_EPIC - ServiceListSnippetRequest => MAP " + servicesFirebaseShadow.docs.first.data().toString());
+      //debugPrint("service_service_epic => ServiceListSnippetRequest => MAP " + servicesFirebaseShadow.docs.first.data().toString());
       serviceListSnippetState = ServiceListSnippetState.fromJson(servicesFirebaseShadow.docs.first.data());
 
-      debugPrint("SERVICE_SERVICE_EPIC - ServiceListSnippetRequest => Epic ServiceListService return list with " + servicesFirebaseShadow.docs.length.toString());
+      debugPrint("service_service_epic => ServiceListSnippetRequest => Epic ServiceListService return list with " + servicesFirebaseShadow.docs.length.toString());
 
       statisticsState = store.state.statistics;
       int reads = statisticsState.serviceListRequestServiceRead;
       int writes = statisticsState.serviceListRequestServiceWrite;
       int documents = statisticsState.serviceListRequestServiceDocuments;
-      debugPrint('SERVICE_SERVICE_EPIC - ServiceListSnippetRequest => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('service_service_epic => ServiceListSnippetRequest => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       reads = reads + read;
       documents = documents + docs;
-      debugPrint('SERVICE_SERVICE_EPIC - ServiceListSnippetRequest =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('service_service_epic => ServiceListSnippetRequest =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       statisticsState.serviceListRequestServiceRead = reads;
       statisticsState.serviceListRequestServiceWrite = writes;
       statisticsState.serviceListRequestServiceDocuments = documents;
@@ -86,11 +86,11 @@ class ServiceListSnippetListRequestService implements EpicClass<AppState> {
 
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-    debugPrint("SERVICE_SERVICE_EPIC - ServiceListSnippetListRequestService => ServiceListService CATCHED ACTION");
+    debugPrint("service_service_epic => ServiceListSnippetListRequestService => ServiceListService CATCHED ACTION");
     List<ServiceState> serviceStateList = [];
     return actions.whereType<ServiceListSnippetListRequest>().asyncMap((event) async {
-      debugPrint("SERVICE_SERVICE_EPIC - ServiceListSnippetListRequestService => ServiceListService Firestore request");
-      debugPrint("SERVICE_SERVICE_EPIC - ServiceListSnippetListRequestService => Business length: ${event.businessesId.length}");
+      debugPrint("service_service_epic => ServiceListSnippetListRequestService => ServiceListService Firestore request");
+      debugPrint("service_service_epic => ServiceListSnippetListRequestService => Business length: ${event.businessesId.length}");
       int docs = 0;
       int read = 0;
       serviceListSnippetListState = [];
@@ -105,19 +105,19 @@ class ServiceListSnippetListRequestService implements EpicClass<AppState> {
 
       read++;
       docs++;
-      //debugPrint("SERVICE_SERVICE_EPIC - ServiceListSnippetRequest => MAP " + servicesFirebaseShadow.docs.first.data().toString());
+      //debugPrint("service_service_epic => ServiceListSnippetRequest => MAP " + servicesFirebaseShadow.docs.first.data().toString());
       //serviceListSnippetState = ServiceListSnippetState.fromJson(servicesFirebaseShadow.docs.first.data());
 
-      debugPrint("SERVICE_SERVICE_EPIC - ServiceListSnippetListRequestService => Epic ServiceListService return list with " + serviceListSnippetListState.length.toString());
+      debugPrint("service_service_epic => ServiceListSnippetListRequestService => Epic ServiceListService return list with " + serviceListSnippetListState.length.toString());
 
       statisticsState = store.state.statistics;
       int reads = statisticsState.serviceListRequestServiceRead;
       int writes = statisticsState.serviceListRequestServiceWrite;
       int documents = statisticsState.serviceListRequestServiceDocuments;
-      debugPrint('SERVICE_SERVICE_EPIC - ServiceListSnippetListRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('service_service_epic => ServiceListSnippetListRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       reads = reads + read;
       documents = documents + docs;
-      debugPrint('SERVICE_SERVICE_EPIC - ServiceListSnippetListRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('service_service_epic => ServiceListSnippetListRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       statisticsState.serviceListRequestServiceRead = reads;
       statisticsState.serviceListRequestServiceWrite = writes;
       statisticsState.serviceListRequestServiceDocuments = documents;
@@ -139,11 +139,11 @@ class ServiceListSnippetRequestServiceNavigate implements EpicClass<AppState> {
   List<String> businessIds;
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-    debugPrint("SERVICE_SERVICE_EPIC - ServiceListSnippetRequestServiceNavigate => ServiceListService CATCHED ACTION");
+    debugPrint("service_service_epic => ServiceListSnippetRequestServiceNavigate => ServiceListService CATCHED ACTION");
     List<ServiceState> serviceStateList = [];
     return actions.whereType<ServiceListSnippetRequestNavigate>().asyncMap((event) async {
-      debugPrint("SERVICE_SERVICE_EPIC - ServiceListSnippetRequestServiceNavigate => ServiceListService Firestore request");
-      debugPrint("SERVICE_SERVICE_EPIC - ServiceListSnippetRequestServiceNavigate => Business Id: ${event.businessId}");
+      debugPrint("service_service_epic => ServiceListSnippetRequestServiceNavigate => ServiceListService Firestore request");
+      debugPrint("service_service_epic => ServiceListSnippetRequestServiceNavigate => Business Id: ${event.businessId}");
       int docs = 0;
       int read = 0;
       var servicesFirebaseShadow = await FirebaseFirestore.instance.collection("business")
@@ -152,7 +152,7 @@ class ServiceListSnippetRequestServiceNavigate implements EpicClass<AppState> {
 
       read++;
       docs++;
-      //debugPrint("SERVICE_SERVICE_EPIC - ServiceListSnippetRequest => MAP " + servicesFirebaseShadow.docs.first.data().toString());
+      //debugPrint("service_service_epic => ServiceListSnippetRequest => MAP " + servicesFirebaseShadow.docs.first.data().toString());
       if (servicesFirebaseShadow.docs != null && servicesFirebaseShadow.docs.isNotEmpty) {
         serviceListSnippetState = ServiceListSnippetState.fromJson(servicesFirebaseShadow.docs?.first?.data());
       }
@@ -164,22 +164,22 @@ class ServiceListSnippetRequestServiceNavigate implements EpicClass<AppState> {
           if(sL.serviceVisibility == 'Deactivated' || sL.serviceVisibility == 'Active'){
             serviceIds.add(sL.serviceAbsolutePath.split('/').last);
             if(!businessIds.contains(sL.serviceAbsolutePath.split('/').first) && sL.serviceAbsolutePath.split('/').first != store.state.business.id_firestore){
-              debugPrint('EXTERNAL BUSINESS ID: ${sL.serviceAbsolutePath.split('/').first}');
+              debugPrint('service_service_epic => EXTERNAL BUSINESS ID: ${sL.serviceAbsolutePath.split('/').first}');
               businessIds.add(sL.serviceAbsolutePath.split('/').first);
             }
           }
         });
       });
-      debugPrint("SERVICE_SERVICE_EPIC - ServiceListSnippetRequestServiceNavigate => Epic ServiceListService return list with " + servicesFirebaseShadow.docs.length.toString());
+      debugPrint("service_service_epic => ServiceListSnippetRequestServiceNavigate => Epic ServiceListService return list with " + servicesFirebaseShadow.docs.length.toString());
 
       statisticsState = store.state.statistics;
       int reads = statisticsState.serviceListRequestServiceRead;
       int writes = statisticsState.serviceListRequestServiceWrite;
       int documents = statisticsState.serviceListRequestServiceDocuments;
-      debugPrint('SERVICE_SERVICE_EPIC - ServiceListSnippetRequestServiceNavigate => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('service_service_epic => ServiceListSnippetRequestServiceNavigate => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       reads = reads + read;
       documents = documents + docs;
-      debugPrint('SERVICE_SERVICE_EPIC - ServiceListSnippetRequestServiceNavigate =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('service_service_epic => ServiceListSnippetRequestServiceNavigate =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       statisticsState.serviceListRequestServiceRead = reads;
       statisticsState.serviceListRequestServiceWrite = writes;
       statisticsState.serviceListRequestServiceDocuments = documents;
@@ -202,11 +202,11 @@ class ServiceListRequestService implements EpicClass<AppState> {
 
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-    debugPrint("SERVICE_SERVICE_EPIC - ServiceListRequestService => ServiceListService CATCHED ACTION");
+    debugPrint("service_service_epic => ServiceListRequestService => ServiceListService CATCHED ACTION");
     List<ServiceState> serviceStateList = [];
     return actions.whereType<ServiceListRequest>().asyncMap((event) async {
-      debugPrint("SERVICE_SERVICE_EPIC - ServiceListRequestService => ServiceListService Firestore request");
-      debugPrint("SERVICE_SERVICE_EPIC - ServiceListRequestService => Business Id: ${event.businessId}");
+      debugPrint("service_service_epic => ServiceListRequestService => ServiceListService Firestore request");
+      debugPrint("service_service_epic => ServiceListRequestService => Business Id: ${event.businessId}");
       int docs = 0;
       int read = 0;
       if (event.permission == "user") {
@@ -250,16 +250,16 @@ class ServiceListRequestService implements EpicClass<AppState> {
         read = 1;
       }
 
-      debugPrint("SERVICE_SERVICE_EPIC - ServiceListRequestService => Epic ServiceListService return list with " + serviceStateList.length.toString());
+      debugPrint("service_service_epic => ServiceListRequestService => Epic ServiceListService return list with " + serviceStateList.length.toString());
 
       statisticsState = store.state.statistics;
       int reads = statisticsState.serviceListRequestServiceRead;
       int writes = statisticsState.serviceListRequestServiceWrite;
       int documents = statisticsState.serviceListRequestServiceDocuments;
-      debugPrint('SERVICE_SERVICE_EPIC - ServiceListRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('service_service_epic => ServiceListRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       reads = reads + read;
       documents = documents + docs;
-      debugPrint('SERVICE_SERVICE_EPIC - ServiceListRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('service_service_epic => ServiceListRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       statisticsState.serviceListRequestServiceRead = reads;
       statisticsState.serviceListRequestServiceWrite = writes;
       statisticsState.serviceListRequestServiceDocuments = documents;
@@ -279,11 +279,11 @@ class ServiceListByIdsRequestService implements EpicClass<AppState> {
 
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-    debugPrint("SERVICE_SERVICE_EPIC - ServiceListByIdsRequestService => ServiceListService CATCHED ACTION");
+    debugPrint("service_service_epic => ServiceListByIdsRequestService => ServiceListService CATCHED ACTION");
     List<ServiceState> serviceStateList = [];
     return actions.whereType<ServiceListRequestByIds>().asyncMap((event) async {
-      debugPrint("SERVICE_SERVICE_EPIC - ServiceListByIdsRequestService => ServiceListService Firestore request");
-      debugPrint("SERVICE_SERVICE_EPIC - ServiceListByIdsRequestService => Service Ids Length: ${event.serviceIds.length}");
+      debugPrint("service_service_epic => ServiceListByIdsRequestService => ServiceListService Firestore request");
+      debugPrint("service_service_epic => ServiceListByIdsRequestService => Service Ids Length: ${event.serviceIds.length}");
       int docs = 0;
       int read = 0;
       serviceStateList.clear();
@@ -307,16 +307,16 @@ class ServiceListByIdsRequestService implements EpicClass<AppState> {
       }
 
 
-      debugPrint("SERVICE_SERVICE_EPIC - ServiceListByIdsRequestService => Epic ServiceListService return list with " + serviceStateList.length.toString());
+      debugPrint("service_service_epic => ServiceListByIdsRequestService => Epic ServiceListService return list with " + serviceStateList.length.toString());
 
       statisticsState = store.state.statistics;
       int reads = statisticsState.serviceListRequestServiceRead;
       int writes = statisticsState.serviceListRequestServiceWrite;
       int documents = statisticsState.serviceListRequestServiceDocuments;
-      debugPrint('SERVICE_SERVICE_EPIC - ServiceListByIdsRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('service_service_epic => ServiceListByIdsRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       reads = reads + read;
       documents = documents + docs;
-      debugPrint('SERVICE_SERVICE_EPIC - ServiceListByIdsRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('service_service_epic => ServiceListByIdsRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       statisticsState.serviceListRequestServiceRead = reads;
       statisticsState.serviceListRequestServiceWrite = writes;
       statisticsState.serviceListRequestServiceDocuments = documents;
@@ -333,14 +333,13 @@ class ServiceListByIdsRequestService implements EpicClass<AppState> {
 
 class ServiceListByBusinessIdsRequestService implements EpicClass<AppState> {
   StatisticsState statisticsState;
-
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-    debugPrint("SERVICE_SERVICE_EPIC - ServiceListByBusinessIdsRequestService => ServiceListService CATCHED ACTION");
+    debugPrint("service_service_epic => ServiceListByBusinessIdsRequestService => ServiceListService CATCHED ACTION");
     List<ServiceState> serviceStateList = [];
     return actions.whereType<ServiceListRequestByBusinessIds>().asyncMap((event) async {
-      debugPrint("SERVICE_SERVICE_EPIC - ServiceListByBusinessIdsRequestService => ServiceListService Firestore request");
-      debugPrint("SERVICE_SERVICE_EPIC - ServiceListByBusinessIdsRequestService => Service Ids Length: ${event.businessIds.length}");
+      debugPrint("service_service_epic => ServiceListByBusinessIdsRequestService => ServiceListService Firestore request");
+      debugPrint("service_service_epic => ServiceListByBusinessIdsRequestService => Service Ids Length: ${event.businessIds.length}");
       int docs = 0;
       int read = 0;
       serviceStateList.clear();
@@ -364,16 +363,16 @@ class ServiceListByBusinessIdsRequestService implements EpicClass<AppState> {
       }
 
 
-      debugPrint("SERVICE_SERVICE_EPIC - ServiceListByBusinessIdsRequestService => Epic ServiceListService return list with " + serviceStateList.length.toString());
+      debugPrint("service_service_epic => ServiceListByBusinessIdsRequestService => Epic ServiceListService return list with " + serviceStateList.length.toString());
 
       statisticsState = store.state.statistics;
       int reads = statisticsState.serviceListRequestServiceRead;
       int writes = statisticsState.serviceListRequestServiceWrite;
       int documents = statisticsState.serviceListRequestServiceDocuments;
-      debugPrint('SERVICE_SERVICE_EPIC - ServiceListByBusinessIdsRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('service_service_epic => ServiceListByBusinessIdsRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       reads = reads + read;
       documents = documents + docs;
-      debugPrint('SERVICE_SERVICE_EPIC - ServiceListByBusinessIdsRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('service_service_epic => ServiceListByBusinessIdsRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       statisticsState.serviceListRequestServiceRead = reads;
       statisticsState.serviceListRequestServiceWrite = writes;
       statisticsState.serviceListRequestServiceDocuments = documents;
@@ -388,16 +387,72 @@ class ServiceListByBusinessIdsRequestService implements EpicClass<AppState> {
   }
 }
 
+class ServiceListByBusinessIdsRequestServiceBroadcast implements EpicClass<AppState> {
+  StatisticsState statisticsState;
+  @override
+  Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
+    debugPrint("service_service_epic => ServiceListByBusinessIdsRequestService => ServiceListService CATCHED ACTION");
+    List<ServiceState> serviceStateList = [];
+    return actions.whereType<ServiceListRequestByBusinessIdsBroadcast>().asyncMap((event) async {
+      debugPrint("service_service_epic => ServiceListByBusinessIdsRequestService => ServiceListService Firestore request");
+      debugPrint("service_service_epic => ServiceListByBusinessIdsRequestService => Service Ids Length: ${event.businessIds.length}");
+      int docs = 0;
+      int read = 0;
+      serviceStateList.clear();
+      for(int i = 0; i < event.businessIds.length; i++){
+        CollectionReference servicesFirebase = FirebaseFirestore.instance.collection("service");
+        Query query = servicesFirebase.where("businessId", isEqualTo: event.businessIds[i]);
+
+        /// 1 READ - ? DOC
+        //   query = query.where("id_category", isEqualTo: categoryInviteState.id_category);
+
+        await query.get().then((value) {
+          docs = value.docs.length;
+          value.docs.forEach((element) {
+            ServiceState serviceState = ServiceState.fromJson(element.data());
+
+            serviceStateList.add(serviceState);
+          });
+        });
+
+        ++read;
+      }
+
+
+      debugPrint("service_service_epic => ServiceListByBusinessIdsRequestService => Epic ServiceListService return list with " + serviceStateList.length.toString());
+
+      statisticsState = store.state.statistics;
+      int reads = statisticsState.serviceListRequestServiceRead;
+      int writes = statisticsState.serviceListRequestServiceWrite;
+      int documents = statisticsState.serviceListRequestServiceDocuments;
+      debugPrint('service_service_epic => ServiceListByBusinessIdsRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      reads = reads + read;
+      documents = documents + docs;
+      debugPrint('service_service_epic => ServiceListByBusinessIdsRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      statisticsState.serviceListRequestServiceRead = reads;
+      statisticsState.serviceListRequestServiceWrite = writes;
+      statisticsState.serviceListRequestServiceDocuments = documents;
+
+      if(serviceStateList.isEmpty)
+        serviceStateList.add(ServiceState().toEmpty());
+
+    }).expand((element) => [
+      ServiceListReturned(serviceStateList),
+      UpdateStatistics(statisticsState),
+    ]);
+  }
+}
+
 class ServiceListByIdsRequestNavigateService implements EpicClass<AppState> {
   StatisticsState statisticsState;
   List<String> categoryIds;
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-    debugPrint("SERVICE_SERVICE_EPIC - ServiceListByIdsRequestNavigateService => ServiceListService CATCHED ACTION");
+    debugPrint("service_service_epic => ServiceListByIdsRequestNavigateService => ServiceListService CATCHED ACTION");
     List<ServiceState> serviceStateList = [];
     return actions.whereType<ServiceListRequestByIdsNavigate>().asyncMap((event) async {
-      debugPrint("SERVICE_SERVICE_EPIC - ServiceListByIdsRequestNavigateService => ServiceListService Firestore request");
-      debugPrint("SERVICE_SERVICE_EPIC - ServiceListByIdsRequestNavigateService => Service Ids Length: ${event.serviceIds.length}");
+      debugPrint("service_service_epic => ServiceListByIdsRequestNavigateService => ServiceListService Firestore request");
+      debugPrint("service_service_epic => ServiceListByIdsRequestNavigateService => Service Ids Length: ${event.serviceIds.length}");
       int docs = 0;
       int read = 0;
       serviceStateList.clear();
@@ -429,16 +484,16 @@ class ServiceListByIdsRequestNavigateService implements EpicClass<AppState> {
         categoryIds.add(bS.categoryAbsolutePath.split('/').last);
       });
 
-      debugPrint("SERVICE_SERVICE_EPIC - ServiceListByIdsRequestNavigateService => Epic ServiceListService return list with " + serviceStateList.length.toString());
+      debugPrint("service_service_epic => ServiceListByIdsRequestNavigateService => Epic ServiceListService return list with " + serviceStateList.length.toString());
 
       statisticsState = store.state.statistics;
       int reads = statisticsState.serviceListRequestServiceRead;
       int writes = statisticsState.serviceListRequestServiceWrite;
       int documents = statisticsState.serviceListRequestServiceDocuments;
-      debugPrint('SERVICE_SERVICE_EPIC - ServiceListByIdsRequestNavigateService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('service_service_epic => ServiceListByIdsRequestNavigateService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       reads = reads + read;
       documents = documents + docs;
-      debugPrint('SERVICE_SERVICE_EPIC - ServiceListByIdsRequestNavigateService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('service_service_epic => ServiceListByIdsRequestNavigateService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       statisticsState.serviceListRequestServiceRead = reads;
       statisticsState.serviceListRequestServiceWrite = writes;
       statisticsState.serviceListRequestServiceDocuments = documents;
@@ -461,15 +516,15 @@ class ServiceListAndNavigateRequestService implements EpicClass<AppState> {
 
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-    debugPrint("SERVICE_SERVICE_EPIC - ServiceListAndNavigateRequestService => CATCHED ACTION");
+    debugPrint("service_service_epic => ServiceListAndNavigateRequestService => CATCHED ACTION");
     return actions.whereType<ServiceListAndNavigateRequest>().asyncMap((event) async {
       businessId = event.businessId;
-      debugPrint("SERVICE_SERVICE_EPIC - ServiceListAndNavigateRequestService => Firestore request business Id: ${event.businessId}, permission: ${event.permission}");
+      debugPrint("service_service_epic => ServiceListAndNavigateRequestService => Firestore request business Id: ${event.businessId}, permission: ${event.permission}");
       serviceStateList = [];
       int docs = 0;
       int read = 0;
       if (event.permission == "user") {
-        debugPrint("SERVICE_SERVICE_EPIC - ServiceListAndNavigateRequestService => Permission as user");
+        debugPrint("service_service_epic => ServiceListAndNavigateRequestService => Permission as user");
         var servicesFirebaseShadow = await FirebaseFirestore.instance
 
             /// 1 READ - ? DOC
@@ -499,7 +554,7 @@ class ServiceListAndNavigateRequestService implements EpicClass<AppState> {
 
         read = 2;
       } else {
-        debugPrint("SERVICE_SERVICE_EPIC - ServiceListAndNavigateRequestService => Permission as manager");
+        debugPrint("service_service_epic => ServiceListAndNavigateRequestService => Permission as manager");
         var servicesFirebase = await FirebaseFirestore.instance
 
             /// 1 READ - ? DOC
@@ -515,15 +570,15 @@ class ServiceListAndNavigateRequestService implements EpicClass<AppState> {
         ++read;
       }
 
-      debugPrint("SERVICE_SERVICE_EPIC - ServiceListAndNavigateRequestService => ServiceListAndNavigateRequestService return list with " + serviceStateList.length.toString());
+      debugPrint("service_service_epic => ServiceListAndNavigateRequestService => ServiceListAndNavigateRequestService return list with " + serviceStateList.length.toString());
       statisticsState = store.state.statistics;
       int reads = statisticsState.serviceListAndNavigateRequestServiceRead;
       int writes = statisticsState.serviceListAndNavigateRequestServiceWrite;
       int documents = statisticsState.serviceListAndNavigateRequestServiceDocuments;
-      debugPrint('SERVICE_SERVICE_EPIC - ServiceListAndNavigateRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('service_service_epic => ServiceListAndNavigateRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       reads = reads + read;
       documents = documents + docs;
-      debugPrint('SERVICE_SERVICE_EPIC - ServiceListAndNavigateRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('service_service_epic => ServiceListAndNavigateRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       statisticsState.serviceListAndNavigateRequestServiceRead = reads;
       statisticsState.serviceListAndNavigateRequestServiceWrite = writes;
       statisticsState.serviceListAndNavigateRequestServiceDocuments = documents;
@@ -538,15 +593,15 @@ class ServiceListAndNavigateOnConfirmRequestService implements EpicClass<AppStat
 
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-    debugPrint("SERVICE_SERVICE_EPIC - ServiceListAndNavigateOnConfirmRequestService => CATCHED ACTION");
+    debugPrint("service_service_epic => ServiceListAndNavigateOnConfirmRequestService => CATCHED ACTION");
     return actions.whereType<ServiceListAndNavigateOnConfirmRequest>().asyncMap((event) async {
-      debugPrint("SERVICE_SERVICE_EPIC - ServiceListAndNavigateOnConfirmRequestService => Firestore request business Id: ${event.businessId}, permission: ${event.permission}");
+      debugPrint("service_service_epic => ServiceListAndNavigateOnConfirmRequestService => Firestore request business Id: ${event.businessId}, permission: ${event.permission}");
       businessId = event.businessId;
       serviceStateList = [];
       int docs = 0;
       int read = 0;
       if (event.permission == "user") {
-        debugPrint("SERVICE_SERVICE_EPIC - ServiceListAndNavigateOnConfirmRequestService => Permission as user");
+        debugPrint("service_service_epic => ServiceListAndNavigateOnConfirmRequestService => Permission as user");
         var servicesFirebaseShadow = await FirebaseFirestore.instance
 
             /// 1 READ - ? DOC
@@ -576,7 +631,7 @@ class ServiceListAndNavigateOnConfirmRequestService implements EpicClass<AppStat
 
         read = 2;
       } else {
-        debugPrint("SERVICE_SERVICE_EPIC - ServiceListAndNavigateOnConfirmRequestService => Permission as manager");
+        debugPrint("service_service_epic => ServiceListAndNavigateOnConfirmRequestService => Permission as manager");
         var servicesFirebase = await FirebaseFirestore.instance.collection("service").where("businessId", isEqualTo: event.businessId).limit(50).get();
         docs = servicesFirebase.docs.length;
         servicesFirebase.docs.forEach((element) {
@@ -586,16 +641,16 @@ class ServiceListAndNavigateOnConfirmRequestService implements EpicClass<AppStat
         ++read;
       }
 
-      debugPrint("SERVICE_SERVICE_EPIC - ServiceListAndNavigateOnConfirmRequestService => Return list with " + serviceStateList.length.toString());
+      debugPrint("service_service_epic => ServiceListAndNavigateOnConfirmRequestService => Return list with " + serviceStateList.length.toString());
 
       statisticsState = store.state.statistics;
       int reads = statisticsState.serviceListAndNavigateOnConfirmRequestServiceRead;
       int writes = statisticsState.serviceListAndNavigateOnConfirmRequestServiceWrite;
       int documents = statisticsState.serviceListAndNavigateOnConfirmRequestServiceDocuments;
-      debugPrint('SERVICE_SERVICE_EPIC - ServiceListAndNavigateOnConfirmRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('service_service_epic => ServiceListAndNavigateOnConfirmRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       reads = reads + read;
       documents = documents + docs;
-      debugPrint('SERVICE_SERVICE_EPIC - ServiceListAndNavigateOnConfirmRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('service_service_epic => ServiceListAndNavigateOnConfirmRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       statisticsState.serviceListAndNavigateOnConfirmRequestServiceRead = reads;
       statisticsState.serviceListAndNavigateOnConfirmRequestServiceWrite = writes;
       statisticsState.serviceListAndNavigateOnConfirmRequestServiceDocuments = documents;
@@ -617,18 +672,18 @@ class ServiceUpdateServiceVisibility implements EpicClass<AppState> {
         /// 1 WRITE
         "visibility": event.visibility,
       }).then((value) {
-        print("SERVICE_SERVICE_EPIC - ServiceUpdateServiceVisibility => ServiceService visibility should be updated online ");
+        debugPrint("service_service_epic => ServiceUpdateServiceVisibility => ServiceService visibility should be updated online ");
       }).catchError((error) {
-        print('SERVICE_SERVICE_EPIC - ServiceUpdateServiceVisibility => ERROR: $error}');
+        debugPrint('service_service_epic => ServiceUpdateServiceVisibility => ERROR: $error}');
       }).then((value) {});
 
       statisticsState = store.state.statistics;
       int reads = statisticsState.serviceUpdateServiceVisibilityRead;
       int writes = statisticsState.serviceUpdateServiceVisibilityWrite;
       int documents = statisticsState.serviceUpdateServiceVisibilityDocuments;
-      debugPrint('SERVICE_SERVICE_EPIC - ServiceUpdateServiceVisibility => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('service_service_epic => ServiceUpdateServiceVisibility => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       ++writes;
-      debugPrint('SERVICE_SERVICE_EPIC - ServiceUpdateServiceVisibility =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('service_service_epic => ServiceUpdateServiceVisibility =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       statisticsState.serviceUpdateServiceVisibilityRead = reads;
       statisticsState.serviceUpdateServiceVisibilityWrite = writes;
       statisticsState.serviceUpdateServiceVisibilityDocuments = documents;
@@ -657,18 +712,18 @@ class ServiceUpdateSlotSnippetService implements EpicClass<AppState> {
       });
           /*.update(event.slotSnippet.toJson())
           .then((value) {
-        print("SERVICE_SERVICE_EPIC - ServiceUpdateSlotSnippetService => ServiceService visibility should be updated online ");
+        debugPrint("service_service_epic => ServiceUpdateSlotSnippetService => ServiceService visibility should be updated online ");
       }).catchError((error) {
-        print('SERVICE_SERVICE_EPIC - ServiceUpdateSlotSnippetService => ERROR: $error}');
+        debugPrint('service_service_epic => ServiceUpdateSlotSnippetService => ERROR: $error}');
       }).then((value) {});*/
 
       statisticsState = store.state.statistics;
       int reads = statisticsState.serviceUpdateServiceVisibilityRead;
       int writes = statisticsState.serviceUpdateServiceVisibilityWrite;
       int documents = statisticsState.serviceUpdateServiceVisibilityDocuments;
-      debugPrint('SERVICE_SERVICE_EPIC - ServiceUpdateServiceVisibility => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('service_service_epic => ServiceUpdateServiceVisibility => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       ++writes;
-      debugPrint('SERVICE_SERVICE_EPIC - ServiceUpdateServiceVisibility =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('service_service_epic => ServiceUpdateServiceVisibility =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       statisticsState.serviceUpdateServiceVisibilityRead = reads;
       statisticsState.serviceUpdateServiceVisibilityWrite = writes;
       statisticsState.serviceUpdateServiceVisibilityDocuments = documents;
@@ -692,7 +747,7 @@ class ServiceRequestService implements EpicClass<AppState> {
           .get();
 
       int serviceSnapshotDocs = serviceSnapshot.docs.length;
-      print("SERVICE_SERVICE_EPIC - ServiceRequestService => BOOKINGS LENGTH: $serviceSnapshotDocs");
+      debugPrint("service_service_epic => ServiceRequestService => BOOKINGS LENGTH: $serviceSnapshotDocs");
       if(serviceSnapshot.docs.isNotEmpty)
         serviceState =  ServiceState.fromJson(serviceSnapshot.docs.first.data());
       else{
@@ -705,10 +760,10 @@ class ServiceRequestService implements EpicClass<AppState> {
       int reads = statisticsState.serviceCreateServiceRead;
       int writes = statisticsState.serviceCreateServiceWrite;
       int documents = statisticsState.serviceCreateServiceDocuments;
-      debugPrint('SERVICE_SERVICE_EPIC - ServiceCreateService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('service_service_epic => ServiceCreateService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       ++reads;
       ++documents;
-      debugPrint('SERVICE_SERVICE_EPIC - ServiceCreateService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('service_service_epic => ServiceCreateService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       statisticsState.serviceCreateServiceRead = reads;
       statisticsState.serviceCreateServiceWrite = writes;
       statisticsState.serviceCreateServiceDocuments = documents;
@@ -734,26 +789,26 @@ class ServiceCreateService implements EpicClass<AppState> {
       serviceState.serviceId = docReference.id;
       serviceState.businessId = store.state.business.id_firestore;
       if (serviceState.fileToUploadList != null && serviceState.fileToUploadList.isNotEmpty) {
-        debugPrint("SERVICE_SERVICE_EPIC - ServiceCreateService => erviceEpic/CreateService : Create service with images");
+        debugPrint("service_service_epic => ServiceCreateService => erviceEpic/CreateService : Create service with images");
         await uploadFiles(event.serviceState.fileToUploadList, event.serviceState).then((ServiceState updatedServiceState) {
           /// TODO check write
-          debugPrint("SERVICE_SERVICE_EPIC - ServiceCreateService => ServiceServiceEpic: uploadFiles executed.");
+          debugPrint("service_service_epic => ServiceCreateService => ServiceServiceEpic: uploadFiles executed.");
           docReference.set(updatedServiceState.toJson()).then((value) {
-            debugPrint("SERVICE_SERVICE_EPIC - ServiceCreateService => ServiceService has created new Service! ");
+            debugPrint("service_service_epic => ServiceCreateService => ServiceService has created new Service! ");
             returnedServiceState = updatedServiceState.copyWith();
           }).catchError((error) {
-            debugPrint('SERVICE_SERVICE_EPIC - ServiceCreateService => ERROR: $error');
+            debugPrint('service_service_epic => ServiceCreateService => ERROR: $error');
           });
           returnedServiceState = serviceState.copyWith();
         }).catchError((error, stackTrace) {
-          debugPrint("SERVICE_SERVICE_EPIC - ServiceCreateService => UploadFiles failed: $error");
+          debugPrint("service_service_epic => ServiceCreateService => UploadFiles failed: $error");
         });
       } else {
-        debugPrint("SERVICE_SERVICE_EPIC - ServiceCreateService => ServiceEpic/CreateService : Create service without images");
+        debugPrint("service_service_epic => ServiceCreateService => ServiceEpic/CreateService : Create service without images");
         docReference.set(serviceState.toJson()).then((value) {
-          debugPrint("SERVICE_SERVICE_EPIC - ServiceCreateService => ServiceService has created new Service! ");
+          debugPrint("service_service_epic => ServiceCreateService => ServiceService has created new Service! ");
         }).catchError((error) {
-          debugPrint('SERVICE_SERVICE_EPIC - ServiceCreateService => ERROR: $error');
+          debugPrint('service_service_epic => ServiceCreateService => ERROR: $error');
         });
         returnedServiceState = serviceState.copyWith();
       }
@@ -762,8 +817,8 @@ class ServiceCreateService implements EpicClass<AppState> {
 
       store.state.serviceListSnippetState.businessSnippet.forEach((element) {
         if(serviceState.categoryId.contains(element.categoryAbsolutePath.split('/').last)){
-          debugPrint('SERVICE_SERVICE_EPIC - SERVICE NAME => ${serviceState.name}');
-          debugPrint('SERVICE_SERVICE_EPIC - SERVICE DESCRIPTION =>  ${serviceState.description}');
+          debugPrint('service_service_epic => SERVICE NAME => ${serviceState.name}');
+          debugPrint('service_service_epic => SERVICE DESCRIPTION =>  ${serviceState.description}');
           ServiceSnippetState tmp = ServiceSnippetState(
             serviceName: serviceState.name,
             serviceAbsolutePath: element.categoryAbsolutePath + '/' + serviceState.serviceId,
@@ -781,10 +836,10 @@ class ServiceCreateService implements EpicClass<AppState> {
       int reads = statisticsState.serviceCreateServiceRead;
       int writes = statisticsState.serviceCreateServiceWrite;
       int documents = statisticsState.serviceCreateServiceDocuments;
-      debugPrint('SERVICE_SERVICE_EPIC - ServiceCreateService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('service_service_epic => ServiceCreateService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       ++reads;
       ++documents;
-      debugPrint('SERVICE_SERVICE_EPIC - ServiceCreateService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('service_service_epic => ServiceCreateService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       statisticsState.serviceCreateServiceRead = reads;
       statisticsState.serviceCreateServiceWrite = writes;
       statisticsState.serviceCreateServiceDocuments = documents;
@@ -819,14 +874,15 @@ class ServiceDuplicateService implements EpicClass<AppState> {
         else if(i < serviceNames.length-1)
           serviceState.name = serviceState.name + '|' + serviceNames[i];
       }*/
-      debugPrint('SERVICE NAME WITH COPY OF: ${serviceState.name}');
+      debugPrint('service_service_epic => SERVICE NAME WITH COPY OF: ${serviceState.name}');
       DocumentReference docReference = FirebaseFirestore.instance.collection('service').doc();
       serviceState.serviceId = docReference.id;
+      serviceState.visibility = 'Invisible';
       docReference.set(serviceState.toJson()).then((value) {
-        debugPrint("SERVICE_SERVICE_EPIC - ServiceDuplicateService => ServiceService has duplicated a Service! ");
+        debugPrint("service_service_epic => ServiceDuplicateService => ServiceService has duplicated a Service! ");
         serviceState = serviceState.copyWith();
       }).catchError((error) {
-        debugPrint('SERVICE_SERVICE_EPIC - ServiceDuplicateService => ERROR: $error');
+        debugPrint('service_service_epic => ServiceDuplicateService => ERROR: $error');
       });
     }).expand((element) => [
           DuplicatedService(),
@@ -846,15 +902,15 @@ class ServiceUpdateService implements EpicClass<AppState> {
         await uploadFiles(event.serviceState.fileToUploadList, event.serviceState).then((ServiceState updatedServiceState) {
           serviceState = updatedServiceState;
           serviceState.serviceSlot.forEach((element) {
-            debugPrint('EPIC => MAX QUANTITY: ${element.maxQuantity}');
+            debugPrint('service_service_epic => EPIC => MAX QUANTITY: ${element.maxQuantity}');
           });
           FirebaseFirestore.instance.collection("service").doc(serviceState.serviceId).update(updatedServiceState.toJson()).then((value) {
 
-            print("ServiceService should be updated online ");
+            debugPrint("service_service_epic => ServiceService should be updated online ");
             serviceState = updatedServiceState;
 
           }).catchError((error) {
-            print(error);
+            debugPrint('service_service_epic => $error');
           }).then((value) {});
         });
       } else {
@@ -863,26 +919,26 @@ class ServiceUpdateService implements EpicClass<AppState> {
         int reads = statisticsState.serviceUpdateServiceRead;
         int writes = statisticsState.serviceUpdateServiceWrite;
         int documents = statisticsState.serviceUpdateServiceDocuments;
-        debugPrint('SERVICE_SERVICE_EPIC - ServiceUpdateService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
-        debugPrint('SERVICE_SERVICE_EPIC - ServiceUpdateService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+        debugPrint('service_service_epic => ServiceUpdateService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+        debugPrint('service_service_epic => ServiceUpdateService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
         statisticsState.serviceUpdateServiceRead = reads;
         statisticsState.serviceUpdateServiceWrite = writes;
         statisticsState.serviceUpdateServiceDocuments = documents;
         serviceState.serviceSlot.forEach((element) {
-          debugPrint('EPIC => MAX QUANTITY: ${element.maxQuantity}');
+          debugPrint('service_service_epic => EPIC => MAX QUANTITY: ${element.maxQuantity}');
         });
         FirebaseFirestore.instance.collection("service").doc(serviceState.serviceId).update(serviceState.toJson()).then((value) {
 
-          print("ServiceService should be updated online ");
+          debugPrint("service_service_epic => ServiceService should be updated online ");
         }).catchError((error) {
-          print(error);
+          debugPrint('service_service_epic => $error');
         }).then((value) {});
       }
 
       store.state.serviceListSnippetState.businessSnippet.forEach((element) {
         /*element.serviceList.forEach((element2) {
           String tmpPath = element.categoryAbsolutePath + '/' + serviceState.serviceId;
-          //debugPrint('SERVICE_SERVICE_EPIC - ServiceUpdateService => P1: ${element2.serviceAbsolutePath} | P2: $tmpPath');
+          //debugPrint('service_service_epic => ServiceUpdateService => P1: ${element2.serviceAbsolutePath} | P2: $tmpPath');
           if(element2.serviceAbsolutePath == tmpPath) {
             element2.serviceName = serviceState.name;
           }
@@ -890,9 +946,9 @@ class ServiceUpdateService implements EpicClass<AppState> {
         ServiceSnippetState tmp = ServiceSnippetState().toEmpty();
         element.serviceList.forEach((element2) {
           String tmpPath = element.categoryAbsolutePath + '/' + serviceState.serviceId;
-          //debugPrint('SERVICE_SERVICE_EPIC - ServiceUpdateService => P1: ${element2.serviceAbsolutePath} | P2: $tmpPath');
+          //debugPrint('service_service_epic => ServiceUpdateService => P1: ${element2.serviceAbsolutePath} | P2: $tmpPath');
           if(element2.serviceAbsolutePath == tmpPath) {
-            debugPrint('SERVICE_SERVICE_EPIC - ServiceUpdateService => P1: ${element2.serviceAbsolutePath} | P2: $tmpPath');
+            debugPrint('service_service_epic => ServiceUpdateService => P1: ${element2.serviceAbsolutePath} | P2: $tmpPath');
             //element2.serviceName = serviceState.name;
             //String tmpPath2 = serviceState.categoryId.first + '/' + serviceState.serviceId;
             element2.serviceName = serviceState.name;
@@ -992,7 +1048,7 @@ class ServiceDeleteService implements EpicClass<AppState> {
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<DeleteService>().asyncMap((event) {
       String serviceId = event.serviceId;
-      print("Deleting Service Id : " + serviceId);
+      debugPrint("service_service_epic => Deleting Service Id : " + serviceId);
       FirebaseFirestore.instance.collection('service').doc(serviceId).delete();
       serviceList = store.state.serviceList.serviceListState;
       serviceList.removeWhere((element) => element.serviceId == serviceId);

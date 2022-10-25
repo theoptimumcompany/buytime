@@ -10,6 +10,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ==============================================================================*/
 
+import 'package:Buytime/UI/user/turist/RUI_U_service_explorer.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/area/area_list_state.dart';
 import 'package:Buytime/reblox/model/area/area_state.dart';
@@ -98,107 +99,114 @@ import 'category_reducer.dart';
 import 'order_detail_reducer.dart';
 
 class ClickOnBusinessState {}
+
 class ErrorAction {
   String _error;
+
   ErrorAction(this._error);
+
   String get error => _error;
 }
+
 class ErrorReset {}
 
+class SetAppStateToEmpty {
+  SetAppStateToEmpty();
+}
+
 AppState appReducer(AppState state, dynamic action) {
-  BusinessState businessState = businessReducer(state.business, action);
-  AreaState areaState = areaReducer(state.area, action);
   AreaListState areaListState = areaListReducer(state.areaList, action);
-  ExternalBusinessState externalBusinessState = externalBusinessReducer(state.externalBusiness, action);
-  BookingState bookingState = bookingReducer(state.booking, action);
-  OrderState orderState = orderReducer(state.order, action);
-  OrderDetailState orderDetailState = orderDetailReducer(state.orderDetail, action);
-  OrderReservableState orderReservableState = orderReservableReducer(state.orderReservable, action);
-  OrderListState orderListState = orderListReducer(state.orderList, action);
-  OrderReservableListState orderReservableListState = orderReservableListReducer(state.orderReservableList, action);
-  BusinessListState businessListState = businessListReducer(state.businessList, action);
-  ExternalBusinessListState externalBusinessListState = externalBusinessListReducer(state.externalBusinessList, action);
+  AreaState areaState = areaReducer(state.area, action);
+  AutoCompleteListState autoCompleteListState = autoCompleteListReducer(state.autoCompleteListState, action);
+  AutoCompleteState autoCompleteState = autoCompleteReducer(state.autoCompleteState, action);
   BookingListState bookingListState = bookingListReducer(state.bookingList, action);
-  StripeState stripeState = stripePaymentReducer(state.stripe, action);
-  UserState userState = userReducer(state.user, action);
-  CategoryState categoryState = categoryReducer(state.category, action);
+  BookingState bookingState = bookingReducer(state.booking, action);
+  BusinessListState businessListState = businessListReducer(state.businessList, action);
+  BusinessState businessState = businessReducer(state.business, action);
+  CardListState cardListState = cardListReducer(state.cardListState, action);
+  CardState cardState = cardReducer(state.cardState, action);
   CategoryInviteState categoryInviteState = categoryInviteReducer(state.categoryInvite, action);
   CategoryListState categoryListState = categoryListReducer(state.categoryList, action);
-  ServiceState serviceState = serviceReducer(state.serviceState, action);
-  ServiceListState serviceListState = serviceListReducer(state.serviceList, action);
-  ServiceSlot serviceSlot = serviceSlotReducer(state.serviceSlot, action);
+  CategoryState categoryState = categoryReducer(state.category, action);
+  EmailState emailState = emailReducer(state.emailState, action);
+  ExternalBusinessImportedListState externalBusinessImportedListState = externalBusinessImportedListReducer(state.externalBusinessImportedListState, action);
+  ExternalBusinessImportedState externalBusinessImportedState = externalBusinessImportedReducer(state.externalBusinessImportedState, action);
+  ExternalBusinessListState externalBusinessListState = externalBusinessListReducer(state.externalBusinessList, action);
+  ExternalBusinessState externalBusinessState = externalBusinessReducer(state.externalBusiness, action);
+  ExternalServiceImportedListState externalServiceImportedListState = externalServiceImportedListReducer(state.externalServiceImportedListState, action);
+  ExternalServiceImportedState externalServiceImportedState = externalServiceImportedReducer(state.externalServiceImportedState, action);
+  NotificationListState notificationListState = notificationListReducer(state.notificationListState, action);
+  NotificationState notificationState = notificationReducer(state.notificationState, action);
+  OrderDetailState orderDetailState = orderDetailReducer(state.orderDetail, action);
+  OrderListState orderListState = orderListReducer(state.orderList, action);
+  OrderReservableListState orderReservableListState = orderReservableListReducer(state.orderReservableList, action);
+  OrderReservableState orderReservableState = orderReservableReducer(state.orderReservable, action);
+  OrderState orderState = orderReducer(state.order, action);
   Pipeline pipeline = pipelineReducer(state.pipeline, action);
   PipelineList pipelineList = pipelineListReducer(state.pipelineList, action);
+  PromotionListState promotionListState = promotionListReducer(state.promotionListState, action);
+  PromotionState promotionState = promotionReducer(state.promotionState, action);
+  ReservationsOrdersListSnippetListState reservationsOrdersListSnippetListState = reservationsOrdersListSnippetListReducer(state.reservationsOrdersListSnippetListState, action);
+  ReservationsOrdersListSnippetState reservationsOrdersListSnippetState = reservationsOrdersListSnippetReducer(state.reservationsOrdersListSnippetState, action);
+  ServiceListSnippetListState serviceListSnippetListState = serviceListSnippetListReducer(state.serviceListSnippetListState, action);
+  ServiceListSnippetState serviceListSnippetState = serviceListSnippetReducer(state.serviceListSnippetState, action);
+  ServiceListState serviceListState = serviceListReducer(state.serviceList, action);
+  ServiceSlot serviceSlot = serviceSlotReducer(state.serviceSlot, action);
+  ServiceState serviceState = serviceReducer(state.serviceState, action);
+  SlotListSnippetState slotSnippetListState = slotListSnippetReducer(state.slotSnippetListState, action);
   StatisticsState statisticsState = statisticsReducer(state.statistics, action);
-  CardState cardState = cardReducer(state.cardState, action);
-  CardListState cardListState = cardListReducer(state.cardListState, action);
-  AutoCompleteState autoCompleteState = autoCompleteReducer(state.autoCompleteState, action);
-  AutoCompleteListState autoCompleteListState = autoCompleteListReducer(state.autoCompleteListState, action);
-  NotificationState notificationState = notificationReducer(state.notificationState, action);
-  NotificationListState notificationListState = notificationListReducer(state.notificationListState, action);
-  EmailState emailState = emailReducer(state.emailState, action);
   String lastError = "";
   String previousError = "";
-  ServiceListSnippetState serviceListSnippetState = serviceListSnippetReducer(state.serviceListSnippetState, action);
-  ServiceListSnippetListState serviceListSnippetListState = serviceListSnippetListReducer(state.serviceListSnippetListState, action);
-  ExternalBusinessImportedState externalBusinessImportedState = externalBusinessImportedReducer(state.externalBusinessImportedState, action);
-  ExternalBusinessImportedListState externalBusinessImportedListState = externalBusinessImportedListReducer(state.externalBusinessImportedListState, action);
-  ExternalServiceImportedState externalServiceImportedState = externalServiceImportedReducer(state.externalServiceImportedState, action);
-  ExternalServiceImportedListState externalServiceImportedListState = externalServiceImportedListReducer(state.externalServiceImportedListState, action);
-  SlotListSnippetState slotSnippetListState = slotListSnippetReducer(state.slotSnippetListState, action);
-  ReservationsOrdersListSnippetState reservationsOrdersListSnippetState = reservationsOrdersListSnippetReducer(state.reservationsOrdersListSnippetState, action);
-  ReservationsOrdersListSnippetListState reservationsOrdersListSnippetListState = reservationsOrdersListSnippetListReducer(state.reservationsOrdersListSnippetListState, action);
-  PromotionState promotionState = promotionReducer(state.promotionState, action);
-  PromotionListState promotionListState = promotionListReducer(state.promotionListState, action);
+  StripeState stripeState = stripePaymentReducer(state.stripe, action);
+  UserState userState = userReducer(state.user, action);
 
   AppState newState = AppState.copyWith(
       //route: navigationReducer(state.route, action),
-      business: businessState,
       area: areaState,
       areaList: areaListState,
-      externalBusiness: externalBusinessState,
+      autoCompleteListState: autoCompleteListState,
+      autoCompleteState: autoCompleteState,
       booking: bookingState,
-      order: orderState,
-      orderDetail: orderDetailState,
-      orderReservable: orderReservableState,
-      orderList: orderListState,
-      orderReservableList: orderReservableListState,
-      businessList: businessListState,
-      externalBusinessList: externalBusinessListState,
       bookingList: bookingListState,
-      user: userState,
-      stripe: stripeState,
+      business: businessState,
+      businessList: businessListState,
+      cardListState: cardListState,
+      cardState: cardState,
       category: categoryState,
       categoryInvite: categoryInviteState,
       categoryList: categoryListState,
-      serviceState: serviceState,
-      serviceList: serviceListState,
-      serviceSlot: serviceSlot,
+      emailState: emailState,
+      externalBusiness: externalBusinessState,
+      externalBusinessImportedListState: externalBusinessImportedListState,
+      externalBusinessImportedState: externalBusinessImportedState,
+      externalBusinessList: externalBusinessListState,
+      externalServiceImportedListState: externalServiceImportedListState,
+      externalServiceImportedState: externalServiceImportedState,
+      lastError: lastError,
+      notificationListState: notificationListState,
+      notificationState: notificationState,
+      order: orderState,
+      orderDetail: orderDetailState,
+      orderList: orderListState,
+      orderReservable: orderReservableState,
+      orderReservableList: orderReservableListState,
       pipeline: pipeline,
       pipelineList: pipelineList,
-      route: navigationReducer(state.route, action),
-      statistics: statisticsState,
-      cardState: cardState,
-      cardListState: cardListState,
-      autoCompleteState: autoCompleteState,
-      autoCompleteListState: autoCompleteListState,
-      notificationState: notificationState,
-      notificationListState: notificationListState,
-      emailState: emailState,
-      lastError: lastError,
       previousError: previousError,
-      serviceListSnippetState: serviceListSnippetState,
-      serviceListSnippetListState: serviceListSnippetListState,
-      reservationsOrdersListSnippetState: reservationsOrdersListSnippetState,
+      promotionListState: promotionListState,
+      promotionState: promotionState,
       reservationsOrdersListSnippetListState: reservationsOrdersListSnippetListState,
-      externalBusinessImportedState: externalBusinessImportedState,
-      externalBusinessImportedListState: externalBusinessImportedListState,
-    externalServiceImportedState: externalServiceImportedState,
-    externalServiceImportedListState: externalServiceImportedListState,
+      reservationsOrdersListSnippetState: reservationsOrdersListSnippetState,
+      route: navigationReducer(state.route, action),
+      serviceList: serviceListState,
+      serviceListSnippetListState: serviceListSnippetListState,
+      serviceListSnippetState: serviceListSnippetState,
+      serviceSlot: serviceSlot,
+      serviceState: serviceState,
       slotSnippetListState: slotSnippetListState,
-    promotionState: promotionState,
-    promotionListState: promotionListState
-  );
+      statistics: statisticsState,
+      stripe: stripeState,
+      user: userState);
 
   if (action is ClickOnBusinessState) {
     // reset the store before going to the service list
@@ -220,6 +228,53 @@ AppState appReducer(AppState state, dynamic action) {
     newState.lastError = "";
     return newState;
     //cartCounter = 0;
+  }
+
+  if (action is SetAppStateToEmpty) {
+    newState.area = AreaState().toEmpty();
+    newState.areaList = AreaListState().toEmpty();
+    newState.autoCompleteListState = autoCompleteListState;
+    newState.autoCompleteState = autoCompleteState;
+    newState.booking = BookingState().toEmpty();
+    newState.bookingList = BookingListState().toEmpty();
+    newState.business = BusinessState().toEmpty();
+    newState.businessList = BusinessListState().toEmpty();
+    newState.cardListState = CardListState().toEmpty();
+    newState.cardState = CardState().toEmpty();
+    newState.category = CategoryState().toEmpty();
+    newState.categoryInvite = CategoryInviteState().toEmpty();
+    newState.categoryList = CategoryListState().toEmpty();
+    newState.emailState = EmailState().toEmpty();
+    newState.externalBusiness = ExternalBusinessState().toEmpty();
+    newState.externalBusinessImportedListState = ExternalBusinessImportedListState().toEmpty();
+    newState.externalBusinessImportedState = ExternalBusinessImportedState().toEmpty();
+    newState.externalBusinessList = ExternalBusinessListState().toEmpty();
+    newState.externalServiceImportedListState = ExternalServiceImportedListState().toEmpty();
+    newState.externalServiceImportedState = ExternalServiceImportedState().toEmpty();
+    newState.notificationListState = NotificationListState().toEmpty();
+    newState.notificationState = NotificationState().toEmpty();
+    newState.order = OrderState().toEmpty();
+    newState.order = OrderState().toEmpty();
+    newState.orderDetail = OrderDetailState().toEmpty();
+    newState.orderList = OrderListState().toEmpty();
+    newState.orderReservable = OrderReservableState().toEmpty();
+    newState.orderReservableList = OrderReservableListState().toEmpty();
+    newState.pipeline = Pipeline().toEmpty();
+    newState.pipelineList = PipelineList().toEmpty();
+    newState.promotionListState = PromotionListState().toEmpty();
+    newState.promotionState = PromotionState().toEmpty();
+    newState.reservationsOrdersListSnippetListState = ReservationsOrdersListSnippetListState().toEmpty();
+    newState.reservationsOrdersListSnippetState = ReservationsOrdersListSnippetState().toEmpty();
+    newState.serviceList = ServiceListState().toEmpty();
+    newState.serviceListSnippetListState = ServiceListSnippetListState().toEmpty();
+    newState.serviceListSnippetState = ServiceListSnippetState().toEmpty();
+    newState.serviceSlot = ServiceSlot().toEmpty();
+    newState.serviceState = ServiceState().toEmpty();
+    newState.slotSnippetListState = SlotListSnippetState().toEmpty();
+    newState.statistics = StatisticsState().toEmpty();
+    newState.stripe = StripeState().toEmpty();
+    newState.user = UserState().toEmpty();
+    return newState;
   }
 
   return newState;

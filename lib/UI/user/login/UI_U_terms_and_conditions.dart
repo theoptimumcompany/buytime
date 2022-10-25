@@ -36,7 +36,7 @@ class _TermsAndConditionsState extends State<TermsAndConditions> with SingleTick
   @override
   void initState() {
     super.initState();
-    debugPrint('path: ${widget.path}');
+    debugPrint('UI_U_terms_conditions => path: ${widget.path}');
   }
 
   @override

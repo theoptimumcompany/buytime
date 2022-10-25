@@ -16,13 +16,14 @@ import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/notification/notification_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/reducer/notification_reducer.dart';
-import 'package:Buytime/reusable/buytime_icons.dart';
+import 'package:Buytime/reusable/icon/buytime_icons.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/utils/utils.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:intl/intl.dart';
 
 class ManagerNotificationListItem extends StatefulWidget {
 
@@ -41,13 +42,18 @@ class _ManagerNotificationListItemState extends State<ManagerNotificationListIte
   String minutes = '';
   String seconds = '';
 
+  bool can = false;
+
+  List<String> notificationBodyList = [];
+  String customNotificationTime = '';
+  DateTime notificationTime = DateTime.now();
   @override
   void initState() {
     super.initState();
-    DateTime notificationTime = DateTime.now();
+
     if(widget.notificationState.timestamp != null)
       notificationTime = DateTime.fromMillisecondsSinceEpoch(widget.notificationState.timestamp);
-    debugPrint('user_notification_list_item => NOTIFICATION TIME: $notificationTime');
+    debugPrint('manager_notification_list_item => NOTIFICATION TIME: $notificationTime');
 
     DateTime currentTime = DateTime.now();
     Duration tmpDuration;
@@ -59,21 +65,49 @@ class _ManagerNotificationListItemState extends State<ManagerNotificationListIte
     if(tmpDuration.inDays != 0){
       days = tmpDuration.inDays.toString();
     }else if(tmpDuration.inHours != 0){
-      //debugPrint('user_notification_list_item => HOURS: ${tmpDuration.inHours}');
+      //debugPrint('manager_notification_list_item => HOURS: ${tmpDuration.inHours}');
       hours = tmpDuration.inHours.toString();
     }else if(tmpDuration.inMinutes != 0){
-      //debugPrint('user_notification_list_item => MINUTES: ${tmpDuration.inMinutes}');
+      //debugPrint('manager_notification_list_item => MINUTES: ${tmpDuration.inMinutes}');
       minutes = tmpDuration.inMinutes.toString();
     }else{
-      //debugPrint('user_notification_list_item => SECONDS: ${tmpDuration.inSeconds}');
+      //debugPrint('manager_notification_list_item => SECONDS: ${tmpDuration.inSeconds}');
       seconds = tmpDuration.inSeconds.toString();
     }
+
+    notificationBodyList =  widget.notificationState.body.split('|');
+    if(notificationBodyList.isNotEmpty && notificationBodyList.length == 4)
+      can = true;
   }
+
+  String notificationBodyBuilder(bool can, List<String> notificationBodyList, String customNotificationTime, BuildContext context) {
+    if (can) {
+      if (notificationBodyList[3] == 'orderPaid') {
+        return '${AppLocalizations.of(context).orderFor} ${notificationBodyList[0]} ${AppLocalizations.of(context).on} $customNotificationTime ${AppLocalizations.of(context).hasBeenPaid}, € ${notificationBodyList[2]}';
+      } else if (notificationBodyList[3] == 'paymentError') {
+        return '${AppLocalizations.of(context).thePaymentFor} ${notificationBodyList[0]} ${AppLocalizations.of(context).on} $customNotificationTime ${AppLocalizations.of(context).hasBeenRefusedMethod}';
+      } else if (notificationBodyList[3] == 'acceptedBuyer') {
+        return '${notificationBodyList[0]}  ${AppLocalizations.of(context).on} $customNotificationTime';
+      } else if (notificationBodyList[3] == 'declinedBuyer') {
+        return '${AppLocalizations.of(context).unfortunatelyYourBooking} ${notificationBodyList[0]} ${AppLocalizations.of(context).on} $customNotificationTime ${AppLocalizations.of(context).hasNotBeenAccepted}';
+      } else if (notificationBodyList[3] == 'canceledBuyer') {
+        return '${AppLocalizations.of(context).orderFor} ${notificationBodyList[0]} ${AppLocalizations.of(context).on} $customNotificationTime ${AppLocalizations.of(context).hasBeenCanceledFor} ${notificationBodyList[4]} ${AppLocalizations.of(context).aRefundFor} €${notificationBodyList[2]} ${AppLocalizations.of(context).hasBeenInitiated}';
+      } else if (notificationBodyList[3] == 'canceledBusiness') {
+        return '${AppLocalizations.of(context).orderFor} ${notificationBodyList[0]} ${AppLocalizations.of(context).on} $customNotificationTime ${AppLocalizations.of(context).hasBeenCanceledRefundFor} €${notificationBodyList[2]} ${AppLocalizations.of(context).hasBeenPaid}';
+      } else if (notificationBodyList[3] == 'createdAutoAcceptedBusiness') {
+        return '${AppLocalizations.of(context).aNewOrder} ${notificationBodyList[0]} ${AppLocalizations.of(context).on} $customNotificationTime ${AppLocalizations.of(context).hasBeenCreated}';
+      } else if (notificationBodyList[3] == 'actionRequiredBusiness') {
+        return '${AppLocalizations.of(context).aNewRequestFor} ${notificationBodyList[0]} ${AppLocalizations.of(context).on} $customNotificationTime ${AppLocalizations.of(context).needsConfirmation} ';
+      }
+    }
+    return widget.notificationState.body;
+  }
+
 
   @override
   Widget build(BuildContext context) {
-
-    //debugPrint('image: ${widget.serviceState.image1}');
+    customNotificationTime = DateFormat('E, dd/M/yyyy, HH:mm', Localizations.localeOf(context).languageCode).format(notificationTime);
+    //debugPrint('manager_notification_list_item => image: ${widget.serviceState.image1}');
     return Container(
       //margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 4, right: SizeConfig.safeBlockHorizontal * 4),
         //padding: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
@@ -128,7 +162,7 @@ class _ManagerNotificationListItemState extends State<ManagerNotificationListIte
                             flex: 10,
                             child: Container(
                               //width: SizeConfig.safeBlockHorizontal * 76,
-                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 0),
+                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 0),
                               child:  Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -195,7 +229,7 @@ class _ManagerNotificationListItemState extends State<ManagerNotificationListIte
                                     child: Container(
                                       margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 0, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1),
                                       child: Text(
-                                        widget.notificationState.body,
+                                        notificationBodyBuilder(can, notificationBodyList, customNotificationTime, context),
                                         overflow: TextOverflow.ellipsis,
                                         maxLines: 3,
                                         style: TextStyle(

@@ -14,7 +14,8 @@ import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:Buytime/reblox/model/business/external_business_state.dart';
 import 'package:Buytime/reblox/model/snippet/generic.dart';
 import 'package:Buytime/reblox/model/file/optimum_file_to_upload.dart';
-import 'package:Buytime/reusable/form/optimum_form_multi_photo.dart';
+import 'package:Buytime/reusable/form/w_optimum_form_multi_photo.dart';
+import 'package:flutter/cupertino.dart';
 
 class SetExternalBusiness {
   ExternalBusinessState _businessState;
@@ -393,7 +394,7 @@ ExternalBusinessState externalBusinessReducer(ExternalBusinessState state, actio
     return externalBusinessState;
   }
   if (action is SetExternalBusinessLogo) {
-    print("business_reducer: set business logo is" + action.logo);
+    debugPrint("external_business_reducer => set business logo is" + action.logo);
     externalBusinessState.logo = action.logo;
     return externalBusinessState;
   }
@@ -434,12 +435,12 @@ ExternalBusinessState externalBusinessReducer(ExternalBusinessState state, actio
     return externalBusinessState;
   }
   if (action is AddFileToUploadInExternalBusiness) {
-    print("business_reducer: addFileInbusiness. business: " + state.name);
+    debugPrint("external_business_reducer => addFileInbusiness. business: " + state.name);
 
     externalBusinessState.fileToUploadList = [];
 
     if (state.fileToUploadList != null) {
-      print("business_reducer: fileuploadlist != null");
+      debugPrint("external_business_reducer => fileuploadlist != null");
 
       externalBusinessState.fileToUploadList
         ..addAll(state.fileToUploadList);
@@ -450,7 +451,7 @@ ExternalBusinessState externalBusinessReducer(ExternalBusinessState state, actio
 
     externalBusinessState.fileToUploadList.forEach((element) {
       if(element.remoteName != null)
-        print("business_reducer: " + element.remoteName);
+        debugPrint("external_business_reducer => business_reducer: " + element.remoteName);
     });
     return externalBusinessState;
   }

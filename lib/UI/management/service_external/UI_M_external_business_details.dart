@@ -38,9 +38,9 @@ import 'package:Buytime/reblox/reducer/external_service_imported_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reservable_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/service_list_reducer.dart';
-import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
-import 'package:Buytime/reusable/buytime_icons.dart';
-import 'package:Buytime/reusable/enterExitRoute.dart';
+import 'package:Buytime/reusable/appbar/w_buytime_appbar.dart';
+import 'package:Buytime/reusable/icon/buytime_icons.dart';
+import 'package:Buytime/reusable/animation/enterExitRoute.dart';
 import 'package:Buytime/utils/theme/buytime_config.dart';
 import 'package:Buytime/utils/utils.dart';
 import 'package:another_flushbar/flushbar.dart';
@@ -155,10 +155,10 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
     serviceSnippetList.forEach((sLSL) {
       if(sLSL.businessId == serviceState.businessId){
         sLSL.businessSnippet.forEach((bS) {
-          //debugPrint('CATEGORY NAME: ${bS.categoryName}');
+          //debugPrint('UI_M_external_business_details => CATEGORY NAME: ${bS.categoryName}');
           bS.serviceList.forEach((sL) {
             if(sL.serviceAbsolutePath.split('/').last == serviceState.serviceId){
-              //debugPrint('SERVICE NAME: ${sL.serviceName} - SERVICE ID: ${sL.serviceAbsolutePath}');
+              //debugPrint('UI_M_external_business_details => SERVICE NAME: ${sL.serviceName} - SERVICE ID: ${sL.serviceAbsolutePath}');
               eSIS.externalCategoryName = bS.categoryName;
             }
           });
@@ -204,14 +204,14 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
       }
     });
     if(equalBusiness){
-      debugPrint('${ service.name} | if | business true');
+      debugPrint('UI_M_external_business_details => ${ service.name} | if | business true');
       externalServices.forEach((element) {
         if(element.externalServiceId == service.serviceId && element.imported == true){
-          debugPrint('${ service.name} | if | business true | service true');
+          debugPrint('UI_M_external_business_details => ${ service.name} | if | business true | service true');
           equalService = true;
         }
         if(element.externalServiceId == service.serviceId && element.imported == false){
-          debugPrint('${ service.name} | if | business true | service false');
+          debugPrint('UI_M_external_business_details => ${ service.name} | if | business true | service false');
           equalService = false;
           equalBusiness = false;
         }
@@ -247,7 +247,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
     double lon2 = 0.0;
     if(businessState.coordinate != null && businessState.coordinate.isNotEmpty){
       List<String> latLng1 = businessState.coordinate.replaceAll('(', '').replaceAll(')', '').replaceAll(' ', '').split(',');
-      debugPrint('W_add_external_business_list_item => $businessState.name} | Cordinates 1: $latLng1');
+      debugPrint('UI_M_external_business_details => $businessState.name} | Cordinates 1: $latLng1');
       if(latLng1.length == 2){
         lat1 = double.parse(latLng1[0]);
         lon1 = double.parse(latLng1[1]);
@@ -255,7 +255,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
     }
     if(widget.externalBusinessState.coordinate != null && widget.externalBusinessState.coordinate.isNotEmpty){
       List<String> latLng2 = widget.externalBusinessState.coordinate.replaceAll('(', '').replaceAll(')', '').replaceAll(' ', '').split(',');
-      debugPrint('W_add_external_business_list_item => ${widget.externalBusinessState.name} | Cordinates 2: $latLng2');
+      debugPrint('UI_M_external_business_details => ${widget.externalBusinessState.name} | Cordinates 2: $latLng2');
       if(latLng2.length == 2){
         lat2 = double.parse(latLng2[0]);
         lon2 = double.parse(latLng2[1]);
@@ -267,7 +267,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
         c(lat1 * p) * c(lat2 * p) *
             (1 - c((lon2 - lon1) * p))/2;
     double tmp = (12742 * asin(sqrt(a)));
-    debugPrint('W_add_external_business_list_item => Distance: $tmp');
+    debugPrint('UI_M_external_business_details => Distance: $tmp');
 
     return  tmp;
   }
@@ -294,7 +294,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
         }
         else{
           store.state.externalBusiness = ExternalBusinessState().toEmpty();
-          debugPrint('UI:M_external_business_details => Request Business for: ${widget.externalBusinessState.id_firestore}');
+          debugPrint('UI_M_external_business_details => Request Business for: ${widget.externalBusinessState.id_firestore}');
           store.dispatch(ExternalBusinessRequest(widget.externalBusinessState.id_firestore));
           //store.state.serviceList.serviceListState.clear();
           List<String> serviceIds = [];
@@ -360,11 +360,11 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
           }
         }else{
           if(snapshot.externalBusiness.id_firestore.isEmpty && tmpServiceList.isEmpty && startRequest){
-            debugPrint('UI:M_external_business_details => Requesting: ${snapshot.externalBusiness.id_firestore}');
+            debugPrint('UI_M_external_business_details => Requesting: ${snapshot.externalBusiness.id_firestore}');
             noActivity = true;
           }else{
             if(snapshot.externalBusiness != null && snapshot.externalBusiness.id_firestore != null && snapshot.externalBusiness.id_firestore.isNotEmpty){
-              debugPrint('UI:M_external_business_details => Business from request: ${snapshot.externalBusiness.id_firestore}');
+              debugPrint('UI_M_external_business_details => Business from request: ${snapshot.externalBusiness.id_firestore}');
               widget.externalBusinessState = snapshot.externalBusiness;
             }
 
@@ -407,7 +407,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
           if(sLS.visibility != 'Invisible')
             count++;
         });
-        debugPrint('Count: $count | tmp: ${tmp.length}');
+        debugPrint('UI_M_external_business_details => Count: $count | tmp: ${tmp.length}');
         if(count != 0 && count == tmp.length)
           equalService = true;
 
@@ -433,47 +433,49 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
           child: WillPopScope(
             onWillPop: () async => false,
             child: Scaffold(
-              appBar: BuytimeAppbar(
-                background: BuytimeTheme.ManagerPrimary,
-                width: media.width,
-                children: [
-                  ///Back Button
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
-                        child: IconButton(
-                          key: Key('external_business_details_back_key'),
-                          icon: const Icon(
-                            Icons.keyboard_arrow_left,
-                            color: Colors.white,
-                            size: 25.0,
-                          ),
-                          tooltip: AppLocalizations.of(context).comeBack,
-                          onPressed: () {
-                            if(widget.fromMyList && !widget.fromMyBusiness){
-                              StoreProvider.of<AppState>(context).dispatch(ExternalServiceImportedListRequest(StoreProvider.of<AppState>(context).state.business.id_firestore));
-                              StoreProvider.of<AppState>(context).dispatch(ExternalBusinessImportedListRequest(StoreProvider.of<AppState>(context).state.business.id_firestore));
-                              Navigator.pushReplacement(context, EnterExitRoute(enterPage: ExternalServiceList(), exitPage: AddExternalServiceList(false), from: false));
-                            }else if(!widget.fromMyList && widget.fromMyBusiness){
-                              StoreProvider.of<AppState>(context).dispatch(ExternalServiceImportedListRequest(StoreProvider.of<AppState>(context).state.business.id_firestore));
-                              StoreProvider.of<AppState>(context).dispatch(ExternalBusinessImportedListRequest(StoreProvider.of<AppState>(context).state.business.id_firestore));
-                              Navigator.pushReplacement(context, EnterExitRoute(enterPage: ExternalBusinessDetails(widget.externalBusinessState, true, false), exitPage: AddExternalServiceList(false), from: false));
-                            }else
-                              Navigator.of(context).pop();
-                          },
+              appBar: AppBar(
+                backgroundColor: BuytimeTheme.BackgroundWhite,
+                leading: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
+                      child: IconButton(
+                        key: Key('external_business_details_back_key'),
+                        icon: const Icon(
+                          Icons.keyboard_arrow_left,
+                          color: Colors.black,
+                          size: 25.0,
                         ),
+                        tooltip: AppLocalizations.of(context).comeBack,
+                        onPressed: () {
+                          if(widget.fromMyList && !widget.fromMyBusiness){
+                            StoreProvider.of<AppState>(context).dispatch(ExternalServiceImportedListRequest(StoreProvider.of<AppState>(context).state.business.id_firestore));
+                            StoreProvider.of<AppState>(context).dispatch(ExternalBusinessImportedListRequest(StoreProvider.of<AppState>(context).state.business.id_firestore));
+                            Navigator.pushReplacement(context, EnterExitRoute(enterPage: ExternalServiceList(), exitPage: AddExternalServiceList(false), from: false));
+                          }else if(!widget.fromMyList && widget.fromMyBusiness){
+                            StoreProvider.of<AppState>(context).dispatch(ExternalServiceImportedListRequest(StoreProvider.of<AppState>(context).state.business.id_firestore));
+                            StoreProvider.of<AppState>(context).dispatch(ExternalBusinessImportedListRequest(StoreProvider.of<AppState>(context).state.business.id_firestore));
+                            Navigator.pushReplacement(context, EnterExitRoute(enterPage: ExternalBusinessDetails(widget.externalBusinessState, true, false), exitPage: AddExternalServiceList(false), from: false));
+                          }else
+                            Navigator.of(context).pop();
+                        },
                       ),
+                    ),
 
-                    ],
+                  ],
+                ),
+                title: Text(
+                  widget.externalBusinessState.name ?? 'Test',
+                  textAlign: TextAlign.start,
+                  style: TextStyle(
+                    color: BuytimeTheme.TextBlack,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
                   ),
-                  ///Title
-                  Utils.barTitle(widget.externalBusinessState.name ?? 'Test'),
-                  SizedBox(
-                    width: 50,
-                  )
-                ],
+                ),
+                centerTitle: true,
+                elevation: 1,
               ),
               floatingActionButton: !widget.fromMyList ?
               Container(
@@ -674,7 +676,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                                     ),
                                     ///Hour text
                                     /*Container(
-                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                                       child: FittedBox(
                                         fit: BoxFit.scaleDown,
                                         child: Text(
@@ -691,7 +693,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                                     ),*/
                                     ///Open until value
                                     /*Container(
-                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
+                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
                                       child: FittedBox(
                                         fit: BoxFit.scaleDown,
                                         child: Text(
@@ -828,7 +830,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                                     ),
                                     ///Hour text
                                     /*Container(
-                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                                       child: FittedBox(
                                         fit: BoxFit.scaleDown,
                                         child: Text(
@@ -845,7 +847,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                                     ),*/
                                     ///Open until value
                                     /*Container(
-                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
+                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
                                       child: FittedBox(
                                         fit: BoxFit.scaleDown,
                                         child: Text(
@@ -1052,7 +1054,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                                                 });
                                                 if (direction == DismissDirection.endToStart) {
 
-                                                  debugPrint('UI_U_external_service_list => DX to DELETE');
+                                                  debugPrint('UI_M_external_business_details => DX to DELETE');
                                                   // Show a snackbar. This snackbar could also contain "Undo" actions.
                                                   cancelExternalService(snapshot.business, service.serviceId, snapshot.serviceListSnippetListState.serviceListSnippetListState);
                                                   /*Scaffold.of(context).showSnackBar(SnackBar(
@@ -1122,7 +1124,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                                                                   Utils.imageShimmer(91, 91),
                                                                   ///Service Name & Description
                                                                   Container(
-                                                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1),
+                                                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1),
                                                                     child:  Column(
                                                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1193,7 +1195,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                                         ///No List
                                         Container(
                                           height: SizeConfig.safeBlockVertical * 8,
-                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                                           decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
                                           child: Center(
                                               child: Container(
@@ -1418,7 +1420,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                                                                     Utils.imageShimmer(91, 91),
                                                                     ///Service Name & Description
                                                                     Container(
-                                                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1),
+                                                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1),
                                                                       child:  Column(
                                                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1486,7 +1488,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                                         ///No List
                                         Container(
                                           height: SizeConfig.safeBlockVertical * 8,
-                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                                           decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
                                           child: Center(
                                               child: Container(
@@ -1579,7 +1581,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                                                     setState(() {
                                                       allServiceList.removeAt(index);
                                                     });
-                                                    debugPrint('UI_U_SearchPage => SX to BOOK');
+                                                    debugPrint('UI_M_external_business_details => SX to BOOK');
                                                     createExternalService(snapshot.business, service, snapshot.serviceListSnippetListState.serviceListSnippetListState);
                                                     undoAllDeletion(index, service);
                                                   },
@@ -1645,7 +1647,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                                                     setState(() {
                                                       allServiceList.removeAt(index);
                                                     });
-                                                    debugPrint('UI_U_SearchPage => SX to BOOK');
+                                                    debugPrint('UI_M_external_business_details => SX to BOOK');
                                                     createExternalService(snapshot.business, service, snapshot.serviceListSnippetListState.serviceListSnippetListState);
                                                     undoAllDeletion(index, service);
                                                   },
@@ -1712,7 +1714,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                                                                     Utils.imageShimmer(91, 91),
                                                                     ///Service Name & Description
                                                                     Container(
-                                                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1),
+                                                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1),
                                                                       child:  Column(
                                                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1780,7 +1782,7 @@ class _ExternalBusinessDetailsState extends State<ExternalBusinessDetails> with 
                                         ///No List
                                         Container(
                                           height: SizeConfig.safeBlockVertical * 8,
-                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                                           decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
                                           child: Center(
                                               child: Container(

@@ -15,6 +15,9 @@ import 'dart:math';
 import 'package:Buytime/UI/management/service_internal/class/service_slot_classes.dart';
 import 'package:Buytime/UI/user/cart/UI_U_cart.dart';
 import 'package:Buytime/UI/user/cart/UI_U_cart_reservable.dart';
+import 'package:Buytime/UI/user/cart/infopark/UI_U_personal_info_park.dart';
+import 'package:Buytime/UI/user/turist/RUI_U_service_explorer.dart';
+import 'package:Buytime/helper/convention/convention_helper.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reblox/model/business/business_state.dart';
@@ -34,12 +37,13 @@ import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reservable_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reservable_reducer.dart';
 import 'package:Buytime/reblox/reducer/slot_list_snippet_reducer.dart';
-import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
-import 'package:Buytime/reusable/sliverAppBarDelegate.dart';
-import 'package:Buytime/reusable/time_slot_widget.dart';
+import 'package:Buytime/reusable/appbar/w_buytime_appbar.dart';
+import 'package:Buytime/reusable/w_sliver_app_bar_delegate.dart';
+import 'package:Buytime/UI/user/service/widget/w_time_slot.dart';
 import 'package:Buytime/utils/globals.dart';
 import 'package:Buytime/utils/utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
@@ -84,27 +88,27 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
   void initState() {
     super.initState();
     serviceState = widget.serviceState;
-    debugPrint('image: ${serviceState.image1}');
+    debugPrint('UI_U_service_reserve => image: ${serviceState.image1}');
     startRequest = true;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       double tmpPrice;
-      debugPrint('UI_U_ServiceReserve => SLOTS LENGTH: ${widget.serviceState.serviceSlot.length}');
+      debugPrint('UI_U_service_reserve => SLOTS LENGTH: ${widget.serviceState.serviceSlot.length}');
       DateTime currentTime = DateTime.now();
       currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0);
       widget.serviceState.serviceSlot.forEach((element) {
         DateTime checkOut = DateFormat('dd/MM/yyyy').parse(element.checkOut);
         if (checkOut.isAtSameMomentAs(currentTime) || checkOut.isAfter(currentTime)) {
-          //debugPrint('UI_U_ServiceReserve => VALID: ${element.checkIn}');
+          //debugPrint('UI_U_service_reserve => VALID: ${element.checkIn}');
           tmpPrice = element.price;
           if (element.price <= tmpPrice) {
             if (element.day != 0) {
-              //debugPrint('UI_U_ServiceReserve => SLOT WITH DAYS');
+              //debugPrint('UI_U_service_reserve => SLOT WITH DAYS');
               if (element.day > 1)
                 price = ' ${element.price.toStringAsFixed(0)} / ${element.day} ${AppLocalizations.of(context).days}';
               else
                 price = ' ${element.price.toStringAsFixed(0)} / ${element.day} ${AppLocalizations.of(context).day}';
             } else {
-              //debugPrint('UI_U_ServiceReserve => SLOT WITHOUT DAYS');
+              //debugPrint('UI_U_service_reserve => SLOT WITHOUT DAYS');
               int tmpMin = element.hour * 60 + element.minute;
               if (tmpMin > 90)
                 price = ' ${element.price.toStringAsFixed(0)} / ${element.hour} h ${element.minute} ${AppLocalizations.of(context).spaceMinSpace}';
@@ -161,13 +165,13 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
     tmpSlots.clear();
     List<DateTime> days = [];
     for (int i = 0; i <= endDate.difference(startDate).inDays; i++) {
-      debugPrint('UI_U_ServiceReserve => LOOKING DATE: ${startDate.add(Duration(days: i))} - IS AFTER: $userStartDate - IS BEFORE: $userEndDate');
+      debugPrint('UI_U_service_reserve => LOOKING DATE: ${startDate.add(Duration(days: i))} - IS AFTER: $userStartDate - IS BEFORE: $userEndDate');
       if(startDate.add(Duration(days: i)).isAfter(userStartDate) && startDate.add(Duration(days: i)).isBefore(userEndDate)){
-        debugPrint('UI_U_ServiceReserve => LOOKED DATE: ${startDate.add(Duration(days: i))} - IS AFTER: $startDate');
+        debugPrint('UI_U_service_reserve => LOOKED DATE: ${startDate.add(Duration(days: i))} - IS AFTER: $startDate');
         if(startDate.add(Duration(days: i)).isAfter(startDate) || startDate.add(Duration(days: i)).isAtSameMomentAs(startDate)){
           DateTime currentTime = DateTime.now();
           currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0);
-          debugPrint('UI_U_ServiceReserve => LOOKED DATE: ${startDate.add(Duration(days: i))} - CURRENT DATE: ${currentTime}');
+          debugPrint('UI_U_service_reserve => LOOKED DATE: ${startDate.add(Duration(days: i))} - CURRENT DATE: ${currentTime}');
           if(startDate.add(Duration(days: i)).isAfter(currentTime) || startDate.add(Duration(days: i)).isAtSameMomentAs(currentTime)) {
               //tmpSlots.add(List.generate(slot.startTime.length, (index) => [index, slot]));
                bool isIn = false;
@@ -175,22 +179,22 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
               tmpSlots.add([]);
               Map<DateTime, List<int>> limted = Map();
               reserved.forEach((element) {
-                debugPrint('UI_U_ServiceReserve => RESERVED: ${element.date} | ${element.itemList.first.time}');
+                debugPrint('UI_U_service_reserve => RESERVED: ${element.date} | ${element.itemList.first.time}');
               });
               reserved.forEach((r) {
                 r.itemList.forEach((item) {
-                  //debugPrint('UI_U_ServiceReserve => LOOKING DATE: ${item.date}');
+                  //debugPrint('UI_U_service_reserve => LOOKING DATE: ${item.date}');
                   if(startDate.add(Duration(days: i)).isAtSameMomentAs(item.date) && !isReserved && slot.startTime.contains(item.time)){
-                    debugPrint('UI_U_ServiceReserve => LOOKED DATE: ${item.date} - RESERVED: ${startDate.add(Duration(days: i))}');
+                    debugPrint('UI_U_service_reserve => LOOKED DATE: ${item.date} - RESERVED: ${startDate.add(Duration(days: i))}');
                     for(int j = 0; j < slot.startTime.length; j++) {
-                      debugPrint('UI_U_ServiceReserve => LOOKING TIME: ${slot.startTime[j]} - TIME: ${item.time}');
+                      debugPrint('UI_U_service_reserve => LOOKING TIME: ${slot.startTime[j]} - TIME: ${item.time}');
                       if(isValid(startDate.add(Duration(days: i)), slot.daysInterval[j])){
                         if(slot.startTime[j] == item.time){
                           isReserved = true;
-                          debugPrint('UI_U_ServiceReserve => LOOKED TIME: ${item.time} - RESERVED: ${slot.startTime[j]}');
+                          debugPrint('UI_U_service_reserve => LOOKED TIME: ${item.time} - RESERVED: ${slot.startTime[j]}');
                         }else{
                           isIn = true;
-                          debugPrint('UI_U_ServiceReserve => VALID FROM RESERVED: ${DateFormat('dd MMMM yyyy').format(startDate.add(Duration(days: i)))} - ${slot.startTime[j]}');
+                          debugPrint('UI_U_service_reserve => VALID FROM RESERVED: ${DateFormat('dd MMMM yyyy').format(startDate.add(Duration(days: i)))} - ${slot.startTime[j]}');
                           tmpSlots.last.add([j, slot]);
                         }
                       }
@@ -203,25 +207,25 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                 //tmpSlots.removeLast();
                 //tmpSlots.add(List.generate(slot.startTime.length, (index) => [index, slot]));
                 for(int j = 0; j < slot.startTime.length; j++) {
-                  //debugPrint('UI_U_ServiceReserve => LOOKING TIME: ${slot.startTime[j]} - TIME: ${item.time}');
+                  //debugPrint('UI_U_service_reserve => LOOKING TIME: ${slot.startTime[j]} - TIME: ${item.time}');
                   if(isValid(startDate.add(Duration(days: i)), slot.daysInterval[j])){
-                    debugPrint('UI_U_ServiceReserve => VALID : ${DateFormat('dd MMMM yyyy').format(startDate.add(Duration(days: i)))} - ${slot.startTime[j]}');
+                    debugPrint('UI_U_service_reserve => VALID : ${DateFormat('dd MMMM yyyy').format(startDate.add(Duration(days: i)))} - ${slot.startTime[j]}');
                     isIn = true;
                     tmpSlots.last.add([j, slot]);
                   }
                 }
               }
-               debugPrint('UI_U_ServiceReserve => BEFORE | tmpSlots LENGTH: ${tmpSlots.length}');
+               debugPrint('UI_U_service_reserve => BEFORE | tmpSlots LENGTH: ${tmpSlots.length}');
               if(isIn){
-                debugPrint('UI_U_ServiceReserve => IS IN');
+                debugPrint('UI_U_service_reserve => IS IN');
                 days.add(startDate.add(Duration(days: i)));
                 if(tmpSlots.last.isEmpty)
                   tmpSlots.removeLast();
               }else{
-                debugPrint('UI_U_ServiceReserve => NOT IN');
+                debugPrint('UI_U_service_reserve => NOT IN');
                 tmpSlots.removeLast();
               }
-               debugPrint('UI_U_ServiceReserve => AFTER | tmpSlots LENGTH: ${tmpSlots.length}');
+               debugPrint('UI_U_service_reserve => AFTER | tmpSlots LENGTH: ${tmpSlots.length}');
 
                //days.add(startDate.add(Duration(days: i)));
             }
@@ -238,72 +242,72 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
     //debugPrint("UI_U_service_reserve => mySlots - " + mySlots.length.toString());
     List<DateTime> days = [];
     for (int i = 0; i <= endDate.difference(startDate).inDays; i++) {
-      //debugPrint('UI_U_ServiceReserve => LOOKING DATE: ${startDate.add(Duration(days: i))} - IS AFTER: $userStartDate - IS BEFORE: $userEndDate');
+      //debugPrint('UI_U_service_reserve => LOOKING DATE: ${startDate.add(Duration(days: i))} - IS AFTER: $userStartDate - IS BEFORE: $userEndDate');
       if ((startDate.add(Duration(days: i)).isAtSameMomentAs(userStartDate) || startDate.add(Duration(days: i)).isAfter(userStartDate)) && startDate.add(Duration(days: i)).isBefore(userEndDate)) {
-        //debugPrint('UI_U_ServiceReserve => LOOKED DATE: ${startDate.add(Duration(days: i))} - IS AFTER: $startDate');
+        //debugPrint('UI_U_service_reserve => LOOKED DATE: ${startDate.add(Duration(days: i))} - IS AFTER: $startDate');
         if (startDate.add(Duration(days: i)).isAfter(startDate) || startDate.add(Duration(days: i)).isAtSameMomentAs(startDate)) {
           DateTime currentTime = DateTime.now();
           currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0);
-          //debugPrint('UI_U_ServiceReserve => LOOKED DATE: ${startDate.add(Duration(days: i))} - CURRENT DATE: ${currentTime}');
+          //debugPrint('UI_U_service_reserve => LOOKED DATE: ${startDate.add(Duration(days: i))} - CURRENT DATE: ${currentTime}');
           if (startDate.add(Duration(days: i)).isAfter(currentTime) || startDate.add(Duration(days: i)).isAtSameMomentAs(currentTime)) {
             days.add(startDate.add(Duration(days: i)));
             tmpSlots.add([]);
             for (int j = 0; j < mySlots.length; j++) {
               if (!first /*&& mySlots[i].visibility*/) {
-               // debugPrint('FIRST TIME');
+               // debugPrint('UI_U_service_reserve => FIRST TIME');
                 if (mySlots[j].free != 0) {
-                  //debugPrint('HEREEE => ${mySlots[j].on}');
+                  //debugPrint('UI_U_service_reserve => HEREEE => ${mySlots[j].on}');
                   DateTime squareDateFormat = DateFormat("dd/MM/yyyy").parse(mySlots[j].date);
-                  //debugPrint('DATE: $squareDateFormat');
+                  //debugPrint('UI_U_service_reserve => DATE: $squareDateFormat');
                   DateTime squareDate = squareDateFormat;
                   squareDate = new DateTime(squareDate.year, squareDate.month, squareDate.day, 0, 0, 0, 0, 0);
                   DateTime squareTime = DateFormat("dd/MM/yyyy").parse(mySlots[j].date);
                   squareTime = new DateTime(squareTime.year, squareTime.month, squareTime.day, int.parse(mySlots[j].on.split(':').first), int.parse(mySlots[j].on.split(':').last), 0, 0, 0);
-                  //debugPrint('UI_U_ServiceReserve => SQUARE SLOT DATE: $squareDate - CURRENT DATE: ${startDate.add(Duration(days: i))} - SQUARE SLOT TIME: ${mySlots[j].on} - SQUARE TIME: $squareTime');
+                  //debugPrint('UI_U_service_reserve => SQUARE SLOT DATE: $squareDate - CURRENT DATE: ${startDate.add(Duration(days: i))} - SQUARE SLOT TIME: ${mySlots[j].on} - SQUARE TIME: $squareTime');
                   if (squareDate.isAtSameMomentAs(startDate.add(Duration(days: i))) && squareTime.isAfter(DateTime.now())) {
-                    //debugPrint('UI_U_ServiceReserve => SQUARE SLOT DATE: $squareDate - CURRENT DATE: ${startDate.add(Duration(days: i))} - SQUARE SLOT TIME: ${mySlots[j].on} - SQUARE TIME: $squareTime');
+                    //debugPrint('UI_U_service_reserve => SQUARE SLOT DATE: $squareDate - CURRENT DATE: ${startDate.add(Duration(days: i))} - SQUARE SLOT TIME: ${mySlots[j].on} - SQUARE TIME: $squareTime');
                     tmpSlots.last.add([j, slot, mySlots[j]]);
                   }
                 }
               } else {
-               // debugPrint('SECONDS AND OTHERS');
+               // debugPrint('UI_U_service_reserve => SECONDS AND OTHERS');
                 bool found = false;
                 Provider.of<ReserveList>(context, listen: false).order.itemList.forEach((element) {
                   if (element.idSquareSlot == mySlots[j].uid) {
                     found = true;
-                 //   debugPrint('FOUND SLOT FROM ORDER');
+                 //   debugPrint('UI_U_service_reserve => FOUND SLOT FROM ORDER');
                   }
                 });
                 if (found) {
-                  //debugPrint('FROM ORDER');
+                  //debugPrint('UI_U_service_reserve => FROM ORDER');
                   DateTime squareDateFormat = DateFormat("dd/MM/yyyy").parse(mySlots[j].date);
-                  //debugPrint('DATE: $squareDateFormat');
+                  //debugPrint('UI_U_service_reserve => DATE: $squareDateFormat');
                   DateTime squareDate = squareDateFormat;
                   squareDate = new DateTime(squareDate.year, squareDate.month, squareDate.day, 0, 0, 0, 0, 0);
                   DateTime squareTime = DateFormat("dd/MM/yyyy").parse(mySlots[j].date);
                   squareTime = new DateTime(squareTime.year, squareTime.month, squareTime.day, int.parse(mySlots[j].on.split(':').first), int.parse(mySlots[j].on.split(':').last), 0, 0, 0);
-                  //debugPrint('UI_U_ServiceReserve => SQUARE SLOT DATE: $squareDate - CURRENT DATE: ${startDate.add(Duration(days: i))} - SQUARE SLOT TIME: ${mySlots[j].on} - SQUARE TIME: $squareTime');
+                  //debugPrint('UI_U_service_reserve => SQUARE SLOT DATE: $squareDate - CURRENT DATE: ${startDate.add(Duration(days: i))} - SQUARE SLOT TIME: ${mySlots[j].on} - SQUARE TIME: $squareTime');
                   if (mySlots[j].free != 0){
                     if (squareDate.isAtSameMomentAs(startDate.add(Duration(days: i))) && squareTime.isAfter(DateTime.now())) {
-                      //debugPrint('UI_U_ServiceReserve => SQUARE SLOT DATE: $squareDate - CURRENT DATE: ${startDate.add(Duration(days: i))} - SQUARE SLOT TIME: ${mySlots[j].on} - SQUARE TIME: $squareTime');
+                      //debugPrint('UI_U_service_reserve => SQUARE SLOT DATE: $squareDate - CURRENT DATE: ${startDate.add(Duration(days: i))} - SQUARE SLOT TIME: ${mySlots[j].on} - SQUARE TIME: $squareTime');
                       tmpSlots.last.add([j, slot, mySlots[j]]);
                     }
                   }
                 } else {
                   DateTime squareDateFormat = DateFormat("dd/MM/yyyy").parse(mySlots[j].date);
-                  //debugPrint('DATE: $squareDateFormat');
+                  //debugPrint('UI_U_service_reserve => DATE: $squareDateFormat');
                   DateTime squareDate = squareDateFormat;
                   squareDate = new DateTime(squareDate.year, squareDate.month, squareDate.day, 0, 0, 0, 0, 0);
                   DateTime squareTime = DateFormat("dd/MM/yyyy").parse(mySlots[j].date);
                   squareTime = new DateTime(squareTime.year, squareTime.month, squareTime.day, int.parse(mySlots[j].on.split(':').first), int.parse(mySlots[j].on.split(':').last), 0, 0, 0);
                   if (squareDate.isAtSameMomentAs(startDate.add(Duration(days: i))) && squareTime.isAfter(DateTime.now())) {
-                    //debugPrint('UI_U_ServiceReserve => OUTSIDE SQUARE SLOT DATE: $squareDate - CURRENT DATE: ${startDate.add(Duration(days: i))} - SQUARE SLOT TIME: ${mySlots[j].on} - SQUARE TIME: $squareTime');
-                    //debugPrint('NOT FROM ORDER');
+                    //debugPrint('UI_U_service_reserve => OUTSIDE SQUARE SLOT DATE: $squareDate - CURRENT DATE: ${startDate.add(Duration(days: i))} - SQUARE SLOT TIME: ${mySlots[j].on} - SQUARE TIME: $squareTime');
+                    //debugPrint('UI_U_service_reserve => NOT FROM ORDER');
                   }
                   if (mySlots[j].free != 0) {
-                    //debugPrint('UI_U_ServiceReserve => SQUARE SLOT DATE: $squareDate - CURRENT DATE: ${startDate.add(Duration(days: i))} - SQUARE SLOT TIME: ${mySlots[j].on} - SQUARE TIME: $squareTime');
+                    //debugPrint('UI_U_service_reserve => SQUARE SLOT DATE: $squareDate - CURRENT DATE: ${startDate.add(Duration(days: i))} - SQUARE SLOT TIME: ${mySlots[j].on} - SQUARE TIME: $squareTime');
                     if (squareDate.isAtSameMomentAs(startDate.add(Duration(days: i))) && squareTime.isAfter(DateTime.now())) {
-                      //debugPrint('UI_U_ServiceReserve => SQUARE SLOT DATE: $squareDate - CURRENT DATE: ${startDate.add(Duration(days: i))} - SQUARE SLOT TIME: ${mySlots[j].on} - SQUARE TIME: $squareTime');
+                      //debugPrint('UI_U_service_reserve => SQUARE SLOT DATE: $squareDate - CURRENT DATE: ${startDate.add(Duration(days: i))} - SQUARE SLOT TIME: ${mySlots[j].on} - SQUARE TIME: $squareTime');
                       tmpSlots.last.add([j, slot, mySlots[j]]);
                     }
                   }
@@ -348,11 +352,11 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
   void deleteItem(OrderState snapshot, OrderEntry entry) {
     //setState(() {
       //cartCounter = cartCounter - entry.number;
-      debugPrint('PROVIDE RENTRY NUMBER: ${entry.number}');
+      debugPrint('UI_U_service_reserve => PROVIDE RENTRY NUMBER: ${entry.number}');
       Provider.of<ReserveList>(context, listen: false).order.cartCounter = Provider.of<ReserveList>(context, listen: false).order.cartCounter - 1;
       Provider.of<ReserveList>(context, listen: false).order.itemList.remove(entry);
       Provider.of<ReserveList>(context, listen: false).order.removeReserveItem(entry,context);
-      debugPrint('PROVIDER ITEM LIST: ${Provider.of<ReserveList>(context, listen: false).order.itemList.length}');
+      debugPrint('UI_U_service_reserve => PROVIDER ITEM LIST: ${Provider.of<ReserveList>(context, listen: false).order.itemList.length}');
       StoreProvider.of<AppState>(context).dispatch(UpdateOrderReservable(Provider.of<ReserveList>(context, listen: false).order));
     //});
   }
@@ -394,6 +398,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
   SlotListSnippetState slotSnippetListState = SlotListSnippetState(slotListSnippet: []);
 
   bool reserve = false;
+  bool isRestaurant = false;
 
   @override
   Widget build(BuildContext context) {
@@ -414,7 +419,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
     orderState =  StoreProvider.of<AppState>(context).state.order;
     userState =  StoreProvider.of<AppState>(context).state.user;
 
-    debugPrint('SERVICE RESERVE HERE');
+    debugPrint('UI_U_service_reserve => SERVICE RESERVE HERE');
     slotSnippetListState = SlotListSnippetState(slotListSnippet: []);
 
     return GestureDetector(
@@ -428,62 +433,44 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
       child: WillPopScope(
         onWillPop: () async => false,
         child: Scaffold(
-          appBar: BuytimeAppbar(
-            background: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
-            width: media.width,
-            children: [
-              ///Back Button
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
-                    child: IconButton(
-                      key: Key('back_from_service_reserve_key'),
-                      icon: const Icon(
-                        Icons.keyboard_arrow_left,
-                        color: Colors.white,
-                        size: 25.0,
-                      ),
-                      tooltip: AppLocalizations.of(context).comeBack,
-                      onPressed: () {
-                        //StoreProvider.of<AppState>(context).dispatch(SetOrderCartCounter(0));
-                        setState(() {
-                          startRequest = true;
-                        });
-                        Provider.of<ReserveList>(context, listen: false).clear();
-                        StoreProvider.of<AppState>(context).dispatch(SetOrderReservable(OrderReservableState().toEmpty()));
-                        //widget.fromConfirm != null ? Navigator.of(context).pop() : Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Landing()),);
-                        Future.delayed(Duration.zero, () {
-                          Navigator.of(context).pop();
-                        });
-                      },
-                    ),
-                  ),
-                ],
+          appBar: AppBar(
+            backgroundColor: Colors.white,
+            brightness: Brightness.dark,
+            elevation: 1,
+            title: Text(
+              AppLocalizations.of(context).reserveSpace + ' ' + Utils.retriveField(Localizations.localeOf(context).languageCode, widget.serviceState.name),
+              style: TextStyle(
+                  fontFamily: BuytimeTheme.FontFamily,
+                  color: BuytimeTheme.TextBlack,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16 ///SizeConfig.safeBlockHorizontal * 7
               ),
-
-              ///Title
-              Container(
-                width: SizeConfig.safeBlockHorizontal * 60,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 10.0),
-                  child: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Text(
-                      AppLocalizations.of(context).reserveSpace + ' ' + Utils.retriveField(Localizations.localeOf(context).languageCode, widget.serviceState.name),
-                      textAlign: TextAlign.start,
-                      style: BuytimeTheme.appbarTitle,
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                    ),
-                  ),
-                ),
+            ),
+            centerTitle: true,
+            leading: IconButton(
+              icon: Icon(
+                Icons.keyboard_arrow_left,
+                color: Colors.black,
               ),
-              SizedBox(
-                width: 56.0,
-              )
-            ],
+              onPressed: () async{
+                FirebaseAnalytics().logEvent(
+                    name: 'back_time_slots',
+                    parameters: {
+                      'user_email': StoreProvider.of<AppState>(context).state.user.email,
+                      'date': DateTime.now().toString(),
+                    });
+                //StoreProvider.of<AppState>(context).dispatch(SetOrderCartCounter(0));
+                setState(() {
+                  startRequest = true;
+                });
+                Provider.of<ReserveList>(context, listen: false).clear();
+                StoreProvider.of<AppState>(context).dispatch(SetOrderReservable(OrderReservableState().toEmpty()));
+                //widget.fromConfirm != null ? Navigator.of(context).pop() : Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Landing()),);
+                Future.delayed(Duration.zero, () {
+                  Navigator.of(context).pop();
+                });
+              },
+            ),
           ),
           body: SafeArea(
             child: ConstrainedBox(
@@ -523,7 +510,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                   }
                   slotSnippetListState = SlotListSnippetState.fromJson(serviceSnapshot.data.docs.first.data());
                   slotSnippetListState.slotListSnippet.first.id = serviceSnapshot.data.docs.first.id;
-                  debugPrint("slotSnippetListState: ${slotSnippetListState.slotListSnippet.length}");
+                  debugPrint("UI_U_service_reserve => slotSnippetListState: ${slotSnippetListState.slotListSnippet.length}");
                   /*squareSlotList.clear();
                   slotSnippetListState.slotListSnippet.forEach((element) {
                     squareSlotList.addAll(element.slot);
@@ -596,7 +583,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                         }
                       }
                     }
-                    debugPrint('UI_U_ServiceReserve => AFTER FOR');
+                    debugPrint('UI_U_service_reserve => AFTER FOR');
                     first = true;
 
                     /*widget.serviceState.serviceSlot.forEach((element) {
@@ -645,7 +632,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                       element.sort((a, b) => (a[2].on).compareTo(b[2].on));
                     });
 
-                    debugPrint("UI_U_ServiceReserve => SLOTS LENGTH: ${Provider.of<ReserveList>(context, listen: false).slots.length} ${tmpSlots.length}");
+                    debugPrint("UI_U_service_reserve => SLOTS LENGTH: ${Provider.of<ReserveList>(context, listen: false).slots.length} ${tmpSlots.length}");
 
                     /*slots.forEach((element) {
             picked.add(List.generate(element.length, (index) => false));
@@ -683,7 +670,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                         Provider.of<ReserveList>(context, listen: false).initControllerList(List.generate(dates.length, (index) => [0, ItemScrollController()]));
                         Provider.of<ReserveList>(context, listen: false).initSlotControllerList(List.generate(dates.length, (index) => [0, ItemScrollController()]));
                       });
-                      debugPrint('UI_U_ServiceReserve => DATES LENGTH: ${dates.length} | BOOL LENGTH: ${selectQuantity.length}');
+                      debugPrint('UI_U_service_reserve => DATES LENGTH: ${dates.length} | BOOL LENGTH: ${selectQuantity.length}');
                     }
                   }
 
@@ -696,14 +683,14 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
 
                   ///First try
                   /*if(order.itemList.isNotEmpty){
-          debugPrint('UI_U_ServiceReserve => ORDER NOT EMPTY');
+          debugPrint('UI_U_service_reserve => ORDER NOT EMPTY');
           for(int i = 0; i < order.itemList.length; i++){
             for(int j = 0; j < dates.length; j++){
                 if(order.itemList[i].date == dates[j]){
                   for(int k = 0; k < picked[j].length; k++){
                     if(order.itemList[i].time == widget.serviceState.serviceSlot.first.startTime[k]){
-                      debugPrint("UI_U_ServiceReserve => $i TIME: ${order.itemList[i].time}");
-                      debugPrint("UI_U_ServiceReserve => $i DATE: ${order.itemList[i].date}");
+                      debugPrint("UI_U_service_reserve => $i TIME: ${order.itemList[i].time}");
+                      debugPrint("UI_U_service_reserve => $i DATE: ${order.itemList[i].date}");
                       picked[j][k] = true;
                     }
                   }
@@ -714,7 +701,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
 
                   ///Second try
                   /*order.selected.forEach((element) {
-          debugPrint('UI_U_ServiceReserve => SELECTED INDEXES: $element');
+          debugPrint('UI_U_service_reserve => SELECTED INDEXES: $element');
           //picked[element[0]][element[1]] = true;
         });*/
 
@@ -734,7 +721,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                         for (int k = 0; k < Provider.of<ReserveList>(context, listen: false).selectedSquareSlotList[i].length; k++) {
                           if (Provider.of<ReserveList>(context, listen: false).selectedSquareSlotList[i][k][1].uid == Provider.of<ReserveList>(context, listen: false).slots[i][j][2].uid) {
                             if (!idk.contains([i, k])) {
-                              debugPrint('FOUND TRUE: $i $k');
+                              debugPrint('UI_U_service_reserve => FOUND TRUE: $i $k');
                               idk.add([i, k]);
                             }
                           }
@@ -747,18 +734,18 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                   //_controllerList = List.generate(dates.length, (index) => [ItemScrollController(initialScrollOffset: scrollPositionList[index])]);
                   idk.forEach((element) {
                     tmpSelectedSquareSlotList[element[0]].add(Provider.of<ReserveList>(context, listen: false).selectedSquareSlotList[element[0]][element[1]]);
-                    debugPrint('FREE: ${Provider.of<ReserveList>(context, listen: false).selectedSquareSlotList[element[0]][element[1]]}');
-                    debugPrint('FREE TMP: ${tmpSelectedSquareSlotList[element[0]]}');
+                    debugPrint('UI_U_service_reserve => FREE: ${Provider.of<ReserveList>(context, listen: false).selectedSquareSlotList[element[0]][element[1]]}');
+                    debugPrint('UI_U_service_reserve => FREE TMP: ${tmpSelectedSquareSlotList[element[0]]}');
                     if (tmpSelectedSquareSlotList[element[0]].length > 1) {
-                      //debugPrint("UI_U_ServiceReserve =>JUMP TO: QUANTITY: ${_controllerList[element[0]][0]}");
-                      //debugPrint("UI_U_ServiceReserve =>JUMP TO: SLOT: ${_slotControllerList[element[0]][0]}");
+                      //debugPrint("UI_U_service_reserve => JUMP TO: QUANTITY: ${_controllerList[element[0]][0]}");
+                      //debugPrint("UI_U_service_reserve => JUMP TO: SLOT: ${_slotControllerList[element[0]][0]}");
                       //_controllerList[element[0]][1].scrollTo(index: selectedSquareSlotList[element[0]].length-1, duration: Duration(milliseconds: 500));
                       //_slotControllerList[element[0]][1].scrollTo(index: _slotControllerList[element[0]][0], duration: Duration(milliseconds: 500));
                       //slotIndex[element[0]] = _slotControllerList[element[0]][0];
                       //_controller.initialScrollOffset;
                     }
                     WidgetsBinding.instance.addPostFrameCallback((_) {
-                      debugPrint('UPDATE');
+                      debugPrint('UI_U_service_reserve => UPDATE');
                       Provider.of<ReserveList>(context, listen: false).updateSlotIndex(element[0], Provider.of<ReserveList>(context, listen: false).selectedSquareSlotList[element[0]][element[1]][2]);
                       Provider.of<ReserveList>(context, listen: false).updateControllerList(element[0], 0, Provider.of<ReserveList>(context, listen: false).selectedSquareSlotList[element[0]][element[1]][2]);
                       Provider.of<ReserveList>(context, listen: false).updateSlotControllerList(element[0], 0, Provider.of<ReserveList>(context, listen: false).selectedSquareSlotList[element[0]][element[1]][2]);
@@ -785,25 +772,26 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
           element[1].jumpTo(element[0]);
         });*/
 
-                  debugPrint("UI_U_ServiceReserve => CART COUNT: ${Provider.of<ReserveList>(context, listen: false).order.cartCounter}");
-                  debugPrint('UI_U_ServiceReserve => PICKED: ${picked.length} - $picked');
-                  debugPrint('UI_U_ServiceReserve => SELECTED: ${selectedSlot}');
-                  debugPrint('UI_U_ServiceReserve => SELECT QUANTITY: ${selectQuantity}');
-                  //debugPrint('UI_U_ServiceReserve => INTERVAL SLOTS LENGTH: ${widget.serviceState.serviceSlot.first.startTime.length}');
+                  debugPrint("UI_U_service_reserve => CART COUNT: ${Provider.of<ReserveList>(context, listen: false).order.cartCounter}");
+                  debugPrint('UI_U_service_reserve => PICKED: ${picked.length} - $picked');
+                  debugPrint('UI_U_service_reserve => SELECTED: ${selectedSlot}');
+                  debugPrint('UI_U_service_reserve => SELECT QUANTITY: ${selectQuantity}');
+                  //isRestaurant = true;
+                  //debugPrint('UI_U_service_reserve => INTERVAL SLOTS LENGTH: ${widget.serviceState.serviceSlot.first.startTime.length}');
                   return Consumer<ReserveList>(
                     builder: (_, reserveState, child) {
                       if(reserveState.selectedSquareSlotList.isNotEmpty && reserveState.selectedSquareSlotList.first.isNotEmpty)
-                        debugPrint('FREE ON BUILD: ${reserveState.selectedSquareSlotList.first.first.first} - ${reserveState.selectedSquareSlotList.first.first[1].free}');
+                        debugPrint('UI_U_service_reserve => FREE ON BUILD: ${reserveState.selectedSquareSlotList.first.first.first} - ${reserveState.selectedSquareSlotList.first.first[1].free}');
                       return Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          ///Service subtitle
+                          /*///Service subtitle
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Container(
-                                margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 4),
+                                margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
                                 child: Text(
                                   Utils.retriveField(Localizations.localeOf(context).languageCode, widget.serviceState.name) ?? AppLocalizations.of(context).serviceName,
                                   style: TextStyle(letterSpacing: 0.25, fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w500, fontSize: 14
@@ -840,10 +828,10 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                 ),
                               )
                             ],
-                          ),
+                          ),*/
 
                           ///Availability text
-                          Row(
+                          /*Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Container(
@@ -857,7 +845,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                 ),
                               )
                             ],
-                          ),
+                          ),*/
 
                           ///Next available time
                           /*Row(
@@ -938,7 +926,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                       style: TextStyle(
                                         //letterSpacing: 1.25,
                                           fontFamily: BuytimeTheme.FontFamily,
-                                          color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
+                                          color: widget.tourist ? BuytimeTheme.SymbolMalibu : BuytimeTheme.UserPrimary,
                                           fontWeight: FontWeight.w400,
                                           fontSize: 16
 
@@ -1007,7 +995,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                       style: TextStyle(
                                         //letterSpacing: 1.25,
                                           fontFamily: BuytimeTheme.FontFamily,
-                                          color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
+                                          color: widget.tourist ? BuytimeTheme.SymbolMalibu : BuytimeTheme.UserPrimary,
                                           fontWeight: FontWeight.w400,
                                           fontSize: 16
 
@@ -1030,11 +1018,14 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                               children: [CircularProgressIndicator()],
                             ),
                           )
-                              : Expanded(
+                              : dates.isNotEmpty ?
+                          Expanded(
                               flex: 5,
                               child: Padding(
-                                padding: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 4),
-                                child: CustomScrollView(shrinkWrap: true, slivers: [
+                                padding: EdgeInsets.only(top: SizeConfig.safeBlockVertical * .5),
+                                child: CustomScrollView(
+                                    physics: new ClampingScrollPhysics(),
+                                    shrinkWrap: true, slivers: [
                                   /*SliverPersistentHeader(
                                 pinned: true,
                                 delegate: CustomSliverAppBarDelegate(
@@ -1048,7 +1039,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                       mainAxisAlignment: MainAxisAlignment.start,
                                       children: [
                                         Container(
-                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
+                                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5),
                                           child: Text(
                                             '0',//index == 0 ? AppLocalizations.of(context).today + date : index == 1 ? AppLocalizations.of(context).tomorrow + date : '${DateFormat('EEEE').format(i).toUpperCase()}, $date',
                                             textAlign: TextAlign.start,
@@ -1077,19 +1068,28 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                         String currentDate = DateFormat('MMM dd',Localizations.localeOf(context).languageCode).format(DateTime.now()).toUpperCase();
                                         String nextDate = DateFormat('MMM dd',Localizations.localeOf(context).languageCode).format(DateTime.now().add(Duration(days: 1))).toUpperCase();
 
-                                        debugPrint('DATES: $i - $currentDate - $nextDate');
+                                        debugPrint('UI_U_service_reserve => DATES: $i - $currentDate - $nextDate');
                                         List<bool> select = picked.elementAt(index);
+                                        //isRestaurant = true;
                                         return Column(
                                           children: [
                                             ///Blue part
                                             Container(
-                                              color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
                                               height: 20,
+                                              decoration: BoxDecoration(
+                                                color: BuytimeTheme.TextWhite,
+                                                border: Border(
+                                                  bottom: BorderSide(
+                                                    color: BuytimeTheme.SymbolMalibu,
+                                                    width: 2
+                                                  )
+                                                )
+                                              ),
                                               child: Row(
                                                 mainAxisAlignment: MainAxisAlignment.start,
                                                 children: [
                                                   Container(
-                                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
+                                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5),
                                                     child: Text(
                                                       index == 0 && currentDate == date
                                                           ? AppLocalizations.of(context).today + ' ' + date
@@ -1100,7 +1100,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                       style: TextStyle(
                                                         letterSpacing: 1.25,
                                                         fontFamily: BuytimeTheme.FontFamily,
-                                                        color: BuytimeTheme.TextWhite,
+                                                        color: BuytimeTheme.SymbolMalibu,
                                                         fontSize: 14,
 
                                                         /// SizeConfig.safeBlockHorizontal * 4
@@ -1144,7 +1144,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                             color:  BuytimeTheme.BackgroundWhite,
                                                             borderRadius: BorderRadius.all(Radius.circular(5)),
                                                             border: Border.all(
-                                                                color: select[i] ? ( widget.tourist ? BuytimeTheme.BackgroundCerulean.withOpacity(0.5) : BuytimeTheme.UserPrimary.withOpacity(0.5)) : BuytimeTheme.BackgroundWhite
+                                                                color: select[i] ? ( widget.tourist ? BuytimeTheme.SymbolMalibu.withOpacity(0.5) : BuytimeTheme.UserPrimary.withOpacity(0.5)) : BuytimeTheme.BackgroundWhite
                                                             ),
                                                             boxShadow: [
                                                               BoxShadow(
@@ -1168,14 +1168,14 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                                     if(select[i]){
                                                                       selectedSquareSlot = serviceSlot[2];
                                                                       selectedQuantityNumber = selectedSquareSlot.maxAvailablePlace - selectedSquareSlot.availablePlaces;
-                                                                      debugPrint('SELECTED SLOT: ${selectQuantity[index]}');
+                                                                      debugPrint('UI_U_service_reserve => SELECTED SLOT: ${selectQuantity[index]}');
                                                                       selectedSquareSlotList[index].add([selectedQuantityNumber, selectedSquareSlot]);
-                                                                      debugPrint('SELECTED SLOT LIST: ${selectedSquareSlotList[index].length}');
+                                                                      debugPrint('UI_U_service_reserve => SELECTED SLOT LIST: ${selectedSquareSlotList[index].length}');
                                                                     }else{
                                                                       serviceSlot[2].availablePlaces = serviceSlot[2].maxAvailablePlace;
                                                                       selectedQuantityNumber = serviceSlot[2].maxAvailablePlace - serviceSlot[2].availablePlaces;
                                                                       int mSQQIndex = 0;
-                                                                      debugPrint('SELECTED SLOT LIST: ${selectedSquareSlotList[index].length}');
+                                                                      debugPrint('UI_U_service_reserve => SELECTED SLOT LIST: ${selectedSquareSlotList[index].length}');
                                                                       for(int j = 0; j < selectedSquareSlotList[index].length; j++){
                                                                         if(selectedSquareSlotList[index][j][1].slotId == serviceSlot[2].slotId){
                                                                           mSQQIndex = j;
@@ -1186,7 +1186,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                                   });
                                                                   if(select[i]){
                                                                     String duration = '';
-                                                                    //debugPrint('TIMESTAMP: ${Timestamp.fromDate(serviceSlot[2].date)}');
+                                                                    //debugPrint('UI_U_service_reserve => TIMESTAMP: ${Timestamp.fromDate(serviceSlot[2].date)}');
                                                                     if(serviceSlot[1].day != 0){
                                                                       if(serviceSlot[1].day > 1){
                                                                         duration = '${serviceSlot[1].day} ${AppLocalizations.of(context).days}';
@@ -1208,7 +1208,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                                       order.business.name = snapshot.business.name;
                                                                       order.business.id = snapshot.business.id_firestore;
                                                                     }
-                                                                    order.user.name = snapshot.user.name;
+                                                                    order.user.name = snapshot.user.name; order.user.email = snapshot.user.email;
                                                                     order.user.id = snapshot.user.uid;
                                                                     order.addReserveItem(widget.serviceState, snapshot.business.ownerId, serviceSlot[2].startTime, duration, dates[index], serviceSlot[2].price, serviceSlot[2].slotId);
                                                                     order.selected.add(indexes[index][i]);
@@ -1234,7 +1234,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                                     deleteItem(snapshot.order, tmp);
                                                                   }
 
-                                                                  debugPrint('UI_U_ServiceReserve => SELECTED INDEXES: ${order.selected}');
+                                                                  debugPrint('UI_U_service_reserve => SELECTED INDEXES: ${order.selected}');
                                                                 } : null,
                                                                 child: TimeSlotWidget(serviceSlot[1], serviceSlot[2], serviceSlot[0], select[i]),
                                                               )
@@ -1257,8 +1257,8 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                           ]),
                                         ),*/
                                             Container(
-                                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1.5, bottom: SizeConfig.safeBlockVertical * 1.5),
-                                              height: 110,
+                                              margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1.5, bottom: SizeConfig.safeBlockVertical * 0),
+                                              height: !isRestaurant ? 110 : 80,
                                               width: SizeConfig.safeBlockHorizontal * 100,
                                               child: ScrollablePositionedList.builder(
                                                   itemCount: reserveState.slots[index].length,
@@ -1279,14 +1279,14 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                       children: [
                                                         ///Slot
                                                         Container(
-                                                          margin: EdgeInsets.only(top: 2, bottom: 2, right: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockVertical * 2),
+                                                          margin: EdgeInsets.only(top: 0, bottom: 0, right: SizeConfig.safeBlockVertical * 0, left: SizeConfig.safeBlockVertical * 2),
                                                           child: Container(
                                                               width: 100,
-                                                              height: 100,
+                                                              height: !isRestaurant ? 100 : 70,
                                                               decoration: BoxDecoration(
                                                                 color: BuytimeTheme.BackgroundWhite,
                                                                 borderRadius: BorderRadius.all(Radius.circular(5)),
-                                                                border: Border.all(color: select[i] ? (widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary) : BuytimeTheme.BackgroundWhite, width: 1.5),
+                                                                border: Border.all(color: select[i] ? (BuytimeTheme.SymbolMalibu) : BuytimeTheme.BackgroundWhite, width: 1.5),
                                                                 boxShadow: [
                                                                   BoxShadow(
                                                                     color: select[i] ? BuytimeTheme.BackgroundWhite : BuytimeTheme.BackgroundBlack.withOpacity(0.3),
@@ -1309,6 +1309,15 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                                         selectQuantity[index] = select[i];
                                                                         scrollPositionList[index][i] = select[i];
                                                                         if (select[i]) {
+
+                                                                          FirebaseAnalytics().logEvent(
+                                                                              name: 'slot_choice_time_slots',
+                                                                              parameters: {
+                                                                                'user_email': StoreProvider.of<AppState>(context).state.user.email,
+                                                                                'date': date,
+                                                                                'service_name': widget.serviceState.name,
+                                                                                'slot_time': serviceSlot[2].on,
+                                                                              });
                                                                           //slotIndex[index] = i;
                                                                           Provider.of<ReserveList>(context, listen: false).updateSlotIndex(index, i);
                                                                           //_slotControllerList[index][0] = i;
@@ -1319,7 +1328,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                                           selectedSquareSlot.free -= 1;
                                                                           //selectedSquareSlot.free -= selectedQuantityNumber;
 
-                                                                          debugPrint('SELECTED SLOT: ${selectQuantity[index]}');
+                                                                          debugPrint('UI_U_service_reserve => SELECTED SLOT: ${selectQuantity[index]}');
                                                                           reserveState.selectedSquareSlotList[index].add([selectedQuantityNumber, selectedSquareSlot, i, serviceSlot[1]]);
                                                                           //reserveState.selectedSquareSlotList[index].add([selectedQuantityNumber, selectedSquareSlot, i+1, serviceSlot[1]]);
                                                                           Provider.of<ReserveList>(context, listen: false).initSelectedSquareSlotList(reserveState.selectedSquareSlotList);
@@ -1328,19 +1337,27 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                                           /*reserveState.selectedSquareSlotList[index].removeLast();
                                                                           Provider.of<ReserveList>(context, listen: false).initSelectedSquareSlotList(reserveState.selectedSquareSlotList);*/
                                                                           //Provider.of<ReserveList>(context, listen: false).updateSlotControllerList(index, 0, reserveState.selectedSquareSlotList[index].length - 1);
-                                                                          debugPrint('QUANTITY SLOT: ${reserveState._controllerList[index][0]}');
+                                                                          debugPrint('UI_U_service_reserve => QUANTITY SLOT: ${reserveState._controllerList[index][0]}');
                                                                           if (reserveState.selectedSquareSlotList[index].length > 1) {
-                                                                            debugPrint('MOVE TO');
+                                                                            debugPrint('UI_U_service_reserve => MOVE TO');
                                                                             reserveState._controllerList[index][1].scrollTo(index: reserveState._controllerList[index][0], duration: Duration(milliseconds: 500));
 
                                                                             //Provider.of<ReserveList>(context, listen: false)._slotControllerList[index][1].scrollTo(index: i, duration: Duration(milliseconds: 500));
                                                                           }
-                                                                          debugPrint('SELECTED SLOT LIST: ${reserveState.selectedSquareSlotList[index].length}');
+                                                                          debugPrint('UI_U_service_reserve => SELECTED SLOT LIST: ${reserveState.selectedSquareSlotList[index].length}');
                                                                         } else {
+                                                                          FirebaseAnalytics().logEvent(
+                                                                              name: 'slot_remove_time_slots',
+                                                                              parameters: {
+                                                                                'user_email': StoreProvider.of<AppState>(context).state.user.email,
+                                                                                'date': date,
+                                                                                'service_name': widget.serviceState.name,
+                                                                                'slot_time': serviceSlot[2].on,
+                                                                              });
                                                                           serviceSlot[2].free = serviceSlot[2].max;
                                                                           selectedQuantityNumber = serviceSlot[2].max - serviceSlot[2].free;
                                                                           int mSQQIndex = 0;
-                                                                          debugPrint('SELECTED SLOT LIST: ${reserveState.selectedSquareSlotList[index].length}');
+                                                                          debugPrint('UI_U_service_reserve => SELECTED SLOT LIST: ${reserveState.selectedSquareSlotList[index].length}');
                                                                           for (int j = 0; j < reserveState.selectedSquareSlotList[index].length; j++) {
                                                                             if (reserveState.selectedSquareSlotList[index][j][1].uid == serviceSlot[2].uid) {
                                                                               mSQQIndex = j;
@@ -1367,7 +1384,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                                       //});
                                                                       if (select[i]) {
                                                                         String duration = '';
-                                                                        //debugPrint('TIMESTAMP: ${Timestamp.fromDate(serviceSlot[2].date)}');
+                                                                        //debugPrint('UI_U_service_reserve => TIMESTAMP: ${Timestamp.fromDate(serviceSlot[2].date)}');
                                                                         if (serviceSlot[1].day != 0) {
                                                                           if (serviceSlot[1].day > 1) {
                                                                             duration = '${serviceSlot[1].day} ${AppLocalizations.of(context).days}';
@@ -1391,16 +1408,20 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                                         }
                                                                         reserveState.order.user.name = userState.name;
                                                                         reserveState.order.user.id = userState.uid;
+                                                                        reserveState.order.user.email = userState.email;
                                                                         reserveState.order.addReserveItem(widget.serviceState, businessState.ownerId, serviceSlot[2].on, duration, dates[index], serviceSlot[1].price, serviceSlot[2].uid, context);
                                                                         reserveState.order.selected.add(indexes[index][i]);
                                                                         //order.selected.add(selected);
                                                                         reserveState.order.cartCounter++;
                                                                         //StoreProvider.of<AppState>(context).dispatch(SetOrderCartCounter(order.cartCounter));
+                                                                        if(Provider.of<Explorer>(context, listen: false).businessState.id_firestore.isNotEmpty){
+                                                                          ConventionHelper conventionHelper = ConventionHelper();
+                                                                          reserveState.order.totalPromoDiscount += (serviceSlot[1].price * conventionHelper.getConventionDiscount(widget.serviceState, Provider.of<Explorer>(context, listen: false).businessState.id_firestore))/100;
+                                                                        }
                                                                         Provider.of<ReserveList>(context, listen: false).updateOrder(reserveState.order);
                                                                         StoreProvider.of<AppState>(context).dispatch(SetOrderReservable(reserveState.order));
                                                                       } else {
                                                                         OrderEntry tmp;
-
                                                                         reserveState.order.itemList.forEach((element) {
                                                                           DateTime tmpDate = dates[index];
                                                                           tmpDate = DateTime(dates[index].year, dates[index].month, dates[index].day, int.parse(element.time.split(':').first), int.parse(element.time.split(':').last));
@@ -1409,23 +1430,27 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                                             debugPrint('UI_U_service_reserve => ENTRY: ${element.id_business}');
                                                                           }
                                                                         });
+                                                                        if(Provider.of<Explorer>(context, listen: false).businessState.id_firestore.isNotEmpty){
+                                                                          ConventionHelper conventionHelper = ConventionHelper();
+                                                                          reserveState.order.totalPromoDiscount -= ((serviceSlot[1].price * conventionHelper.getConventionDiscount(widget.serviceState, Provider.of<Explorer>(context, listen: false).businessState.id_firestore))/100) * tmp.number;
+                                                                        }
                                                                         //debugPrint('UI_U_service_reserve => ENTRY: ${tmp.id_business}');
                                                                         reserveState.order.selected.remove(indexes[index][i]);
                                                                         //order.selected.remove(selected);
                                                                         deleteItem(orderState, tmp);
                                                                       }
 
-                                                                      debugPrint('UI_U_ServiceReserve => SELECTED INDEXES: ${reserveState.order.selected}');
+                                                                      debugPrint('UI_U_service_reserve => SELECTED INDEXES: ${reserveState.order.selected}');
                                                                     }
                                                                         : null,
-                                                                    child: TimeSlotWidget(serviceSlot[1], serviceSlot[2], serviceSlot[0], select[i]),
+                                                                    child: TimeSlotWidget(serviceSlot[1], serviceSlot[2], serviceSlot[0], select[i], isRestaurant),
                                                                   ))),
                                                         ),
                                                         Container(
-                                                          margin: EdgeInsets.only(top: 5),
+                                                          margin: EdgeInsets.only(top: 5, left: SizeConfig.safeBlockVertical * 2),
                                                           height: 1,
                                                           width: 80,
-                                                          color: reserveState.slotIndex.isNotEmpty && reserveState.slotIndex[index] == i ? BuytimeTheme.UserPrimary : BuytimeTheme.BackgroundWhite,
+                                                          color: reserveState.slotIndex.isNotEmpty && reserveState.slotIndex[index] == i ? BuytimeTheme.SymbolMalibu : BuytimeTheme.BackgroundWhite,
                                                         )
                                                       ],
                                                     );
@@ -1436,7 +1461,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                             //selectQuantity[index]
                                             reserveState.selectedSquareSlotList.isNotEmpty ?
                                             Container(
-                                              margin: EdgeInsets.only(bottom: 5, left: 5, right: 5),
+                                              margin: EdgeInsets.only(bottom: 5, left: 5, right: 5, top: 5),
                                               height: reserveState.selectedSquareSlotList[index].isNotEmpty ? 100 : 0,
                                               width: SizeConfig.safeBlockHorizontal * 100,
                                               child: ScrollablePositionedList.builder(
@@ -1447,12 +1472,12 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                   scrollDirection: Axis.horizontal,
                                                   //initialScrollIndex: selectedSquareSlotList[index].length - 1,
                                                   itemBuilder: (context, i) {
-                                                    //debugPrint('i OUT: $i - ${reserveState.selectedSquareSlotList[index].length}');
+                                                    //debugPrint('UI_U_service_reserve => i OUT: $i - ${reserveState.selectedSquareSlotList[index].length}');
                                                     if(i < reserveState.selectedSquareSlotList[index].length){
-                                                      //debugPrint('i IN: $i - ${reserveState.selectedSquareSlotList[index].length}');
+                                                      //debugPrint('UI_U_service_reserve => i IN: $i - ${reserveState.selectedSquareSlotList[index].length}');
                                                       SquareSlotState mySSS = reserveState.selectedSquareSlotList[index].elementAt(i)[1];
                                                       ServiceSlot tmpService = reserveState.selectedSquareSlotList[index].elementAt(i)[3];
-                                                      debugPrint('UI_U_ServiceReserve => INDEX: $index - QUANTITY INDEXES: ${reserveState.selectedSquareSlotList[index].length} '
+                                                      debugPrint('UI_U_service_reserve => INDEX: $index - QUANTITY INDEXES: ${reserveState.selectedSquareSlotList[index].length} '
                                                           '- FREE: ${Provider.of<ReserveList>(context, listen: false).selectedSquareSlotList[index][i][1].free} '
                                                           '- FREE RESERVE STATE: ${reserveState.selectedSquareSlotList[index][i][1].free} '
                                                           '- FREE MYSSS: ${mySSS.free}');
@@ -1467,7 +1492,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                             width: 24,
                                                             decoration: BoxDecoration(
                                                               //borderRadius: BorderRadius.all(Radius.circular(12)),
-                                                              color: widget.tourist ? BuytimeTheme.BackgroundCerulean.withOpacity(.2) : BuytimeTheme.UserPrimary.shade50,
+                                                              color: BuytimeTheme.SymbolMalibu.withOpacity(.1),
                                                             ),
                                                             child: Material(
                                                               color: Colors.transparent,
@@ -1476,7 +1501,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                                 onTap: () {
                                                                   int jump = i;
                                                                   --jump;
-                                                                  debugPrint('JUMP: $jump');
+                                                                  debugPrint('UI_U_service_reserve => JUMP: $jump');
 
                                                                   //_controllerList[index][0] = jump;
                                                                   Provider.of<ReserveList>(context, listen: false).updateControllerList(index, 0, jump);
@@ -1493,7 +1518,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                                   width: 24,
                                                                   child: Icon(
                                                                     Icons.keyboard_arrow_left,
-                                                                    color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
+                                                                    color: BuytimeTheme.SymbolMalibu,
                                                                   ),
                                                                 ),
                                                               ),
@@ -1506,7 +1531,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                             child: Container(
                                                               //color: Colors.black,
                                                               alignment: Alignment.center,
-                                                              margin: EdgeInsets.only(left: 20, top: 25, right: 20),
+                                                              margin: EdgeInsets.only(left: 20, top: 24, right: 20),
                                                               height: 100,
                                                               width: i != 0 && i != reserveState.selectedSquareSlotList[index].length - 1
                                                                   ? SizeConfig.screenWidth - 40 - 24 - 24 - 10
@@ -1537,7 +1562,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                                           Container(
                                                                             height: 24,
                                                                             width: 24,
-                                                                            decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(12)), color: widget.tourist ? BuytimeTheme.BackgroundCerulean.withOpacity(.2) : BuytimeTheme.UserPrimary.shade50),
+                                                                            decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(12)), color:  BuytimeTheme.SymbolMalibu.withOpacity(.1)),
                                                                             child: Material(
                                                                               color: Colors.transparent,
                                                                               child: InkWell(
@@ -1563,9 +1588,13 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                                                       element.number -= 1;
                                                                                     }
                                                                                     reserveState.order.total += element.price;
-                                                                                    reserveState.order.total -= (reserveState.order.totalPromoDiscount / reserveState.order.itemList.length);
+                                                                                    //reserveState.order.total -= (reserveState.order.totalPromoDiscount / reserveState.order.itemList.length);
 
                                                                                   });
+                                                                                  if(Provider.of<Explorer>(context, listen: false).businessState.id_firestore.isNotEmpty){
+                                                                                    ConventionHelper conventionHelper = ConventionHelper();
+                                                                                    reserveState.order.totalPromoDiscount -= (tmpService.price * conventionHelper.getConventionDiscount(widget.serviceState, Provider.of<Explorer>(context, listen: false).businessState.id_firestore))/100;
+                                                                                  }
                                                                                   Provider.of<ReserveList>(context, listen: false).updateOrder(reserveState.order);
                                                                                   //});
                                                                                 }
@@ -1575,7 +1604,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                                                   width: 24,
                                                                                   child: Icon(
                                                                                     Icons.remove,
-                                                                                    color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
+                                                                                    color: BuytimeTheme.SymbolMalibu,
                                                                                   ),
                                                                                 ),
                                                                               ),
@@ -1587,7 +1616,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                                             margin: EdgeInsets.only(top: 0, left: 10, right: 10),
                                                                             child: Text(
                                                                               '${reserveState.selectedSquareSlotList[index].elementAt(i)[0]}',
-                                                                              style: TextStyle(fontFamily: BuytimeTheme.FontFamily, fontSize: 16, fontWeight: FontWeight.w500),
+                                                                              style: TextStyle(fontFamily: BuytimeTheme.FontFamily, fontSize: 16, fontWeight: FontWeight.w500, color: BuytimeTheme.SymbolMalibu),
                                                                             ),
                                                                           ),
 
@@ -1595,7 +1624,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                                           Container(
                                                                             height: 24,
                                                                             width: 24,
-                                                                            decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(12)), color: widget.tourist ? BuytimeTheme.BackgroundCerulean.withOpacity(.2) : BuytimeTheme.UserPrimary.shade50),
+                                                                            decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(12)), color: BuytimeTheme.SymbolMalibu.withOpacity(.1)),
                                                                             child: Material(
                                                                               color: Colors.transparent,
                                                                               child: InkWell(
@@ -1621,8 +1650,12 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                                                       element.number += 1;
                                                                                     }
                                                                                     reserveState.order.total += element.price;
-                                                                                    reserveState.order.total -= (reserveState.order.totalPromoDiscount / reserveState.order.itemList.length);
+                                                                                    //reserveState.order.total -= (reserveState.order.totalPromoDiscount / reserveState.order.itemList.length);
                                                                                   });
+                                                                                  if(Provider.of<Explorer>(context, listen: false).businessState.id_firestore.isNotEmpty){
+                                                                                    ConventionHelper conventionHelper = ConventionHelper();
+                                                                                    reserveState.order.totalPromoDiscount += (tmpService.price * conventionHelper.getConventionDiscount(widget.serviceState, Provider.of<Explorer>(context, listen: false).businessState.id_firestore))/100;
+                                                                                  }
                                                                                   Provider.of<ReserveList>(context, listen: false).updateOrder(reserveState.order);
                                                                                   //});
                                                                                 }
@@ -1632,7 +1665,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                                                   width: 24,
                                                                                   child: Icon(
                                                                                     Icons.add,
-                                                                                    color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
+                                                                                    color: BuytimeTheme.SymbolMalibu,
                                                                                   ),
                                                                                 ),
                                                                               ),
@@ -1663,7 +1696,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                             width: 24,
                                                             decoration: BoxDecoration(
                                                               //borderRadius: BorderRadius.all(Radius.circular(12)),
-                                                              color: widget.tourist ? BuytimeTheme.BackgroundCerulean.withOpacity(.2) : BuytimeTheme.UserPrimary.shade50,
+                                                              color: BuytimeTheme.SymbolMalibu.withOpacity(.1),
                                                             ),
                                                             child: Material(
                                                               color: Colors.transparent,
@@ -1672,7 +1705,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                                 onTap: () {
                                                                   int jump = i;
                                                                   ++jump;
-                                                                  debugPrint('JUMP: $jump');
+                                                                  debugPrint('UI_U_service_reserve => JUMP: $jump');
                                                                   //_controllerList[index][0] = jump;
                                                                   Provider.of<ReserveList>(context, listen: false).updateControllerList(index, 0, jump);
                                                                   reserveState._controllerList[index][1].scrollTo(index: jump, duration: Duration(milliseconds: 500));
@@ -1687,7 +1720,7 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                                   width: 24,
                                                                   child: Icon(
                                                                     Icons.keyboard_arrow_right,
-                                                                    color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
+                                                                    color: BuytimeTheme.SymbolMalibu,
                                                                   ),
                                                                 ),
                                                               ),
@@ -1712,7 +1745,25 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                   ),
                                 ]),
                               )
-                          ),
+                          ) : ///No List
+                          Expanded(child: Column(
+                            children: [
+                              Container(
+                                height: SizeConfig.safeBlockVertical * 8,
+                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
+                                child: Center(
+                                    child: Container(
+                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 4),
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        AppLocalizations.of(context).warningNoSlotReservable,
+                                        style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextGrey, fontWeight: FontWeight.w500, fontSize: 16),
+                                      ),
+                                    )),
+                              )
+                            ],
+                          )),
 
                           ///Confirm button
                           noActivity
@@ -1728,8 +1779,8 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                 children: [
                                   ///Confirm button
                                   Container(
-                                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5, bottom: SizeConfig.safeBlockVertical * 4),
-                                      width: 158,
+                                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5, bottom: SizeConfig.safeBlockVertical * 2),
+                                      width: 198,
 
                                       ///media.width * .4
                                       height: 44,
@@ -1739,9 +1790,25 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                         hoverElevation: 0,
                                         focusElevation: 0,
                                         highlightElevation: 0,
-                                        onPressed: () async{
+                                        onPressed: reserveState.order.cartCounter > 0 ? () async{
+                                          FirebaseAnalytics().logEvent(
+                                              name: 'reserve_time_slots',
+                                              parameters: {
+                                                'user_email': StoreProvider.of<AppState>(context).state.user.email,
+                                                'date': DateTime.now().toString(),
+                                                'service_name': widget.serviceState.name
+                                              });
+
                                           if (reserveState.order.cartCounter > 0) {
                                             // dispatch the order
+                                            bool found = false;
+                                            Provider.of<Explorer>(context, listen: false).cartReservableServiceList.forEach((s) {
+                                              if(s.serviceId == widget.serviceState.serviceId)
+                                                found = true;
+                                            });
+                                            if(!found)
+                                              Provider.of<Explorer>(context, listen: false).cartReservableServiceList.add(widget.serviceState);
+
                                             StoreProvider.of<AppState>(context).dispatch(SetOrderReservable(reserveState.order));
                                             // go to the cart page
                                             bool refresh = await Navigator.push(
@@ -1772,15 +1839,16 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                                   ],
                                                 ));
                                           }
-                                        },
+                                        } : null,
                                         textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
-                                        color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
+                                        color: BuytimeTheme.ActionBlackPurple,
+                                        disabledColor: BuytimeTheme.SymbolLightGrey,
                                         padding: EdgeInsets.all(media.width * 0.03),
                                         shape: RoundedRectangleBorder(
-                                          borderRadius: new BorderRadius.circular(5),
+                                          borderRadius: new BorderRadius.circular(20),
                                         ),
                                         child: Text(
-                                          AppLocalizations.of(context).reserveUpper,
+                                          AppLocalizations.of(context).reserve,
                                           style: TextStyle(
                                             letterSpacing: 1.25,
                                             fontSize: 14,
@@ -1790,72 +1858,42 @@ class _ServiceReserveState extends State<ServiceReserve> with SingleTickerProvid
                                           ),
                                         ),
                                       )),
-                                  /*Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      GestureDetector(
-                                        onTap: () {
-                                          // trigger payment information page
-                                          Navigator.pushReplacement(
-                                            context,
-                                            MaterialPageRoute(builder: (context) => UI_U_StripePayment()),
-                                          );
-                                        },
-                                        child: Padding(
-                                          padding: EdgeInsets.only(top: (media.height * 0.05)),
-                                          child: Container(
-                                            width: media.width * 0.55,
-                                            decoration: BoxDecoration(color: Color.fromRGBO(1, 175, 81, 1.0), borderRadius: BorderRadius.all(Radius.circular(5.0))),
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(8.0),
-                                              child: Row(
-                                                mainAxisAlignment: MainAxisAlignment.center,
-                                                children: [Icon(Icons.credit_card, color: Colors.white), SizedBox(width: 10.0), Text(AppLocalizations.of(context).orderAndPay, style: TextStyle(color: Colors.white))],
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  // Row(
-                                  //   mainAxisAlignment: MainAxisAlignment.center,
-                                  //   children: [
-                                  //     GestureDetector(
-                                  //       onTap: () {
-                                  //         // trigger payment information page
-                                  //         print("Dispatch Order create!");
-                                  //         StoreProvider.of<AppState>(context).dispatch(CreateOrder(OrderState(
-                                  //             itemList: snapshot.order.itemList,
-                                  //             date: snapshot.order.date,
-                                  //             progress: "paid",
-                                  //             position: snapshot.order.position,
-                                  //             total: snapshot.order.total,
-                                  //             business: snapshot.order.business,
-                                  //             user: snapshot.order.user,
-                                  //             businessId: snapshot.business.id_firestore)));
-                                  //         StoreProvider.of<AppState>(context).dispatch(OrderListRequest());
+                                  // Container(
+                                  //     margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5, bottom: SizeConfig.safeBlockVertical * 4),
+                                  //     width: 158,
+                                  //
+                                  //     ///media.width * .4
+                                  //     height: 44,
+                                  //     child: MaterialButton(
+                                  //       key: Key('service_reserve_key'),
+                                  //       elevation: 0,
+                                  //       hoverElevation: 0,
+                                  //       focusElevation: 0,
+                                  //       highlightElevation: 0,
+                                  //       onPressed: () async{
+                                  //         await Navigator.push(
+                                  //           context,
+                                  //           MaterialPageRoute(builder: (context) => PersonalInfoPark()),
+                                  //         );
                                   //       },
-                                  //       child: Padding(
-                                  //         padding: EdgeInsets.only(top: (media.height * 0.05)),
-                                  //         child: Container(
-                                  //           width: media.width * 0.55,
-                                  //           decoration: BoxDecoration(color: Color.fromRGBO(1, 175, 81, 1.0), borderRadius: BorderRadius.all(Radius.circular(5.0))),
-                                  //           child: Padding(
-                                  //             padding: const EdgeInsets.all(8.0),
-                                  //             child: Row(
-                                  //               mainAxisAlignment: MainAxisAlignment.center,
-                                  //               children: [Icon(Icons.credit_card, color: Colors.white), SizedBox(width: 10.0), Text("Test Order Create", style: TextStyle(color: Colors.white))],
-                                  //             ),
-                                  //           ),
+                                  //       textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
+                                  //       color: BuytimeTheme.SymbolMalibu,
+                                  //       padding: EdgeInsets.all(media.width * 0.03),
+                                  //       shape: RoundedRectangleBorder(
+                                  //         borderRadius: new BorderRadius.circular(5),
+                                  //       ),
+                                  //       child: Text(
+                                  //         AppLocalizations.of(context).test,
+                                  //         style: TextStyle(
+                                  //           letterSpacing: 1.25,
+                                  //           fontSize: 14,
+                                  //           fontFamily: BuytimeTheme.FontFamily,
+                                  //           fontWeight: FontWeight.w500,
+                                  //           color: BuytimeTheme.TextWhite,
                                   //         ),
                                   //       ),
-                                  //     ),
-                                  //   ],
-                                  // ),
-                                  SizedBox(
-                                    height: media.height * 0.05,
-                                  )*/
+                                  //     )),
+
                                 ],
                               ),
                             ),
@@ -1886,32 +1924,32 @@ class ReserveList with ChangeNotifier{
 
   initSlot(List<List<List<dynamic>>> slots){
     this.slots = slots;
-    debugPrint('SLOT INIT');
+    debugPrint('UI_U_service_reserve => SLOT INIT');
     notifyListeners();
   }
   initOrder(OrderReservableState order){
     this.order = order;
-    debugPrint('ORDER INIT');
+    debugPrint('UI_U_service_reserve => ORDER INIT');
     notifyListeners();
   }
   initControllerList(List<List<dynamic>> _controllerList){
     this._controllerList = _controllerList;
-    debugPrint('CONTROLLER LIST INIT');
+    debugPrint('UI_U_service_reserve => CONTROLLER LIST INIT');
     notifyListeners();
   }
   initSlotControllerList(List<List<dynamic>> _slotControllerList){
     this._slotControllerList = _slotControllerList;
-    debugPrint('SLOT CONTROLLER LIST INIT');
+    debugPrint('UI_U_service_reserve => SLOT CONTROLLER LIST INIT');
     notifyListeners();
   }
   initSlotIndex(List<int> slotIndex){
     this.slotIndex = slotIndex;
-    debugPrint('SLOT INDEX INIT');
+    debugPrint('UI_U_service_reserve => SLOT INDEX INIT');
     notifyListeners();
   }
   initSelectedSquareSlotList(List<List<List<dynamic>>> selectedSquareSlotList){
     this.selectedSquareSlotList = selectedSquareSlotList;
-    debugPrint('SELECTED SQUARE SLOT LIST INIT');
+    debugPrint('UI_U_service_reserve => SELECTED SQUARE SLOT LIST INIT');
     notifyListeners();
   }
 

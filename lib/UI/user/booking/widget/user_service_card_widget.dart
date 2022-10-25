@@ -117,15 +117,33 @@ class _UserServiceCardWidgetState extends State<UserServiceCardWidget> {
                   //color: Colors.black.withOpacity(.2)
                   ),
               child: Column(
+                //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  ///Order status label
+                  /*Container(
+                    margin: EdgeInsets.only(right: 5, top: 5),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [Container(
+                        height: 15,
+                        width: 15,
+                        decoration: BoxDecoration(
+                            color: Utils.colorOrderStatusUser(context, widget.orderState.progress),
+                          border: Border.all(color: Colors.white, width: .5),
+                          borderRadius: BorderRadius.all(Radius.circular(10))
+                        ),
+                      )],
+                    ),
+                  ),*/
                   ///Service name
                   Container(
                     //width: 200,
                     height: 100 / 3,
                     alignment: Alignment.centerLeft,
                     decoration: BoxDecoration(borderRadius: BorderRadius.only(bottomLeft: Radius.circular(5), bottomRight: Radius.circular(5)), color: Colors.black.withOpacity(.2)),
+                    //decoration: BoxDecoration(borderRadius: BorderRadius.only(bottomLeft: Radius.circular(5), bottomRight: Radius.circular(5)), color: Utils.colorOrderStatus(context, widget.orderState.progress).withOpacity(.2)),
                     //margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, bottom: SizeConfig.safeBlockVertical * 2),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -142,6 +160,7 @@ class _UserServiceCardWidgetState extends State<UserServiceCardWidget> {
                             ),
                           ),
                         ),
+                        widget.orderState.itemList.first.time != null ?
                         Container(
                           margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 5),
                           child: FittedBox(
@@ -156,6 +175,22 @@ class _UserServiceCardWidgetState extends State<UserServiceCardWidget> {
 
                                   ///SizeConfig.safeBlockHorizontal * 4
                                   ),
+                            ),
+                          ),
+                        ) : Container(
+                          margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 5),
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(
+                              DateFormat('MMM dd').format(DateTime.now()).toUpperCase() == DateFormat('MMM dd').format(widget.orderState.itemList.first.date).toUpperCase()
+                                  ? AppLocalizations.of(context).todayLower + ', ${widget.orderState.total.toStringAsFixed(2)} €'
+                                  : DateFormat('MMM dd').format(DateTime.now().add(Duration(days: 1))).toUpperCase() == DateFormat('MMM dd').format(widget.orderState.itemList.first.date).toUpperCase()
+                                  ? AppLocalizations.of(context).tomorrowLower + ', ${widget.orderState.total.toStringAsFixed(2)} €'
+                                  : '${DateFormat('dd EEE', Localizations.localeOf(context).languageCode).format(widget.orderState.date)},  ${widget.orderState.total.toStringAsFixed(2)} €',
+                              style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextWhite, fontWeight: FontWeight.w500, fontSize: 12
+
+                                ///SizeConfig.safeBlockHorizontal * 4
+                              ),
                             ),
                           ),
                         )

@@ -124,6 +124,14 @@ class CreateOrderOnSiteAndPay {
   PaymentType get paymentType => _paymentType;
 }
 
+class CreateOrderPaypalAndPay {
+  OrderState _orderState;
+  PaymentType _paymentType;
+  CreateOrderPaypalAndPay(this._orderState, this._paymentType);
+  OrderState get orderState => _orderState;
+  PaymentType get paymentType => _paymentType;
+}
+
 class CreateOrderCardPending {
   OrderState _orderState;
   String _last4;
@@ -162,6 +170,13 @@ class CreateOrderOnSitePending {
   OrderState _orderState;
   PaymentType _paymentType;
   CreateOrderOnSitePending(this._orderState, this._paymentType);
+  OrderState get orderState => _orderState;
+  PaymentType get paymentType => _paymentType;
+}
+class CreateOrderPaypalPending {
+  OrderState _orderState;
+  PaymentType _paymentType;
+  CreateOrderPaypalPending(this._orderState, this._paymentType);
   OrderState get orderState => _orderState;
   PaymentType get paymentType => _paymentType;
 }
@@ -265,9 +280,10 @@ class ConfirmOrderWait
 class AddingStripePaymentMethod {
   AddingStripePaymentMethod();
 }
-class AddingStripePaymentMethodResetOR {
-  AddingStripePaymentMethodResetOR();
-}
+///TODO: Check Delete
+// class AddingStripePaymentMethodResetOR {
+//   AddingStripePaymentMethodResetOR();
+// }
 class DeletingStripePaymentMethodOR {
   DeletingStripePaymentMethodOR();
 }
@@ -329,7 +345,7 @@ OrderState orderReducer(OrderState state, action) {
     return orderState;
   }
   if (action is CreatingOrder) {
-    orderState.progress = Utils.enumToString(OrderStatus.creating);
+    orderState.progress = Utils.enumToString(OrderStatus.pending);
     return orderState;
   }
   if (action is CreatedOrder) {
@@ -349,10 +365,11 @@ OrderState orderReducer(OrderState state, action) {
     orderState.addCardProgress = Utils.enumToString(AddCardStatus.inProgress);
     return orderState;
   }
-  if (action is AddingStripePaymentMethodResetOR) {
-    orderState.addCardProgress = Utils.enumToString(AddCardStatus.notStarted);
-    return orderState;
-  }
+  ///TODO: Check Delete
+  // if (action is AddingStripePaymentMethodResetOR) {
+  //   orderState.addCardProgress = Utils.enumToString(AddCardStatus.notStarted);
+  //   return orderState;
+  // }
   if (action is AddedStripePaymentMethod) {
     orderState.addCardProgress = Utils.enumToString(AddCardStatus.done);
     return orderState;
@@ -378,13 +395,13 @@ OrderState orderReducer(OrderState state, action) {
   }
   if (action is AddItemToOrder) {
     if (state.itemList != null) {
-      print("order_reducer: itemList != null");
+      debugPrint("order_reducer: itemList != null");
       orderState.itemList
       = []
         ..addAll(state.itemList)
         ..add(action.orderEntry);
     } else {
-      print("order_reducer: itemList == null");
+      debugPrint("order_reducer: itemList == null");
       orderState.itemList
       = []
         ..add(action.orderEntry);

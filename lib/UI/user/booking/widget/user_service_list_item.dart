@@ -40,8 +40,8 @@ class _UserServiceListItemState extends State<UserServiceListItem> {
   @override
   Widget build(BuildContext context) {
 
-    debugPrint('${widget.serviceState.image1}');
-    //debugPrint('image: ${widget.serviceState.image1}');
+    debugPrint('user_service_list_item => ${widget.serviceState.image1}');
+    //debugPrint('user_service_list_item => image: ${widget.serviceState.image1}');
     return Container(
         //margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 4, right: SizeConfig.safeBlockHorizontal * 4),
         margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1),
@@ -95,7 +95,7 @@ class _UserServiceListItemState extends State<UserServiceListItem> {
                     ),*/
                     ///Service Name & Description
                     Container(
-                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 0),
+                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 0),
                       child:  Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -165,7 +165,7 @@ class _UserServiceListItemState extends State<UserServiceListItem> {
                               child: Text(
                                 widget.orderState.itemList[0].time != null ?
                                 DateFormat('dd MMM yyyy - ', Localizations.localeOf(context).languageCode).format(widget.orderState.itemList[0].date) + widget.orderState.itemList[0].time ?? ''
-                                : DateFormat('dd MMM yyyy ', Localizations.localeOf(context).languageCode).format(widget.orderState.itemList[0].date),
+                                : DateFormat('dd MMM yyyy - HH:mm', Localizations.localeOf(context).languageCode).format(widget.orderState.creationDate.add(Duration(hours: 2))),
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 2,
                                 style: TextStyle(

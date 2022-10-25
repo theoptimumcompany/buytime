@@ -14,19 +14,19 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 import 'package:Buytime/UI/management/business/RUI_M_business_list.dart';
-import 'package:Buytime/UI/management/business/UI_M_business_list.dart';
-import 'package:Buytime/UI/user/landing/UI_U_landing.dart';
 import 'package:Buytime/UI/user/login/UI_U_forgot_password.dart';
+import 'package:Buytime/UI/user/turist/RUI_U_service_explorer.dart';
 import 'package:Buytime/reblox/model/autoComplete/auto_complete_state.dart';
 import 'package:Buytime/reblox/model/role/role.dart';
 import 'package:Buytime/reblox/model/snippet/device.dart';
 import 'package:Buytime/reblox/model/snippet/token.dart';
 import 'package:Buytime/reblox/reducer/auto_complete_list_reducer.dart';
+import 'package:Buytime/helper/messaging/messaging_helper.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/reblox/model/user/user_state.dart';
 import 'package:Buytime/reblox/reducer/user_reducer.dart';
-import 'package:Buytime/reusable/branded_button.dart';
+import 'package:Buytime/reusable/w_branded_button.dart';
 import 'package:crypto/crypto.dart';
 import 'package:device_info/device_info.dart';
 import 'package:email_validator/email_validator.dart';
@@ -39,6 +39,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+//import 'package:keychain_plugin/keychain_plugin.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
@@ -46,9 +47,13 @@ import '../../../environment_abstract.dart';
 import '../../../reblox/model/app_state.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import 'UI_U_home.dart';
+import 'UI_U_registration.dart';
+
 class Login extends StatefulWidget {
   static String route = '/login';
-
+  bool fromDiscover;
+  Login(this.fromDiscover);
   @override
   State<StatefulWidget> createState() => LoginState();
 }
@@ -180,10 +185,19 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
       if (result == 1) {
         setState(() {
           isLoggedIn = true;
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => Landing()),
-          );
+          Future.delayed(Duration(milliseconds: 1500), () async {
+            if (StoreProvider.of<AppState>(context).state.user.getRole() != Role.user){
+              debugPrint('UI_U_login => Account authority: > User');
+              Navigator.push(context, MaterialPageRoute(builder: (context) => RBusinessList()));
+            }else{
+              debugPrint('UI_U_login => Account authority: <= User');
+              await FirebaseMessaging.instance.subscribeToTopic('broadcast_user');
+              debugPrint('FIREBASE MESSAGING TOP SUBSCRIBTION TO: broadcast_user');
+              Navigator.of(context).pushNamedAndRemoveUntil(AppRoutes.serviceExplorer, (Route<dynamic> route) => false);
+            }
+            //Navigator.of(context).pushNamedAndRemoveUntil(AppRoutes.myBookings, ModalRoute.withName(AppRoutes.landing));
+            //StoreProvider.of<AppState>(context).dispatch(new UserBookingRequest(user.email));
+          });
         });
       } else {
         print("No result");
@@ -239,10 +253,10 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
         }
       }
       print("Device ID : " + deviceId);
-      StoreProvider.of<AppState>(context).dispatch(new LoggedUser(UserState.fromFirebaseUser(user, deviceId, [Environment().config.serverToken])));
+      StoreProvider.of<AppState>(context).dispatch(new LoggedUser(UserState.fromFirebaseUser(user, deviceId, [MessagingHelper.serverToken])));
       Device device = Device(name: "device", id: deviceId, user_uid: user.uid);
       StoreProvider.of<AppState>(context).dispatch(new UpdateUserDevice(device));
-      TokenB token = TokenB(name: "token", id: Environment().config.serverToken, user_uid: user.uid);
+      TokenB token = TokenB(name: "token", id: MessagingHelper.serverToken, user_uid: user.uid);
       StoreProvider.of<AppState>(context).dispatch(new UpdateUserToken(token));
       // return 'signInWithGoogle succeeded: $user';
       await pr.hide();
@@ -264,10 +278,19 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
       if (result == 1) {
         setState(() {
           isLoggedIn = true;
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => Landing()),
-          );
+          Future.delayed(Duration(milliseconds: 1500), () async {
+            if (StoreProvider.of<AppState>(context).state.user.getRole() != Role.user){
+              debugPrint('UI_U_login => Account authority: > User');
+              Navigator.push(context, MaterialPageRoute(builder: (context) => RBusinessList()));
+            }else{
+              debugPrint('UI_U_login => Account authority: <= User');
+              await FirebaseMessaging.instance.subscribeToTopic('broadcast_user');
+              debugPrint('FIREBASE MESSAGING TOP SUBSCRIBTION TO: broadcast_user');
+              Navigator.of(context).pushNamedAndRemoveUntil(AppRoutes.serviceExplorer, (Route<dynamic> route) => false);
+            }
+            //Navigator.of(context).pushNamedAndRemoveUntil(AppRoutes.myBookings, ModalRoute.withName(AppRoutes.landing));
+            //StoreProvider.of<AppState>(context).dispatch(new UserBookingRequest(user.email));
+          });
         });
       } else {
         print("No result");
@@ -339,11 +362,13 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
       }
       print("Device ID : " + deviceId);
 
-      StoreProvider.of<AppState>(context).dispatch(new LoggedUser(UserState.fromFirebaseUser(user, deviceId, [Environment().config.serverToken])));
+      StoreProvider.of<AppState>(context).dispatch(new LoggedUser(UserState.fromFirebaseUser(user, deviceId, [MessagingHelper.serverToken])));
       Device device = Device(name: "device", id: deviceId, user_uid: user.uid);
       StoreProvider.of<AppState>(context).dispatch(new UpdateUserDevice(device));
-      TokenB token = TokenB(name: "token", id: Environment().config.serverToken, user_uid: user.uid);
+      TokenB token = TokenB(name: "token", id: MessagingHelper.serverToken, user_uid: user.uid);
       StoreProvider.of<AppState>(context).dispatch(new UpdateUserToken(token));
+
+
       // return 'signInWithGoogle succeeded: $user';
       await pr.hide();
       return 1;
@@ -369,7 +394,7 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
         assert(token != null);
 
         print("Token " + token);
-        Environment().config.serverToken = token;
+        MessagingHelper.serverToken = token;
       });
 
       //   check_logged();
@@ -384,7 +409,7 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
 
   void checkAuth() async {
     bool didAuthenticate = await localAuth.authenticateWithBiometrics(localizedReason: AppLocalizations.of(context).pleaseAuthenticateShowAccountBalance);
-    debugPrint('UI_U_Login => $didAuthenticate');
+    debugPrint('UI_U_login => $didAuthenticate');
   }
 
   ///Validation
@@ -499,7 +524,7 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
                         ),
                       ),
                       child: CustomScrollView(
-                        //physics: ClampingScrollPhysics(),
+                          physics: ClampingScrollPhysics(),
                           shrinkWrap: true,
                           slivers: [
                             SliverList(
@@ -510,7 +535,7 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
                                   return GestureDetector(
                                     onTap: () async {
                                       if(!didAuthenticate){
-                                        didAuthenticate = await localAuth.authenticateWithBiometrics(localizedReason: AppLocalizations.of(context).pleaseAuthenticateUseCredentials);
+                                        didAuthenticate = await localAuth.authenticate(localizedReason: AppLocalizations.of(context).pleaseAuthenticateUseCredentials);
                                         /*if(!didAuthenticate)
                                   didAuthenticate = true;*/
                                       }
@@ -520,6 +545,11 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
                                       //didAuthenticate = true;
                                       if (didAuthenticate) {
                                         _emailController.text = autoCompleteList.elementAt(index).email;
+                                        /*if(Platform.isIOS){
+                                          _passwordController.text = await KeychainPlugin.getKeychainValue(autoCompleteList.elementAt(index).email, '');
+                                        }else{
+                                          _passwordController.text = autoCompleteList.elementAt(index).password;
+                                        }*/
                                         _passwordController.text = autoCompleteList.elementAt(index).password;
                                         if (_formKey.currentState.validate() && !_isRequestFlying) {
                                           _signInWithEmailAndPassword();
@@ -575,7 +605,7 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
                                   );
                                   // return InkWell(
                                   //   onTap: () {
-                                  //     debugPrint('Category Item: ${categoryItem.name.toUpperCase()} Clicked!');
+                                  //     debugPrint('UI_U_login => Category Item: ${categoryItem.name.toUpperCase()} Clicked!');
                                   //   },
                                   //   //child: MenuItemListItemWidget(menuItem),
                                   //   child: CategoryListItemWidget(categoryItem),
@@ -683,7 +713,7 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
       converter: (store) => store.state,
       builder: (context, snapshot) {
         autoCompleteList = snapshot.autoCompleteListState.autoCompleteListState;
-        debugPrint('UI_U_Login => Auto complete List LENGTH: ${autoCompleteList.length}');
+        debugPrint('UI_U_login => Auto complete List LENGTH: ${autoCompleteList.length}');
         return GestureDetector(
           onTap: () {
             FocusScopeNode currentFocus = FocusScope.of(context);
@@ -719,6 +749,7 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
                     color: BuytimeTheme.SymbolBlack,
                   ),
                   onPressed: () {
+                    controller.play();
                     if (overlayEntry != null && isMenuOpen) {
                       overlayEntry.remove();
                       isMenuOpen = !isMenuOpen;
@@ -930,7 +961,7 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
                                                 style: TextStyle(
                                                   fontFamily: BuytimeTheme.FontFamily,
                                                   color: Color(0xff666666),
-                                                  fontWeight: FontWeight.bold,
+                                                  fontWeight: FontWeight.w800,
                                                 ),
                                                 validator: (String value) {
                                                   setState(() {
@@ -1106,6 +1137,43 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
                                 ),
                                 Platform.isIOS ?
                                 BrandedButton("assets/img/apple_logo.png", AppLocalizations.of(context).logInWithApple, initiateAppleSignIn) : Container(),
+                                widget.fromDiscover ?
+                                Container(
+                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
+                                    //margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 0.5),
+                                    alignment: Alignment.center,
+                                    child: Material(
+                                      color: Colors.transparent,
+                                      child: InkWell(
+                                        key: Key('tourist_registration'),
+                                        onTap: () {
+                                          Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(builder: (context) => Registration(widget.fromDiscover)),
+                                          );
+                                        },
+                                        borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                        child: Container(
+                                          //width: 328,
+                                          width: 80,
+                                          height: 28,
+                                          padding: EdgeInsets.all(5.0),
+                                          child: FittedBox(
+                                            child: Text(
+                                              AppLocalizations.of(context).register,
+                                              style: TextStyle(
+                                                fontFamily: BuytimeTheme.FontFamily,
+                                                color: BuytimeTheme.TextWhite,
+                                                fontWeight: FontWeight.w400,
+                                                fontSize: 16,
+
+                                                ///SizeConfig.safeBlockHorizontal * 3
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    )) : Container(),
                                 //BrandedButton("assets/img/facebook_logo.png", AppLocalizations.of(context).signFacebook, initiateFacebookSignIn),
                               ]),
                             ),
@@ -1175,7 +1243,7 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
     setState(() {
       _isRequestFlying = false;
     });
-
+    //await KeychainPlugin.setKeychainValue(_emailController.text, _passwordController.text, '');
     if (user != null) {
       AutoCompleteState autoComplete = AutoCompleteState().toEmpty();
       autoComplete.email = _emailController.text;
@@ -1190,10 +1258,12 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
           await autoComplete.writeToStorage(autoCompleteList);
           StoreProvider.of<AppState>(context).dispatch(AddAutoCompleteToList(autoCompleteList));
         }
+        debugPrint('UI_U_login => AUTOMPLETE LIST ON LOGIN: ${autoCompleteList.length}');
       } else {
         List<AutoCompleteState> list = [];
         list.add(autoComplete);
         await autoComplete.writeToStorage(list);
+        debugPrint('UI_U_login => AUTOMPLETE LIST ON LOGIN: ${list.length}');
         StoreProvider.of<AppState>(context).dispatch(AddAutoCompleteToList(list));
       }
       /*if (remeberMe) {
@@ -1235,24 +1305,31 @@ class LoginState extends State<Login> with SingleTickerProviderStateMixin {
 
       print("Device ID : " + deviceId);
 
-      StoreProvider.of<AppState>(context).dispatch(new LoggedUser(UserState.fromFirebaseUser(user, deviceId, [Environment().config.serverToken])));
+      StoreProvider.of<AppState>(context).dispatch(new LoggedUser(UserState.fromFirebaseUser(user, deviceId, [MessagingHelper.serverToken])));
       Device device = Device(name: "device", id: deviceId, user_uid: user.uid);
       StoreProvider.of<AppState>(context).dispatch(new UpdateUserDevice(device));
-      TokenB token = TokenB(name: "token", id: Environment().config.serverToken, user_uid: user.uid);
+      TokenB token = TokenB(name: "token", id: MessagingHelper.serverToken, user_uid: user.uid);
       StoreProvider.of<AppState>(context).dispatch(new UpdateUserToken(token));
       setState(() {
         _success = true;
+        Future.delayed(Duration(milliseconds: 1500), () async {
+          if (StoreProvider.of<AppState>(context).state.user.getRole() != Role.user){
+            debugPrint('UI_U_login => Account authority: > User');
+            Navigator.push(context, MaterialPageRoute(builder: (context) => RBusinessList()));
+          }else{
+            debugPrint('UI_U_login => Account authority: <= User');
+            await FirebaseMessaging.instance.subscribeToTopic('broadcast_user');
+            debugPrint('FIREBASE MESSAGING TOP SUBSCRIBTION TO: broadcast_user');
+            Navigator.of(context).pushNamedAndRemoveUntil(AppRoutes.serviceExplorer, (Route<dynamic> route) => false);
+          }
+          //Navigator.of(context).pushNamedAndRemoveUntil(AppRoutes.myBookings, ModalRoute.withName(AppRoutes.landing));
+          //StoreProvider.of<AppState>(context).dispatch(new UserBookingRequest(user.email));
+        });
 
-        if (StoreProvider.of<AppState>(context).state.user.getRole() != Role.user)
-          Navigator.push(context, MaterialPageRoute(builder: (context) => RBusinessList()));
-        else
-          Navigator.of(context).pushNamedAndRemoveUntil(AppRoutes.landing, (Route<dynamic> route) => false);
-        //Navigator.of(context).pushNamedAndRemoveUntil(AppRoutes.myBookings, ModalRoute.withName(AppRoutes.landing));
-        //StoreProvider.of<AppState>(context).dispatch(new UserBookingRequest(user.email));
       });
     } else {
       Navigator.of(context).pop();
-      debugPrint('response: $responseMessage');
+      debugPrint('UI_U_login => esponse: $responseMessage');
       if (responseMessage.isEmpty) {
         setState(() {
           _success = false;

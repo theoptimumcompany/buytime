@@ -16,10 +16,10 @@ import 'package:Buytime/reblox/model/booking/booking_list_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reblox/reducer/booking_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/booking_reducer.dart';
-import 'package:Buytime/reusable/booking_list_item.dart';
-import 'package:Buytime/reusable/booking_month_list.dart';
-import 'package:Buytime/reusable/custom_bottom_button_widget.dart';
-import 'package:Buytime/reusable/menu/UI_M_business_list_drawer.dart';
+import 'package:Buytime/UI/management/invite/widget/w_booking_list_item.dart';
+import 'package:Buytime/UI/management/invite/widget/w_booking_month_list.dart';
+import 'package:Buytime/reusable/w_custom_bottom_button.dart';
+import 'package:Buytime/reusable/menu/w_manager_drawer.dart';
 import 'package:Buytime/services/booking_service_epic.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
@@ -79,7 +79,7 @@ class _BookingListState extends State<BookingList> {
         key: _drawerKey,
         ///Appbar
         appBar: AppBar(
-          backgroundColor: BuytimeTheme.ManagerPrimary,
+          backgroundColor: BuytimeTheme.TextWhite,
           title: Container(
             child: Padding(
               padding: const EdgeInsets.only(left: 0.0),
@@ -87,15 +87,30 @@ class _BookingListState extends State<BookingList> {
                 AppLocalizations.of(context).guests,
                 textAlign: TextAlign.start,
                 style: TextStyle(
-                  color: BuytimeTheme.TextWhite,
-                  fontSize: media.height * 0.025,
+                  color: BuytimeTheme.TextBlack,
+                  fontSize: 16,
                   fontWeight: FontWeight.w400,
                 ),
               ),
             ),
           ),
+          leading: IconButton(
+            key: Key('business_drawer_key'),
+            icon: const Icon(
+              Icons.keyboard_arrow_left,
+              color: BuytimeTheme.TextBlack,
+              //size: 30.0,
+            ),
+            tooltip: AppLocalizations.of(context).showMenu,
+            onPressed: () {
+              //_drawerKey.currentState.openDrawer();
+              Navigator.of(context).pop();
+            },
+          ),
+          elevation: 1,
+          centerTitle: true,
         ),
-        drawer: UI_M_BusinessListDrawer(),
+        drawer: ManagerDrawer(),
         body: Center(
           child: ConstrainedBox(
             constraints: BoxConstraints(),
@@ -113,7 +128,7 @@ class _BookingListState extends State<BookingList> {
                     checkedOutBookingMap.clear();
                     checkedOutBookingList.clear();
 
-                    //debugPrint('UI_M_BookingList: snapshot: ${snapshot.bookingList.bookingListState.length}');
+                    //debugPrint('UI_M_Booking_list => snapshot: ${snapshot.bookingList.bookingListState.length}');
                     bookingSnapshot.data.docs.forEach((element) {
                       bookingList.add(BookingState.fromJson(element.data()));
                     });
@@ -122,8 +137,8 @@ class _BookingListState extends State<BookingList> {
                     bookingList.sort((a,b) => DateFormat('MM').format(a.start_date).compareTo(DateFormat('MM').format(b.start_date)));
                     //DateFormat('dd/MM').format(widget.booking.start_date)
                     bookingList.forEach((element) {
-                      //debugPrint('UI_M_BookingList: snapshot booking Date Time: ${element.start_date} - ${element.end_date} | ${element.start_date.isUtc} - ${element.end_date.isUtc} | ${element.start_date.timeZoneName} - ${element.end_date.timeZoneName} | ${element.start_date.timeZoneOffset} - ${element.end_date.timeZoneOffset}');
-                      //debugPrint('UI_M_BookingList: snapshot booking status: ${element.user.first.surname} ${element.status}');
+                      //debugPrint('UI_M_Booking_list => snapshot booking Date Time: ${element.start_date} - ${element.end_date} | ${element.start_date.isUtc} - ${element.end_date.isUtc} | ${element.start_date.timeZoneName} - ${element.end_date.timeZoneName} | ${element.start_date.timeZoneOffset} - ${element.end_date.timeZoneOffset}');
+                      //debugPrint('UI_M_Booking_list => snapshot booking status: ${element.user.first.surname} ${element.status}');
                       if(element.status != 'closed'){
                         bookingMap.putIfAbsent(DateFormat('MMM yyyy').format(element.start_date), () => []);
                         bookingMap[DateFormat('MMM yyyy').format(element.start_date)].add(element);
@@ -136,7 +151,7 @@ class _BookingListState extends State<BookingList> {
 
                     bookingMap.forEach((key, value) {
                       /*value.forEach((element) {
-            debugPrint('UI_M_BookingList: value booking status: ${element.user.first.surname} ${element.status}');
+            debugPrint('UI_M_Booking_list => value booking status: ${element.user.first.surname} ${element.status}');
           });*/
                       value.sort((a,b) => DateFormat('dd').format(a.start_date).compareTo(DateFormat('dd').format(b.start_date)));
                       //value.sort((a,b) => DateFormat('dd').format(a.end_date).compareTo(DateFormat('dd').format(b.end_date)));
@@ -145,7 +160,7 @@ class _BookingListState extends State<BookingList> {
 
                     checkedOutBookingMap.forEach((key, value) {
                       /*value.forEach((element) {
-            debugPrint('UI_M_BookingList: value booking status: ${element.user.first.surname} ${element.status}');
+            debugPrint('UI_M_Booking_list => value booking status: ${element.user.first.surname} ${element.status}');
           });*/
                       value.sort((a,b) => DateFormat('dd',Localizations.localeOf(context).languageCode).format(a.start_date).compareTo(DateFormat('dd').format(b.start_date)));
                       checkedOutBookingList.add(value);
@@ -168,13 +183,14 @@ class _BookingListState extends State<BookingList> {
                                     //color: Colors.blueGrey.withOpacity(0.1),
                                     margin: EdgeInsets.only(bottom: 60.0),
                                     padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
-                                    child: CustomScrollView(shrinkWrap: true, slivers: [
+                                    child: CustomScrollView(physics: new ClampingScrollPhysics(),
+                                        shrinkWrap: true, slivers: [
                                       SliverList(
                                         delegate: SliverChildBuilderDelegate((context, index) {
                                           //MenuItemModel menuItem = menuItems.elementAt(index);
                                           List<BookingState> bookings = activeBookingList.elementAt(index);
                                           bookings.forEach((element) {
-                                            //debugPrint('UI_M_BookingList: bookings booking status: ${element.user.first.surname} ${element.status}');
+                                            //debugPrint('UI_M_Booking_list => bookings booking status: ${element.user.first.surname} ${element.status}');
                                           });
                                           return BookingMonthList(bookings);
                                         },
@@ -188,7 +204,7 @@ class _BookingListState extends State<BookingList> {
                               ///No Bookings
                               Container(
                                 height: SizeConfig.safeBlockVertical * 8,
-                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                                 decoration: BoxDecoration(
                                     color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2),
                                     borderRadius: BorderRadius.circular(10)

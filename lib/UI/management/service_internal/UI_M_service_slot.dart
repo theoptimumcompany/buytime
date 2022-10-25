@@ -18,7 +18,7 @@ import 'package:Buytime/UI/management/service_internal/widget/W_service_step_pri
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/reducer/service/service_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/service_slot_time_reducer.dart';
-import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
+import 'package:Buytime/reusable/appbar/w_buytime_appbar.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/utils/utils.dart';
@@ -152,7 +152,7 @@ class UI_M_ServiceSlotState extends State<UI_M_ServiceSlot> {
                                           currentStep = step;
                                         });
                                       },
-                                      controlsBuilder: (BuildContext context, {VoidCallback onStepContinue, VoidCallback onStepCancel}) {
+                                      controlsBuilder: (BuildContext context, ControlsDetails details) {
                                         return Row(
                                           mainAxisSize: MainAxisSize.max,
                                           mainAxisAlignment: MainAxisAlignment.center,
@@ -166,7 +166,7 @@ class UI_M_ServiceSlotState extends State<UI_M_ServiceSlot> {
                                                   style: OutlinedButton.styleFrom(
                                                     backgroundColor: BuytimeTheme.ManagerPrimary,
                                                   ),
-                                                  onPressed: onStepContinue,
+                                                  onPressed: details.onStepContinue,
                                                   child: Padding(
                                                     padding: const EdgeInsets.all(0.0),
                                                     child: Text(

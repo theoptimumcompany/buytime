@@ -12,6 +12,7 @@ limitations under the License.
 
 import 'package:Buytime/utils/utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'promotion_state.g.dart';
@@ -41,6 +42,8 @@ class PromotionState {
   String discountType;
   @JsonKey(defaultValue: 0)
   int limit;
+  @JsonKey(ignore: true, defaultValue: 0)
+  int timesUsed = 0;
 
   PromotionState({
     this.area,
@@ -51,7 +54,8 @@ class PromotionState {
     this.dateStop,
     this.discount,
     this.discountType,
-    this.limit
+    this.limit,
+    this.timesUsed
   });
 
   PromotionState toEmpty() {
@@ -64,7 +68,8 @@ class PromotionState {
       dateStop: DateTime.now(),
       discount: 0,
       discountType: Utils.enumToString(DiscountType.fixedAmount),
-      limit: 0
+      limit: 0,
+      timesUsed: 0
     );
   }
 
@@ -78,6 +83,7 @@ class PromotionState {
     this.discount = promotionState.discount;
     this.discountType = promotionState.discountType;
     this.limit = promotionState.limit;
+    this.timesUsed = this.timesUsed != null ? this.timesUsed : 0;
   }
 
   PromotionState copyWith({
@@ -90,6 +96,7 @@ class PromotionState {
   int discount,
   String discountType,
   int limit,
+  int timesUsed,
   }) {
     return PromotionState(
       area: area ?? this.area,
@@ -101,7 +108,13 @@ class PromotionState {
       discount: discount ?? this.discount,
       discountType: discountType ?? this.discountType,
       limit: limit ?? this.limit,
+      timesUsed: timesUsed2(timesUsed),
     );
+  }
+
+  int timesUsed2(int timesUsed) {
+    debugPrint("timesUsed updated " + this.timesUsed.toString() + " - " + timesUsed.toString());
+    return this.timesUsed != null ? this.timesUsed : 0;
   }
 
   factory PromotionState.fromJson(Map<String, dynamic> json) => _$PromotionStateFromJson(json);

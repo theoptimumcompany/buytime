@@ -16,11 +16,16 @@ import 'package:Buytime/reblox/model/order/order_entry.dart';
 import 'package:Buytime/reblox/model/order/selected_entry.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/model/user/snippet/user_snippet_state.dart';
+import 'package:Buytime/reblox/reducer/promotion/promotion_reducer.dart';
 import 'package:Buytime/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
+
+import '../app_state.dart';
+import 'order_state.dart';
 
 part 'order_reservable_state.g.dart';
 
@@ -58,9 +63,11 @@ class OrderReservableState {
   PaymentMethod paymentMethod;
   String location;
   String openUntil;
+  String tableNumber;
   String cancellationReason;
   bool carbonCompensation = false;
   double totalPromoDiscount = 0.0;
+  String promotionId;
 
   OrderReservableState({
     @required this.itemList,
@@ -90,9 +97,11 @@ class OrderReservableState {
     this.paymentMethod,
     this.location,
     this.openUntil,
+    this.tableNumber,
     this.cancellationReason,
     this.carbonCompensation,
     this.totalPromoDiscount,
+    this.promotionId,
   });
 
 
@@ -125,9 +134,44 @@ class OrderReservableState {
     this.paymentMethod = state.paymentMethod;
     this.location = state.location;
     this.openUntil = state.openUntil;
+    this.tableNumber = state.tableNumber;
     this.cancellationReason = state.cancellationReason;
     this.carbonCompensation = state.carbonCompensation;
     this.totalPromoDiscount = state.totalPromoDiscount;
+    this.promotionId = state.promotionId;
+  }
+
+  OrderReservableState.fromReservableState(OrderState state) {
+    this.itemList = state.itemList;
+    this.date = state.date;
+    this.creationDate = state.creationDate;
+    this.position = state.position;
+    this.total = state.total;
+    this.tip = state.tip;
+    this.tax = state.tax;
+    this.taxPercent = state.taxPercent;
+    this.amount = state.amount;
+    this.progress = state.progress;
+    this.addCardProgress = state.addCardProgress;
+    this.navigate = state.navigate;
+    this.business = state.business;
+    this.businessId = state.businessId;
+    this.businessIdForGiveback = state.businessIdForGiveback;
+    this.userId = state.userId;
+    this.orderId = state.orderId;
+    this.user = state.user;
+    this.selected = state.selected;
+    this.cartCounter = state.cartCounter;
+    this.cardType = state.cardType;
+    this.cardLast4Digit = state.cardLast4Digit;
+    this.paymentMethod = state.paymentMethod;
+    this.location = state.location;
+    this.openUntil = state.openUntil;
+    this.tableNumber = state.tableNumber;
+    this.cancellationReason = state.cancellationReason;
+    this.carbonCompensation = state.carbonCompensation;
+    this.totalPromoDiscount = state.totalPromoDiscount;
+    this.promotionId = state.promotionId;
   }
 
   OrderReservableState copyWith({
@@ -158,9 +202,11 @@ class OrderReservableState {
     PaymentMethod paymentMethodRequest,
     String location,
     String openUntil,
+    String tableNumber,
     String cancellationReason,
     bool carbonCompensation,
     bool totalPromoDiscount,
+    String promotionId,
   }) {
     return OrderReservableState(
       itemList: itemList ?? this.itemList,
@@ -190,9 +236,11 @@ class OrderReservableState {
       paymentMethod: paymentMethod ?? this.paymentMethod,
       location: location ?? this.location,
       openUntil: openUntil ?? this.openUntil,
+      tableNumber: tableNumber ?? this.tableNumber,
       cancellationReason: cancellationReason ?? this.cancellationReason,
       carbonCompensation: carbonCompensation ?? this.carbonCompensation,
       totalPromoDiscount: totalPromoDiscount ?? this.totalPromoDiscount,
+      promotionId: promotionId ?? this.promotionId,
     );
   }
 
@@ -200,7 +248,7 @@ class OrderReservableState {
     return OrderReservableState(
       position: "",
       date: DateTime.now(),
-        creationDate: DateTime.now(),
+      creationDate: DateTime.now(),
       itemList: [],
       total: 0.0,
       tip: 0.0,
@@ -213,21 +261,23 @@ class OrderReservableState {
       businessId: "",
       businessIdForGiveback: "",
       userId: "",
-        orderId: "",
+      orderId: "",
       business: OrderBusinessSnippetState().toEmpty(),
       user: UserSnippet().toEmpty(),
       selected: [],
-        cartCounter: 0,
+      cartCounter: 0,
       serviceId: '',
-        cardType: '',
-        cardLast4Digit: '',
-        confirmOrderWait: false,
-        paymentMethod: null,
-        location: '',
-        openUntil: '--:--',
+      cardType: '',
+      cardLast4Digit: '',
+      confirmOrderWait: false,
+      paymentMethod: null,
+      location: '',
+      openUntil: '--:--',
+      tableNumber: '',
       cancellationReason: 'Overbooking',
       carbonCompensation: false,
       totalPromoDiscount: 0.0,
+      promotionId: '',
     );
   }
 
@@ -258,13 +308,6 @@ class OrderReservableState {
   }
 
   addReserveItem(ServiceState itemToAdd, String idOwner, String time, String minutes, DateTime date, dynamic price, String slotId,  BuildContext context) {
-    /*bool added = false;
-    itemList.forEach((element) {
-      if (!added && element.id == itemToAdd.serviceId) {
-        element.number++;
-        added = true;
-      }
-    });*/
     DateTime tmpDate = date;
     tmpDate = DateTime(date.year, date.month, date.day, int.parse(time.split(':').first), int.parse(time.split(':').last));
     itemList.add(OrderEntry(
@@ -285,31 +328,18 @@ class OrderReservableState {
         switchAutoConfirm: itemToAdd.switchAutoConfirm,
       vat: itemToAdd.vat != null && itemToAdd.vat != 0 ? itemToAdd.vat : 22
     ));
-
-    this.totalPromoDiscount += Utils.calculatePromoDiscount(price, context);
+    double itemDiscount = 0.0;//Utils.calculatePromoDiscount(price, context, itemToAdd.businessId, 1, totalNumberOfItems());
+    this.totalPromoDiscount += itemDiscount;
     this.total += price;
-    this.total -= (totalPromoDiscount / itemList.length);
+    this.total -= itemDiscount;
   }
 
-  // void removeItem(OrderEntry entry, BuildContext context) {
-  //   bool deleted = false;
-  //   itemList.forEach((element) {
-  //     //debugPrint('order_state => DATES: ${element.date} - ${entry.date}');
-  //     if (!deleted && element.id == entry.id) {
-  //       this.totalPromoDiscount -= (Utils.calculatePromoDiscount(entry.price, context));
-  //       this.total -= ((entry.price + this.totalPromoDiscount ) * element.number);
-  //       element.number = 0;
-  //       deleted = true;
-  //     }
-  //   });
-  // }
-
   void removeReserveItem(OrderEntry entry, BuildContext context) {
-
-    this.totalPromoDiscount -= (Utils.calculatePromoDiscount(entry.price, context));
+    double itemDiscount = 0.0;//(Utils.calculatePromoDiscount(entry.price, context, entry.id_business, 2, totalNumberOfItems()));
+    this.totalPromoDiscount -= itemDiscount;
     this.total -= entry.price;
     if(this.itemList.length!= 0)
-      this.total += (totalPromoDiscount / this.itemList.length);
+      this.total += itemDiscount;
     else
       this.total = 0;
   }
@@ -321,6 +351,16 @@ class OrderReservableState {
       }
     }
     return true;
+  }
+
+  int totalNumberOfItems () {
+    int totalNumberOfItems = 0;
+    if (this.itemList != null && this.itemList.isNotEmpty) {
+      for (int i = 0; i < this.itemList.length; i++) {
+        totalNumberOfItems += this.itemList[i].number;
+      }
+    }
+    return totalNumberOfItems;
   }
 
   factory OrderReservableState.fromJson(Map<String, dynamic> json) => _$OrderReservableStateFromJson(json);

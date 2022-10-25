@@ -16,15 +16,11 @@ import 'package:Buytime/reblox/reducer/service/service_list_reducer.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:Buytime/UI/user/cart/UI_U_cart.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
-import 'package:Buytime/reblox/model/business/snippet/business_snippet_state.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
-import 'package:Buytime/reblox/model/order/order_entry.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
-import 'package:Buytime/reblox/model/user/snippet/user_snippet_state.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
-import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
-import 'package:Buytime/utils/globals.dart';
-import 'package:Buytime/reusable/service/optimum_service_card_medium.dart';
+import 'package:Buytime/reusable/appbar/w_buytime_appbar.dart';
+import 'package:Buytime/UI/user/service/widget/w_service_card_medium.dart';
 import 'package:badges/badges.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -141,6 +137,7 @@ class ServiceListState extends State<ServiceList> {
                                                         order.business.id = snapshot.business.id_firestore;
                                                         order.user.name = snapshot.user.name;
                                                         order.user.id = snapshot.user.uid;
+                                                        order.user.email = snapshot.user.email;
                                                         // order.addItem(serviceList[index], snapshot.business.ownerId, context);
                                                         if (!order.addingFromAnotherBusiness(serviceList[index].businessId)) {
                                                           order.addItem(serviceList[index], snapshot.business.ownerId, context);

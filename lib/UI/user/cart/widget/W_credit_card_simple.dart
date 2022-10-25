@@ -15,8 +15,8 @@ import 'package:Buytime/reblox/model/card/card_state.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/card_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/stripe_payment_reducer.dart';
-import 'package:Buytime/reusable/buytime_icons.dart';
-import 'package:Buytime/reusable/material_design_icons.dart';
+import 'package:Buytime/reusable/icon/buytime_icons.dart';
+import 'package:Buytime/reusable/icon/material_design_icons.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -116,7 +116,7 @@ class _CreditCardSimpleListElementState extends State<CreditCardSimpleListElemen
                   children: [
                     ///Card Name & Ending **** ....
                     Container(
-                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
+                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.center,

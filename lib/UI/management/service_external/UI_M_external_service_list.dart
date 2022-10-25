@@ -10,6 +10,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ==============================================================================*/
 
+import 'package:Buytime/UI/management/business/RUI_M_business.dart';
 import 'package:Buytime/UI/management/business/UI_M_business.dart';
 import 'package:Buytime/UI/management/service_external/UI_M_add_external_service_list.dart';
 import 'package:Buytime/UI/management/service_external/widget/W_external_business_list_item.dart';
@@ -23,9 +24,9 @@ import 'package:Buytime/reblox/reducer/external_business_imported_list_reducer.d
 import 'package:Buytime/reblox/reducer/external_business_imported_reducer.dart';
 import 'package:Buytime/reblox/reducer/external_service_imported_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/service_list_snippet_list_reducer.dart';
-import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
-import 'package:Buytime/reusable/buytime_icons.dart';
-import 'package:Buytime/reusable/enterExitRoute.dart';
+import 'package:Buytime/reusable/appbar/w_buytime_appbar.dart';
+import 'package:Buytime/reusable/icon/buytime_icons.dart';
+import 'package:Buytime/reusable/animation/enterExitRoute.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/utils/utils.dart';
@@ -178,26 +179,27 @@ class ExternalServiceListState extends State<ExternalServiceList> {
               },
               child: Scaffold(
                 resizeToAvoidBottomInset: false,
-                appBar: BuytimeAppbar(
-                  width: media.width,
-                  children: [
-                    ///Back Button
-                    IconButton(
-                      key: Key('external_business_list_back_key'),
-                      icon: Icon(Icons.keyboard_arrow_left, color: Colors.white),
-                      onPressed: () {
-                        //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_Business()))
-                        Navigator.pushReplacement(context, EnterExitRoute(enterPage: UI_M_Business(), exitPage: ExternalServiceList(), from: false));
-                      },
+                appBar: AppBar(
+                  backgroundColor: BuytimeTheme.BackgroundWhite,
+                  leading: IconButton(
+                    key: Key('external_business_list_back_key'),
+                    icon: Icon(Icons.keyboard_arrow_left, color: Colors.black),
+                    onPressed: () {
+                      //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_Business()))
+                      Navigator.pushReplacement(context, EnterExitRoute(enterPage: RBusiness(), exitPage: ExternalServiceList(), from: false));
+                    },
+                  ),
+                  title: Text(
+                    AppLocalizations.of(context).externalServices,
+                    textAlign: TextAlign.start,
+                    style: TextStyle(
+                      color: BuytimeTheme.TextBlack,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
                     ),
-                    Utils.barTitle(AppLocalizations.of(context).externalServices),
-                    IconButton(
-                      icon: Icon(Icons.add, color: BuytimeTheme.ManagerPrimary),
-                      onPressed: () {
-                        return null;
-                      },
-                    ),
-                  ],
+                  ),
+                  centerTitle: true,
+                  elevation: 1,
                 ),
                 body: ConstrainedBox(
                   constraints: BoxConstraints(),
@@ -242,6 +244,7 @@ class ExternalServiceListState extends State<ExternalServiceList> {
                        externalBusinessList.isNotEmpty ?
                       Expanded(
                         child: CustomScrollView(
+                          physics: new ClampingScrollPhysics(),
                           shrinkWrap: true,
                           slivers: [
                             SliverList(
@@ -322,6 +325,7 @@ class ExternalServiceListState extends State<ExternalServiceList> {
                       )  : noActivity ?
                        Expanded(
                          child: CustomScrollView(
+                           physics: new ClampingScrollPhysics(),
                            shrinkWrap: true,
                            slivers: [
                              SliverList(
@@ -344,7 +348,7 @@ class ExternalServiceListState extends State<ExternalServiceList> {
                                                    Utils.imageShimmer(91, 91),
                                                    ///Service Name & Description
                                                    Container(
-                                                     margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1),
+                                                     margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1),
                                                      child:  Column(
                                                        mainAxisAlignment: MainAxisAlignment.start,
                                                        crossAxisAlignment: CrossAxisAlignment.start,
@@ -393,7 +397,7 @@ class ExternalServiceListState extends State<ExternalServiceList> {
                          ),
                        ) : Container(
                          height: SizeConfig.safeBlockVertical * 8,
-                         margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                         margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                          decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
                          child: Center(
                              child: Container(

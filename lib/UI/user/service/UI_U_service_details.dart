@@ -27,10 +27,11 @@ import 'package:Buytime/reblox/model/role/role.dart';
 import 'package:Buytime/reblox/navigation/navigation_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reservable_list_reducer.dart';
-import 'package:Buytime/reusable/W_green_choice.dart';
-import 'package:Buytime/reusable/W_promo_discount.dart';
-import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
-import 'package:Buytime/reusable/buytime_icons.dart';
+import 'package:Buytime/reusable/icon/material_design_icons.dart';
+import 'package:Buytime/reusable/w_green_choice.dart';
+import 'package:Buytime/reusable/w_promo_discount.dart';
+import 'package:Buytime/reusable/appbar/w_buytime_appbar.dart';
+import 'package:Buytime/reusable/icon/buytime_icons.dart';
 import 'package:Buytime/utils/utils.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_pro/carousel_pro.dart';
@@ -65,7 +66,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
   void initState() {
     super.initState();
     serviceState = widget.serviceState;
-    debugPrint('image: ${widget.serviceState.image1}');
+    debugPrint('UI_U_service_details => image: ${widget.serviceState.image1}');
   }
 
   @override
@@ -73,16 +74,19 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
     super.dispose();
   }
 
+  bool useOriginal = false;
+
   bool isExternal = false;
   ExternalBusinessState externalBusinessState = ExternalBusinessState().toEmpty();
   String address = '';
   String bussinessName = '-';
+  String translatedDescription = '';
 
   @override
   Widget build(BuildContext context) {
     // the media containing information on width and height
     var media = MediaQuery.of(context).size;
-
+    Locale myLocale = Localizations.localeOf(context);
     SizeConfig().init(context);
     return StoreConnector<AppState, AppState>(
       converter: (store) => store.state,
@@ -93,34 +97,34 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
           address = widget.serviceState.serviceBusinessAddress;
         else
           address = '${AppLocalizations.of(context).noAddress}.';
-        debugPrint('UI_M_external_service_details => ADDRESS: $address');
+        debugPrint('UI_U_service_details => ADDRESS: $address');
         store.dispatch(SetService(widget.serviceState));
         //order = store.state.order.itemList != null ? (store.state.order.itemList.length > 0 ? store.state.order : order) : order;
         if (widget.serviceState.image1.isNotEmpty) images.add(widget.serviceState.image1);
         if (widget.serviceState.image2.isNotEmpty) images.add(widget.serviceState.image2);
         if (widget.serviceState.image3.isNotEmpty) images.add(widget.serviceState.image3);
 
-        debugPrint('UI_U_ServiceDetails => IMAGES: ${images.length}');
+        debugPrint('UI_U_service_details => IMAGES: ${images.length}');
 
         if (widget.serviceState.switchSlots) {
           double tmpPrice;
-          debugPrint('UI_U_ServiceDetails => SLOTS LENGTH: ${widget.serviceState.serviceSlot.length}');
+          debugPrint('UI_U_service_details => SLOTS LENGTH: ${widget.serviceState.serviceSlot.length}');
           DateTime currentTime = DateTime.now();
           currentTime = new DateTime(currentTime.year, currentTime.month, currentTime.day, 0, 0, 0, 0, 0);
           widget.serviceState.serviceSlot.forEach((element) {
             DateTime checkOut = DateFormat('dd/MM/yyyy').parse(element.checkOut);
             if (checkOut.isAtSameMomentAs(currentTime) || checkOut.isAfter(currentTime)) {
-              debugPrint('UI_U_ServiceDetails => VALID: ${element.checkIn}');
+              debugPrint('UI_U_service_details => VALID: ${element.checkIn}');
               tmpPrice = element.price;
               if (element.price <= tmpPrice) {
                 if (element.day != 0) {
-                  debugPrint('UI_U_ServiceDetails => SLOT WITH DAYS');
+                  debugPrint('UI_U_service_details => SLOT WITH DAYS');
                   if (element.day > 1)
                     price = AppLocalizations.of(context).startingFromCurrency + ' ${element.price.toStringAsFixed(0)} / ${element.day} ${AppLocalizations.of(context).days}';
                   else
                     price = AppLocalizations.of(context).startingFromCurrency + ' ${element.price.toStringAsFixed(0)} / ${element.day} ${AppLocalizations.of(context).day}';
                 } else {
-                  debugPrint('UI_U_ServiceDetails => SLOT WITHOUT DAYS');
+                  debugPrint('UI_U_service_details => SLOT WITHOUT DAYS');
                   int tmpMin = element.hour * 60 + element.minute;
                   if (tmpMin > 90)
                     price = AppLocalizations.of(context).startingFromCurrency + ' ${element.price.toStringAsFixed(0)} / ${element.hour} h ${element.minute} ${AppLocalizations.of(context).spaceMinSpace}';
@@ -132,7 +136,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
           });
         } else {
           price = widget.serviceState.price != null
-              ? '${AppLocalizations.of(context).currencySpace} ' + widget.serviceState.price.toString() + AppLocalizations.of(context).slashOneUnit
+              ? '${AppLocalizations.of(context).currencySpace} ' + widget.serviceState.price.toStringAsFixed(2) /*+ AppLocalizations.of(context).slashOneUnit*/
               : AppLocalizations.of(context).currencyNoPrice + AppLocalizations.of(context).hour;
         }
 
@@ -154,22 +158,22 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
 
         ///Business name from business list
         store.state.businessList.businessListState.forEach((element) {
-          debugPrint('BUSINESS NAME: ${element.id_firestore} VS ${widget.serviceState.businessId}');
+          debugPrint('UI_U_service_details => BUSINESS NAME: ${element.id_firestore} VS ${widget.serviceState.businessId}');
           if (widget.serviceState.businessId == element.id_firestore) bussinessName = element.name;
         });
 
         ///Business name from snippet
         store.state.serviceListSnippetListState.serviceListSnippetListState.forEach((element) {
-          debugPrint('BUSINESS NAME: ${element.businessId} VS ${widget.serviceState.businessId}');
+          debugPrint('UI_U_service_details => BUSINESS NAME: ${element.businessId} VS ${widget.serviceState.businessId}');
           if (widget.serviceState.businessId == element.businessId) bussinessName = element.businessName;
         });
 
         debugPrint('BUSINESS NAME: $bussinessName');
       },
       builder: (context, snapshot) {
-        debugPrint('UI_U_ServiceDetails => SNAPSHOT CART COUNT: ${snapshot.order}');
+        debugPrint('UI_U_service_details => SNAPSHOT CART COUNT: ${snapshot.order}');
         order = snapshot.order.itemList != null ? (snapshot.order.itemList.length > 0 ? snapshot.order : OrderState().toEmpty()) : OrderState().toEmpty();
-        debugPrint('UI_U_ServiceDetails => CART COUNT: ${order.cartCounter}');
+        debugPrint('UI_U_service_details => CART COUNT: ${order.cartCounter}');
 
         return GestureDetector(
           onTap: () {
@@ -352,33 +356,9 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                                         crossAxisAlignment: CrossAxisAlignment.start,
                                                         mainAxisAlignment: MainAxisAlignment.end,
                                                         children: [
-                                                          ///Promo Discount label
-                                                          Utils.checkPromoDiscount('general_1', context).promotionId != 'empty'
-                                                              ? Container(
-                                                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
-                                                                  child: Padding(
-                                                                    padding: const EdgeInsets.symmetric(vertical: 5.0,horizontal: 0.0),
-                                                                    child: FittedBox(
-                                                                      fit: BoxFit.fitHeight,
-                                                                      child: W_PromoDiscount(false),
-                                                                    ),
-                                                                  ),
-                                                                )
-                                                              : Container(),
-                                                          ///ECO label
-                                                          widget.serviceState.tag.contains('ECO')
-                                                              ? Container(
-                                                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
-                                                                  child: FittedBox(
-                                                                    fit: BoxFit.fitHeight,
-                                                                    child: W_GreenChoice(false),
-                                                                  ),
-                                                                )
-                                                              : Container(),
-
                                                           ///Service Name Text
                                                           Container(
-                                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 0.5),
+                                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * 0.5),
                                                             child: Text(
                                                               widget.serviceState.name != null ? Utils.retriveField(Localizations.localeOf(context).languageCode, widget.serviceState.name) : AppLocalizations.of(context).serviceName,
                                                               style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextWhite, fontWeight: FontWeight.w700, fontSize: 18
@@ -400,16 +380,43 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                 ),*/
 
                                                           ///Amount
-                                                          Container(
-                                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1),
-                                                            child: Text(
-                                                              price,
-                                                              style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextWhite, fontWeight: FontWeight.w400, fontSize: 14
+                                                          Row(
+                                                            children: [
+                                                              Container(
+                                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1),
+                                                                child: Text(
+                                                                  price,
+                                                                  style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextWhite, fontWeight: FontWeight.w400, fontSize: 14
 
-                                                                  ///SizeConfig.safeBlockHorizontal * 4
+                                                                    ///SizeConfig.safeBlockHorizontal * 4
                                                                   ),
-                                                            ),
-                                                          ),
+                                                                ),
+                                                              ),
+                                                              ///Promo Discount label
+                                                              Utils.checkPromoDiscount('general_1', context, snapshot.serviceState.businessId).promotionId != 'empty'
+                                                                  ? Container(
+                                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5),
+                                                                child: Padding(
+                                                                  padding: const EdgeInsets.symmetric(vertical: 5.0,horizontal: 0.0),
+                                                                  child: FittedBox(
+                                                                    fit: BoxFit.fitHeight,
+                                                                    child: W_PromoDiscount(true),
+                                                                  ),
+                                                                ),
+                                                              )
+                                                                  : Container(),
+                                                              ///ECO label
+                                                              widget.serviceState.tag.contains('ECO')
+                                                                  ? Container(
+                                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 2.5),
+                                                                child: FittedBox(
+                                                                  fit: BoxFit.fitHeight,
+                                                                  child: W_GreenChoice(false),
+                                                                ),
+                                                              )
+                                                                  : Container(),
+                                                            ],
+                                                          )
                                                         ],
                                                       ),
                                                     ),
@@ -457,7 +464,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                               children: [
                                                 ///Service Name Text
                                                 Container(
-                                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2.5),
+                                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * 2.5),
                                                   child: Text(
                                                     widget.serviceState.name != null ? Utils.retriveField(Localizations.localeOf(context).languageCode, widget.serviceState.name) : AppLocalizations.of(context).serviceName,
                                                     style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextWhite, fontWeight: FontWeight.w700, fontSize: 18
@@ -480,7 +487,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
 
                                                 ///Amount
                                                 Container(
-                                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1),
+                                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1),
                                                   child: Text(
                                                     price,
                                                     style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextWhite, fontWeight: FontWeight.w400, fontSize: 14
@@ -509,7 +516,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                         children: [
                                           ///Supplied by
                                           Container(
-                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                                             child: FittedBox(
                                               fit: BoxFit.scaleDown,
                                               child: Text(
@@ -524,7 +531,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
 
                                           ///Supplied Value
                                           Container(
-                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
+                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
                                             child: FittedBox(
                                               fit: BoxFit.scaleDown,
                                               child: Text(
@@ -539,7 +546,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
 
                                           ///Address text
                                           Container(
-                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                                             child: FittedBox(
                                               fit: BoxFit.scaleDown,
                                               child: Text(
@@ -554,7 +561,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
 
                                           ///Address value
                                           Container(
-                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
+                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
                                             child: FittedBox(
                                               fit: BoxFit.scaleDown,
                                               child: Text(
@@ -570,7 +577,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                               ? Container()
                                               :///Directions
                                               Container(
-                                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 0.5),
+                                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 0.5),
                                                   child: Row(
                                                     children: [
                                                       Icon(
@@ -638,7 +645,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                             children: [
                                               ///Supplied by
                                               Container(
-                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                                                 child: FittedBox(
                                                   fit: BoxFit.scaleDown,
                                                   child: Text(
@@ -653,7 +660,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
 
                                               ///Supplied Value
                                               Container(
-                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
+                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
                                                 child: FittedBox(
                                                   fit: BoxFit.scaleDown,
                                                   child: Text(
@@ -668,7 +675,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
 
                                               ///Address text
                                               Container(
-                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                                                 child: FittedBox(
                                                   fit: BoxFit.scaleDown,
                                                   child: Text(
@@ -683,7 +690,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
 
                                               ///Address value
                                               Container(
-                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
+                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
                                                 child: FittedBox(
                                                   fit: BoxFit.scaleDown,
                                                   child: Text(
@@ -698,7 +705,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
 
                                               ///Directions
                                               Container(
-                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 0.5),
+                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 0.5),
                                                 child: Row(
                                                   children: [
                                                     Icon(
@@ -762,7 +769,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                 ///Condition Text
                                 widget.serviceState.condition != null &&  widget.serviceState.condition.isNotEmpty ?
                                 Container(
-                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                                   child: FittedBox(
                                     fit: BoxFit.scaleDown,
                                     child: Text(
@@ -777,7 +784,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                 ///Condition Value
                                 widget.serviceState.condition != null &&  widget.serviceState.condition.isNotEmpty ?
                                 Container(
-                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
+                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
                                   child: FittedBox(
                                     fit: BoxFit.scaleDown,
                                     child: Text(
@@ -791,7 +798,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                 ) : Container(),
                                 ///Description text
                                 Container(
-                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                                   child: FittedBox(
                                     fit: BoxFit.scaleDown,
                                     child: Text(
@@ -807,7 +814,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                 Flexible(
                                   child: Container(
                                     width: double.infinity,
-                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, bottom: SizeConfig.safeBlockVertical * 1, top: SizeConfig.safeBlockVertical * .5),
+                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, bottom: SizeConfig.safeBlockVertical * 0, top: SizeConfig.safeBlockVertical * .5),
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
@@ -824,7 +831,9 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                         Container(
                                           margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 2),
                                           child: Text(
-                                            widget.serviceState.description.isNotEmpty ? Utils.retriveField(Localizations.localeOf(context).languageCode, widget.serviceState.description) : AppLocalizations.of(context).loreIpsum,
+                                            translatedDescription.isNotEmpty && useOriginal ? translatedDescription : widget.serviceState.description.isNotEmpty ? Utils.retriveField(useOriginal ?
+                                                serviceState.originalLanguage :
+                                            Localizations.localeOf(context).languageCode, widget.serviceState.description) : AppLocalizations.of(context).loreIpsum,
                                             style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextBlack, fontWeight: FontWeight.w400, fontSize: 16
 
                                                 ///SizeConfig.safeBlockHorizontal * 4
@@ -834,7 +843,102 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                       ],
                                     ),
                                   ),
-                                )
+                                ),
+
+                                ///Original & Translate
+                                serviceState.originalLanguage.isNotEmpty && myLocale.languageCode != serviceState.originalLanguage && (serviceState.description.split('|').length > 1 || translatedDescription.isNotEmpty) ?
+                                Container(
+                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, bottom: SizeConfig.safeBlockVertical * 1, top: SizeConfig.safeBlockVertical * .5),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Icon(
+                                          MaterialDesignIcons.language,
+                                        //size: 19,
+                                        color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
+                                      ),
+                                      Container(
+                                        margin: EdgeInsets.only(left: 5),
+                                        child: Text(
+                                          AppLocalizations.of(context).translatedWith,
+                                          style: TextStyle(
+                                              fontFamily: BuytimeTheme.FontFamily,
+                                            color: BuytimeTheme.TextMedium,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w400
+                                          ),
+                                        ),
+                                      ),
+                                      Container(
+                                        margin: EdgeInsets.only(left: 7, top: 1),
+                                        height: 2,
+                                        width: 2,
+                                        color: Colors.black,
+                                      ),
+                                      Container(
+                                          margin: EdgeInsets.only(left: 5),
+                                          alignment: Alignment.center,
+                                          child: Material(
+                                            color: Colors.transparent,
+                                            child: InkWell(
+                                                onTap: () {
+                                                  setState(() {
+                                                    useOriginal = !useOriginal;
+                                                  });
+                                                },
+                                                borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                                child: Container(
+                                                  padding: EdgeInsets.all(5.0),
+                                                  child: Text(
+                                                    !useOriginal ? AppLocalizations.of(context).original :  AppLocalizations.of(context).translated,
+                                                    style: TextStyle(letterSpacing: SizeConfig.safeBlockHorizontal * .2, fontFamily: BuytimeTheme.FontFamily, color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary, fontWeight: FontWeight.w500, fontSize: 15
+
+                                                      ///SizeConfig.safeBlockHorizontal * 4
+                                                    ),
+                                                  ),
+                                                )),
+                                          ))
+                                    ],
+                                  ),
+                                ) : serviceState.originalLanguage.isNotEmpty && (serviceState.description.split('|').length == 1 || translatedDescription.isEmpty) ? Container(
+                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, bottom: SizeConfig.safeBlockVertical * 1, top: SizeConfig.safeBlockVertical * .5),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Icon(
+                                        MaterialDesignIcons.language,
+                                        //size: 19,
+                                        color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
+                                      ),
+                                      Container(
+                                          margin: EdgeInsets.only(left: 5),
+                                          alignment: Alignment.center,
+                                          child: Material(
+                                            color: Colors.transparent,
+                                            child: InkWell(
+                                                onTap: (){
+                                                  Utils.singleGoogleTranslate(serviceState.originalLanguage, myLocale.languageCode, Utils.retriveField(serviceState.originalLanguage, serviceState.description)).then((value) => setState(() {
+                                                    useOriginal = true;
+                                                    debugPrint('UI_U_service_details => TRANLATED IN: $value');
+                                                    translatedDescription =  value;
+                                                  }));
+
+                                                },
+                                                borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                                child: Container(
+                                                  padding: EdgeInsets.all(5.0),
+                                                  child: Text(
+                                                    AppLocalizations.of(context).clickHere,
+                                                    style: TextStyle(letterSpacing: SizeConfig.safeBlockHorizontal * .2, fontFamily: BuytimeTheme.FontFamily, color: widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary, fontWeight: FontWeight.w500, fontSize: 15
+
+                                                      ///SizeConfig.safeBlockHorizontal * 4
+                                                    ),
+                                                  ),
+                                                )),
+                                          ))
+                                    ],
+                                  ),
+                                ) : Container()
                               ],
                             ),
                           ],
@@ -842,7 +946,6 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                       ),
                       !widget.serviceState.switchSlots
                           ?
-
                           ///Add a cart & Buy
                           Row(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -874,6 +977,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                               }
                                               order.user.name = snapshot.user.name;
                                               order.user.id = snapshot.user.uid;
+                                              order.user.email = snapshot.user.email;
                                               if (!order.addingFromAnotherBusiness(widget.serviceState.businessId)) {
                                                 order.addItem(widget.serviceState, snapshot.business.ownerId, context);
                                                 order.cartCounter++;
@@ -970,6 +1074,7 @@ class _ServiceDetailsState extends State<ServiceDetails> with SingleTickerProvid
                                               }
                                               order.user.name = snapshot.user.name;
                                               order.user.id = snapshot.user.uid;
+                                              order.user.email = snapshot.user.email;
                                               // order.addItem(widget.serviceState, snapshot.business.ownerId, context);
                                               if (!order.addingFromAnotherBusiness(widget.serviceState.businessId)) {
                                                 order.addItem(widget.serviceState, snapshot.business.ownerId, context);

@@ -83,7 +83,7 @@ class _DashboardCardState extends State<DashboardCard> {
                   children: [
                     ///Icon
                     Container(
-                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
+                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5),
                       child: widget.icon,
                     ),
                     ///Count

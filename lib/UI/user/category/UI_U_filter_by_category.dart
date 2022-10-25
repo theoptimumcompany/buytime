@@ -13,6 +13,7 @@ limitations under the License.
 import 'package:Buytime/UI/user/cart/UI_U_cart.dart';
 import 'package:Buytime/UI/user/search/UI_U_filter_general.dart';
 import 'package:Buytime/UI/user/service/UI_U_service_reserve.dart';
+import 'package:Buytime/UI/user/turist/RUI_U_service_explorer.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/business/snippet/business_snippet_state.dart';
 import 'package:Buytime/reblox/model/category/category_list_state.dart';
@@ -25,11 +26,11 @@ import 'package:Buytime/reblox/model/snippet/service_list_snippet_state.dart';
 import 'package:Buytime/reblox/model/user/snippet/user_snippet_state.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reservable_list_reducer.dart';
-import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
-import 'package:Buytime/reusable/booking_page_service_list_item.dart';
-import 'package:Buytime/reusable/buytime_icons.dart';
-import 'package:Buytime/reusable/find_your_inspiration_card_widget.dart';
-import 'package:Buytime/reusable/material_design_icons.dart';
+import 'package:Buytime/reusable/appbar/w_buytime_appbar.dart';
+import 'package:Buytime/reusable/w_service_list_item.dart';
+import 'package:Buytime/reusable/icon/buytime_icons.dart';
+import 'package:Buytime/reusable/w_find_your_inspiration_card.dart';
+import 'package:Buytime/reusable/icon/material_design_icons.dart';
 import 'package:Buytime/utils/globals.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
@@ -37,6 +38,7 @@ import 'package:Buytime/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:provider/provider.dart';
 
 class FilterByCategory extends StatefulWidget {
   static String route = '/filterByCategory';
@@ -86,10 +88,10 @@ class _FilterByCategoryState extends State<FilterByCategory> {
     ServiceListSnippetState serviceListSnippetState = StoreProvider.of<AppState>(context).state.serviceListSnippetState;
       for (var w = 0; w < serviceListSnippetState.businessSnippet.length; w++) {
         for (var y = 0; y < serviceListSnippetState.businessSnippet[w].serviceList.length; y++) {
-          //debugPrint('INSIDE SERVICE PATH  => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath}');
+          //debugPrint('UI_U_filter_by_category => INSIDE SERVICE PATH  => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath}');
           if (serviceListSnippetState.businessSnippet[w].serviceList[y].serviceAbsolutePath.contains(categoryId)  &&  serviceListSnippetState.businessSnippet[w].serviceList[y].serviceAbsolutePath.contains(serviceId)) {
             return serviceListSnippetState.businessSnippet[w].serviceList[y].serviceAbsolutePath.split('/')[1];
-           // debugPrint('searchCategoryRootId SERVICE PATH  => ${serviceListSnippetState.businessSnippet[w].serviceList[y].serviceAbsolutePath}');
+           // debugPrint('UI_U_filter_by_category => searchCategoryRootId SERVICE PATH  => ${serviceListSnippetState.businessSnippet[w].serviceList[y].serviceAbsolutePath}');
           }
         }
       }
@@ -103,10 +105,10 @@ class _FilterByCategoryState extends State<FilterByCategory> {
       ServiceListSnippetState serviceListSnippetState =  StoreProvider.of<AppState>(context).state.serviceListSnippetState;
       for (var w = 0; w < serviceListSnippetState.businessSnippet.length; w++) {
         for (var y = 0; y < serviceListSnippetState.businessSnippet[w].serviceList.length; y++) {
-          //debugPrint('INSIDE SERVICE PATH  => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath}');
+          //debugPrint('UI_U_filter_by_category => INSIDE SERVICE PATH  => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath}');
           if (serviceListSnippetState.businessSnippet[w].serviceList[y].serviceAbsolutePath.contains(serviceId) && serviceListSnippetState.businessSnippet[w].serviceList[y].serviceAbsolutePath.contains(categoryId)) {
-            //  debugPrint('INSIDE CATEGORY ROOT => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceName}');
-            //debugPrint('INSIDE SERVICE PATH  => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath}');
+            //  debugPrint('UI_U_filter_by_category => INSIDE CATEGORY ROOT => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceName}');
+            //debugPrint('UI_U_filter_by_category => INSIDE SERVICE PATH  => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath}');
             sub = true;
           }
         }
@@ -116,10 +118,10 @@ class _FilterByCategoryState extends State<FilterByCategory> {
     for (var z = 0; z < serviceListSnippetListState.length; z++) {
       for (var w = 0; w < serviceListSnippetListState[z].businessSnippet.length; w++) {
         for (var y = 0; y < serviceListSnippetListState[z].businessSnippet[w].serviceList.length; y++) {
-          //debugPrint('INSIDE SERVICE PATH  => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath}');
+          //debugPrint('UI_U_filter_by_category => INSIDE SERVICE PATH  => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath}');
           if (serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath.contains(serviceId) && serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath.contains(categoryId)) {
-            //  debugPrint('INSIDE CATEGORY ROOT => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceName}');
-            //debugPrint('INSIDE SERVICE PATH  => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath}');
+            //  debugPrint('UI_U_filter_by_category => INSIDE CATEGORY ROOT => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceName}');
+            //debugPrint('UI_U_filter_by_category => INSIDE SERVICE PATH  => ${serviceListSnippetListState[z].businessSnippet[w].serviceList[y].serviceAbsolutePath}');
             sub = true;
           }
         }
@@ -235,7 +237,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
         }
       });
     }
-    debugPrint('i1: ${i1} - i2: ${i2} - i3: ${i3}');
+    debugPrint('UI_U_filter_by_category => i1: ${i1} - i2: ${i2} - i3: ${i3}');
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -307,7 +309,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
     }
 
     categoryListIds.forEach((key, value) {
-      debugPrint('IDS: $key | $value');
+      debugPrint('UI_U_filter_by_category => IDS: $key | $value');
     });
   }
 
@@ -334,8 +336,8 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                 if (element.parent != null && widget.categoryListIds != null && widget.categoryListIds.contains(element.parent.id)) {
                   if (widget.tourist) {
                     debugPrint('UI_U_filter_by_category => SUB CATEGORY NAME: ${element.name}');
-                    store.state.serviceList.serviceListState.forEach((service) {
-                      //debugPrint('CATAGORY ID: ${cLS.id} - CATEGORY LIST: ${service.categoryId}');
+                    Provider.of<Explorer>(context, listen: false).serviceList.forEach((service) {
+                      //debugPrint('UI_U_filter_by_category => CATAGORY ID: ${cLS.id} - CATEGORY LIST: ${service.categoryId}');
                       if (service.categoryId.contains(element.id) || searchCategoryAndServiceOnSnippetList(service.serviceId, element.id)) {
                         createSubCategoryList(element);
                       }
@@ -343,7 +345,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                   } else{
                     debugPrint('UI_U_filter_by_category => SUB CATEGORY NAME: ${element.name}');
                     store.state.serviceList.serviceListState.forEach((service) {
-                      //debugPrint('CATAGORY ID: ${cLS.id} - CATEGORY LIST: ${service.categoryId}');
+                      //debugPrint('UI_U_filter_by_category => CATAGORY ID: ${cLS.id} - CATEGORY LIST: ${service.categoryId}');
                       if (service.categoryId.contains(element.id) || searchCategoryAndServiceOnSnippetList(service.serviceId, element.id)) {
                         createSubCategoryList(element);
                       }
@@ -354,9 +356,9 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                   if(!widget.categoryListIds.contains(element.id)){
                     if(!widget.tourist){
                       if ((element.customTag == 'showcase' || element.showcase) && element.level == 0) {
-                        debugPrint('UI_U_booking_page => LEVEL 0 & SHOWCASE CATEGORY: ${element.name}');
+                        debugPrint('UI_U_filter_by_category => LEVEL 0 & SHOWCASE CATEGORY: ${element.name}');
                         store.state.serviceList.serviceListState.forEach((service) {
-                          //debugPrint('CATAGORY ID: ${cLS.id} - CATEGORY LIST: ${service.categoryId}');
+                          //debugPrint('UI_U_filter_by_category => CATAGORY ID: ${cLS.id} - CATEGORY LIST: ${service.categoryId}');
                           if (service.categoryId.contains(element.id) || searchCategoryAndServiceOnSnippetList(service.serviceId, element.id)) {
                             createCategoryList(element);
                           }
@@ -364,9 +366,9 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                       }
                     }else{
                       if (element.level == 0) {
-                        //debugPrint('UI_U_booking_page => LEVEL 0 & SHOWCASE CATEGORY: ${element.name}');
-                        store.state.serviceList.serviceListState.forEach((service) {
-                          //debugPrint('CATAGORY ID: ${cLS.id} - CATEGORY LIST: ${service.categoryId}');
+                        //debugPrint('UI_U_filter_by_category => LEVEL 0 & SHOWCASE CATEGORY: ${element.name}');
+                        Provider.of<Explorer>(context, listen: false).serviceList.forEach((service) {
+                          //debugPrint('UI_U_filter_by_category => CATAGORY ID: ${cLS.id} - CATEGORY LIST: ${service.categoryId}');
                           if (service.categoryId.contains(element.id) || searchCategoryAndServiceOnSnippetList(service.serviceId, element.id)) {
                             createCategoryList(element);
                           }
@@ -377,7 +379,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                 }
               });
               categoryListIds.forEach((key, value) {
-                debugPrint('IDS: $key | $value');
+                debugPrint('UI_U_filter_by_category => IDS: $key | $value');
               });
             }
           });
@@ -397,19 +399,20 @@ class _FilterByCategoryState extends State<FilterByCategory> {
         if (_searchController.text.isEmpty) {
           tmpServiceList.clear();
           serviceList.clear();
-          s.addAll(snapshot.serviceList.serviceListState);
-          debugPrint('SERVICE LENGTH: ${s.length}');
+          //s.addAll(snapshot.serviceList.serviceListState);
+          s.addAll(Provider.of<Explorer>(context, listen: false).serviceList);
+          debugPrint('UI_U_filter_by_category => SERVICE LENGTH: ${s.length}');
           s.forEach((element) {
             if (element.categoryId != null) {
               element.categoryId.forEach((element2) {
-                //debugPrint('CATEGORY ID: ${element2}');
+                //debugPrint('UI_U_filter_by_category => CATEGORY ID: ${element2}');
                 if (widget.categoryListIds != null && widget.categoryListIds.contains(element2)) {
                   tmpServiceList.add(element);
                   serviceList.add(element);
                 }
               });
               if (!tmpServiceList.contains(element) && !serviceList.contains(element)) {
-            //    debugPrint('categoryListIds   => ${widget.categoryListIds}');
+            //    debugPrint('UI_U_filter_by_category => categoryListIds   => ${widget.categoryListIds}');
                 if (widget.categoryListIds != null && widget.categoryListIds.contains(searchCategoryRootId(element.categoryId.first, element.serviceId))) {
                     tmpServiceList.add(element);
                     serviceList.add(element);
@@ -583,7 +586,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                     children: [
                                       ///Just show me
                                       Container(
-                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1),
+                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1),
                                         child: Text(
                                           AppLocalizations.of(context).justShowMe,
                                           style: TextStyle(
@@ -603,8 +606,10 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                           Container(
                                               height: SizeConfig.screenWidth / 3,
                                               width: double.infinity,
-                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5),
-                                            child: CustomScrollView(shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
+                                            margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5),
+                                            child: CustomScrollView(
+                                                physics: new ClampingScrollPhysics(),
+                                                shrinkWrap: true, scrollDirection: Axis.horizontal, slivers: [
                                                 SliverList(
                                                   delegate: SliverChildBuilderDelegate(
                                                     (context, index) {
@@ -625,7 +630,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                           ///No List
                                           Container(
                                               height: SizeConfig.safeBlockVertical * 8,
-                                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                                               decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
                                               child: Center(
                                                   child: Container(
@@ -663,7 +668,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                               children: [
                                 ///Search
                                 /*Container(
-                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5),
+                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5),
                                   height: SizeConfig.safeBlockHorizontal * 20,
                                   child: TextFormField(
                                     controller: _searchController,
@@ -687,7 +692,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                       ),
                                       suffixIcon: InkWell(
                                         onTap: () {
-                                          debugPrint('done');
+                                          debugPrint('UI_U_filter_by_category => done');
                                           FocusScope.of(context).unfocus();
                                           search(serviceList);
                                         },
@@ -700,7 +705,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                     ),
                                     style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextMedium, fontWeight: FontWeight.w400, fontSize: 16),
                                     onEditingComplete: () {
-                                      debugPrint('done');
+                                      debugPrint('UI_U_filter_by_category => done');
                                       FocusScope.of(context).unfocus();
                                       search(serviceList);
                                     },
@@ -709,7 +714,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                 Container(
                                   margin: EdgeInsets.only(
                                       top: SizeConfig.safeBlockVertical * 3,
-                                      left: SizeConfig.safeBlockHorizontal * 5,
+                                      left: SizeConfig.safeBlockHorizontal * 3.5,
                                       bottom: SizeConfig.safeBlockVertical * 1,
                                       right: _searchController.text.isNotEmpty ? SizeConfig.safeBlockHorizontal * .5 : SizeConfig.safeBlockHorizontal * 5),
                                   child: Row(
@@ -744,9 +749,9 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                               ),
                                               suffixIcon: InkWell(
                                                 onTap: () {
-                                                  debugPrint('done');
+                                                  debugPrint('UI_U_filter_by_category => done');
                                                   FocusScope.of(context).unfocus();
-                                                  search(snapshot.serviceList.serviceListState);
+                                                  search(Provider.of<Explorer>(context, listen: false).serviceList);
                                                 },
                                                 child: Icon(
                                                   // Based on passwordVisible state choose the icon
@@ -757,9 +762,9 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                             ),
                                             style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextMedium, fontWeight: FontWeight.w400, fontSize: 16),
                                             onEditingComplete: () {
-                                              debugPrint('done');
+                                              debugPrint('UI_U_filter_by_category => done');
                                               FocusScope.of(context).unfocus();
-                                              search(snapshot.serviceList.serviceListState);
+                                              search(Provider.of<Explorer>(context, listen: false).serviceList);
                                             },
                                           ),
                                         ),
@@ -776,7 +781,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                           onPressed: () {
                                             setState(() {
                                               _searchController.clear();
-                                              search(snapshot.serviceList.serviceListState);
+                                              search(Provider.of<Explorer>(context, listen: false).serviceList);
                                               //first = false;
                                             });
                                           },
@@ -921,7 +926,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                                       });
                                                       if (StoreProvider.of<AppState>(context).state.user.getRole() == Role.user) {
                                                         if (direction == DismissDirection.startToEnd) {
-                                                          debugPrint('UI_U_SearchPage => DX to DELETE');
+                                                          debugPrint('UI_U_filter_by_category => DX to DELETE');
                                                           // Show a snackbar. This snackbar could also contain "Undo" actions.
                                                           Scaffold.of(context).showSnackBar(SnackBar(
                                                               content: Text("${service.name} removed"),
@@ -932,7 +937,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                                                     undoDeletion(index, service);
                                                                   })));
                                                         } else {
-                                                          debugPrint('UI_U_SearchPage => SX to BOOK');
+                                                          debugPrint('UI_U_filter_by_category => SX to BOOK');
                                                           if (service.switchSlots) {
                                                             StoreProvider.of<AppState>(context).dispatch(OrderReservableListRequest(service.serviceId));
                                                             Navigator.push(
@@ -944,6 +949,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                                             order.business.id = snapshot.business.id_firestore;
                                                             order.user.name = snapshot.user.name;
                                                             order.user.id = snapshot.user.uid;
+                                                            order.user.email = snapshot.user.email;
                                                             // order.addItem(service, snapshot.business.ownerId, context);
                                                             if (!order.addingFromAnotherBusiness(service.businessId)) {
                                                               order.addItem(service, snapshot.business.ownerId, context);
@@ -995,16 +1001,16 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                                         }
                                                       } else {
                                                         if (direction == DismissDirection.startToEnd) {
-                                                          debugPrint('UI_U_SearchPage => DX to DELETE');
+                                                          debugPrint('UI_U_filter_by_category => DX to DELETE');
                                                         } else {
-                                                          debugPrint('UI_U_SearchPage => SX to BOOK');
+                                                          debugPrint('UI_U_filter_by_category => SX to BOOK');
                                                           undoDeletion(index, service);
                                                         }
                                                       }
                                                     },
                                                     child: Column(
                                                       children: [
-                                                        BookingListServiceListItem(service, widget.tourist),
+                                                        ServiceListItem(service, widget.tourist, index),
                                                         Container(
                                                           margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 30),
                                                           height: SizeConfig.safeBlockVertical * .2,
@@ -1055,7 +1061,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                         : _searchController.text.isNotEmpty
                                             ? Container(
                                                 height: SizeConfig.safeBlockVertical * 8,
-                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                                margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                                                 decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
                                                 child: Center(
                                                     child: Container(
@@ -1070,7 +1076,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                             : tmpServiceList.isEmpty
                                                 ? Container(
                                                     height: SizeConfig.safeBlockVertical * 8,
-                                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                                                     decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
                                                     child: Center(
                                                         child: Container(
@@ -1110,7 +1116,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                               children: [
                                 ///Inspiration
                                 /*Container(
-                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 1),
+                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, top: SizeConfig.safeBlockVertical * 1),
                                     child: Text(
                                       'Find your inspiration here',
                                       style: TextStyle(
@@ -1201,7 +1207,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                     ),
                                   )*/
                                 Container(
-                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 3, bottom: SizeConfig.safeBlockVertical * 2),
+                                  margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 3, bottom: SizeConfig.safeBlockVertical * 2),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
@@ -1270,7 +1276,7 @@ class _FilterByCategoryState extends State<FilterByCategory> {
                                     ///No Category
                                     Container(
                                         height: SizeConfig.safeBlockVertical * 8,
-                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                                         decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
                                         child: Center(
                                             child: Container(

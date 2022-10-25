@@ -254,7 +254,7 @@ CategoryState categoryReducer(CategoryState state, action) {
   }
   if (action is SetCategoryLevel) {
     categoryState.level = action.level;
-    print("Setto livello categoria a " + action.level.toString());
+    debugPrint("category_reducer => Setto livello categoria a " + action.level.toString());
     return categoryState;
   }
   if (action is SetCategoryParent) {
@@ -286,28 +286,28 @@ CategoryState categoryReducer(CategoryState state, action) {
     return categoryState;
   }
   if (action is AddFileToUploadInCategory) {
-    print("category_reducer: addFileInCategory. category: " + state.name);
+    debugPrint("category_reducer => addFileInCategory. category: " + state.name);
 
     //categoryState.fileToUpload = null;
 
     if (state.fileToUpload != null) {
-      print("category_reducer: fileupload != null");
+      debugPrint("category_reducer => fileupload != null");
 
       categoryState.fileToUpload = state.fileToUpload;
 
     }
     categoryState.fileToUpload = action.fileToUpload;
-    debugPrint('category_reducer: cation remoteName: ${action.fileToUpload.remoteName}');
+    debugPrint('category_reducer => cation remoteName: ${action.fileToUpload.remoteName}');
     replaceIfExists(categoryState.fileToUpload, action.fileToUpload);
 
-    debugPrint('category_reducer: remoteName: ${categoryState.fileToUpload.remoteName}');
-    debugPrint('category_reducer: remoteFolder: ${categoryState.fileToUpload.remoteFolder}');
+    debugPrint('category_reducer => remoteName: ${categoryState.fileToUpload.remoteName}');
+    debugPrint('category_reducer => remoteFolder: ${categoryState.fileToUpload.remoteFolder}');
 
     return categoryState;
   }
   if (action is SetCategoryBusinessId) {
     categoryState.businessId = action.businessId;
-    print(categoryState.businessId);
+    debugPrint(categoryState.businessId);
     return categoryState;
   }
   if (action is CategoryChanged) {
@@ -320,7 +320,7 @@ CategoryState categoryReducer(CategoryState state, action) {
   }
   if (action is CreatedCategory) {
     categoryState = action.categoryState.copyWith();
-    debugPrint('category_reducer: categoryImage: ${categoryState.categoryImage}');
+    debugPrint('category_reducer => categoryImage: ${categoryState.categoryImage}');
     return categoryState;
   }
   if (action is CategoryRequestResponse) {

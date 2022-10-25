@@ -11,7 +11,7 @@ limitations under the License.
 ==============================================================================*/
 
 import 'dart:core';
-import 'package:Buytime/UI/management/invite/UI_M_RoomPaymentList.dart';
+import 'package:Buytime/UI/management/invite/UI_M_room_payment_list.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reblox/model/email/email_state.dart';
@@ -19,7 +19,7 @@ import 'package:Buytime/reblox/model/email/template_data_state.dart';
 import 'package:Buytime/reblox/model/email/template_state.dart';
 import 'package:Buytime/reblox/reducer/booking_reducer.dart';
 import 'package:Buytime/reblox/reducer/email_reducer.dart';
-import 'package:Buytime/reusable/material_design_icons.dart';
+import 'package:Buytime/reusable/icon/material_design_icons.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/utils/utils.dart';
@@ -100,7 +100,7 @@ class _BookingDetailsState extends State<BookingDetails> {
       ),
     );
     var dynamicUrl = await parameters.buildUrl();
-    print("Link dinamico creato " + dynamicUrl.toString());
+    debugPrint("Link dinamico creato " + dynamicUrl.toString());
     return dynamicUrl;
   }
 
@@ -134,13 +134,13 @@ class _BookingDetailsState extends State<BookingDetails> {
 
         readDynamicLink(bookingState.booking_code);
 
-        debugPrint('UI_M_BookingDetails => BOOKING CODE: ${bookingState.booking_code}');
+        debugPrint('UI_M_Booking_details => BOOKING CODE: ${bookingState.booking_code}');
         //emailState = snapshot.emailState;
         if (snapshot.emailState.sent != null && snapshot.emailState.sent) {
-          debugPrint('UI_M_BookingDetails => EMAIL SENT');
+          debugPrint('UI_M_Booking_details => EMAIL SENT');
           snapshot.emailState.sent = null;
         } else {
-          debugPrint('UI_M_BookingDetails => EMAIL NOT SENT');
+          debugPrint('UI_M_Booking_details => EMAIL NOT SENT');
         }
 
         return WillPopScope(
@@ -151,7 +151,7 @@ class _BookingDetailsState extends State<BookingDetails> {
 
             ///Appbar
             appBar: AppBar(
-              backgroundColor: BuytimeTheme.ManagerPrimary,
+              backgroundColor: BuytimeTheme.TextWhite,
               title: Container(
                 child: Padding(
                   padding: const EdgeInsets.only(left: 0.0),
@@ -159,8 +159,8 @@ class _BookingDetailsState extends State<BookingDetails> {
                     AppLocalizations.of(context).guestDetails,
                     textAlign: TextAlign.start,
                     style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
+                      color: Colors.black,
+                      fontSize: 16,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -169,12 +169,14 @@ class _BookingDetailsState extends State<BookingDetails> {
               leading: IconButton(
                 icon: Icon(
                   Icons.keyboard_arrow_left,
-                  color: Colors.white,
+                  color: Colors.black,
                 ),
                 onPressed: () async {
                   Navigator.of(context).pop();
                 },
               ),
+              elevation: 1,
+              centerTitle: true,
             ),
             //drawer: !view ? UI_M_BusinessListDrawer() : null,
             body: SafeArea(
@@ -214,7 +216,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                                   children: [
                                     ///Booking code
                                     Container(
-                                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 4, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.blockSizeHorizontal * 5),
+                                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 4, left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.blockSizeHorizontal * 5),
                                       child: Row(
                                         crossAxisAlignment: CrossAxisAlignment.end,
                                         children: [
@@ -248,7 +250,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                                     ///Full Name
                                     Expanded(
                                       child: Container(
-                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 4, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.blockSizeHorizontal * 5),
+                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 4, left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.blockSizeHorizontal * 5),
                                         child: Row(
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
@@ -280,7 +282,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                                     ///Email
                                     Expanded(
                                       child: Container(
-                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 4, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.blockSizeHorizontal * 5),
+                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 4, left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.blockSizeHorizontal * 5),
                                         child: Row(
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
@@ -311,7 +313,7 @@ class _BookingDetailsState extends State<BookingDetails> {
 
                                     ///Check In & Check Out
                                     Container(
-                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.blockSizeHorizontal * 5),
+                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.blockSizeHorizontal * 5),
                                         child: Row(
                                           mainAxisAlignment: MainAxisAlignment.start,
                                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -390,7 +392,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                                                       suffixIcon: Icon(Icons.calendar_today)),
                                                   style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextMedium, fontWeight: FontWeight.w600, fontSize: 16),
                                                   /*validator: (String value) {
-                                                    debugPrint('${checkIn.compareTo(checkOut)}');
+                                                    debugPrint('UI_M_Booking_details => ${checkIn.compareTo(checkOut)}');
                                                     if (value.isEmpty || checkIn.compareTo(checkOut) > 0) {
                                                       return 'Please enter a valid interval of dates';
                                                     }
@@ -406,7 +408,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                                     Container(
                                         //width: 327,
                                         height: 56,
-                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.blockSizeHorizontal * 5),
+                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.blockSizeHorizontal * 5),
                                         child: TextFormField(
                                           enabled: false,
                                           controller: _numberOfGuestsController,
@@ -439,7 +441,7 @@ class _BookingDetailsState extends State<BookingDetails> {
                                         );
                                       },
                                       child: Container(
-                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.blockSizeHorizontal * 5),
+                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.blockSizeHorizontal * 5),
                                         decoration: BoxDecoration(
                                           borderRadius: BorderRadius.circular(5),
                                           color: Colors.white,

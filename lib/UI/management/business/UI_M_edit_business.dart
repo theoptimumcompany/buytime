@@ -19,21 +19,24 @@ import 'package:Buytime/reblox/model/business/business_state.dart';
 import 'package:Buytime/reblox/model/role/role.dart';
 import 'package:Buytime/reblox/model/snippet/generic.dart';
 import 'package:Buytime/reblox/reducer/business_reducer.dart';
-import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
-import 'package:Buytime/reusable/enterExitRoute.dart';
+import 'package:Buytime/reusable/appbar/w_buytime_appbar.dart';
+import 'package:Buytime/reusable/animation/enterExitRoute.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/utils/utils.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../reusable/form/optimum_chip.dart';
-import '../../../reusable/form/optimum_form_field.dart';
-import 'package:Buytime/reusable/form/optimum_form_multi_photo.dart';
+import '../../../reusable/form/w_optimum_chip.dart';
+import '../../../reusable/form/w_optimum_form_field.dart';
+import 'package:Buytime/reusable/form/w_optimum_form_multi_photo.dart';
+
+import 'RUI_M_business.dart';
 
 class UI_M_EditBusiness extends StatefulWidget {
   @override
@@ -48,7 +51,7 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
   int steps = 4;
   List<String> europeanCountries = ['Austria', 'Italy', 'Belgium', 'Latvia', 'Bulgaria', 'Lithuania', 'Croatia', 'Luxembourg', 'Cyprus', 'Malta', 'Czechia', 'Netherlands', 'Denmark', 'Poland', 'Estonia', 'Portugal', 'Finland', 'Romania', 'France', 'Slovakia', 'Germany', 'Slovenia', 'Greece', 'Spain', 'Hungary', 'Sweden', 'Ireland'];
   final GlobalKey<FormState> _formKeyEdit = GlobalKey<FormState>();
-  bool _autoValidate = false;
+  AutovalidateMode _autoValidate = AutovalidateMode.disabled;
 
   next() {
     currentStep + 1 != steps ? goTo(currentStep + 1) : setState(() => complete = true);
@@ -64,9 +67,11 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
     setState(() => currentStep = step);
   }
 
+
   @override
   void initState() {
     super.initState();
+    FlutterSecureStorage().write(key: 'businessId', value: '');
   }
 
   bool _validateInputs() {
@@ -77,7 +82,7 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
     } else {
 //    If all data are not valid then start auto validation.
       setState(() {
-        _autoValidate = true;
+        _autoValidate = AutovalidateMode.always;
       });
       return false;
     }
@@ -258,28 +263,27 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
                 },
                 child: Scaffold(
                   //resizeToAvoidBottomInset: false,
-                  appBar: BuytimeAppbar(
-                    width: media.width,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          IconButton(
-                            icon: Icon(Icons.chevron_left, color: BuytimeTheme.TextWhite),
-                            onPressed: () {
-                              //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_Business()),);
-                              Navigator.pushReplacement(context, EnterExitRoute(enterPage: UI_M_Business(), exitPage: UI_M_EditBusiness(), from: false));
-                            },
-                          ),
-                        ],
+                  appBar: AppBar(
+                    backgroundColor: Colors.white,
+                    brightness: Brightness.dark,
+                    elevation: 1,
+                    title: Text(
+                      AppLocalizations.of(context).businessEdit,
+                      style: TextStyle(
+                          fontFamily: BuytimeTheme.FontFamily,
+                          color: BuytimeTheme.TextBlack,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 16 ///SizeConfig.safeBlockHorizontal * 7
                       ),
-
-                      ///Title
-                      Utils.barTitle(AppLocalizations.of(context).businessEdit),
-                      SizedBox(
-                        width: 50.0,
-                      )
-                    ],
+                    ),
+                    centerTitle: true,
+                    leading: IconButton(
+                      icon: Icon(Icons.chevron_left, color: BuytimeTheme.TextBlack),
+                      onPressed: () {
+                        //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_Business()),);
+                        Navigator.pushReplacement(context, EnterExitRoute(enterPage: RBusiness(), exitPage: UI_M_EditBusiness(), from: false));
+                      },
+                    ),
                   ),
                   body: Theme(
                     data: ThemeData(primaryColor: BuytimeTheme.ManagerPrimary, accentColor: BuytimeTheme.Secondary),
@@ -288,11 +292,11 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
                         child: ConstrainedBox(
                           constraints: BoxConstraints(),
                           child: Padding(
-                            padding: EdgeInsets.only(top: 10.0),
+                            padding: EdgeInsets.only(top: 0.0),
                             child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
                               Form(
                                 key: _formKeyEdit,
-                                autovalidate: _autoValidate,
+                                autovalidateMode: _autoValidate,
                                 child: Flexible(
                                   child: StoreConnector<AppState, BusinessState>(
                                       converter: (store) => store.state.business,
@@ -338,27 +342,27 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
                                           if (snapshot.business_type.isNotEmpty)
                                             businessType = snapshot.business_type;
                                           else
-                                            debugPrint('UI_M_create_business => HAS BUSINESSS TYPE');
-                                          debugPrint('UI_M_create_business => BEFORE BUSINESS TYPE LENGTH: ${snapshot.business_type.length}');
+                                            debugPrint('UI_M_edit_business => HAS BUSINESSS TYPE');
+                                          debugPrint('UI_M_edit_business => BEFORE BUSINESS TYPE LENGTH: ${snapshot.business_type.length}');
 
                                           if (isHub != snapshot.hub) {
                                             snapshot.business_type = '';
                                             businessType = '';
                                             //StoreProvider.of<AppState>(context).dispatch(SetBusinessType([]));
                                             if (snapshot.hub) {
-                                              debugPrint('UI_M_create_business => NOW IS HUB');
+                                              debugPrint('UI_M_edit_business => NOW IS HUB');
                                               //snapshot.business_type = [GenericState(name: 'Hotel')];
                                               businessType = 'Hotel';
                                               //StoreProvider.of<AppState>(context).dispatch(SetBusinessType([GenericState(name: 'Hotel')]));
                                             } else {
-                                              debugPrint('UI_M_create_business => NOW IS NOT A HUB');
+                                              debugPrint('UI_M_edit_business => NOW IS NOT A HUB');
                                               //snapshot.business_type = [GenericState(name: 'Bar')];
                                               businessType = 'Bar';
                                               //StoreProvider.of<AppState>(context).dispatch(SetBusinessType([GenericState(name: 'Bar')]));
                                             }
                                             isHub = snapshot.hub;
                                           }
-                                          debugPrint('UI_M_create_business => AFTER BUSINESS TYPE LENGTH: ${snapshot.business_type.length}');
+                                          debugPrint('UI_M_edit_business => AFTER BUSINESS TYPE LENGTH: ${snapshot.business_type.length}');
                                         }
                                         return Stepper(
                                           steps: [
@@ -448,6 +452,7 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
                                                           //enabled: false,
                                                           //focusNode: focusNode,
                                                           //initialValue: widget.initialFieldValue,
+                                                          textCapitalization: TextCapitalization.sentences,
                                                           controller: _salesmanNameController,
                                                           onChanged: (value) {
                                                             StoreProvider.of<AppState>(context).dispatch(SetBusinessSalesmanName(value));
@@ -481,6 +486,7 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
                                                       child: Form(
                                                         key: _formKeySalesmanPhonenumberFieldEdit,
                                                         child: TextFormField(
+                                                            textCapitalization: TextCapitalization.sentences,
                                                           // maxLength: 10,
                                                           //enabled: false,
                                                           //focusNode: focusNode,
@@ -521,6 +527,7 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
                                                       child: Form(
                                                         key: _formKeyConciergePhonenumberFieldEdit,
                                                         child: TextFormField(
+                                                          textCapitalization: TextCapitalization.sentences,
                                                           //maxLength: 10,
                                                           //enabled: false,
                                                           //focusNode: focusNode,
@@ -617,7 +624,7 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
                                                               value: snapshot.hub,
                                                               onChanged: StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin || StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman
                                                                   ? (value) {
-                                                                      debugPrint('UI_M-create_business => HUB: ${value}');
+                                                                      debugPrint('UI_M_edit_business => HUB: ${value}');
                                                                       StoreProvider.of<AppState>(context).dispatch(SetHub(value));
                                                                       //snapshot.hub = value;
                                                                     }
@@ -627,7 +634,7 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
                                                               value: false,
                                                               onChanged: StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin || StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman
                                                                   ? (value) {
-                                                                      debugPrint('UI_M-create_business => HUB: $value');
+                                                                      debugPrint('UI_M_edit_business => HUB: $value');
                                                                       StoreProvider.of<AppState>(context).dispatch(SetHub(value));
                                                                     }
                                                                   : (value) {}),
@@ -701,6 +708,7 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
                                                                 margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0),
                                                                 //decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
                                                                 child: TextFormField(
+                                                                  textCapitalization: TextCapitalization.sentences,
                                                                   enabled: false,
                                                                   readOnly: true,
                                                                   keyboardType: TextInputType.multiline,
@@ -771,6 +779,7 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
                                                         child: Form(
                                                           key: _formKeyCoordinateFieldEdit,
                                                           child: TextFormField(
+                                                            textCapitalization: TextCapitalization.sentences,
                                                             enabled: false,
                                                             //focusNode: focusNode,
                                                             //initialValue: widget.initialFieldValue,
@@ -992,6 +1001,7 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
                                                                 height: SizeConfig.safeBlockHorizontal * 10,
                                                                 width: SizeConfig.safeBlockHorizontal * 30,
                                                                 child: TextFormField(
+                                                                  textCapitalization: TextCapitalization.sentences,
                                                                   controller: _tagController,
                                                                   textAlign: TextAlign.start,
                                                                   decoration: InputDecoration(
@@ -1135,6 +1145,7 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
                                                                 height: SizeConfig.safeBlockHorizontal * 10,
                                                                 width: SizeConfig.safeBlockHorizontal * 60,
                                                                 child: TextFormField(
+                                                                  textCapitalization: TextCapitalization.sentences,
                                                                   controller: _areaController,
                                                                   textAlign: TextAlign.start,
                                                                   decoration: InputDecoration(
@@ -1404,7 +1415,7 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
                                           onStepContinue: next,
                                           onStepTapped: (step) => goTo(step),
                                           onStepCancel: cancel,
-                                          controlsBuilder: (BuildContext context, {VoidCallback onStepContinue, VoidCallback onStepCancel}) => StoreConnector<AppState, BusinessState>(
+                                          controlsBuilder: (BuildContext context, ControlsDetails details) => StoreConnector<AppState, BusinessState>(
                                             converter: (store) => store.state.business,
                                             builder: (context, snapshot) {
                                               return Row(
@@ -1440,7 +1451,7 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
                                                             highlightElevation: 0,
                                                             onPressed: () {
                                                               print("salesman board: Upload to DB");
-                                                              onStepContinue();
+                                                              details.onStepContinue();
                                                             },
                                                             padding: EdgeInsets.all(0),
                                                             shape: RoundedRectangleBorder(
@@ -1499,7 +1510,7 @@ class UI_M_EditBusinessState extends State<UI_M_EditBusiness> {
                                                                 if (areaListState != null && areaListState.areaList != null) {
                                                                   for (int ij = 0; ij < areaListState.areaList.length; ij++) {
                                                                     var distance = Utils.calculateDistanceBetweenPoints(areaListState.areaList[ij].coordinates, _coordinateController.text);
-                                                                    debugPrint('UI_M_edit_business: area distance ' + distance.toString());
+                                                                    debugPrint('UI_M_edit_business => area distance ' + distance.toString());
                                                                     if (distance != null && distance < 100) {
                                                                       setState(() {
                                                                         if (areaListState.areaList[ij].areaId.isNotEmpty && !snapshot.tag.contains(areaListState.areaList[ij].areaId)) {

@@ -13,14 +13,16 @@ limitations under the License.
 import 'package:Buytime/UI/user/cart/UI_U_ConfirmOrder.dart';
 import 'package:Buytime/UI/user/login/tourist_session/UI_U_tourist_session.dart';
 import 'package:Buytime/UI/user/service/UI_U_service_reserve.dart';
+import 'package:Buytime/UI/user/turist/RUI_U_service_explorer.dart';
+import 'package:Buytime/helper/convention/convention_helper.dart';
 import 'package:Buytime/reblox/enum/order_time_intervals.dart';
 import 'package:Buytime/reblox/model/order/order_entry.dart';
 import 'package:Buytime/reblox/model/order/order_reservable_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/reducer/order_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reservable_reducer.dart';
-import 'package:Buytime/reusable/W_promo_discount.dart';
-import 'package:Buytime/reusable/buytime_icons.dart';
+import 'package:Buytime/reusable/w_promo_discount.dart';
+import 'package:Buytime/reusable/icon/buytime_icons.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
@@ -28,9 +30,9 @@ import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/utils/utils.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
-import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
-import 'package:Buytime/reusable/order/optimum_order_item_card_medium.dart';
-import 'package:Buytime/reusable/order/order_total.dart';
+import 'package:Buytime/reusable/appbar/w_buytime_appbar.dart';
+import 'package:Buytime/reusable/order/w_optimum_order_item_card_medium.dart';
+import 'package:Buytime/reusable/order/w_order_total.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -63,7 +65,7 @@ class CartReservableState extends State<CartReservable> {
   }
 
   void deleteItem(OrderReservableState snapshot, OrderEntry entry, int index) {
-    debugPrint('UI_U_CartReservable => Remove Normal Item');
+    debugPrint('UI_U_cart_reservable => Remove Normal Item 1');
     setState(() {
       if (snapshot.itemList.length >= 1) {
         orderReservableState.cartCounter = orderReservableState.cartCounter - entry.number;
@@ -88,19 +90,23 @@ class CartReservableState extends State<CartReservable> {
   }
 
   void deleteReserveItem(OrderReservableState snapshot, OrderEntry entry, int index) {
-    debugPrint('UI_U_CartReservable => Remove Normal Item');
+    debugPrint('UI_U_cart_reservable => Remove Normal Item 2 - ${entry.number} - ${entry.price}');
     setState(() {
       StoreProvider.of<AppState>(context).state.slotSnippetListState.slotListSnippet.forEach((element) {
         element.slot.forEach((element2) {
           if(element2.uid == entry.idSquareSlot){
-            debugPrint('ON: ${element2.on} - FREE: ${element2.free} - MAX: ${element2.max} - ORDER CAPACITY: ${entry.orderCapacity}');
+            debugPrint('UI_U_cart_reservable => ON: ${element2.on} - FREE: ${element2.free} - MAX: ${element2.max} - ORDER CAPACITY: ${entry.orderCapacity}');
             int tmp = element2.free;
             tmp = tmp+ entry.orderCapacity;
             element2.free = tmp;
           }
         });
       });
-      orderReservableState.cartCounter = orderReservableState.cartCounter - entry.number;
+      if(Provider.of<Explorer>(context, listen: false).businessState.id_firestore.isNotEmpty){
+        ConventionHelper conventionHelper = ConventionHelper();
+        orderReservableState.totalPromoDiscount -= (((entry.price/entry.number) * conventionHelper.getConventionDiscount(Provider.of<Explorer>(context, listen: false).cartReservableServiceList.first, Provider.of<Explorer>(context, listen: false).businessState.id_firestore))/100) * entry.number;
+      }
+      orderReservableState.cartCounter -= 1;
       orderReservableState.removeReserveItem(entry,context);
       orderReservableState.selected.removeAt(index);
 
@@ -131,47 +137,29 @@ class CartReservableState extends State<CartReservable> {
               orderReservableState = snapshot.orderReservable;
               return Scaffold(
                   resizeToAvoidBottomInset: false,
-                  appBar: BuytimeAppbar(
-                    background: widget.tourist ? BuytimeTheme.BackgroundCerulean :BuytimeTheme.UserPrimary,
-                    width: media.width,
-                    children: [
-                      ///Back Button
-                      IconButton(
-                          key: Key('back_from_cart_reserve_key'),
-                          icon: Icon(Icons.chevron_left, color: BuytimeTheme.TextWhite),
-                          onPressed: () {
-                            /*Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (context) => ServiceList()),
-                          );*/
-                            /*StoreProvider.of<AppState>(context).dispatch(UpdateOrder(OrderState(
-                              itemList: orderState.itemList, date: orderState.date, position: orderState.position, total: orderState.total, business: orderState.business, user: orderState.user, businessId: orderState.businessId, userId: orderState.userId)));*/
-
-                            Navigator.of(context).pop();
-                          }),
-
-                      ///Cart Title
-                      Container(
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 0.0),
-                          child: Text(
-                            AppLocalizations.of(context).confirmBooking,
-                            textAlign: TextAlign.start,
-                            style: BuytimeTheme.appbarTitle,
-                          ),
-                        ),
+                  appBar: AppBar(
+                    backgroundColor: Colors.white,
+                    brightness: Brightness.dark,
+                    elevation: 1,
+                    title: Text(
+                      AppLocalizations.of(context).confirmBooking,
+                      style: TextStyle(
+                          fontFamily: BuytimeTheme.FontFamily,
+                          color: BuytimeTheme.TextBlack,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 16 ///SizeConfig.safeBlockHorizontal * 7
                       ),
-                      /*ColorFiltered(
-                        colorFilter: ColorFilter.linearToSrgbGamma(),
-                        child: Image.network(
-                          StoreProvider.of<AppState>(context).state.business.logo,
-                          height: media.height * 0.05,
-                        ),
-                      ),*/
-                      SizedBox(
-                        width: 40.0,
-                      )
-                    ],
+                    ),
+                    centerTitle: true,
+                    leading: IconButton(
+                      icon: Icon(
+                        Icons.keyboard_arrow_left,
+                        color: Colors.black,
+                      ),
+                      onPressed: () async{
+                        Navigator.of(context).pop();
+                      },
+                    ),
                   ),
                   body: SafeArea(
                     child: Center(
@@ -214,18 +202,20 @@ class CartReservableState extends State<CartReservable> {
                                       rebuildOnChange: true,
                                       builder: (context, snapshot) {
                                         orderReservableState = snapshot;
-                                        print("UI_U_cartReservable => CART COUNT: ${orderReservableState.itemList.length}");
+                                        debugPrint("UI_U_cartReservable => CART COUNT: ${orderReservableState.itemList.length}");
                                         return Column(
                                           children: [
                                             ///Service List
                                             Flexible(
                                               flex: 1,
-                                              child: CustomScrollView(shrinkWrap: true, slivers: [
+                                              child: CustomScrollView(
+                                                  physics: new ClampingScrollPhysics(),
+                                                  shrinkWrap: true, slivers: [
                                                 SliverList(
                                                   delegate: SliverChildBuilderDelegate(
                                                     (context, index) {
                                                       //MenuItemModel menuItem = menuItems.elementAt(index);
-                                                      debugPrint('UI_U_CartReservable => LIST| ${orderReservableState.itemList[index].name} ITEM COUNT: ${orderReservableState.itemList[index].number}');
+                                                      debugPrint('UI_U_cart_reservable => LIST| ${orderReservableState.itemList[index].name} ITEM COUNT: ${orderReservableState.itemList[index].number}');
                                                       var item = (index != orderReservableState.itemList.length ? orderReservableState.itemList[index] : null);
                                                       //int itemCount = orderState.itemList[index].number;
                                                       return  Dismissible(
@@ -241,19 +231,20 @@ class CartReservableState extends State<CartReservable> {
                                                                   orderReservableState.itemList.removeAt(index);
                                                                 });
                                                                 if (direction == DismissDirection.endToStart) {
+
                                                                   orderReservableState.selected == null || orderReservableState.selected.isEmpty ?
                                                                     deleteItem(orderReservableState, item, index) :
                                                                   deleteReserveItem(orderReservableState, item, index);
-                                                                  debugPrint('UI_U_CartReservable => DX to DELETE');
+                                                                  debugPrint('UI_U_cart_reservable => DX to DELETE');
                                                                   // Show a snackbar. This snackbar could also contain "Undo" actions.
-                                                                  Scaffold.of(context).showSnackBar(SnackBar(
-                                                                      content: Text(Utils.retriveField(Localizations.localeOf(context).languageCode, item.name) + ' ${AppLocalizations.of(context).spaceRemoved}'),
-                                                                      action: SnackBarAction(
-                                                                          label: AppLocalizations.of(context).undo,
-                                                                          onPressed: () {
-                                                                            //To undo deletion
-                                                                            undoDeletion(index, item);
-                                                                          })));
+                                                                  // Scaffold.of(context).showSnackBar(SnackBar(
+                                                                  //     content: Text(Utils.retriveField(Localizations.localeOf(context).languageCode, item.name) + ' ${AppLocalizations.of(context).spaceRemoved}'),
+                                                                  //     action: SnackBarAction(
+                                                                  //         label: AppLocalizations.of(context).undo,
+                                                                  //         onPressed: () {
+                                                                  //           //To undo deletion
+                                                                  //           undoDeletion(index, item);
+                                                                  //         })));
                                                                 } else {
                                                                   orderReservableState.itemList.insert(index, item);
                                                                 }
@@ -323,7 +314,7 @@ class CartReservableState extends State<CartReservable> {
                                             ),
 
                                             ///Total Order
-                                            OrderTotal(/*totalECO: 0*/ media: media, orderState: OrderState.fromReservableState(orderReservableState)),
+                                            OrderTotal(/*totalECO: 0*/ media: media, orderState: OrderState.fromReservableState(orderReservableState), promotion: false),
 
                                             ///Divider
                                             Container(
@@ -390,8 +381,8 @@ class CartReservableState extends State<CartReservable> {
                                   children: [
                                     ///Reserve button
                                     Container(
-                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5, bottom: SizeConfig.safeBlockVertical * 5),
-                                        width: 158,
+                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5, bottom: SizeConfig.safeBlockVertical * 2),
+                                        width: 198,
 
                                         /// media.width * .4
                                         height: 46,
@@ -431,12 +422,12 @@ class CartReservableState extends State<CartReservable> {
 
                                           },
                                           textColor: BuytimeTheme.BackgroundWhite.withOpacity(0.3),
-                                          color:  widget.tourist ? BuytimeTheme.BackgroundCerulean : BuytimeTheme.UserPrimary,
+                                          color: BuytimeTheme.ActionBlackPurple,
                                           shape: RoundedRectangleBorder(
-                                            borderRadius: new BorderRadius.circular(5),
+                                            borderRadius: new BorderRadius.circular(20),
                                           ),
                                           child: Text(
-                                            AppLocalizations.of(context).reserveUpper,
+                                            AppLocalizations.of(context).reserve,
                                             style: TextStyle(fontSize: 14, fontFamily: BuytimeTheme.FontFamily, fontWeight: FontWeight.w500, color: BuytimeTheme.TextWhite, letterSpacing: 1.25),
                                           ),
                                         )),

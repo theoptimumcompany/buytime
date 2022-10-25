@@ -42,13 +42,13 @@ class TreeViewTheme {
   /// If this property is null then horizontal spacing between tabs is default [_treeView.theme.iconTheme.size + 5]
   final double horizontalSpacing;
 
-  /// Horizontal padding for node icons.
+  /// Horizontal padding for node icon.
   final double iconPadding;
 
-  /// The default appearance theme for [TreeNode] icons.
+  /// The default appearance theme for [TreeNode] icon.
   final IconThemeData iconTheme;
 
-  /// The appearance theme for [TreeNode] expander icons.
+  /// The appearance theme for [TreeNode] expander icon.
   final ExpanderThemeData expanderTheme;
 
   /// The text style for child [TreeNode] text.

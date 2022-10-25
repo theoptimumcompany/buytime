@@ -20,8 +20,8 @@ import 'package:Buytime/reblox/model/snippet/parent.dart';
 import 'package:Buytime/reblox/model/snippet/service_list_snippet_state.dart';
 import 'package:Buytime/reblox/reducer/category_tree_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/service_reducer.dart';
-import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
-import 'package:Buytime/reusable/enterExitRoute.dart';
+import 'package:Buytime/reusable/appbar/w_buytime_appbar.dart';
+import 'package:Buytime/reusable/animation/enterExitRoute.dart';
 import 'package:Buytime/utils/animations/translate_animation.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
@@ -158,7 +158,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
 
   _buildChoiceList() {
     List<Widget> choices = [];
-    debugPrint('size: ${categoryList.length}');
+    debugPrint('UI_M_create_service => size: ${categoryList.length}');
     for(int i = 0; i < categoryList.length; i++){
       choices.add(Container(
         padding: const EdgeInsets.all(2.0),
@@ -207,14 +207,14 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
           access = true;
       });
     }
-   // debugPrint('UI_M_service_list => CAN MANAGER ACCESS THE SERVICE? $access');
+   // debugPrint('UI_M_create_service => CAN MANAGER ACCESS THE SERVICE? $access');
 
     if(!access &&  (StoreProvider.of<AppState>(context).state.user.getRole() == Role.admin ||
         StoreProvider.of<AppState>(context).state.user.getRole() == Role.salesman ||
         StoreProvider.of<AppState>(context).state.user.getRole() == Role.owner)){
       access = true;
     }
-  //  debugPrint('UI_M_service_list => CAN MANAGER|OTHERS ACCESS THE SERVICE? $access');
+  //  debugPrint('UI_M_create_service => CAN MANAGER|OTHERS ACCESS THE SERVICE? $access');
 
     return access;
   }
@@ -290,57 +290,71 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                     alignment: Alignment.topCenter,
                     child: Scaffold(
                       //resizeToAvoidBottomInset: false,
-                        appBar: BuytimeAppbar(
-                          width: media.width,
-                          children: [
-                            Container(
-                                child: IconButton(
-                                    icon: Icon(Icons.keyboard_arrow_left, color: Colors.white, size: 24),
-                                    onPressed: () {
-                                      Provider.of<Spinner>(context, listen: false).add.forEach((element) {
-                                        element[0] = false;
-                                      });
-                                      Provider.of<Spinner>(context, listen: false).initAdd( Provider.of<Spinner>(context, listen: false).add);
-                                      //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_ServiceList()),);
-                                      Navigator.of(context).pop();
-                                      //Navigator.pushReplacement(context, EnterExitRoute(enterPage: UI_M_ServiceList(), exitPage: UI_CreateService(), from: false));
-                                    })),
-                            Flexible(
-                              child: Utils.barTitle(AppLocalizations.of(context).createService),
+                        appBar: AppBar(
+                          backgroundColor: Colors.white,
+                          brightness: Brightness.dark,
+                          elevation: 1,
+                          title: Text(
+                            AppLocalizations.of(context).createService,
+                            style: TextStyle(
+                                fontFamily: BuytimeTheme.FontFamily,
+                                color: BuytimeTheme.TextBlack,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 16 ///SizeConfig.safeBlockHorizontal * 7
                             ),
-                            Container(
-                              child: IconButton(
-                                  icon: Icon(Icons.check, color: Colors.white),
-                                  onPressed: () {
-                                    if(nameController.text.isNotEmpty)
-                                      StoreProvider.of<AppState>(context).dispatch(SetServiceName(Utils.saveField(myLocale.languageCode, nameController.text, snapshot.serviceState.name)));
-                                    if(descriptionController.text.isNotEmpty)
-                                      StoreProvider.of<AppState>(context).dispatch(SetServiceDescription(Utils.saveField(myLocale.languageCode, descriptionController.text, snapshot.serviceState.description)));
-                                    if (validateChosenCategories() && validateAndSave() && validatePrice(priceController.text)) {
-                                      setState(() {
-                                        rippleLoading = true;
-                                      });
-                                      ServiceState tmpService = ServiceState.fromState(snapshot.serviceState);
-                                      tmpService.name = Utils.saveField(myLocale.languageCode, nameController.text, snapshot.serviceState.name);
-                                      tmpService.description = Utils.saveField(myLocale.languageCode, descriptionController.text, snapshot.serviceState.description);
-                                      tmpService.serviceAddress = addressController.text;
-                                      tmpService.serviceBusinessAddress = _serviceBusinessAddress;
-                                      if(conditionController.text.isNotEmpty)
-                                        tmpService.condition =  Utils.saveField(myLocale.languageCode, conditionController.text, snapshot.serviceState.condition);
-                                      if(_serviceVAT == 0)
-                                        tmpService.vat = 22;
-                                      else
-                                        tmpService.vat = _serviceVAT;
-                                      tmpService.price = _servicePrice;
+                          ),
+                          centerTitle: true,
+                          leading: IconButton(
+                              icon: Icon(Icons.keyboard_arrow_left, color: Colors.black,),
+                              onPressed: () {
+                                Provider.of<Spinner>(context, listen: false).add.forEach((element) {
+                                  element[0] = false;
+                                });
+                                Provider.of<Spinner>(context, listen: false).initAdd( Provider.of<Spinner>(context, listen: false).add);
+                                //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_ServiceList()),);
+                                Navigator.of(context).pop();
+                                //Navigator.pushReplacement(context, EnterExitRoute(enterPage: UI_M_ServiceList(), exitPage: UI_CreateService(), from: false));
+                              }),
+                          actions: [
+                            IconButton(
+                                icon: Icon(Icons.check, color: Colors.black),
+                                onPressed: () {
+                                  if(nameController.text.isNotEmpty)
+                                    StoreProvider.of<AppState>(context).dispatch(SetServiceName(Utils.saveField(myLocale.languageCode, nameController.text, snapshot.serviceState.name)));
+                                  if(descriptionController.text.isNotEmpty)
+                                    StoreProvider.of<AppState>(context).dispatch(SetServiceDescription(Utils.saveField(myLocale.languageCode, descriptionController.text, snapshot.serviceState.description)));
+                                  if (validateChosenCategories() && validateAndSave() && validatePrice(priceController.text)) {
+                                    setState(() {
+                                      rippleLoading = true;
+                                    });
+                                    ServiceState tmpService = ServiceState.fromState(snapshot.serviceState);
+                                    tmpService.name = Utils.saveField(myLocale.languageCode, nameController.text, snapshot.serviceState.name);
+                                    tmpService.description = Utils.saveField(myLocale.languageCode, descriptionController.text, snapshot.serviceState.description);
+                                    tmpService.serviceAddress = addressController.text;
+                                    tmpService.serviceBusinessAddress = _serviceBusinessAddress;
+                                    tmpService.price = _servicePrice;
+                                    if(conditionController.text.isNotEmpty)
+                                      tmpService.condition =  Utils.saveField(myLocale.languageCode, conditionController.text, snapshot.serviceState.condition);
+                                    if(_serviceVAT == 0)
+                                      tmpService.vat = 22;
+                                    else
+                                      tmpService.vat = _serviceVAT;
+                                    tmpService.price = _servicePrice;
                                     //  debugPrint('UI_M_create_service => Service Name: ${tmpService.name}');
                                     //  debugPrint('UI_M_create_service => Service Description: ${tmpService.description}');
                                     //  debugPrint('UI_M_create_service => Service Address: ${tmpService.serviceBusinessAddress}');
-                                      Provider.of<Spinner>(context, listen: false).initLoad(true);
-                                      StoreProvider.of<AppState>(context).dispatch(CreateService(tmpService));
+                                    Provider.of<Spinner>(context, listen: false).initLoad(true);
+                                    if(tmpService.originalLanguage.isEmpty)
+                                      tmpService.originalLanguage = myLocale.languageCode;
 
-                                    }
-                                  }),
-                            ),
+                                    tmpService.contentCreator.name = snapshot.user.name;
+                                    tmpService.contentCreator.surname = snapshot.user.surname;
+                                    tmpService.contentCreator.email = snapshot.user.email;
+                                    tmpService.contentCreator.id = snapshot.user.uid;
+                                    StoreProvider.of<AppState>(context).dispatch(CreateService(tmpService));
+
+                                  }
+                                })
                           ],
                         ),
                         body: SingleChildScrollView(
@@ -407,7 +421,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                 ),*/
                                   ///Name
                                   Container(
-                                    margin: EdgeInsets.only(top: 40.0, bottom: 5.0, left: 32.0, right: 28.0),
+                                    margin: EdgeInsets.only(top: 25.0, bottom: 5.0, left: 32.0, right: 28.0),
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
@@ -416,6 +430,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                               //width: SizeConfig.safeBlockHorizontal * 60,
                                               // decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
                                               child: TextFormField(
+                                                  textCapitalization: TextCapitalization.sentences,
                                                   controller: nameController,
                                                   validator: (value) => value.isEmpty ? AppLocalizations.of(context).serviceNameBlank : null,
                                                   onChanged: (value) {
@@ -480,6 +495,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                             //width: SizeConfig.safeBlockHorizontal * 60,
                                             // decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
                                               child: TextFormField(
+                                                  textCapitalization: TextCapitalization.sentences,
                                                   keyboardType: TextInputType.multiline,
                                                   maxLines: null,
                                                   controller: descriptionController,
@@ -549,6 +565,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                             //width: SizeConfig.safeBlockHorizontal * 60,
                                             // decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
                                               child: TextFormField(
+                                                  textCapitalization: TextCapitalization.sentences,
                                                   controller: conditionController,
                                                   //validator: (value) => value.isEmpty ? AppLocalizations.of(context).serviceNameBlank : null,
                                                   onChanged: (value) {
@@ -618,6 +635,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                             child: Padding(
                                               padding: EdgeInsets.only(top: 0.0, bottom: 0.0, left: 0.0, right: 0.0),
                                               child: TextFormField(
+                                                textCapitalization: TextCapitalization.sentences,
                                                 //enabled: canEditService,
                                                 controller: priceController,
                                                 keyboardType: TextInputType.numberWithOptions(signed: true, decimal: true),
@@ -675,6 +693,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                             child: Padding(
                                               padding: EdgeInsets.only(top: 0.0, bottom: 0.0, left: 3.0, right: 42.0),
                                               child: TextFormField(
+                                                textCapitalization: TextCapitalization.sentences,
                                                 //maxLength: 2,
                                                 //enabled: canEditService,
                                                 controller: vatController,
@@ -747,6 +766,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                               margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0),
                                               //decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
                                               child: TextFormField(
+                                                textCapitalization: TextCapitalization.sentences,
                                                 enabled: false,
                                                 keyboardType: TextInputType.multiline,
                                                 maxLines: null,
@@ -871,6 +891,7 @@ class UI_CreateServiceState extends State<UI_CreateService> with SingleTickerPro
                                                         height: 45,
                                                         width: media.width * 0.55,
                                                         child: TextFormField(
+                                                          textCapitalization: TextCapitalization.sentences,
                                                           controller: _tagServiceController,
                                                           textAlign: TextAlign.start,
                                                           decoration: InputDecoration(

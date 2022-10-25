@@ -20,9 +20,9 @@ import 'package:Buytime/reblox/model/business/external_business_state.dart';
 import 'package:Buytime/reblox/model/service/external_service_imported_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/reducer/external_service_imported_reducer.dart';
-import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
-import 'package:Buytime/reusable/buytime_icons.dart';
-import 'package:Buytime/reusable/enterExitRoute.dart';
+import 'package:Buytime/reusable/appbar/w_buytime_appbar.dart';
+import 'package:Buytime/reusable/icon/buytime_icons.dart';
+import 'package:Buytime/reusable/animation/enterExitRoute.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/utils/utils.dart';
@@ -91,7 +91,7 @@ class PAServiceListState extends State<PAServiceList> {
             if(sLS.visibility != 'Invisible')
               count++;
           });
-          debugPrint('Count: $count | tmp: ${tmp.length}');
+          debugPrint('UI_M_p_a_service_list => Count: $count | tmp: ${tmp.length}');
           if(count != 0 && count == tmp.length)
             equalService = true;
 
@@ -116,26 +116,27 @@ class PAServiceListState extends State<PAServiceList> {
               },
               child: Scaffold(
                 resizeToAvoidBottomInset: false,
-                appBar: BuytimeAppbar(
-                  width: media.width,
-                  children: [
-                    ///Back Button
-                    IconButton(
-                      icon: Icon(Icons.keyboard_arrow_left, color: Colors.white),
-                      onPressed: () {
-                        //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_Business()))
-                        //Navigator.pushReplacement(context, EnterExitRoute(enterPage: UI_M_Business(), exitPage: PAServiceList(), from: false));
-                        Navigator.of(context).pop();
-                      },
+                appBar: AppBar(
+                 backgroundColor: BuytimeTheme.BackgroundWhite,
+                  leading: IconButton(
+                    icon: Icon(Icons.keyboard_arrow_left, color: Colors.black),
+                    onPressed: () {
+                      //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_Business()))
+                      //Navigator.pushReplacement(context, EnterExitRoute(enterPage: UI_M_Business(), exitPage: PAServiceList(), from: false));
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  title: Text(
+                    widget.title,
+                    textAlign: TextAlign.start,
+                    style: TextStyle(
+                      color: BuytimeTheme.TextBlack,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
                     ),
-                    Utils.barTitle(widget.title),
-                    IconButton(
-                      icon: Icon(Icons.add, color: BuytimeTheme.ManagerPrimary),
-                      onPressed: () {
-                        return null;
-                      },
-                    ),
-                  ],
+                  ),
+                  centerTitle: true,
+                  elevation: 1,
                 ),
                 floatingActionButton: Container(
                     margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2.5, bottom: SizeConfig.safeBlockVertical *4),
@@ -149,11 +150,11 @@ class PAServiceListState extends State<PAServiceList> {
                       onPressed: !equalService && !equalBusiness ? () {
                         List<String> tmp = [];
                         StoreProvider.of<AppState>(context).state.externalServiceImportedListState.externalServiceImported.forEach((element) {
-                          //debugPrint('here');
+                          //debugPrint('UI_M_p_a_service_list => here');
                           widget.serviceState.forEach((sL) {
-                            //debugPrint(' 2');
+                            //debugPrint('UI_M_p_a_service_list => 2');
                             if(element.externalServiceId != sL.serviceId && element.externalBusinessId == widget.externalBusinessState.id_firestore){
-                              //debugPrint('here 3');
+                              //debugPrint('UI_M_p_a_service_list => here 3');
                               tmp.add(sL.serviceId);
                             }
                           });
@@ -177,7 +178,7 @@ class PAServiceListState extends State<PAServiceList> {
                             sLSL.businessSnippet.forEach((bS) {
                               bS.serviceList.forEach((sL) {
                                 if(sL.serviceAbsolutePath.split('/').last == serviceId){
-                                  debugPrint('UI_M_external_business_details => External category name: ${bS.categoryName}');
+                                  debugPrint('UI_M_p_a_service_list => External category name: ${bS.categoryName}');
                                   eSIS.externalCategoryName = bS.categoryName;
                                 }
                               });
@@ -248,6 +249,7 @@ class PAServiceListState extends State<PAServiceList> {
                         child: Container(
                           margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2),
                           child: CustomScrollView(
+                            physics: new ClampingScrollPhysics(),
                             shrinkWrap: true,
                             slivers: [
                               SliverList(
@@ -284,7 +286,7 @@ class PAServiceListState extends State<PAServiceList> {
                                         setState(() {
                                           serviceList.removeAt(index);
                                         });
-                                        debugPrint('UI_U_external_business_details => SX to BOOK');
+                                        debugPrint('UI_M_p_a_service_list => SX to BOOK');
                                         ExternalServiceImportedState eSIS = ExternalServiceImportedState();
                                         eSIS.internalBusinessId = snapshot.business.id_firestore;
                                         eSIS.internalBusinessName = snapshot.business.name;
@@ -345,7 +347,7 @@ class PAServiceListState extends State<PAServiceList> {
                         ),
                       )  : Container(
                          height: SizeConfig.safeBlockVertical * 8,
-                         margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                         margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                          decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
                          child: Center(
                              child: Container(

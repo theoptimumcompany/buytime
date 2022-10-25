@@ -16,28 +16,25 @@ import 'package:Buytime/reblox/model/order/order_reservable_state.dart';
 import 'package:Buytime/reblox/model/order/selected_entry.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/model/user/snippet/user_snippet_state.dart';
+import 'package:Buytime/reblox/reducer/promotion/promotion_reducer.dart';
 // import 'package:stripe_payment/stripe_payment.dart' as StripeRecommended;
 import 'package:Buytime/utils/utils.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+
+import '../app_state.dart';
 part 'order_state.g.dart';
 
 enum OrderStatus {
-  progress, /// non lo vedranno mai
-  unpaid, /// non lo vedranno mai
   accepted,
   paid,
   pending,
   toBePaidAtCheckout,
-  canceled, /// Viene cancellato DOPO il pagamento dall'utente o dal business
-  frozen, /// non lo vedranno mai
-  created,
-  declined, /// Viene cancellato PRIMA del pagamento dal business POTREBBE VENIRE RIAPERTO DAL BUSINESS
-  holding,
-  creating /// non lo vedranno mai
+  canceled,
 }
 
 enum AddCardStatus {
@@ -59,7 +56,7 @@ class OrderState {
   double tax = 0.0;
   double taxPercent = 0.0;
   int amount = 0;
-  String progress = Utils.enumToString(OrderStatus.unpaid);
+  String progress = Utils.enumToString(OrderStatus.pending);
   @JsonKey(ignore: true)
   String addCardProgress = Utils.enumToString(AddCardStatus.notStarted);
   bool navigate = false;
@@ -77,9 +74,12 @@ class OrderState {
   PaymentMethod paymentMethod;
   String location;
   String openUntil;
+  @JsonKey(defaultValue: "")
+  String tableNumber;
   String cancellationReason;
   bool carbonCompensation = false;
   double totalPromoDiscount = 0.0;
+  String promotionId;
 
   OrderState({
     @required this.itemList,
@@ -107,9 +107,11 @@ class OrderState {
     this.paymentMethod,
     this.location,
     this.openUntil,
+    this.tableNumber,
     this.cancellationReason,
     this.carbonCompensation,
     this.totalPromoDiscount,
+    this.promotionId,
   });
 
 
@@ -140,9 +142,11 @@ class OrderState {
     this.paymentMethod = state.paymentMethod;
     this.location = state.location;
     this.openUntil = state.openUntil;
+    this.tableNumber = state.tableNumber;
     this.cancellationReason = state.cancellationReason;
     this.carbonCompensation = state.carbonCompensation;
     this.totalPromoDiscount = state.totalPromoDiscount;
+    this.promotionId = state.promotionId;
   }
 
   OrderState.fromReservableState(OrderReservableState state) {
@@ -171,9 +175,11 @@ class OrderState {
     this.paymentMethod = state.paymentMethod;
     this.location = state.location;
     this.openUntil = state.openUntil;
+    this.tableNumber = state.tableNumber;
     this.cancellationReason = state.cancellationReason;
     this.carbonCompensation = state.carbonCompensation;
     this.totalPromoDiscount = state.totalPromoDiscount;
+    this.promotionId = state.promotionId;
   }
 
   OrderState copyWith({
@@ -203,9 +209,11 @@ class OrderState {
     PaymentMethod paymentMethod,
     String location,
     String openUntil,
+    String tableNumber,
     String cancellationReason,
     bool carbonCompensation,
     double totalPromoDiscount,
+    String promotionId,
   }) {
     return OrderState(
       itemList: itemList ?? this.itemList,
@@ -233,9 +241,11 @@ class OrderState {
       paymentMethod: paymentMethod ?? this.paymentMethod,
       location: location ?? this.location,
       openUntil: openUntil ?? this.openUntil,
+      tableNumber: tableNumber ?? this.tableNumber,
       cancellationReason: cancellationReason ?? this.cancellationReason,
       carbonCompensation: carbonCompensation ?? this.carbonCompensation,
       totalPromoDiscount: totalPromoDiscount ?? this.totalPromoDiscount,
+      promotionId: promotionId ?? this.promotionId,
     );
   }
 
@@ -250,7 +260,7 @@ class OrderState {
       tax: 0.0,
       taxPercent: 0.0,
       amount: 0,
-      progress: Utils.enumToString(OrderStatus.unpaid),
+      progress: Utils.enumToString(OrderStatus.pending),
       addCardProgress: Utils.enumToString(AddCardStatus.notStarted),
       navigate: false,
       businessId: "",
@@ -266,23 +276,31 @@ class OrderState {
       paymentMethod: null,
       location: '',
       openUntil: '--:--',
+      tableNumber: '',
       cancellationReason: 'Overbooking',
       carbonCompensation: false,
       totalPromoDiscount: 0.0,
+      promotionId: '',
     );
   }
 
   addItem(ServiceState itemToAdd, String idOwner, BuildContext context) {
     bool added = false;
+    double itemDiscount = 0.0;//Utils.calculatePromoDiscount(itemToAdd.price, context, itemToAdd.businessId, 1, totalNumberOfItems());
       itemList.forEach((element) {
         if (!added && element.id == itemToAdd.serviceId) {
           element.number++;
+          // if (itemDiscount != 0.0){
+          //   // element.numberDiscounted++;
+          //   debugPrint("order_state numberDiscounted: " +  element.numberDiscounted.toString());
+          // }
           added = true;
         }
       });
       if (!added) {
         itemList.add(OrderEntry(
             number: 1,
+            numberDiscounted: itemDiscount != 0.0 ? 1 : 0,
             name: itemToAdd.name,
             description: itemToAdd.description,
             price: itemToAdd.price,
@@ -296,8 +314,9 @@ class OrderState {
         ));
       }
       this.total += itemToAdd.price;
-      this.totalPromoDiscount += Utils.calculatePromoDiscount(itemToAdd.price, context);
-      this.total -= Utils.calculatePromoDiscount(itemToAdd.price, context);
+
+      this.totalPromoDiscount += itemDiscount;
+      this.total -= itemDiscount;
   }
 
   addingFromAnotherBusiness(String businessId) {
@@ -309,40 +328,20 @@ class OrderState {
     return false;
   }
 
-  addReserveItem(ServiceState itemToAdd, String idOwner, String time, String minutes, DateTime date, dynamic price, BuildContext context) {
-    /*bool added = false;
-    itemList.forEach((element) {
-      if (!added && element.id == itemToAdd.serviceId) {
-        element.number++;
-        added = true;
-      }
-    });*/
-    itemList.add(OrderEntry(
-        number: 1,
-        name: itemToAdd.name,
-        description: itemToAdd.description,
-        price: price,
-        thumbnail: itemToAdd.image1,
-        id: itemToAdd.serviceId,
-        id_business: itemToAdd.businessId,
-        id_category: itemToAdd.categoryId != null ? itemToAdd.categoryId[0] : '',
-        id_owner: idOwner,
-      time: time,
-      minutes: minutes,
-      date: date,
-      switchAutoConfirm: itemToAdd.switchAutoConfirm
-    ));
-    this.total += price;
-    this.totalPromoDiscount += Utils.calculatePromoDiscount(price, context);
-  }
-
   void removeItem(OrderEntry entry, BuildContext context) {
     bool deleted = false;
     itemList.forEach((element) {
-      //debugPrint('order_state => DATES: ${element.date} - ${entry.date}');
       if (!deleted && element.id == entry.id) {
         this.total -= (entry.price * element.number);
-        this.totalPromoDiscount -= (Utils.calculatePromoDiscount(entry.price, context) * element.number);
+        double itemDiscount = 0.0;//Utils.calculatePromoDiscount(entry.price, context, entry.id_business, 2, totalNumberOfItems());
+        this.totalPromoDiscount -= itemDiscount;
+        this.total += itemDiscount;
+        // if (itemDiscount != 0.0){
+        //   element.numberDiscounted--;
+        //   if (element.numberDiscounted < 0) {
+        //     element.numberDiscounted = 0;
+        //   }
+        // }
         element.number = 0;
         deleted = true;
       }
@@ -351,7 +350,19 @@ class OrderState {
 
   void removeReserveItem(OrderEntry entry, BuildContext context) {
     this.total -= (entry.price);
-    this.totalPromoDiscount -= (Utils.calculatePromoDiscount(entry.price, context));
+    double itemDiscount = 0.0;//Utils.calculatePromoDiscount(entry.price, context, entry.id_business, 2, totalNumberOfItems());
+    this.totalPromoDiscount -= itemDiscount;
+    this.total += itemDiscount;
+  }
+
+  int totalNumberOfItems () {
+    int totalNumberOfItems = 0;
+    if (this.itemList != null && this.itemList.isNotEmpty) {
+      for (int i = 0; i < this.itemList.length; i++) {
+        totalNumberOfItems += this.itemList[i].number;
+      }
+    }
+    return totalNumberOfItems;
   }
 
   bool isOrderAutoConfirmable() {

@@ -26,10 +26,10 @@ import 'package:Buytime/reblox/reducer/email_reducer.dart';
 import 'package:Buytime/reblox/reducer/external_business_imported_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/external_business_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/external_service_imported_list_reducer.dart';
-import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
-import 'package:Buytime/reusable/buytime_icons.dart';
-import 'package:Buytime/reusable/enterExitRoute.dart';
-import 'package:Buytime/reusable/material_design_icons.dart';
+import 'package:Buytime/reusable/appbar/w_buytime_appbar.dart';
+import 'package:Buytime/reusable/icon/buytime_icons.dart';
+import 'package:Buytime/reusable/animation/enterExitRoute.dart';
+import 'package:Buytime/reusable/icon/material_design_icons.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/utils/utils.dart';
@@ -196,7 +196,6 @@ class AddExternalServiceListState extends State<AddExternalServiceList> {
                 }
               }
             }
-            debugPrint('UI_M_add_external_service_list => ');
             noActivity = false;
             startRequest = false;
           }
@@ -211,36 +210,37 @@ class AddExternalServiceListState extends State<AddExternalServiceList> {
               },
               child: Scaffold(
                 resizeToAvoidBottomInset: false,
-                appBar: BuytimeAppbar(
-                  width: media.width,
-                  children: [
-                    ///Back Button
-                    IconButton(
-                      key: Key('add_external_business_back_key'),
-                      icon: Icon(Icons.keyboard_arrow_left, color: Colors.white),
-                      onPressed: () {
-                        //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_Business()))
-                        StoreProvider.of<AppState>(context).dispatch(ExternalServiceImportedListRequest(StoreProvider.of<AppState>(context).state.business.id_firestore));
-                        StoreProvider.of<AppState>(context).dispatch(ExternalBusinessImportedListRequest(StoreProvider.of<AppState>(context).state.business.id_firestore));
-                        Navigator.pushReplacement(context, EnterExitRoute(enterPage: ExternalServiceList(), exitPage: AddExternalServiceList(false), from: false));
-                        //Navigator.of(context).pop();
-                      },
+                appBar: AppBar(
+                  backgroundColor: BuytimeTheme.BackgroundWhite,
+                  leading: IconButton(
+                    key: Key('add_external_business_back_key'),
+                    icon: Icon(Icons.keyboard_arrow_left, color: Colors.black),
+                    onPressed: () {
+                      //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_Business()))
+                      StoreProvider.of<AppState>(context).dispatch(ExternalServiceImportedListRequest(StoreProvider.of<AppState>(context).state.business.id_firestore));
+                      StoreProvider.of<AppState>(context).dispatch(ExternalBusinessImportedListRequest(StoreProvider.of<AppState>(context).state.business.id_firestore));
+                      Navigator.pushReplacement(context, EnterExitRoute(enterPage: ExternalServiceList(), exitPage: AddExternalServiceList(false), from: false));
+                      //Navigator.of(context).pop();
+                    },
+                  ),
+                  title: Text(
+                    AppLocalizations.of(context).addExternalService,
+                    textAlign: TextAlign.start,
+                    style: TextStyle(
+                      color: BuytimeTheme.TextBlack,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
                     ),
-                    Utils.barTitle(AppLocalizations.of(context).addExternalService),
-                    IconButton(
-                      icon: Icon(Icons.add, color: BuytimeTheme.ManagerPrimary),
-                      onPressed: () {
-                        return null;
-                      },
-                    ),
-                  ],
+                  ),
+                  centerTitle: true,
+                  elevation: 1,
                 ),
                 body: Container(
                   child: Column(
                     children: [
                       ///Search
                       Container(
-                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5),
+                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5),
                         height: SizeConfig.safeBlockHorizontal * 15,
                         child: TextFormField(
                           controller: _searchController,
@@ -266,7 +266,7 @@ class AddExternalServiceListState extends State<AddExternalServiceList> {
                             ),
                             suffixIcon: InkWell(
                               onTap: () {
-                                debugPrint('done');
+                                debugPrint('UI_M_add_external_service_list => done');
                                 FocusScope.of(context).unfocus();
                                 search(snapshot.externalBusinessList.externalBusinessListState);
                               },
@@ -279,7 +279,7 @@ class AddExternalServiceListState extends State<AddExternalServiceList> {
                           ),
                           style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextMedium, fontWeight: FontWeight.w400, fontSize: 16),
                           onEditingComplete: () {
-                            debugPrint('done');
+                            debugPrint('UI_M_add_external_service_list => done');
                             FocusScope.of(context).unfocus();
                             search(snapshot.externalBusinessList.externalBusinessListState);
                           },
@@ -419,6 +419,7 @@ class AddExternalServiceListState extends State<AddExternalServiceList> {
                       externalBuinessList.isNotEmpty ?
                       Expanded(
                         child: CustomScrollView(
+                          physics: new ClampingScrollPhysics(),
                           shrinkWrap: true,
                           slivers: [
                             SliverList(
@@ -497,7 +498,7 @@ class AddExternalServiceListState extends State<AddExternalServiceList> {
                           children: [
                             Container(
                               //height: SizeConfig.safeBlockVertical * 8,
-                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
@@ -513,7 +514,7 @@ class AddExternalServiceListState extends State<AddExternalServiceList> {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Container(
-                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 5),
+                                        margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 3.5),
                                         //alignment: Alignment.centerLeft,
                                         child: Text(
                                           AppLocalizations.of(context).noResultsFor,
@@ -537,7 +538,7 @@ class AddExternalServiceListState extends State<AddExternalServiceList> {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Container(
-                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5),
+                                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5),
                                         alignment: Alignment.centerLeft,
                                         child: Text(
                                           AppLocalizations.of(context).tryAnotherSearch,
@@ -693,6 +694,7 @@ class AddExternalServiceListState extends State<AddExternalServiceList> {
                           ? noActivity ?
                       Expanded(
                         child: CustomScrollView(
+                          physics: new ClampingScrollPhysics(),
                           shrinkWrap: true,
                           slivers: [
                             SliverList(
@@ -715,7 +717,7 @@ class AddExternalServiceListState extends State<AddExternalServiceList> {
                                                   Utils.imageShimmer(91, 91),
                                                   ///Service Name & Description
                                                   Container(
-                                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1),
+                                                    margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1),
                                                     child:  Column(
                                                       mainAxisAlignment: MainAxisAlignment.start,
                                                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -764,7 +766,7 @@ class AddExternalServiceListState extends State<AddExternalServiceList> {
                         ),
                       ) : Container(
                         height: SizeConfig.safeBlockVertical * 8,
-                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
+                        margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * 2),
                         decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
                         child: Center(
                             child: Container(

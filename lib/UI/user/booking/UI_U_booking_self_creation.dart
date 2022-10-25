@@ -12,11 +12,12 @@ limitations under the License.
 
 import 'dart:async';
 
+import 'package:Buytime/UI/user/turist/RUI_U_service_explorer.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reblox/model/user/snippet/user_snippet_state.dart';
 import 'package:Buytime/reblox/reducer/booking_reducer.dart';
-import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
+import 'package:Buytime/reusable/appbar/w_buytime_appbar.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/utils/utils.dart';
@@ -110,7 +111,7 @@ class _BookingSelfCreationState extends State<BookingSelfCreation> {
     SizeConfig().init(context);
     final node = FocusScope.of(context);
 
-    debugPrint('ID Business da Link => ' + StoreProvider.of<AppState>(context).state.business.id_firestore);
+    debugPrint('UI_U_booking_self_creation => ID Business da Link => ' + StoreProvider.of<AppState>(context).state.business.id_firestore);
     images.add(StoreProvider.of<AppState>(context).state.business.wide);
     return WillPopScope(
         onWillPop: () async => false,
@@ -123,27 +124,20 @@ class _BookingSelfCreationState extends State<BookingSelfCreation> {
             key: _drawerKey,
 
             ///Appbar
-            appBar: BuytimeAppbar(
-              width: media.width,
-              background: BuytimeTheme.BackgroundCerulean,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    IconButton(
-                        icon: Icon(Icons.chevron_left, color: BuytimeTheme.BackgroundCerulean),
-                        onPressed: () {
-                          //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_BusinessList()));
-                        }),
-                  ],
+            appBar: AppBar(
+              backgroundColor: Colors.white,
+              brightness: Brightness.dark,
+              elevation: 1,
+              title: Text(
+                '${AppLocalizations.of(context).checkIn}',
+                style: TextStyle(
+                    fontFamily: BuytimeTheme.FontFamily,
+                    color: BuytimeTheme.TextBlack,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 16 ///SizeConfig.safeBlockHorizontal * 7
                 ),
-
-                ///Title
-                Utils.barTitle(AppLocalizations.of(context).checkIn),
-                SizedBox(
-                  width: 56.0,
-                )
-              ],
+              ),
+              centerTitle: true,
             ),
             //drawer: UI_M_BusinessListDrawer(),
             body: SafeArea(
@@ -251,7 +245,7 @@ class _BookingSelfCreationState extends State<BookingSelfCreation> {
                                             ///Email address
                                             Expanded(
                                               child: Container(
-                                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.blockSizeHorizontal * 5),
+                                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.blockSizeHorizontal * 5),
                                                   child: TextFormField(
                                                     key: Key('self_email_key'),
                                                     controller: _emailToInviteController,
@@ -282,7 +276,7 @@ class _BookingSelfCreationState extends State<BookingSelfCreation> {
                                                     style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextMedium, fontWeight: FontWeight.w600, fontSize: 16),
                                                     validator: (String value) {
                                                       if (value.isEmpty || !EmailValidator.validate(value)) {
-                                                        debugPrint('UI_M_booking_creation => Email Is Empty');
+                                                        debugPrint('UI_U_booking_self_creation => Email Is Empty');
                                                         return AppLocalizations.of(context).pleaseEnterAValidEmail;
                                                       }
                                                       return null;
@@ -298,7 +292,7 @@ class _BookingSelfCreationState extends State<BookingSelfCreation> {
                                             ///Name
                                             Expanded(
                                               child: Container(
-                                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.blockSizeHorizontal * 5),
+                                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.blockSizeHorizontal * 5),
                                                   child: TextFormField(
                                                     key: Key('self_name_key'),
                                                     controller: _nameController,
@@ -322,7 +316,7 @@ class _BookingSelfCreationState extends State<BookingSelfCreation> {
                                                     style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextMedium, fontWeight: FontWeight.w600, fontSize: 16),
                                                     validator: (String value) {
                                                       if (value.isEmpty) {
-                                                        debugPrint('UI_M_booking_creation => Name Is Empty');
+                                                        debugPrint('UI_U_booking_self_creation => Name Is Empty');
                                                         return AppLocalizations.of(context).pleaseEnterAValidName;
                                                       }
                                                       return null;
@@ -333,7 +327,7 @@ class _BookingSelfCreationState extends State<BookingSelfCreation> {
                                             ///Surname
                                             Expanded(
                                               child: Container(
-                                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.blockSizeHorizontal * 5),
+                                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.blockSizeHorizontal * 5),
                                                   child: TextFormField(
                                                     key: Key('self_surname_key'),
                                                     controller: _surnameController,
@@ -357,7 +351,7 @@ class _BookingSelfCreationState extends State<BookingSelfCreation> {
                                                     style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextMedium, fontWeight: FontWeight.w600, fontSize: 16),
                                                     validator: (String value) {
                                                       if (value.isEmpty) {
-                                                        debugPrint('UI_M_booking_creation => Surname Is Empty');
+                                                        debugPrint('UI_U_booking_self_creation => Surname Is Empty');
                                                         return AppLocalizations.of(context).pleaseEnterAValidSurname;
                                                       }
                                                       return null;
@@ -368,7 +362,7 @@ class _BookingSelfCreationState extends State<BookingSelfCreation> {
                                             ///Check In & Check Out
                                             Expanded(
                                               child: Container(
-                                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.blockSizeHorizontal * 5),
+                                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.blockSizeHorizontal * 5),
                                                   child: Row(
                                                     mainAxisAlignment: MainAxisAlignment.start,
                                                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -408,7 +402,7 @@ class _BookingSelfCreationState extends State<BookingSelfCreation> {
                                                           },
                                                           validator: (String value) {
                                                             if (value.isEmpty) {
-                                                              debugPrint('UI_M_booking_creation => Check In Is Empty');
+                                                              debugPrint('UI_U_booking_self_creation => Check In Is Empty');
                                                               return AppLocalizations.of(context).pleaseEnterAValidDateInterval;
                                                             }
                                                             return null;
@@ -455,7 +449,7 @@ class _BookingSelfCreationState extends State<BookingSelfCreation> {
                                                           validator: (String value) {
                                                             debugPrint('${checkIn.compareTo(checkOut)}');
                                                             if (value.isEmpty || checkIn.compareTo(checkOut) > 0) {
-                                                              debugPrint('UI_M_booking_creation => Check Out Is Empty');
+                                                              debugPrint('UI_U_booking_self_creation => Check Out Is Empty');
                                                               return AppLocalizations.of(context).pleaseEnterAValidDateInterval;
                                                             }
                                                             return null;
@@ -469,7 +463,7 @@ class _BookingSelfCreationState extends State<BookingSelfCreation> {
                                             ///Number of guests
                                             Expanded(
                                               child: Container(
-                                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.blockSizeHorizontal * 5),
+                                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.blockSizeHorizontal * 5),
                                                   child: TextFormField(
                                                     key: Key('self_guests_key'),
                                                     controller: _numberOfGuestsController,
@@ -533,15 +527,15 @@ class _BookingSelfCreationState extends State<BookingSelfCreation> {
                                                     bookingState.start_date = checkIn;
                                                     bookingState.end_date = checkOut;
 
-                                                    debugPrint('UI_M_BookingCreation => Start date: ${bookingState.start_date}');
-                                                    debugPrint('UI_M_BookingCreation => End date: ${bookingState.end_date}');
+                                                    debugPrint('UI_U_booking_self_creation => Start date: ${bookingState.start_date}');
+                                                    debugPrint('UI_U_booking_self_creation => End date: ${bookingState.end_date}');
 
                                                     bookingState.status = Utils.enumToString(BookingStatus.opened);
 
                                                     bookingState.userEmail.add(_emailToInviteController.text);
 
-                                                    StoreProvider.of<AppState>(context).dispatch(CreateSelfBookingRequest(bookingState, StoreProvider.of<AppState>(context).state.business.id_firestore));
-
+                                                    //StoreProvider.of<AppState>(context).dispatch(CreateSelfBookingRequest(bookingState, StoreProvider.of<AppState>(context).state.business.id_firestore));
+                                                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => RServiceExplorer()));
                                                     // Timer(Duration(seconds: 1), () {
                                                     //   setState(() {
                                                     //     bookingRequest = '';
@@ -552,17 +546,17 @@ class _BookingSelfCreationState extends State<BookingSelfCreation> {
                                                   }
                                                 },
                                                 textColor: BuytimeTheme.TextWhite,
-                                                color: BuytimeTheme.BackgroundCerulean,
-                                                padding: EdgeInsets.all(media.width * 0.03),
+                                                color: BuytimeTheme.ActionBlackPurple,
+                                                //padding: EdgeInsets.all(media.width * 0.03),
                                                 shape: RoundedRectangleBorder(
-                                                  borderRadius: new BorderRadius.circular(5),
+                                                  borderRadius: new BorderRadius.circular(20),
                                                 ),
                                                 child: Row(
                                                   mainAxisAlignment: MainAxisAlignment.center,
                                                   children: [
                                                     Text(
                                                       AppLocalizations.of(context).send.toUpperCase(),
-                                                      style: TextStyle(fontSize: 14, fontFamily: BuytimeTheme.FontFamily, fontWeight: FontWeight.w600, color: BuytimeTheme.TextDark, letterSpacing: 1.25),
+                                                      style: TextStyle(fontSize: 14, fontFamily: BuytimeTheme.FontFamily, fontWeight: FontWeight.w600, color: BuytimeTheme.TextWhite, letterSpacing: 1.25),
                                                     )
                                                   ],
                                                 ),

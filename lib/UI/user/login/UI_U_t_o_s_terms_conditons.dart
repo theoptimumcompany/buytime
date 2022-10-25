@@ -42,7 +42,7 @@ class _TosTermsConditonsState extends State<TosTermsConditons> with WidgetsBindi
   @override
   void initState() {
     super.initState();
-    debugPrint('UI_U_ToS_TermsConditions - path 1 : ${widget.path}');
+    debugPrint('UI_U_t_o_s_terms_conditions => path 1 : ${widget.path}');
   } //PDFViewController _pdfViewController;
 
 
@@ -51,7 +51,7 @@ class _TosTermsConditonsState extends State<TosTermsConditons> with WidgetsBindi
   Widget build(BuildContext context) {
 
     var media = MediaQuery.of(context).size;
-    debugPrint('UI_U_ToS_TermsConditions - path 2 : ${widget.path}');
+    debugPrint('UI_U_t_o_s_terms_conditions => path 2 : ${widget.path}');
     SizeConfig().init(context);
 
    widget.path ??= '/';
@@ -144,10 +144,10 @@ class _TosTermsConditonsState extends State<TosTermsConditons> with WidgetsBindi
                             nightMode: false,
                             preventLinkNavigation: false, // if set to true the link is handled in flutter
                             onError: (e) {
-                              print('UI_U_ToS_TermsConditions - path error : ' + e);
+                              print('UI_U_t_o_s_terms_conditions => path error : ' + e);
                             },
                             onRender: (_pages) {
-                              debugPrint('UI_U_ToS_TermsConditions - path 3 : ${widget.path}');
+                              debugPrint('UI_U_t_o_s_terms_conditions => path 3 : ${widget.path}');
                               setState(() {
                                 _totalPages = _pages;
                                 pdfReady = true;

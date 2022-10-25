@@ -15,20 +15,15 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 import 'package:Buytime/UI/user/cart/UI_U_ConfirmOrder.dart';
-import 'package:Buytime/UI/user/landing/UI_U_landing.dart';
 import 'package:Buytime/UI/user/login/tourist_session/UI_U_tourist_session.dart';
-import 'package:Buytime/UI/user/turist/UI_U_service_explorer.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/autoComplete/auto_complete_state.dart';
-import 'package:Buytime/reblox/model/role/role.dart';
 import 'package:Buytime/reblox/model/snippet/device.dart';
 import 'package:Buytime/reblox/model/snippet/token.dart';
 import 'package:Buytime/reblox/model/user/user_state.dart';
 import 'package:Buytime/reblox/reducer/auto_complete_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/user_reducer.dart';
-import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
-import 'package:Buytime/reusable/branded_button.dart';
-import 'package:Buytime/reusable/branded_button_tourist.dart';
+import 'package:Buytime/reusable/w_branded_button.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:crypto/crypto.dart';
 import 'package:device_info/device_info.dart';
@@ -36,23 +31,18 @@ import 'package:email_validator/email_validator.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:Buytime/UI/user/login/UI_U_t_o_s_terms_conditons.dart';
-import 'package:Buytime/UI/user/login/UI_U_login.dart';
-import 'package:Buytime/UI/user/login/UI_U_registration.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
-import '../UI_U_forgot_password.dart';
 
 class TouristSessionRegister extends StatefulWidget {
   static String route = '/touristSessionRegister';
@@ -472,7 +462,7 @@ class _TouristSessionRegisterState extends State<TouristSessionRegister> with Si
 
   void checkAuth() async {
     bool didAuthenticate = await localAuth.authenticateWithBiometrics(localizedReason: AppLocalizations.of(context).pleaseAuthenticateShowAccountBalance);
-    debugPrint('UI_U_Login => $didAuthenticate');
+    debugPrint('UI_U_tourist_session_register => $didAuthenticate');
   }
 
   ///Validation
@@ -580,7 +570,7 @@ class _TouristSessionRegisterState extends State<TouristSessionRegister> with Si
                           ),
                         ),
                         child: CustomScrollView(
-                            //physics: ClampingScrollPhysics(),
+                            physics: ClampingScrollPhysics(),
                             shrinkWrap: true,
                             slivers: [
                               SliverList(
@@ -979,6 +969,7 @@ class _TouristSessionRegisterState extends State<TouristSessionRegister> with Si
                               child: Material(
                                 color: Colors.transparent,
                                 child: InkWell(
+                                  key: Key('tourist_login'),
                                   onTap: () {
                                     Navigator.pushReplacement(
                                       context,

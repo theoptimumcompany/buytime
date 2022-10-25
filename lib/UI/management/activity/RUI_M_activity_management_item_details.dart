@@ -11,38 +11,24 @@ limitations under the License.
 ==============================================================================*/
 
 import 'package:Buytime/UI/management/activity/widget/W_cancel_popup.dart';
-import 'package:Buytime/UI/management/activity/widget/W_dashboard_card.dart';
-import 'package:Buytime/UI/management/activity/widget/W_dashboard_list_item.dart';
-import 'package:Buytime/UI/management/business/UI_M_edit_business.dart';
 import 'package:Buytime/reblox/model/order/order_entry.dart';
 import 'package:Buytime/reblox/model/order/order_state.dart';
-import 'package:Buytime/reblox/reducer/booking_list_reducer.dart';
-import 'package:Buytime/reblox/reducer/order_list_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_reducer.dart';
-import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
-import 'package:Buytime/UI/management/category/UI_M_manage_category.dart';
-import 'package:Buytime/UI/management/service_internal/UI_M_service_list.dart';
-import 'package:Buytime/UI/model/manager_model.dart';
-import 'package:Buytime/UI/model/service_model.dart';
+import 'package:Buytime/reusable/appbar/w_buytime_appbar.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
-import 'package:Buytime/reblox/model/category/category_state.dart';
-import 'package:Buytime/reblox/reducer/category_list_reducer.dart';
-import 'package:Buytime/reblox/reducer/category_tree_reducer.dart';
-import 'package:Buytime/reusable/buytime_icons.dart';
-import 'package:Buytime/reusable/menu/UI_M_business_list_drawer.dart';
-import 'package:Buytime/reusable/order/optimum_order_item_card_medium.dart';
-import 'package:Buytime/reusable/order/order_total.dart';
+import 'package:Buytime/reusable/icon/buytime_icons.dart';
+import 'package:Buytime/reusable/order/w_optimum_order_item_card_medium.dart';
+import 'package:Buytime/reusable/order/w_order_total.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/utils/utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-//import 'package:add_2_calendar/add_2_calendar.dart';
-//import 'package:device_calendar/device_calendar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class RActivityManagementItemDetails extends StatefulWidget {
   static String route = '/activityManagementItemDetails';
@@ -70,10 +56,6 @@ class _RActivityManagementItemDetailsState extends State<RActivityManagementItem
   }
 
   void undoDeletion(index, OrderEntry item, OrderState orderState) {
-    /*
-  This method accepts the parameters index and item and re-inserts the {item} at
-  index {index}
-  */
     setState(() {
       //orderState.addReserveItem(item., snapshot.business.ownerId, widget.serviceState.serviceSlot.first.startTime[i], widget.serviceState.serviceSlot.first.minDuration.toString(), dates[index]);
       orderState.itemList.insert(index, item);
@@ -82,7 +64,7 @@ class _RActivityManagementItemDetailsState extends State<RActivityManagementItem
   }
 
   void deleteItem(OrderState snapshot, OrderEntry entry, int index) {
-    debugPrint('UI_U_Cart => Remove Normal Item');
+    debugPrint('RUI_M_activity_management_item_details => Remove Normal Item');
     setState(() {
       if (snapshot.itemList.length >= 1) {
         snapshot.cartCounter = snapshot.cartCounter - entry.number;
@@ -106,7 +88,7 @@ class _RActivityManagementItemDetailsState extends State<RActivityManagementItem
   }
 
   void deleteReserveItem(OrderState snapshot, OrderEntry entry, int index) {
-    debugPrint('UI_U_Cart => Remove Normal Item');
+    debugPrint('RUI_M_activity_management_item_details =>  Remove Normal Item');
     setState(() {
       snapshot.cartCounter = snapshot.cartCounter - entry.number;
       snapshot.removeReserveItem(entry,context);
@@ -132,6 +114,7 @@ class _RActivityManagementItemDetailsState extends State<RActivityManagementItem
     var media = MediaQuery.of(context).size;
 
     final Stream<DocumentSnapshot> _orderStream =  FirebaseFirestore.instance.collection('order').doc(widget.orderId).snapshots(includeMetadataChanges: true);
+    debugPrint('RUI_M_activity_management_item_details => ORDER ID: ${widget.orderId}');
     ///Init sizeConfig
     SizeConfig().init(context);
     return StreamBuilder<DocumentSnapshot>(
@@ -146,50 +129,34 @@ class _RActivityManagementItemDetailsState extends State<RActivityManagementItem
                 drawerEnableOpenDragGesture: false,
                 key: _drawerKey,
                 ///Appbar
-                appBar: BuytimeAppbar(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
-                          child: IconButton(
-                            icon: const Icon(
-                              Icons.keyboard_arrow_left,
-                              color: Colors.white,
-                              size: 25.0,
-                            ),
-                            tooltip: AppLocalizations.of(context).comeBack,
-                            onPressed: () {
-                              //widget.fromConfirm != null ? Navigator.of(context).pop() : Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Landing()),);
-                              Future.delayed(Duration.zero, () {
-                                Navigator.of(context).pop();
-                              });
-                            },
-                          ),
-                        ),
-                      ],
+                appBar: AppBar(
+                  backgroundColor: Colors.white,
+                  brightness: Brightness.dark,
+                  elevation: 1,
+                  title: Text(
+                    '...',
+                    style: TextStyle(
+                        fontFamily: BuytimeTheme.FontFamily,
+                        color: BuytimeTheme.TextBlack,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 16 ///SizeConfig.safeBlockHorizontal * 7
                     ),
-                    ///Title
-                    Container(
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 20.0),
-                        child: Text(
-                          '...',
-                          textAlign: TextAlign.start,
-                          style: TextStyle(
-                              fontFamily: BuytimeTheme.FontFamily,
-                              fontSize: 20,
-                              fontWeight: FontWeight.w500,
-                              color: BuytimeTheme.TextWhite
-                          ),
-                        ),
-                      ),
+                  ),
+                  centerTitle: true,
+                  leading: IconButton(
+                    icon: const Icon(
+                      Icons.keyboard_arrow_left,
+                      color: Colors.white,
+                      size: 25.0,
                     ),
-                    SizedBox(
-                      width: 56.0,
-                    )
-                  ],
+                    tooltip: AppLocalizations.of(context).comeBack,
+                    onPressed: () {
+                      //widget.fromConfirm != null ? Navigator.of(context).pop() : Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Landing()),);
+                      Future.delayed(Duration.zero, () {
+                        Navigator.of(context).pop();
+                      });
+                    },
+                  ),
                 ),
                 //drawer: UI_M_BusinessListDrawer(),
                 body: ConstrainedBox(
@@ -218,50 +185,34 @@ class _RActivityManagementItemDetailsState extends State<RActivityManagementItem
               drawerEnableOpenDragGesture: false,
               key: _drawerKey,
               ///Appbar
-              appBar: BuytimeAppbar(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
-                        child: IconButton(
-                          icon: const Icon(
-                            Icons.keyboard_arrow_left,
-                            color: Colors.white,
-                            size: 25.0,
-                          ),
-                          tooltip: AppLocalizations.of(context).comeBack,
-                          onPressed: () {
-                            //widget.fromConfirm != null ? Navigator.of(context).pop() : Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Landing()),);
-                            Future.delayed(Duration.zero, () {
-                              Navigator.of(context).pop();
-                            });
-                          },
-                        ),
-                      ),
-                    ],
+              appBar: AppBar(
+                backgroundColor: Colors.white,
+                brightness: Brightness.dark,
+                elevation: 1,
+                title: Text(
+                  '${orderState.user.name} ${orderState.user.surname ?? ''}',
+                  style: TextStyle(
+                      fontFamily: BuytimeTheme.FontFamily,
+                      color: BuytimeTheme.TextBlack,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 16 ///SizeConfig.safeBlockHorizontal * 7
                   ),
-                  ///Title
-                  Container(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 20.0),
-                      child: Text(
-                        '${orderState.user.name} ${orderState.user.surname ?? ''}',
-                        textAlign: TextAlign.start,
-                        style: TextStyle(
-                            fontFamily: BuytimeTheme.FontFamily,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w500,
-                            color: BuytimeTheme.TextWhite
-                        ),
-                      ),
-                    ),
+                ),
+                centerTitle: true,
+                leading: IconButton(
+                  icon: const Icon(
+                    Icons.keyboard_arrow_left,
+                    color: Colors.black,
+                    //size: 25.0,
                   ),
-                  SizedBox(
-                    width: 56.0,
-                  )
-                ],
+                  tooltip: AppLocalizations.of(context).comeBack,
+                  onPressed: () {
+                    //widget.fromConfirm != null ? Navigator.of(context).pop() : Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Landing()),);
+                    Future.delayed(Duration.zero, () {
+                      Navigator.of(context).pop();
+                    });
+                  },
+                ),
               ),
               //drawer: UI_M_BusinessListDrawer(),
               body: ConstrainedBox(
@@ -279,14 +230,16 @@ class _RActivityManagementItemDetailsState extends State<RActivityManagementItem
                           padding: const EdgeInsets.only(top: 10),
                           child: Column(
                             children: [
-                              orderState.itemList.first == null ?
+                              orderState.itemList != null && orderState.itemList.length > 1 ?
+                              ///Title
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Container(
-                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1),
+                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 2),
                                     child: Text(
-                                      '${orderState.business.name}',
+                                      //'${orderState.business.name}',
+                                      '${AppLocalizations.of(context).multipleOrders} - ${orderState.itemList.length} ${AppLocalizations.of(context).items}',
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
                                           fontFamily: BuytimeTheme.FontFamily,
@@ -318,6 +271,34 @@ class _RActivityManagementItemDetailsState extends State<RActivityManagementItem
                                   )
                                 ],
                               ),
+                              orderState.itemList.length == 1 ?
+                              ///Description
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Flexible(
+                                    child: Container(
+                                      width: double.infinity,
+                                      alignment: Alignment.center,
+                                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0, bottom: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 2.5),
+                                      child: Text(
+                                        Utils.retriveField(Localizations.localeOf(context).languageCode, orderState.itemList.first.description),
+                                        //'${orderState.itemList.first.description}',
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 2,
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            fontFamily: BuytimeTheme.FontFamily,
+                                            fontWeight: FontWeight.w500,
+                                            color: BuytimeTheme.TextBlack,
+                                            fontSize: 16 /// mediaSize.height * 0.024
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ) :
+                              Container(),
                               ///Order status
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -358,34 +339,15 @@ class _RActivityManagementItemDetailsState extends State<RActivityManagementItem
                                   )
                                 ],
                               ),
-                              orderState.itemList.first == null ?
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1, bottom: SizeConfig.safeBlockVertical * 1),
-                                    child: Text(
-                                      orderState.itemList.length > 1 ? '${orderState.itemList.length} ${AppLocalizations.of(context).items}' : '${orderState.itemList.length} ${AppLocalizations.of(context).item}',
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                          fontFamily: BuytimeTheme.FontFamily,
-                                          fontWeight: FontWeight.w600,
-                                          color: BuytimeTheme.TextBlack,
-                                          fontSize: 18 /// mediaSize.height * 0.024
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ) :
-                              ///Sub text
-                              Row(
+                              /// Order location
+                              orderState.location != '' ? Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Flexible(
                                     child: Container(
-                                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * .5, bottom: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 2.5, right: SizeConfig.safeBlockHorizontal * 2.5),
+                                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * .5, bottom: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 2.5),
                                       child: Text(
-                                        Utils.retriveField(Localizations.localeOf(context).languageCode, orderState.itemList.first.description),
+                                        '${AppLocalizations.of(context).location}',
                                         //'${orderState.itemList.first.description}',
                                         overflow: TextOverflow.ellipsis,
                                         maxLines: 2,
@@ -397,19 +359,80 @@ class _RActivityManagementItemDetailsState extends State<RActivityManagementItem
                                         ),
                                       ),
                                     ),
+                                  ),
+                                  Flexible(
+                                    child: Container(
+                                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * .5, bottom: SizeConfig.safeBlockVertical * 1, right: SizeConfig.safeBlockHorizontal * 2.5),
+                                      child: Text(
+                                        ' ${orderState.location}',
+                                        //'${orderState.itemList.first.description}',
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 2,
+                                        style: TextStyle(
+                                            fontFamily: BuytimeTheme.FontFamily,
+                                            fontWeight: FontWeight.w600,
+                                            color: BuytimeTheme.TextBlack,
+                                            fontSize: 16 /// mediaSize.height * 0.024
+                                        ),
+                                      ),
+                                    ),
                                   )
                                 ],
-                              ),
+                              ) : Container(),
+
+                              /// Order table
+                              orderState.tableNumber != '' ? Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Flexible(
+                                    child: Container(
+                                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * .5, bottom: SizeConfig.safeBlockVertical * 1, left: SizeConfig.safeBlockHorizontal * 2.5),
+                                      child: Text(
+                                        '${AppLocalizations.of(context).table}',
+                                        //'${orderState.itemList.first.description}',
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 2,
+                                        style: TextStyle(
+                                            fontFamily: BuytimeTheme.FontFamily,
+                                            fontWeight: FontWeight.w500,
+                                            color: BuytimeTheme.TextBlack,
+                                            fontSize: 16 /// mediaSize.height * 0.024
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Flexible(
+                                    child: Container(
+                                      margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * .5, bottom: SizeConfig.safeBlockVertical * 1, right: SizeConfig.safeBlockHorizontal * 2.5),
+                                      child: Text(
+                                        ' ${orderState.tableNumber}',
+                                        //'${orderState.itemList.first.description}',
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 2,
+                                        style: TextStyle(
+                                            fontFamily: BuytimeTheme.FontFamily,
+                                            fontWeight: FontWeight.w600,
+                                            color: BuytimeTheme.TextBlack,
+                                            fontSize: 16 /// mediaSize.height * 0.024
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ) : Container(),
+
                               ///Order List
-                              orderState.itemList.first == null ?
+                              orderState.itemList != null && orderState.itemList.length > 1 ?
                               Flexible(
                                 flex: 1,
-                                child: CustomScrollView(shrinkWrap: true, slivers: [
+                                child: CustomScrollView(
+                                    physics: new ClampingScrollPhysics(),
+                                    shrinkWrap: true, slivers: [
                                   SliverList(
                                     delegate: SliverChildBuilderDelegate(
                                           (context, index) {
                                         //MenuItemModel menuItem = menuItems.elementAt(index);
-                                        debugPrint('UI_M_activity_management_item_details => LIST| ${orderState.itemList[index].name} ITEM COUNT: ${orderState.itemList[index].number}');
+                                        debugPrint('RUI_M_activity_management_item_details =>  LIST| ${orderState.itemList[index].name} ITEM COUNT: ${orderState.itemList[index].number}');
                                         var item = (index != orderState.itemList.length ? orderState.itemList[index] : null);
                                         //int itemCount = orderState.itemList[index].number;
                                         return  Dismissible(
@@ -428,7 +451,85 @@ class _RActivityManagementItemDetailsState extends State<RActivityManagementItem
                                               orderState.selected == null || orderState.selected.isEmpty ?
                                               deleteItem(orderState, item, index) :
                                               deleteReserveItem(orderState, item, index);
-                                              debugPrint('UI_U_SearchPage => DX to DELETE');
+                                              debugPrint('RUI_M_activity_management_item_details => DX to DELETE');
+                                              // Show a snackbar. This snackbar could also contain "Undo" actions.
+                                              Scaffold.of(context).showSnackBar(SnackBar(
+                                                  content: Text(Utils.retriveField(Localizations.localeOf(context).languageCode, item.name) + AppLocalizations.of(context).spaceRemoved),
+                                                  action: SnackBarAction(
+                                                      label: AppLocalizations.of(context).undo,
+                                                      onPressed: () {
+                                                        //To undo deletion
+                                                        undoDeletion(index, item, orderState);
+                                                      })));
+                                            } else {
+                                              orderState.itemList.insert(index, item);
+                                            }
+                                          },
+                                          child: OptimumOrderItemCardMedium(
+                                            key: ObjectKey(item),
+                                            orderEntry: orderState.itemList[index],
+                                            mediaSize: media,
+                                            orderState: orderState,
+                                            index: index,
+                                            show: true,
+                                          ),
+                                          background: Container(
+                                            color: BuytimeTheme.BackgroundWhite,
+                                            //margin: EdgeInsets.symmetric(horizontal: 15),
+                                            alignment: Alignment.centerRight,
+                                          ),
+                                          secondaryBackground: Container(
+                                            color: BuytimeTheme.AccentRed,
+                                            //margin: EdgeInsets.symmetric(horizontal: 15),
+                                            alignment: Alignment.centerRight,
+                                            child: Container(
+                                              margin: EdgeInsets.only(right: SizeConfig.safeBlockHorizontal * 2.5),
+                                              child: Icon(
+                                                BuytimeIcons.remove,
+                                                size: 24,
+
+                                                ///SizeConfig.safeBlockHorizontal * 7
+                                                color: BuytimeTheme.SymbolWhite,
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      childCount: orderState.itemList.length,
+                                    ),
+                                  ),
+                                ]),
+                              ) :
+                              orderState.itemList.length == 1 ?
+                              Flexible(
+                                flex: 1,
+                                child: CustomScrollView(
+                                    physics: new ClampingScrollPhysics(),
+                                    shrinkWrap: true, slivers: [
+                                  SliverList(
+                                    delegate: SliverChildBuilderDelegate(
+                                          (context, index) {
+                                        //MenuItemModel menuItem = menuItems.elementAt(index);
+                                        debugPrint('RUI_M_activity_management_item_details => LIST| ${orderState.itemList[index].name} ITEM COUNT: ${orderState.itemList[index].number}');
+                                        var item = (index != orderState.itemList.length ? orderState.itemList[index] : null);
+                                        //int itemCount = orderState.itemList[index].number;
+                                        return  Dismissible(
+                                          // Each Dismissible must contain a Key. Keys allow Flutter to
+                                          // uniquely identify widgets.
+                                          key: UniqueKey(),
+                                          // Provide a function that tells the app
+                                          // what to do after an item has been swiped away.
+                                          direction: DismissDirection.endToStart,
+                                          onDismissed: (direction) {
+                                            // Remove the item from the data source.
+                                            setState(() {
+                                              orderState.itemList.removeAt(index);
+                                            });
+                                            if (direction == DismissDirection.endToStart) {
+                                              orderState.selected == null || orderState.selected.isEmpty ?
+                                              deleteItem(orderState, item, index) :
+                                              deleteReserveItem(orderState, item, index);
+                                              debugPrint('RUI_M_activity_management_item_details => DX to DELETE');
                                               // Show a snackbar. This snackbar could also contain "Undo" actions.
                                               Scaffold.of(context).showSnackBar(SnackBar(
                                                   content: Text(Utils.retriveField(Localizations.localeOf(context).languageCode, item.name) + AppLocalizations.of(context).spaceRemoved),
@@ -568,8 +669,10 @@ class _RActivityManagementItemDetailsState extends State<RActivityManagementItem
                                 ),
                               ),
                               ///Total Order
-                              orderState.itemList.first == null ?
-                              OrderTotal(/*totalECO: 0*/ media: media, orderState: orderState) :
+                              orderState.itemList != null && orderState.itemList.length > 1 ?
+                              OrderTotal(/*totalECO: 0*/ media: media, orderState: orderState, promotion: false,) :
+                              orderState.itemList.length == 1 ?
+                              OrderTotal(/*totalECO: 0*/ media: media, orderState: orderState, promotion: false) :
                               Container(
                                 width: media.width,
                                 height: SizeConfig.safeBlockVertical * 10,
@@ -642,12 +745,79 @@ class _RActivityManagementItemDetailsState extends State<RActivityManagementItem
                         ),
                       ),
                     ),
+
+                    Column(
+                      children: [
+                        Container(
+                          child: Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                                onTap: () async{
+                                  String encodeQueryParameters(Map<String, String> params) {
+                                    return params.entries
+                                        .map((e) => '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
+                                        .join('&');
+                                  }
+                                  final Uri emailLaunchUri = Uri(
+                                    scheme: 'mailto',
+                                    path: orderState.user.email,
+                                      query: encodeQueryParameters(<String, String>{
+                                        'subject' : 'EMAIL FOR ...',
+                                        'body' : 'EMAIL SEND FOR ...'
+                                      }),
+                                  );
+                                  if (await canLaunch(emailLaunchUri.toString())) {
+                                    await launch(emailLaunchUri.toString());
+                                  } else {
+                                    throw 'Could not launch $emailLaunchUri';
+                                  }
+                                },
+                                borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                                child: Container(
+                                  padding: EdgeInsets.only(top: 12.5, bottom: 12.5),
+                                  margin: EdgeInsets.symmetric(horizontal: 18),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Container(
+                                        child: Text(
+                                          AppLocalizations.of(context).sendAnEmail,
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              fontFamily: BuytimeTheme.FontFamily,
+                                              fontWeight: FontWeight.w500,
+                                              //letterSpacing: 1.25
+                                          ),
+                                        ),
+                                      ),
+                                      Container(
+                                        child: Icon(
+                                          Icons.email_outlined,
+                                          color: BuytimeTheme.TextBlack,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                )
+                            ),
+                          ),
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(left: 18),
+                          child: Divider(
+                            indent: 0.0,
+                            color: BuytimeTheme.DividerGrey,
+                            thickness: 1.0,
+                          ),
+                        )
+                      ],
+                    ),
                     ///Accept & Cancel
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         ///Re-Open: the order was declined in a first moment but now, before it is canceled, the worker/manager wants to evaluate again.
-                        orderState.progress == Utils.enumToString(OrderStatus.declined) ?
+                        orderState.progress == Utils.enumToString(OrderStatus.canceled) ?
                         Flexible(
                           flex : 1,
                           child: Padding(
@@ -695,7 +865,7 @@ class _RActivityManagementItemDetailsState extends State<RActivityManagementItem
                         ) : Container(),
                         /// Accept: the worker/manager thinks that he can provide the order, so he accepts it.
                         /// A notification to the customer is sent, but the rest of the process depends on the payment method and the order type.
-                        orderState.progress == Utils.enumToString(OrderStatus.pending)?
+                        orderState.progress == Utils.enumToString(OrderStatus.pending) || (orderState.progress == Utils.enumToString(OrderStatus.paid) && orderState.isOrderAutoConfirmable())?
                         Flexible(
                           flex : 1,
                           child: Padding(
@@ -742,7 +912,7 @@ class _RActivityManagementItemDetailsState extends State<RActivityManagementItem
                           ),
                         ) : Container(),
                         /// Decline
-                        orderState.progress == Utils.enumToString(OrderStatus.pending) || orderState.progress == Utils.enumToString(OrderStatus.holding) || orderState.progress == Utils.enumToString(OrderStatus.accepted)?
+                       /* orderState.progress == Utils.enumToString(OrderStatus.pending) || orderState.progress == Utils.enumToString(OrderStatus.holding) || orderState.progress == Utils.enumToString(OrderStatus.accepted)?
                         Flexible(
                           flex : 1,
                           child: Padding(
@@ -786,8 +956,9 @@ class _RActivityManagementItemDetailsState extends State<RActivityManagementItem
                                 )
                             ),
                           ),
-                        ) : Container(),
-                        orderState.progress ==  Utils.enumToString(OrderStatus.paid) || orderState.progress ==  Utils.enumToString(OrderStatus.toBePaidAtCheckout) ?
+                        ) : Container(),*/
+                        ///Cancel
+                        orderState.progress ==  Utils.enumToString(OrderStatus.paid) || orderState.progress == Utils.enumToString(OrderStatus.accepted) || orderState.progress == Utils.enumToString(OrderStatus.pending) || orderState.progress ==  Utils.enumToString(OrderStatus.toBePaidAtCheckout) ?
                         Flexible(
                           flex : 1,
                           child: Padding(

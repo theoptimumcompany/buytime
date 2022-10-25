@@ -15,7 +15,7 @@ import 'package:Buytime/UI/management/category/widget/W_category_list_item.dart'
 import 'package:Buytime/UI/management/service_internal/RUI_M_service_list.dart';
 import 'package:Buytime/UI/management/service_internal/UI_M_service_list.dart';
 import 'package:Buytime/reblox/model/category/category_state.dart';
-import 'package:Buytime/reusable/enterExitRoute.dart';
+import 'package:Buytime/reusable/animation/enterExitRoute.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:flutter/material.dart';
@@ -115,7 +115,9 @@ class InternalServiceShowcaseState extends State<InternalServiceShowcase> {
                             color: Colors.blueGrey.withOpacity(0.1),
                             //margin: EdgeInsets.only(bottom: 60.0),
                             padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
-                            child: CustomScrollView(shrinkWrap: true, slivers: [
+                            child: CustomScrollView(
+                                physics: new ClampingScrollPhysics(),
+                                shrinkWrap: true, slivers: [
                               SliverList(
                                 delegate: SliverChildBuilderDelegate(
                                   (context, index) {
@@ -125,7 +127,7 @@ class InternalServiceShowcaseState extends State<InternalServiceShowcase> {
                                     return Container();
                                     // return InkWell(
                                     //   onTap: () {
-                                    //     debugPrint('Category Item: ${categoryItem.name.toUpperCase()} Clicked!');
+                                    //     debugPrint('W_internal_services_showcase => ${categoryItem.name.toUpperCase()} Clicked!');
                                     //   },
                                     //   //child: MenuItemListItemWidget(menuItem),
                                     //   child: CategoryListItemWidget(categoryItem),

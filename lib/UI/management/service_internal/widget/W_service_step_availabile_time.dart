@@ -12,7 +12,7 @@ limitations under the License.
 
 import 'package:Buytime/UI/management/service_internal/class/service_slot_classes.dart';
 import 'package:Buytime/reblox/reducer/service/service_slot_time_reducer.dart';
-import 'package:Buytime/reusable/checkbox/W_checkbox_parent_child.dart';
+import 'package:Buytime/UI/management/service_internal/widget/w_checkbox_parent_child.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:Buytime/reblox/model/service/service_slot_time_state.dart';
@@ -239,7 +239,7 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
             String hour = value[0] < 10 ? "0" + value[0].toString() : value[0].toString();
             String format24 = hour + ":" + minute;
             stopController[indexController].text = format24;
-            debugPrint('W_service_step_availabile_time => stop time: $format24');
+            debugPrint('W_service_step_available_time => stop time: $format24');
             List<String> controllerList = convertListTextEditingControllerToListString(stopController);
             StoreProvider.of<AppState>(context).dispatch(SetServiceSlotStopTime(controllerList));
             setState(() {
@@ -543,7 +543,7 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
                                     daysInterval.removeAt(i);
                                     StoreProvider.of<AppState>(context).dispatch(SetServiceSlotDaysInterval(daysInterval));
                                     startController.removeAt(i);
-                                    debugPrint('W_service_step_availabile_time => startController: $startController');
+                                    debugPrint('W_service_step_available_time => startController: $startController');
                                     List<String> listStart = [];
                                     startController.forEach((element) {
                                       if (element.text.isEmpty)
@@ -551,7 +551,7 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
                                       else
                                         listStart.add(element.text);
                                     });
-                                    debugPrint('W_service_step_availabile_time => listStart: $listStart');
+                                    debugPrint('W_service_step_available_time => listStart: $listStart');
                                     StoreProvider.of<AppState>(context).dispatch(SetServiceSlotStartTime(listStart));
                                     stopController.removeAt(i);
                                     List<String> listStop = [];
@@ -869,6 +869,7 @@ class StepAvailableTimeState extends State<StepAvailableTime> {
                   ),
                 ),
               ),
+
             ],
           );
         });

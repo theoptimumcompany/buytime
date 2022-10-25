@@ -10,6 +10,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ==============================================================================*/
 
+import 'dart:async';
+
 import 'package:Buytime/UI/management/service_internal/UI_M_service_list.dart';
 import 'package:Buytime/UI/management/service_internal/UI_M_service_slot.dart';
 import 'package:Buytime/UI/management/service_internal/widget/W_service_photo.dart';
@@ -17,15 +19,16 @@ import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/area/area_list_state.dart';
 import 'package:Buytime/reblox/model/category/tree/category_tree_state.dart';
 import 'package:Buytime/reblox/model/role/role.dart';
+import 'package:Buytime/reblox/model/service/convention_slot_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/model/snippet/parent.dart';
 import 'package:Buytime/reblox/reducer/category_tree_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/service_reducer.dart';
 import 'package:Buytime/reblox/reducer/service/service_slot_time_reducer.dart';
 import 'package:Buytime/reblox/reducer/slot_list_snippet_reducer.dart';
-import 'package:Buytime/reusable/appbar/buytime_appbar.dart';
-import 'package:Buytime/reusable/checkbox/W_checkbox_parent_child.dart';
-import 'package:Buytime/reusable/enterExitRoute.dart';
+import 'package:Buytime/reusable/appbar/w_buytime_appbar.dart';
+import 'package:Buytime/UI/management/service_internal/widget/w_checkbox_parent_child.dart';
+import 'package:Buytime/reusable/animation/enterExitRoute.dart';
 import 'package:Buytime/utils/animations/translate_animation.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
@@ -33,6 +36,7 @@ import 'package:Buytime/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
@@ -40,6 +44,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
 import 'RUI_M_service_list.dart';
+import 'UI_M_hub_convention_create.dart';
+import 'UI_M_hub_convention_edit.dart';
 
 class UI_EditService extends StatefulWidget {
   String serviceId;
@@ -80,11 +86,13 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
   TextEditingController vatController = TextEditingController();
   TextEditingController addressController = TextEditingController();
   TextEditingController conditionController = TextEditingController();
+  ScrollController scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {});
+    FlutterSecureStorage().write(key: 'serviceId', value: '');
   }
 
   void _manageTristate(bool value, String type) {
@@ -269,6 +277,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
   }
 
   bool canEditService = false;
+  bool hubConvention = false;
 
   String serviceName = '';
   String serviceCondition = '';
@@ -320,13 +329,13 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
               setCategoryList();
 
               AppLocalizations.supportedLocales.forEach((element) {
-                debugPrint('UI_M_create_service => Locale: ${element}');
+                debugPrint('UI_M_edit_service => Locale: ${element}');
                 String flag = '';
                 if (element.languageCode == 'en')
                   flag = 'gb'.toUpperCase().replaceAllMapped(RegExp(r'[A-Z]'), (match) => String.fromCharCode(match.group(0).codeUnitAt(0) + 127397));
                 else
                   flag = element.languageCode.toUpperCase().replaceAllMapped(RegExp(r'[A-Z]'), (match) => String.fromCharCode(match.group(0).codeUnitAt(0) + 127397));
-                //debugPrint('UI_M_create_service => Locale charCode: $flag');
+                //debugPrint('UI_M_edit_service => Locale charCode: $flag');
                 flagsCharCode.add(flag);
                 languageCode.add(element.languageCode);
               });
@@ -399,94 +408,105 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                         child: Align(
                             alignment: Alignment.topCenter,
                             child: Scaffold(
-                                appBar: BuytimeAppbar(
-                                  width: media.width,
-                                  children: [
-                                    Container(
-                                        child: IconButton(
-                                            icon: Icon(Icons.keyboard_arrow_left, color: Colors.white, size: 24),
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                              //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_ServiceList()),);
-                                              //Navigator.pushReplacement(context, EnterExitRoute(enterPage: UI_M_ServiceList(), exitPage: UI_EditService(), from: false));
-                                            })),
-                                    Flexible(
-                                      child: Utils.barTitle('${AppLocalizations.of(context).editSpace} ${nameController.text}'),
+                                appBar: AppBar(
+                                  backgroundColor: Colors.white,
+                                  brightness: Brightness.dark,
+                                  elevation: 1,
+                                  title: Text(
+                                    '${AppLocalizations.of(context).editSpace} ${nameController.text}',
+                                    style: TextStyle(
+                                        fontFamily: BuytimeTheme.FontFamily,
+                                        color: BuytimeTheme.TextBlack,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 16 ///SizeConfig.safeBlockHorizontal * 7
                                     ),
-                                    canEditService
-                                        ? Container(
-                                            child: IconButton(
-                                                icon: Icon(Icons.check, color: Colors.white),
-                                                onPressed: () {
-                                                  setState(() {
-                                                    submit = true;
-                                                  });
-                                                  if (nameController.text.isNotEmpty) StoreProvider.of<AppState>(context).dispatch(SetServiceName(Utils.saveField(myLocale.languageCode, nameController.text, snapshot.serviceState.name)));
-                                                  if (descriptionController.text.isNotEmpty)
-                                                    StoreProvider.of<AppState>(context).dispatch(SetServiceDescription(Utils.saveField(myLocale.languageCode, descriptionController.text, snapshot.serviceState.description)));
-                                                  if (validateReservableService() && validateChosenCategories() && validateAndSave() && validatePrice(_servicePrice.toString())) {
-                                                    setState(() {
-                                                      rippleLoading = true;
-                                                    });
-                                                    ServiceState tmpService = ServiceState.fromState(snapshot.serviceState);
-                                                    tmpService.name = Utils.saveField(myLocale.languageCode, nameController.text, snapshot.serviceState.name);
-                                                    tmpService.description = Utils.saveField(myLocale.languageCode, descriptionController.text, snapshot.serviceState.description);
-                                                    tmpService.serviceAddress = addressController.text;
-                                                    tmpService.serviceBusinessAddress = _serviceBusinessAddress;
-                                                    tmpService.serviceCoordinates = _serviceCoordinates;
-                                                    tmpService.serviceBusinessCoordinates = _serviceBusinessCoordinates;
-                                                    if(conditionController.text.isNotEmpty)
-                                                      tmpService.condition =  Utils.saveField(myLocale.languageCode, conditionController.text, snapshot.serviceState.condition);
-                                                    if (_serviceVAT == 0)
-                                                      tmpService.vat = 22;
-                                                    else
-                                                      tmpService.vat = _serviceVAT;
-                                                    debugPrint('UI_M_edit_service => Service Name: ${tmpService.name}');
-                                                    debugPrint('UI_M_edit_service => Service Description: ${tmpService.description}');
-                                                    debugPrint('UI_M_edit_service => Service Address: ${tmpService.serviceAddress}');
-                                                    debugPrint('UI_M_edit_service => Service Business Address: ${tmpService.serviceBusinessAddress}');
-                                                    debugPrint('UI_M_edit_service => Service Coordinates: ${tmpService.serviceCoordinates}');
-                                                    debugPrint('UI_M_edit_service => Service Business Coordinates: ${tmpService.serviceBusinessCoordinates}');
-                                                    debugPrint('UI_M_edit_service => Service Conidtion: ${tmpService.condition}');
-                                                    StoreProvider.of<AppState>(context).dispatch(SetServiceServiceCrossSell(snapshot.serviceState.serviceCrossSell));
+                                  ),
+                                  centerTitle: true,
+                                  leading: IconButton(
+                                      icon: Icon(Icons.keyboard_arrow_left, color: Colors.black, ),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                        //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_ServiceList()),);
+                                        //Navigator.pushReplacement(context, EnterExitRoute(enterPage: UI_M_ServiceList(), exitPage: UI_EditService(), from: false));
+                                      }),
+                                    actions: [
+                                      canEditService
+                                          ? Container(
+                                        child: IconButton(
+                                            icon: Icon(Icons.check, color: Colors.black),
+                                            onPressed: () {
+                                              setState(() {
+                                                submit = true;
+                                              });
+                                              if (nameController.text.isNotEmpty) StoreProvider.of<AppState>(context).dispatch(SetServiceName(Utils.saveField(myLocale.languageCode, nameController.text, snapshot.serviceState.name)));
+                                              if (descriptionController.text.isNotEmpty)
+                                                StoreProvider.of<AppState>(context).dispatch(SetServiceDescription(Utils.saveField(myLocale.languageCode, descriptionController.text, snapshot.serviceState.description)));
+                                              if (validateReservableService() && validateChosenCategories() && validateAndSave() && validatePrice(_servicePrice.toString())) {
+                                                setState(() {
+                                                  rippleLoading = true;
+                                                });
+                                                ServiceState tmpService = ServiceState.fromState(snapshot.serviceState);
+                                                tmpService.name = Utils.saveField(myLocale.languageCode, nameController.text, snapshot.serviceState.name);
+                                                tmpService.description = Utils.saveField(myLocale.languageCode, descriptionController.text, snapshot.serviceState.description);
+                                                tmpService.serviceAddress = addressController.text;
+                                                tmpService.serviceBusinessAddress = _serviceBusinessAddress;
+                                                tmpService.serviceCoordinates = _serviceCoordinates;
+                                                tmpService.serviceBusinessCoordinates = _serviceBusinessCoordinates;
+                                                tmpService.price = _servicePrice;
+                                                if(conditionController.text.isNotEmpty)
+                                                  tmpService.condition =  Utils.saveField(myLocale.languageCode, conditionController.text, snapshot.serviceState.condition);
+                                                if (_serviceVAT == 0)
+                                                  tmpService.vat = 22;
+                                                else
+                                                  tmpService.vat = _serviceVAT;
+                                                debugPrint('UI_M_edit_service => Service Name: ${tmpService.name}');
+                                                debugPrint('UI_M_edit_service => Service Description: ${tmpService.description}');
+                                                debugPrint('UI_M_edit_service => Service Address: ${tmpService.serviceAddress}');
+                                                debugPrint('UI_M_edit_service => Service Business Address: ${tmpService.serviceBusinessAddress}');
+                                                debugPrint('UI_M_edit_service => Service Coordinates: ${tmpService.serviceCoordinates}');
+                                                debugPrint('UI_M_edit_service => Service Business Coordinates: ${tmpService.serviceBusinessCoordinates}');
+                                                debugPrint('UI_M_edit_service => Service Conidtion: ${tmpService.condition}');
+                                                StoreProvider.of<AppState>(context).dispatch(SetServiceServiceCrossSell(snapshot.serviceState.serviceCrossSell));
 
-                                                    /// set the area of the service
-                                                    if (_serviceCoordinates != null && _serviceCoordinates.isNotEmpty) {
-                                                      AreaListState areaListState = StoreProvider.of<AppState>(context).state.areaList;
-                                                      if (areaListState != null && areaListState.areaList != null) {
-                                                        for (int ij = 0; ij < areaListState.areaList.length; ij++) {
-                                                          var distance = Utils.calculateDistanceBetweenPoints(areaListState.areaList[ij].coordinates, _serviceCoordinates);
-                                                          debugPrint('UI_M_edit_service: area distance ' + distance.toString());
-                                                          if (distance != null && distance < 100) {
-                                                            setState(() {
-                                                              if (areaListState.areaList[ij].areaId.isNotEmpty && !snapshot.serviceState.tag.contains(areaListState.areaList[ij].areaId)) {
-                                                                snapshot.serviceState.tag.add(areaListState.areaList[ij].areaId);
-                                                              }
-                                                            });
+                                                /// set the area of the service
+                                                if (_serviceCoordinates != null && _serviceCoordinates.isNotEmpty) {
+                                                  AreaListState areaListState = StoreProvider.of<AppState>(context).state.areaList;
+                                                  if (areaListState != null && areaListState.areaList != null) {
+                                                    for (int ij = 0; ij < areaListState.areaList.length; ij++) {
+                                                      var distance = Utils.calculateDistanceBetweenPoints(areaListState.areaList[ij].coordinates, _serviceCoordinates);
+                                                      debugPrint('UI_M_edit_service: area distance ' + distance.toString());
+                                                      if (distance != null && distance < 100) {
+                                                        setState(() {
+                                                          if (areaListState.areaList[ij].areaId.isNotEmpty && !snapshot.serviceState.tag.contains(areaListState.areaList[ij].areaId)) {
+                                                            snapshot.serviceState.tag.add(areaListState.areaList[ij].areaId);
                                                           }
-                                                        }
+                                                        });
                                                       }
                                                     }
-                                                    tmpService.serviceSlot.forEach((element) {
-                                                      debugPrint('UI_M_edit_service => MAX QUANTITY: ${element.maxQuantity}');
-                                                    });
-
-                                                    tmpService.serviceSlot.forEach((element) {
-                                                      debugPrint('UI_M_edit_service => MAX QUANTITY: ${element.maxQuantity}');
-                                                    });
-                                                    Provider.of<Spinner>(context, listen: false).initLoad(true);
-                                                    StoreProvider.of<AppState>(context).dispatch(UpdateService(tmpService));
                                                   }
-                                                }),
-                                          )
-                                        : SizedBox(
-                                            width: 50.0,
-                                          ),
-                                  ],
+                                                }
+                                                tmpService.serviceSlot.forEach((element) {
+                                                  debugPrint('UI_M_edit_service => MAX QUANTITY: ${element.maxQuantity}');
+                                                });
+
+                                                tmpService.serviceSlot.forEach((element) {
+                                                  debugPrint('UI_M_edit_service => MAX QUANTITY: ${element.maxQuantity}');
+                                                });
+
+                                                if(tmpService.originalLanguage.isEmpty)
+                                                  tmpService.originalLanguage = myLocale.languageCode;
+                                                Provider.of<Spinner>(context, listen: false).initLoad(true);
+                                                StoreProvider.of<AppState>(context).dispatch(UpdateService(tmpService));
+                                              }
+                                            }),
+                                      )
+                                          : Container()
+                                    ],
                                 ),
                                 body: SafeArea(
                                   child: Center(
                                     child: SingleChildScrollView(
+                                      controller: scrollController,
                                       child: ConstrainedBox(
                                         constraints: BoxConstraints(),
                                         child: Form(
@@ -509,7 +529,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                             image: snapshot.serviceState.image1,
                                                             cropAspectRatioPreset: CropAspectRatioPreset.square,
                                                             onFilePicked: (fileToUpload) {
-                                                              print("UI_create_service - callback upload image 1!");
+                                                              debugPrint("UI_create_service - callback upload image 1!");
                                                               StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInService(fileToUpload));
                                                             },
                                                           ),
@@ -527,7 +547,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                                 cropAspectRatioPreset: CropAspectRatioPreset.square,
                                                                 image: snapshot.serviceState.image2,
                                                                 onFilePicked: (fileToUpload) {
-                                                                  print("UI_create_service -  callback upload image 2!");
+                                                                  debugPrint("UI_create_service -  callback upload image 2!");
                                                                   StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInService(fileToUpload));
                                                                 },
                                                               ),
@@ -538,7 +558,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                               cropAspectRatioPreset: CropAspectRatioPreset.square,
                                                               image: snapshot.serviceState.image3,
                                                               onFilePicked: (fileToUpload) {
-                                                                print("UI_create_service -  callback upload image 3!");
+                                                                debugPrint("UI_create_service -  callback upload image 3!");
                                                                 StoreProvider.of<AppState>(context).dispatch(AddFileToUploadInService(fileToUpload));
                                                               },
                                                             ),
@@ -561,6 +581,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                           //width: SizeConfig.safeBlockHorizontal * 60,
                                                           // decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
                                                           child: TextFormField(
+                                                              textCapitalization: TextCapitalization.sentences,
                                                               enabled: canEditService,
                                                               controller: nameController,
                                                               validator: (value) => value.isEmpty ? AppLocalizations.of(context).serviceNameBlank : null,
@@ -630,6 +651,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                           //width: SizeConfig.safeBlockHorizontal * 60,
                                                           // decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
                                                           child: TextFormField(
+                                                                  textCapitalization: TextCapitalization.sentences,
                                                               enabled: canEditService,
                                                               keyboardType: TextInputType.multiline,
                                                               maxLines: null,
@@ -702,6 +724,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                         //width: SizeConfig.safeBlockHorizontal * 60,
                                                         // decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
                                                           child: TextFormField(
+                                                                  textCapitalization: TextCapitalization.sentences,
                                                               enabled: canEditService,
                                                               controller: conditionController,
                                                               //validator: (value) => value.isEmpty ? AppLocalizations.of(context).serviceNameBlank : null,
@@ -763,8 +786,8 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
 
                                               ///Price
                                               snapshot.serviceState.switchSlots
-                                                  ? Container()
-                                                  : Container(
+                                                  ? Container() :
+                                              Container(
                                                       margin: EdgeInsets.only(top: 10.0, bottom: 5.0, left: 32.0, right: 32.0),
                                                       child: Row(
                                                         children: [
@@ -777,6 +800,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                               child: Padding(
                                                                 padding: EdgeInsets.only(top: 0.0, bottom: 0.0, left: 0.0, right: 0.0),
                                                                 child: TextFormField(
+                                                                  textCapitalization: TextCapitalization.sentences,
                                                                   enabled: canEditService,
                                                                   controller: priceController,
                                                                   keyboardType: TextInputType.numberWithOptions(signed: true, decimal: true),
@@ -840,6 +864,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                               child: Padding(
                                                                 padding: EdgeInsets.only(top: 0.0, bottom: 0.0, left: 3.0, right: 42.0),
                                                                 child: TextFormField(
+                                                                    textCapitalization: TextCapitalization.sentences,
                                                                   //maxLength: 2,
                                                                   enabled: canEditService,
                                                                   controller: vatController,
@@ -913,6 +938,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                           margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 0),
                                                           //decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(color: Colors.grey)),
                                                           child: TextFormField(
+                                                              textCapitalization: TextCapitalization.sentences,
                                                             enabled: false,
                                                             readOnly: true,
                                                             keyboardType: TextInputType.multiline,
@@ -1048,6 +1074,7 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                                     height: 45,
                                                                     width: media.width * 0.55,
                                                                     child: TextFormField(
+                                                                        textCapitalization: TextCapitalization.sentences,
                                                                       enabled: canEditService,
                                                                       controller: _tagServiceController,
                                                                       textAlign: TextAlign.start,
@@ -1421,7 +1448,6 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
 
                                               snapshot.serviceState.switchSlots
                                                   ?
-
                                                   ///Service Resevable Slot Block
                                                   Padding(
                                                       padding: const EdgeInsets.only(
@@ -1614,6 +1640,238 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                                                       ),
                                                     )
                                                   : Container(),
+
+                                              ///Divider under switch booking block
+                                              Container(
+                                                child: Divider(
+                                                  indent: 0.0,
+                                                  color: BuytimeTheme.DividerGrey,
+                                                  thickness: 20.0,
+                                                ),
+                                              ),
+                                              ///Switch HUB Convention
+                                              Padding(
+                                                padding: const EdgeInsets.only(top: 0.0, bottom: 10.0, left: 20.0, right: 20.0),
+                                                child: Container(
+                                                  child: Row(
+                                                    children: [
+                                                      Switch(
+                                                          activeColor: BuytimeTheme.ManagerPrimary,
+                                                          value: snapshot.serviceState.hubConvention,
+                                                          onChanged:  (value) {
+                                                            setState(() {
+                                                              StoreProvider.of<AppState>(context).dispatch(SetServiceHubConvention(value));
+                                                              ///Open Hub Convection Block with animation and scrolling
+                                                              Timer(
+                                                                Duration(milliseconds: 100),
+                                                                    () => scrollController.animateTo(scrollController.position.maxScrollExtent,
+                                                                        duration: Duration(milliseconds: 1000), curve: Curves.ease),
+                                                              );
+                                                            });
+                                                          }
+                                                          ),
+                                                      Expanded(
+                                                        child: Text(
+                                                          AppLocalizations.of(context).hubConventionAccepted,
+                                                          textAlign: TextAlign.start,
+                                                          overflow: TextOverflow.clip,
+                                                          style: TextStyle(
+                                                            fontSize: media.height * 0.018,
+                                                            color: BuytimeTheme.TextGrey,
+                                                            fontWeight: FontWeight.w500,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+
+                                              snapshot.serviceState.hubConvention
+                                                  ?
+                                              ///Service Convention Slot Block
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                  left: 0.0,
+                                                  right: 0.0,
+                                                  bottom: 20.0,
+                                                ),
+                                                child: Column(
+                                                  children: [
+                                                    Padding(
+                                                      padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 35.0),
+                                                      child: Row(
+                                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                        children: [
+                                                          Container(
+                                                            child: Text(
+                                                              AppLocalizations.of(context).activeHubConventions,
+                                                              textAlign: TextAlign.start,
+                                                              overflow: TextOverflow.clip,
+                                                              style: TextStyle(
+                                                                fontSize: 14,
+                                                                color: BuytimeTheme.TextBlack,
+                                                                fontWeight: FontWeight.w500,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          Container(
+                                                              child: GestureDetector(
+                                                                child: Icon(Icons.add, color: BuytimeTheme.SymbolGrey),
+                                                                onTap:() {
+                                                                  // StoreProvider.of<AppState>(context).dispatch(SetServiceSlotToEmpty());
+                                                                  Navigator.push(
+                                                                    context,
+                                                                    MaterialPageRoute(builder: (context) => HubConventionCreate()),
+                                                                  );
+                                                                },
+                                                              )),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    snapshot.serviceState.conventionSlotList.length > 0
+                                                        ? Padding(
+                                                      padding: const EdgeInsets.only(left: 20.0),
+                                                      child: ConstrainedBox(
+                                                        constraints: BoxConstraints(),
+                                                        child: ListView.builder(
+                                                          shrinkWrap: true,
+                                                          physics: const NeverScrollableScrollPhysics(),
+                                                          itemCount: snapshot.serviceState.conventionSlotList.length,
+                                                          itemBuilder: (context, index) {
+                                                            ConventionSlot conventionSlot = snapshot.serviceState.conventionSlotList[index];
+                                                            return Dismissible(
+                                                              key: UniqueKey(),
+                                                              direction: DismissDirection.endToStart,
+                                                              background: Container(
+                                                                color: Colors.red,
+                                                                margin: EdgeInsets.symmetric(horizontal: 0),
+                                                                alignment: Alignment.centerRight,
+                                                                child: Icon(
+                                                                  Icons.delete,
+                                                                  color: BuytimeTheme.SymbolWhite,
+                                                                ),
+                                                              ),
+                                                              onDismissed: (direction) {
+                                                                setState(() {
+                                                                  ///Deleting Slot
+                                                                  StoreProvider.of<AppState>(context).dispatch(DeleteConventionSlot(index));
+                                                                });
+                                                              },
+                                                              child: GestureDetector(
+                                                                onTap:() {
+                                                                  Navigator.push(
+                                                                    context,
+                                                                    MaterialPageRoute(
+                                                                        builder: (context) => HubConventionEdit(
+                                                                          createSlot: false,
+                                                                          editSlot: true,
+                                                                          indexSlot: index,
+                                                                          conventionSlot: conventionSlot,
+                                                                        )),
+                                                                  );
+                                                                },
+                                                                child: Padding(
+                                                                  padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 0.0),
+                                                                  child: Column(
+                                                                    children: [
+                                                                      Container(
+                                                                        height: 88,
+                                                                        child: ListTile(
+                                                                          title: Row(
+                                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                            children: [
+                                                                              Text(
+                                                                                '${AppLocalizations.of(context).hubConvention} ' + (index + 1).toString(),
+                                                                                style: TextStyle(
+                                                                                  fontSize: 16,
+                                                                                  color: BuytimeTheme.TextBlack,
+                                                                                  fontWeight: FontWeight.w400,
+                                                                                ),
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                          subtitle: Column(
+                                                                            mainAxisAlignment: MainAxisAlignment.start,
+                                                                            children: [
+                                                                              Container(
+                                                                                margin: EdgeInsets.only(top: 10),
+                                                                                child: Row(
+                                                                                  children: [
+                                                                                    Text(
+                                                                                      snapshot.serviceState.conventionSlotList[index].discount.toString() + "%" ,
+                                                                                      style: TextStyle(
+                                                                                        fontSize: 14,
+                                                                                        color: BuytimeTheme.TextBlack,
+                                                                                        fontWeight: FontWeight.w400,
+                                                                                      ),
+                                                                                    ),
+                                                                                  ],
+                                                                                ),
+                                                                              ),
+                                                                              Row(
+                                                                                children: [
+                                                                                  Text(
+                                                                                    snapshot.serviceState.conventionSlotList[index].hubName,
+                                                                                    style: TextStyle(
+                                                                                      fontSize: 14,
+                                                                                      color: BuytimeTheme.TextBlack,
+                                                                                      fontWeight: FontWeight.w400,
+                                                                                    ),
+                                                                                  ),
+                                                                                ],
+                                                                              ),
+                                                                              //showSlotInterval(snapshot.serviceState.serviceSlot[index].numberOfInterval, media, index),
+                                                                            ],
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                      Container(
+                                                                        height: 1,
+                                                                        color: BuytimeTheme.DividerGrey,
+                                                                        margin: EdgeInsets.only(left: 20),
+                                                                      )
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            );
+                                                          },
+                                                        ),
+                                                      ),
+                                                    )
+                                                        : Padding(
+                                                      padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 12.0),
+                                                      child: Row(
+                                                        children: [
+                                                          Flexible(
+                                                              flex: 1,
+                                                              child: Container(
+                                                                height: SizeConfig.safeBlockVertical * 5,
+                                                                margin: EdgeInsets.only(left: 20, right: SizeConfig.safeBlockHorizontal * 5, top: SizeConfig.safeBlockVertical * .5),
+                                                                decoration: BoxDecoration(color: BuytimeTheme.SymbolLightGrey.withOpacity(0.2), borderRadius: BorderRadius.circular(5)),
+                                                                child: Center(
+                                                                    child: Container(
+                                                                      margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 1),
+                                                                      alignment: Alignment.center,
+                                                                      child: Text(
+                                                                        (snapshot.serviceState.name != null && snapshot.serviceState.name != ""
+                                                                            ? Utils.retriveField(Localizations.localeOf(context).languageCode, snapshot.serviceState.name)
+                                                                            : AppLocalizations.of(context).theService) +
+                                                                            ' ' +
+                                                                            AppLocalizations.of(context).spaceHasNotReservableSlots,
+                                                                        style: TextStyle(fontFamily: BuytimeTheme.FontFamily, color: BuytimeTheme.TextGrey, fontWeight: FontWeight.w500, fontSize: 14),
+                                                                      ),
+                                                                    )),
+                                                              ))
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              )
+                                                  : Container(),
+
                                             ],
                                           ),
                                         ),
@@ -1625,26 +1883,99 @@ class UI_EditServiceState extends State<UI_EditService> with SingleTickerProvide
                         child: Align(
                             alignment: Alignment.topCenter,
                             child: Scaffold(
-                                appBar: BuytimeAppbar(
-                                  width: media.width,
-                                  children: [
-                                    Container(
-                                        child: IconButton(
-                                            icon: Icon(Icons.keyboard_arrow_left, color: Colors.white, size: 24),
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-
-                                              //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_ServiceList()),);
-                                              //Navigator.pushReplacement(context, EnterExitRoute(enterPage: UI_M_ServiceList(), exitPage: UI_EditService(), from: false));
-                                            })),
-                                    Flexible(
-                                      child: Utils.barTitle('${AppLocalizations.of(context).editSpace}' + widget.serviceName),
+                                appBar: AppBar(
+                                  backgroundColor: Colors.white,
+                                  brightness: Brightness.dark,
+                                  elevation: 1,
+                                  title: Text(
+                                    '${AppLocalizations.of(context).editSpace} ${nameController.text}',
+                                    style: TextStyle(
+                                        fontFamily: BuytimeTheme.FontFamily,
+                                        color: BuytimeTheme.TextBlack,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 16 ///SizeConfig.safeBlockHorizontal * 7
                                     ),
-                                    Container(
-                                        child: IconButton(
-                                      icon: Icon(Icons.check, color: BuytimeTheme.SymbolLightGrey),
-                                      onPressed: null,
-                                    )),
+                                  ),
+                                  centerTitle: true,
+                                  leading: IconButton(
+                                      icon: Icon(Icons.keyboard_arrow_left, color: Colors.black, ),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                        //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => UI_M_ServiceList()),);
+                                        //Navigator.pushReplacement(context, EnterExitRoute(enterPage: UI_M_ServiceList(), exitPage: UI_EditService(), from: false));
+                                      }),
+                                  actions: [
+                                    canEditService
+                                        ? Container(
+                                      child: IconButton(
+                                          icon: Icon(Icons.check, color: Colors.black),
+                                          onPressed: () {
+                                            setState(() {
+                                              submit = true;
+                                            });
+                                            if (nameController.text.isNotEmpty) StoreProvider.of<AppState>(context).dispatch(SetServiceName(Utils.saveField(myLocale.languageCode, nameController.text, snapshot.serviceState.name)));
+                                            if (descriptionController.text.isNotEmpty)
+                                              StoreProvider.of<AppState>(context).dispatch(SetServiceDescription(Utils.saveField(myLocale.languageCode, descriptionController.text, snapshot.serviceState.description)));
+                                            if (validateReservableService() && validateChosenCategories() && validateAndSave() && validatePrice(_servicePrice.toString())) {
+                                              setState(() {
+                                                rippleLoading = true;
+                                              });
+                                              ServiceState tmpService = ServiceState.fromState(snapshot.serviceState);
+                                              tmpService.name = Utils.saveField(myLocale.languageCode, nameController.text, snapshot.serviceState.name);
+                                              tmpService.description = Utils.saveField(myLocale.languageCode, descriptionController.text, snapshot.serviceState.description);
+                                              tmpService.serviceAddress = addressController.text;
+                                              tmpService.serviceBusinessAddress = _serviceBusinessAddress;
+                                              tmpService.serviceCoordinates = _serviceCoordinates;
+                                              tmpService.serviceBusinessCoordinates = _serviceBusinessCoordinates;
+                                              tmpService.price = _servicePrice;
+                                              if(conditionController.text.isNotEmpty)
+                                                tmpService.condition =  Utils.saveField(myLocale.languageCode, conditionController.text, snapshot.serviceState.condition);
+                                              if (_serviceVAT == 0)
+                                                tmpService.vat = 22;
+                                              else
+                                                tmpService.vat = _serviceVAT;
+                                              debugPrint('UI_M_edit_service => Service Name: ${tmpService.name}');
+                                              debugPrint('UI_M_edit_service => Service Description: ${tmpService.description}');
+                                              debugPrint('UI_M_edit_service => Service Address: ${tmpService.serviceAddress}');
+                                              debugPrint('UI_M_edit_service => Service Business Address: ${tmpService.serviceBusinessAddress}');
+                                              debugPrint('UI_M_edit_service => Service Coordinates: ${tmpService.serviceCoordinates}');
+                                              debugPrint('UI_M_edit_service => Service Business Coordinates: ${tmpService.serviceBusinessCoordinates}');
+                                              debugPrint('UI_M_edit_service => Service Conidtion: ${tmpService.condition}');
+                                              StoreProvider.of<AppState>(context).dispatch(SetServiceServiceCrossSell(snapshot.serviceState.serviceCrossSell));
+
+                                              /// set the area of the service
+                                              if (_serviceCoordinates != null && _serviceCoordinates.isNotEmpty) {
+                                                AreaListState areaListState = StoreProvider.of<AppState>(context).state.areaList;
+                                                if (areaListState != null && areaListState.areaList != null) {
+                                                  for (int ij = 0; ij < areaListState.areaList.length; ij++) {
+                                                    var distance = Utils.calculateDistanceBetweenPoints(areaListState.areaList[ij].coordinates, _serviceCoordinates);
+                                                    debugPrint('UI_M_edit_service: area distance ' + distance.toString());
+                                                    if (distance != null && distance < 100) {
+                                                      setState(() {
+                                                        if (areaListState.areaList[ij].areaId.isNotEmpty && !snapshot.serviceState.tag.contains(areaListState.areaList[ij].areaId)) {
+                                                          snapshot.serviceState.tag.add(areaListState.areaList[ij].areaId);
+                                                        }
+                                                      });
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                              tmpService.serviceSlot.forEach((element) {
+                                                debugPrint('UI_M_edit_service => MAX QUANTITY: ${element.maxQuantity}');
+                                              });
+
+                                              tmpService.serviceSlot.forEach((element) {
+                                                debugPrint('UI_M_edit_service => MAX QUANTITY: ${element.maxQuantity}');
+                                              });
+
+                                              if(tmpService.originalLanguage.isEmpty)
+                                                tmpService.originalLanguage = myLocale.languageCode;
+                                              Provider.of<Spinner>(context, listen: false).initLoad(true);
+                                              StoreProvider.of<AppState>(context).dispatch(UpdateService(tmpService));
+                                            }
+                                          }),
+                                    )
+                                        : Container()
                                   ],
                                 ),
                                 body: SafeArea(

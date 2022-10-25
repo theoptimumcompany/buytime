@@ -27,7 +27,7 @@ class PipelineListRequestService implements EpicClass<AppState> {
   StatisticsState statisticsState;
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
-    debugPrint("PIPELINE_SERVICE_EPIC - PipelineListRequestService => CATCHED ACTION");
+    debugPrint("pipeline_service_epic => PipelineListRequestService => CATCHED ACTION");
     return actions.whereType<RequestListPipeline>().asyncMap((event) async {
 
       pipelineList = [];
@@ -35,21 +35,21 @@ class PipelineListRequestService implements EpicClass<AppState> {
 
       int snapshotDocs = snapshot.docs.length;
 
-      debugPrint("PIPELINE_SERVICE_EPIC - PipelineListRequestService => PipelineListService firestore request");
+      debugPrint("pipeline_service_epic => PipelineListRequestService => PipelineListService firestore request");
       snapshot.docs.forEach((element) {
         Pipeline pipeline = Pipeline.fromJson(element.data());
         pipelineList.add(pipeline);
       });
-      debugPrint("PIPELINE_SERVICE_EPIC - PipelineListRequestService => PipelineListService return list with " + pipelineList.length.toString());
+      debugPrint("pipeline_service_epic => PipelineListRequestService => PipelineListService return list with " + pipelineList.length.toString());
 
       statisticsState = store.state.statistics;
       int reads = statisticsState.categoryDeleteServiceRead;
       int writes = statisticsState.categoryDeleteServiceWrite;
       int documents = statisticsState.categoryDeleteServiceDocuments;
-      debugPrint('PIPELINE_SERVICE_EPIC - PipelineListRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('pipeline_service_epic => PipelineListRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       ++reads;
       documents = documents + snapshotDocs;
-      debugPrint('PIPELINE_SERVICE_EPIC - PipelineListRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('pipeline_service_epic => PipelineListRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       statisticsState.categoryDeleteServiceRead = reads;
       statisticsState.categoryDeleteServiceWrite = writes;
       statisticsState.categoryDeleteServiceDocuments = documents;
@@ -99,7 +99,7 @@ class PipelineUpdateService implements EpicClass<AppState> {
           .document(store.state.business.idCategoryTree)
           .updateData(.toJson())
           .then((value) {
-        print("Pipeline Service should be updated online ");
+        debugPrint("pipeline_service_epic => Pipeline Service should be updated online ");
         return new UpdatedPipeline(null);
       });*/
     }).takeUntil(actions.whereType<UnlistenPipeline>());

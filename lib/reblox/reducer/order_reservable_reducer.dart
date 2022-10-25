@@ -14,6 +14,7 @@ import 'package:Buytime/reblox/model/business/snippet/business_snippet_state.dar
 import 'package:Buytime/reblox/model/business/snippet/order_business_snippet_state.dart';
 import 'package:Buytime/reblox/model/order/order_entry.dart';
 import 'package:Buytime/reblox/model/order/order_reservable_state.dart';
+import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/model/stripe/stripe_state.dart';
 import 'package:Buytime/reblox/model/user/snippet/user_snippet_state.dart';
 import 'package:flutter/cupertino.dart';
@@ -41,26 +42,6 @@ class CreateOrderReservableCardAndPay {
   String get selectedCardPaymentMethodId => _selectedCardPaymentMethodId;
 }
 
-
-class CreateOrderReservableCardAndHold {
-  BuildContext _context;
-  OrderReservableState _orderReservableState;
-  String _last4;
-  String _businessStripeAccount;
-  String _brand;
-  String _country;
-  String _selectedCardPaymentMethodId;
-  PaymentType _paymentType;
-  CreateOrderReservableCardAndHold(this._orderReservableState, this._last4, this._brand, this._country, this._selectedCardPaymentMethodId, this._paymentType, this._context, this._businessStripeAccount);
-  OrderReservableState get orderReservableState => _orderReservableState;
-  PaymentType get paymentType => _paymentType;
-  BuildContext get context => _context;
-  String get last4 => _last4;
-  String get businessStripeAccount => _businessStripeAccount;
-  String get brand => _brand;
-  String get country => _country;
-  String get selectedCardPaymentMethodId => _selectedCardPaymentMethodId;
-}
 class CreateOrderReservableCardAndReminder {
   BuildContext _context;
   OrderReservableState _orderReservableState;
@@ -112,19 +93,7 @@ class CreateOrderReservableNativeAndPay {
   BuildContext get context => _context;
   String get businessStripeAccount => _businessStripeAccount;
 }
-class CreateOrderReservableNativeAndHold {
-  OrderReservableState _orderReservableState;
-  PaymentMethod _paymentMethod;
-  PaymentType _paymentType;
-  String _businessStripeAccount;
-  BuildContext _context;
-  CreateOrderReservableNativeAndHold(this._orderReservableState, this._paymentMethod, this._paymentType, this._context, this._businessStripeAccount);
-  OrderReservableState get orderReservableState => _orderReservableState;
-  PaymentType get paymentType => _paymentType;
-  PaymentMethod get paymentMethod => _paymentMethod;
-  BuildContext get context => _context;
-  String get businessStripeAccount => _businessStripeAccount;
-}
+
 class CreateOrderReservableNativeAndReminder {
   OrderReservableState _orderReservableState;
   PaymentMethod _paymentMethod;
@@ -170,6 +139,14 @@ class CreateOrderReservableOnSiteAndPay {
   PaymentType get paymentType => _paymentType;
 }
 
+class CreateOrderReservablePaypalAndPay {
+  OrderReservableState _orderReservableState;
+  PaymentType _paymentType;
+  CreateOrderReservablePaypalAndPay(this._orderReservableState, this._paymentType);
+  OrderReservableState get orderReservableState => _orderReservableState;
+  PaymentType get paymentType => _paymentType;
+}
+
 class CreateOrderReservableRoomPending {
   OrderReservableState _orderReservableState;
   String _roomNumber;
@@ -184,6 +161,14 @@ class CreateOrderReservableOnSitePending {
   OrderReservableState _orderReservableState;
   PaymentType _paymentType;
   CreateOrderReservableOnSitePending(this._orderReservableState, this._paymentType);
+  OrderReservableState get orderReservableState => _orderReservableState;
+  PaymentType get paymentType => _paymentType;
+}
+
+class CreateOrderReservablePaypalPending {
+  OrderReservableState _orderReservableState;
+  PaymentType _paymentType;
+  CreateOrderReservablePaypalPending(this._orderReservableState, this._paymentType);
   OrderReservableState get orderReservableState => _orderReservableState;
   PaymentType get paymentType => _paymentType;
 }
@@ -429,13 +414,13 @@ OrderReservableState orderReservableReducer(OrderReservableState state, action) 
   }
   if (action is AddItemToOrderReservable) {
     if (state.itemList != null) {
-      print("orderReservable_reducer: itemList != null");
+      debugPrint("orderReservable_reducer: itemList != null");
       orderReservableState.itemList
       = []
         ..addAll(state.itemList)
         ..add(action.orderReservableEntry);
     } else {
-      print("orderReservable_reducer: itemList == null");
+      debugPrint("orderReservable_reducer: itemList == null");
       orderReservableState.itemList
       = []
         ..add(action.orderReservableEntry);

@@ -44,9 +44,11 @@ OrderReservableState _$OrderReservableStateFromJson(Map<String, dynamic> json) {
     cardLast4Digit: json['cardLast4Digit'] as String,
     location: json['location'] as String,
     openUntil: json['openUntil'] as String,
+    tableNumber: json['tableNumber'] as String,
     cancellationReason: json['cancellationReason'] as String,
     carbonCompensation: json['carbonCompensation'] as bool,
     totalPromoDiscount: (json['totalPromoDiscount'] as num)?.toDouble(),
+    promotionId: json['promotionId'] as String,
   );
 }
 
@@ -77,7 +79,9 @@ Map<String, dynamic> _$OrderReservableStateToJson(
       'cardLast4Digit': instance.cardLast4Digit,
       'location': instance.location,
       'openUntil': instance.openUntil,
+      'tableNumber': instance.tableNumber,
       'cancellationReason': instance.cancellationReason,
       'carbonCompensation': instance.carbonCompensation,
       'totalPromoDiscount': instance.totalPromoDiscount,
+      'promotionId': instance.promotionId,
     };

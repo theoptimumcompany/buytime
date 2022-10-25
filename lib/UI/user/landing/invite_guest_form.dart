@@ -11,9 +11,7 @@ limitations under the License.
 ==============================================================================*/
 
 import 'dart:async';
-
-import 'package:Buytime/UI/user/booking/UI_U_confirm_booking.dart';
-import 'package:Buytime/UI/user/landing/UI_U_landing.dart';
+import 'package:Buytime/UI/user/turist/RUI_U_service_explorer.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/booking/booking_state.dart';
 import 'package:Buytime/reblox/reducer/booking_reducer.dart';
@@ -98,7 +96,7 @@ class _InviteGuestFormState extends State<InviteGuestForm> {
 
   @override
   void dispose() {
-    debugPrint('invite_guest_form: Dispose');
+    debugPrint('invite_guest_form => Dispose');
     super.dispose();
   }
 
@@ -107,6 +105,8 @@ class _InviteGuestFormState extends State<InviteGuestForm> {
 
     FocusScopeNode currentFocus = FocusScope.of(context);
      //bool bookingRequest = false;
+
+    SizeConfig().init(context);
 
     return StoreConnector<AppState, AppState>(
         converter: (store) => store.state,
@@ -123,14 +123,14 @@ class _InviteGuestFormState extends State<InviteGuestForm> {
                     alignment: Alignment.topCenter,
                     child: Scaffold(
                       appBar: AppBar(
-                        backgroundColor: BuytimeTheme.BackgroundCerulean,
+                        backgroundColor: BuytimeTheme.TextWhite,
                         brightness: Brightness.dark,
                         elevation: 0,
                         actions: [
                           IconButton(
                             icon: Icon(
                               Icons.help_outline,
-                              color: Colors.white,
+                              color: Colors.black,
                             ),
                             onPressed: (){
 
@@ -142,15 +142,15 @@ class _InviteGuestFormState extends State<InviteGuestForm> {
                           AppLocalizations.of(context).bookingCode,
                           style: TextStyle(
                               fontFamily: BuytimeTheme.FontFamily,
-                              color: BuytimeTheme.TextWhite,
-                              fontWeight: FontWeight.w700,
-                              fontSize: 20 ///SizeConfig.safeBlockHorizontal * 8
+                              color: BuytimeTheme.TextBlack,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 16 ///SizeConfig.safeBlockHorizontal * 8
                           ),
                         ),
                         leading: IconButton(
                           icon: Icon(
                             Icons.keyboard_arrow_left,
-                            color: Colors.white,
+                            color: Colors.black,
                           ),
                           onPressed: () async{
 
@@ -164,7 +164,7 @@ class _InviteGuestFormState extends State<InviteGuestForm> {
                             if(widget.fromLanding)
                               Navigator.of(context).pop();
                             else
-                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Landing()));
+                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => RServiceExplorer()));
                           },
                         ),
                       ),
@@ -173,14 +173,14 @@ class _InviteGuestFormState extends State<InviteGuestForm> {
                           child: Container(
                             width: double.infinity,
                             height: (SizeConfig.safeBlockVertical * 100) - 56,
-                            color: BuytimeTheme.BackgroundCerulean,
+                            color: Colors.white,
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 ///Enter Booking Code Title
                                 /*Container(
-                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5),
+                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5),
                                   child: Text(
                                     AppLocalizations.of(context).bookingCode.toUpperCase(),
                                     style: TextStyle(
@@ -193,12 +193,12 @@ class _InviteGuestFormState extends State<InviteGuestForm> {
                                 ),*/
                                 ///Enter Booking Code Subtitle
                                 Container(
-                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 5, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5),
+                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 5, left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5),
                                   child: Text(
                                     AppLocalizations.of(context).enterYourBookingCode,
                                     style: TextStyle(
                                         fontFamily: BuytimeTheme.FontFamily,
-                                        color: BuytimeTheme.TextWhite,
+                                        color: BuytimeTheme.TextBlack,
                                         fontWeight: FontWeight.w400,
                                         fontSize: 24 ///SizeConfig.safeBlockHorizontal * 5
                                     ),
@@ -206,7 +206,7 @@ class _InviteGuestFormState extends State<InviteGuestForm> {
                                 ),
                                 ///Booking Code
                                 Container(
-                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 5),
+                                  margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 3, left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 5),
                                   height: SizeConfig.safeBlockHorizontal * 40, ///SizeConfig.safeBlockHorizontal * 40
                                   child: TextFormField(
                                     autofocus: bookingCodeController.text.isNotEmpty ? false : true,
@@ -220,11 +220,11 @@ class _InviteGuestFormState extends State<InviteGuestForm> {
                                       fillColor: BuytimeTheme.TextWhite,
                                       filled: true,
                                       enabledBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(color: Color(0xffe0e0e0)),
+                                          borderSide: BorderSide(color: Colors.black),
                                           borderRadius: BorderRadius.all(Radius.circular(5.0))
                                       ),
                                       focusedBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(color: Colors.white),
+                                          borderSide: BorderSide(color: Colors.black),
                                           borderRadius: BorderRadius.all(Radius.circular(5.0))
                                       ),
                                       errorBorder: OutlineInputBorder(
@@ -246,7 +246,7 @@ class _InviteGuestFormState extends State<InviteGuestForm> {
                                       helperMaxLines: 3,
                                       helperStyle: TextStyle(
                                         fontFamily: BuytimeTheme.FontFamily,
-                                        color: Colors.white,
+                                        color: Colors.black,
                                         fontWeight: FontWeight.w400,
                                         letterSpacing: 0.0,
                                       ),
@@ -259,7 +259,7 @@ class _InviteGuestFormState extends State<InviteGuestForm> {
                                       letterSpacing: 5.0,
                                     ),
                                     onEditingComplete: (){
-                                      debugPrint('done');
+                                      debugPrint('invite_guest_form => done');
                                       onBookingCode();
                                     },
                                   ),

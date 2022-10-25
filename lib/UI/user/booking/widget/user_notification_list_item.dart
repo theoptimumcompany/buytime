@@ -13,23 +13,28 @@ limitations under the License.
 import 'package:Buytime/UI/user/service/UI_U_service_reserve.dart';
 import 'package:Buytime/reblox/model/app_state.dart';
 import 'package:Buytime/reblox/model/notification/notification_state.dart';
+import 'package:Buytime/reblox/model/order/order_state.dart';
 import 'package:Buytime/reblox/model/service/service_state.dart';
 import 'package:Buytime/reblox/reducer/notification_reducer.dart';
 import 'package:Buytime/reblox/reducer/order_detail_reducer.dart';
-import 'package:Buytime/reusable/buytime_icons.dart';
+import 'package:Buytime/reusable/icon/buytime_icons.dart';
 import 'package:Buytime/utils/size_config.dart';
 import 'package:Buytime/utils/theme/buytime_theme.dart';
 import 'package:Buytime/utils/utils.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:intl/intl.dart';
+
+import '../UI_U_order_details.dart';
 
 class UserNotificationListItem extends StatefulWidget {
 
   NotificationState notificationState;
   ServiceState serviceState;
+  OrderState orderState;
   bool tourist;
-  UserNotificationListItem(this.notificationState, this.serviceState, this.tourist);
+  UserNotificationListItem(this.notificationState, this.serviceState, this.tourist, this.orderState);
 
   @override
   _UserNotificationListItemState createState() => _UserNotificationListItemState();
@@ -41,16 +46,27 @@ class _UserNotificationListItemState extends State<UserNotificationListItem> {
   String hours = '';
   String minutes = '';
   String seconds = '';
+  bool can = false;
 
+  List<String> notificationBodyList = [];
+  String customNotificationTime = '';
+  DateTime notificationTime = DateTime.now();
   @override
   void initState() {
     super.initState();
-    DateTime notificationTime = DateTime.now();
-    if(widget.notificationState.timestamp != null)
+    if(widget.notificationState.timestamp != null){
       notificationTime = DateTime.fromMillisecondsSinceEpoch(widget.notificationState.timestamp);
+      debugPrint('user_notification_list_item => TIME ZONE OFFSET IN HOURS: ${notificationTime.timeZoneOffset.inHours}');
+      debugPrint('user_notification_list_item => TIME TO LOCAL: ${notificationTime.toLocal()}');
+      debugPrint('user_notification_list_item => TIME TO UTC: ${notificationTime.toUtc()}');
+    }
     debugPrint('user_notification_list_item => NOTIFICATION TIME: $notificationTime');
 
+    //notificationTime = DateTime(notificationTime.year, notificationTime.month, notificationTime.day, notificationTime.hour + 2, notificationTime.minute, notificationTime.second, notificationTime.millisecond, notificationTime.microsecond);
     DateTime currentTime = DateTime.now();
+    if(currentTime.timeZoneOffset.inHours != notificationTime.timeZoneOffset.inHours){
+
+    }
     Duration tmpDuration;
     if(currentTime.isAfter(notificationTime))
       tmpDuration = currentTime.difference(notificationTime);
@@ -69,12 +85,40 @@ class _UserNotificationListItemState extends State<UserNotificationListItem> {
       //debugPrint('user_notification_list_item => SECONDS: ${tmpDuration.inSeconds}');
       seconds = tmpDuration.inSeconds.toString();
     }
+
+    notificationBodyList =  widget.notificationState.body.split('|');
+    if(notificationBodyList.isNotEmpty && notificationBodyList.length == 4)
+      can = true;
+    customNotificationTime = DateFormat('E, dd/M/yyyy, HH:mm').format(notificationTime);
+  }
+
+  String notificationBodyBuilder(bool can, List<String> notificationBodyList, String customNotificationTime, BuildContext context) {
+    if (can) {
+      if (notificationBodyList[3] == 'orderPaid') {
+        return '${AppLocalizations.of(context).orderFor} ${notificationBodyList[0]} ${AppLocalizations.of(context).on} $customNotificationTime ${AppLocalizations.of(context).hasBeenPaid}, € ${notificationBodyList[2]}';
+      } else if (notificationBodyList[3] == 'paymentError') {
+        return '${AppLocalizations.of(context).thePaymentFor} ${notificationBodyList[0]} ${AppLocalizations.of(context).on} $customNotificationTime ${AppLocalizations.of(context).hasBeenRefusedMethod}';
+      } else if (notificationBodyList[3] == 'acceptedBuyer') {
+        return '${notificationBodyList[0]}  ${AppLocalizations.of(context).on} $customNotificationTime';
+      } else if (notificationBodyList[3] == 'declinedBuyer') {
+        return '${AppLocalizations.of(context).unfortunatelyYourBooking} ${notificationBodyList[0]} ${AppLocalizations.of(context).on} $customNotificationTime ${AppLocalizations.of(context).hasNotBeenAccepted}';
+      } else if (notificationBodyList[3] == 'canceledBuyer') {
+        return '${AppLocalizations.of(context).orderFor} ${notificationBodyList[0]} ${AppLocalizations.of(context).on} $customNotificationTime ${AppLocalizations.of(context).hasBeenCanceledFor} ${notificationBodyList[4]} ${AppLocalizations.of(context).aRefundFor} €${notificationBodyList[2]} ${AppLocalizations.of(context).hasBeenInitiated}';
+      } else if (notificationBodyList[3] == 'canceledBusiness') {
+        return '${AppLocalizations.of(context).orderFor} ${notificationBodyList[0]} ${AppLocalizations.of(context).on} $customNotificationTime ${AppLocalizations.of(context).hasBeenCanceledRefundFor} €${notificationBodyList[2]} ${AppLocalizations.of(context).hasBeenPaid}';
+      } else if (notificationBodyList[3] == 'createdAutoAcceptedBusiness') {
+        return '${AppLocalizations.of(context).aNewOrder} ${notificationBodyList[0]} ${AppLocalizations.of(context).on} $customNotificationTime ${AppLocalizations.of(context).hasBeenCreated}';
+      } else if (notificationBodyList[3] == 'actionRequiredBusiness') {
+        return '${AppLocalizations.of(context).aNewRequestFor} ${notificationBodyList[0]} ${AppLocalizations.of(context).on} $customNotificationTime ${AppLocalizations.of(context).needsConfirmation} ';
+      }
+    }
+    return widget.notificationState.body;
   }
 
   @override
   Widget build(BuildContext context) {
-
-    //debugPrint('image: ${widget.serviceState.image1}');
+    customNotificationTime = DateFormat('E, dd/M/yyyy, HH:mm', Localizations.localeOf(context).languageCode).format(notificationTime);
+    //debugPrint('user_notification_list_item => image: ${widget.serviceState.image1}');
     return Container(
       //margin: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 2, left: SizeConfig.safeBlockHorizontal * 4, right: SizeConfig.safeBlockHorizontal * 4),
         //padding: EdgeInsets.only(top: SizeConfig.safeBlockVertical * 1),
@@ -95,6 +139,7 @@ class _UserNotificationListItemState extends State<UserNotificationListItem> {
                   widget.notificationState.opened = true;
                   StoreProvider.of<AppState>(context).dispatch(UpdateNotification(widget.notificationState));
                   StoreProvider.of<AppState>(context).dispatch(SetOrderDetailAndNavigatePop(widget.notificationState.data.state.orderId, widget.notificationState.data.state.serviceId));
+                  //Navigator.push(context, MaterialPageRoute(builder: (context) => OrderDetails(orderState: widget.orderState, tourist: widget.tourist, serviceState: widget.serviceState,)));
                   // Navigator.push(context, MaterialPageRoute(builder: (context) => RUI_U_OrderDetail()));
                 }
               },
@@ -128,7 +173,7 @@ class _UserNotificationListItemState extends State<UserNotificationListItem> {
                             flex: 10,
                             child: Container(
                               //width: SizeConfig.safeBlockHorizontal * 76,
-                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 5, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 0),
+                              margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 3.5, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 0),
                               child:  Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -194,7 +239,7 @@ class _UserNotificationListItemState extends State<UserNotificationListItem> {
                                     child: Container(
                                       margin: EdgeInsets.only(left: SizeConfig.safeBlockHorizontal * 0, right: SizeConfig.safeBlockHorizontal * 2.5, top: SizeConfig.safeBlockVertical * 1),
                                       child: Text(
-                                        widget.notificationState.body,
+                                        notificationBodyBuilder(can, notificationBodyList, customNotificationTime, context),
                                         overflow: TextOverflow.ellipsis,
                                         maxLines: 3,
                                         style: TextStyle(

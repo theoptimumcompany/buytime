@@ -36,7 +36,7 @@ class BookingCreateRequestService implements EpicClass<AppState> {
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<CreateBookingRequest>().asyncMap((event) async {
-      print("BOOKING_SERVICE_EPIC - BookingCreateRequestService => DOCUMENT ID: ${event.bookingState.business_id}");
+      debugPrint("BOOKING_SERVICE_EPIC - BookingCreateRequestService => DOCUMENT ID: ${event.bookingState.business_id}");
 
       // create a unique booking code for this booking
       String randomBookingCodeCandidate;
@@ -47,7 +47,7 @@ class BookingCreateRequestService implements EpicClass<AppState> {
         // WARNING, every booking we do tops 5 reads to mitigate collisions.
         // This has a really low chance of generating a booking without a code. this is on purpose, to avoid infinite loop risk in a read statement.
         randomBookingCodeCandidate = Utils.getRandomBookingCode(6);
-        debugPrint('BOOKING_SERVICE_EPIC - BookingCreateRequestService => GENERATE BOOKING CODE| Random booking code candidate: $randomBookingCodeCandidate');
+        debugPrint('booking_service_epic => BookingCreateRequestService => GENERATE BOOKING CODE| Random booking code candidate: $randomBookingCodeCandidate');
         // search if the code already exists
         QuerySnapshot bookingCodeCollision = await FirebaseFirestore.instance /// ? READ - ? DOC
             .collection("booking")
@@ -56,7 +56,7 @@ class BookingCreateRequestService implements EpicClass<AppState> {
         bookingCodeCollisionDocs = bookingCodeCollisionDocs + bookingCodeCollision.docs.length;
         ++read;
         if (bookingCodeCollision.size > 0) {
-          debugPrint('BOOKING_SERVICE_EPIC - BookingCreateRequestService => GENERATE BOOKING CODE| Code collision happening for code: $randomBookingCodeCandidate');
+          debugPrint('booking_service_epic => BookingCreateRequestService => GENERATE BOOKING CODE| Code collision happening for code: $randomBookingCodeCandidate');
         } else {
           // the candidate is ok, we can break and use it
           foundRandomCode = true;
@@ -64,14 +64,14 @@ class BookingCreateRequestService implements EpicClass<AppState> {
         }
       }
       if (foundRandomCode) {
-        print('BOOKING_SERVICE_EPIC - BookingCreateRequestService => GENERATE BOOKING CODE| Creating booking for business: ${event.bookingState.business_id}');
+        debugPrint('booking_service_epic => BookingCreateRequestService => GENERATE BOOKING CODE| Creating booking for business: ${event.bookingState.business_id}');
         event.bookingState.booking_code = randomBookingCodeCandidate;
         // create a booking
         DocumentReference addingReturn = await FirebaseFirestore.instance /// 1 WRITE
             .collection("booking")
             .add(event.bookingState.toJson());
         bookingId = addingReturn.id;
-        print('BOOKING_SERVICE_EPIC - BookingCreateRequestService =>  $addingReturn');
+        debugPrint('booking_service_epic => BookingCreateRequestService =>  $addingReturn');
       } else {
         // TODO notify the user something went wrong and he has to try again.
         // example: return new ErrorInBookingCreation(event.bookingState);
@@ -95,11 +95,11 @@ class BookingCreateRequestService implements EpicClass<AppState> {
       int reads = statisticsState.bookingCreateRequestServiceRead;
       int writes = statisticsState.bookingCreateRequestServiceWrite;
       int documents = statisticsState.bookingCreateRequestServiceDocuments;
-      debugPrint('BOOKING_SERVICE_EPIC - BookingCreateRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('booking_service_epic => BookingCreateRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       reads = reads + read;
       writes = writes + 2;
       documents = documents + bookingCodeCollisionDocs;
-      debugPrint('BOOKING_SERVICE_EPIC - BookingCreateRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('booking_service_epic => BookingCreateRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       statisticsState.bookingCreateRequestServiceRead = reads;
       statisticsState.bookingCreateRequestServiceWrite = writes;
       statisticsState.bookingCreateRequestServiceDocuments = documents;
@@ -123,7 +123,7 @@ class SelfBookingCreateRequestService implements EpicClass<AppState> {
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<CreateSelfBookingRequest>().asyncMap((event) async {
-      print("BOOKING_SERVICE_EPIC - SelfBookingCreateRequestService => DOCUMENT ID: ${event.bookingState.business_id}");
+      debugPrint("booking_service_epic => SelfBookingCreateRequestService => DOCUMENT ID: ${event.bookingState.business_id}");
 
       // create a unique booking code for this booking
       String randomBookingCodeCandidate;
@@ -134,7 +134,7 @@ class SelfBookingCreateRequestService implements EpicClass<AppState> {
         // WARNING, every booking we do tops 5 reads to mitigate collisions.
         // This has a really low chance of generating a booking without a code. this is on purpose, to avoid infinite loop risk in a read statement.
         randomBookingCodeCandidate = Utils.getRandomBookingCode(6);
-        debugPrint('BOOKING_SERVICE_EPIC - SelfBookingCreateRequestService => GENERATE BOOKING CODE| Random booking code candidate: $randomBookingCodeCandidate');
+        debugPrint('booking_service_epic => SelfBookingCreateRequestService => GENERATE BOOKING CODE| Random booking code candidate: $randomBookingCodeCandidate');
         // search if the code already exists
         QuerySnapshot bookingCodeCollision = await FirebaseFirestore.instance /// ? READ - ? DOC
             .collection("booking")
@@ -143,7 +143,7 @@ class SelfBookingCreateRequestService implements EpicClass<AppState> {
         bookingCodeCollisionDocs = bookingCodeCollisionDocs + bookingCodeCollision.docs.length;
         ++read;
         if (bookingCodeCollision.size > 0) {
-          debugPrint('BOOKING_SERVICE_EPIC - SelfBookingCreateRequestService => GENERATE BOOKING CODE| Code collision happening for code: $randomBookingCodeCandidate');
+          debugPrint('booking_service_epic => SelfBookingCreateRequestService => GENERATE BOOKING CODE| Code collision happening for code: $randomBookingCodeCandidate');
         } else {
           // the candidate is ok, we can break and use it
           foundRandomCode = true;
@@ -151,14 +151,14 @@ class SelfBookingCreateRequestService implements EpicClass<AppState> {
         }
       }
       if (foundRandomCode) {
-        print('BOOKING_SERVICE_EPIC - SelfBookingCreateRequestService => GENERATE BOOKING CODE| Creating booking for business: ${event.bookingState.business_id}');
+        debugPrint('booking_service_epic => SelfBookingCreateRequestService => GENERATE BOOKING CODE| Creating booking for business: ${event.bookingState.business_id}');
         event.bookingState.booking_code = randomBookingCodeCandidate;
         // create a booking
         DocumentReference addingReturn = await FirebaseFirestore.instance /// 1 WRITE
             .collection("booking")
             .add(event.bookingState.toJson());
         bookingId = addingReturn.id;
-        print('BOOKING_SERVICE_EPIC - SelfBookingCreateRequestService =>  $addingReturn');
+        debugPrint('booking_service_epic => SelfBookingCreateRequestService =>  $addingReturn');
       } else {
         // TODO notify the user something went wrong and he has to try again.
         // example: return new ErrorInBookingCreation(event.bookingState);
@@ -183,11 +183,11 @@ class SelfBookingCreateRequestService implements EpicClass<AppState> {
       int reads = statisticsState.bookingCreateRequestServiceRead;
       int writes = statisticsState.bookingCreateRequestServiceWrite;
       int documents = statisticsState.bookingCreateRequestServiceDocuments;
-      debugPrint('BOOKING_SERVICE_EPIC - BookingCreateRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('booking_service_epic => BookingCreateRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       reads = reads + read;
       writes = writes + 2;
       documents = documents + bookingCodeCollisionDocs;
-      debugPrint('BOOKING_SERVICE_EPIC - BookingCreateRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('booking_service_epic => BookingCreateRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       statisticsState.bookingCreateRequestServiceRead = reads;
       statisticsState.bookingCreateRequestServiceWrite = writes;
       statisticsState.bookingCreateRequestServiceDocuments = documents;
@@ -208,7 +208,7 @@ class BookingRequestService implements EpicClass<AppState> {
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<BookingRequest>().asyncMap((event) async {
-      print("BOOKING_SERVICE_EPIC - BookingRequestService => DOCUMENT ID: ${event.bookingId}");
+      debugPrint("booking_service_epic => BookingRequestService => DOCUMENT ID: ${event.bookingId}");
 
       QuerySnapshot bookingSnapshot = await FirebaseFirestore.instance /// 1 READ - ? DOC
           .collection("booking")
@@ -218,7 +218,7 @@ class BookingRequestService implements EpicClass<AppState> {
           .get();
 
       int bookingSnapshotDocs = bookingSnapshot.docs.length;
-      print("BOOKING_SERVICE_EPIC - BookingRequestService => BOOKINGS LENGTH: $bookingSnapshotDocs");
+      debugPrint("booking_service_epic => BookingRequestService => BOOKINGS LENGTH: $bookingSnapshotDocs");
       if(bookingSnapshot.docs.isNotEmpty)
         bookingState =  BookingState.fromJson(bookingSnapshot.docs.first.data());
       else{
@@ -230,10 +230,10 @@ class BookingRequestService implements EpicClass<AppState> {
       int reads = statisticsState.bookingRequestServiceRead;
       int writes = statisticsState.bookingRequestServiceWrite;
       int documents = statisticsState.bookingRequestServiceDocuments;
-      debugPrint('BOOKING_SERVICE_EPIC - BookingRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('booking_service_epic => BookingRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       ++reads;
       documents = documents + bookingSnapshotDocs;
-      debugPrint('BOOKING_SERVICE_EPIC - BookingRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('booking_service_epic => BookingRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       statisticsState.bookingRequestServiceRead = reads;
       statisticsState.bookingRequestServiceWrite = writes;
       statisticsState.bookingRequestServiceDocuments = documents;
@@ -254,7 +254,7 @@ class UserBookingListRequestService implements EpicClass<AppState> {
   @override
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<UserBookingListRequest>().asyncMap((event) async {
-      print("BOOKING_SERVICE_EPIC - UserBookingListRequestService => USER EMAIL: ${ event.userEmail}");
+      debugPrint("booking_service_epic => UserBookingListRequestService => USER EMAIL: ${ event.userEmail}");
       fromConfirm = event.fromConfirm;
 
       QuerySnapshot openedBookingSnapshot = await FirebaseFirestore.instance /// 1 READ - ? DOC
@@ -264,7 +264,7 @@ class UserBookingListRequestService implements EpicClass<AppState> {
           .get();
 
       int openedBookingSnapshotDocs = openedBookingSnapshot.docs.length;
-      print("BOOKING_SERVICE_EPIC - UserBookingListRequestService => OPENED BOOKING LIST: $openedBookingSnapshotDocs");
+      debugPrint("booking_service_epic => UserBookingListRequestService => OPENED BOOKING LIST: $openedBookingSnapshotDocs");
       QuerySnapshot closedBookingSnapshot = await FirebaseFirestore.instance /// 1 READ - ? DOC
           .collection("booking")
           .where("userEmail", arrayContains: event.userEmail)
@@ -272,14 +272,14 @@ class UserBookingListRequestService implements EpicClass<AppState> {
           .get();
 
       int closedBookingSnapshotDocs = closedBookingSnapshot.docs.length;
-      print("BOOKING_SERVICE_EPIC - UserBookingListRequestService => CLOSED BOOKING LIST: $closedBookingSnapshotDocs");
+      debugPrint("booking_service_epic => UserBookingListRequestService => CLOSED BOOKING LIST: $closedBookingSnapshotDocs");
       bookingListState = [];
       List<BookingState> openedBookingListState = [];
       List<BookingState> closedBookingListState = [];
 
       openedBookingSnapshot.docs.forEach((element) {
         openedBookingListState.add(BookingState.fromJson(element.data()));
-        print("BOOKING_SERVICE_EPIC - UserBookingListRequestService => BOOKING: ${openedBookingListState.last.start_date}");
+        debugPrint("booking_service_epic => UserBookingListRequestService => BOOKING: ${openedBookingListState.last.start_date}");
       });
       openedBookingListState.sort((a,b) => a.start_date.isBefore(b.start_date) ? -1 : a.start_date.isAtSameMomentAs(b.start_date) ? 0 : 1);
       //DateFormat('dd').format(a.start_date).compareTo(DateFormat('dd').format(b.start_date))
@@ -296,10 +296,10 @@ class UserBookingListRequestService implements EpicClass<AppState> {
       int reads = statisticsState.userBookingListRequestServiceRead;
       int writes = statisticsState.userBookingListRequestServiceWrite;
       int documents = statisticsState.userBookingListRequestServiceDocuments;
-      debugPrint('BOOKING_SERVICE_EPIC - UserBookingListRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('booking_service_epic => UserBookingListRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       reads = reads + 2;
       documents = documents + openedBookingSnapshotDocs + closedBookingSnapshotDocs;
-      debugPrint('BOOKING_SERVICE_EPIC - UserBookingListRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('booking_service_epic => UserBookingListRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       statisticsState.userBookingListRequestServiceRead = reads;
       statisticsState.userBookingListRequestServiceWrite = writes;
       statisticsState.userBookingListRequestServiceDocuments = documents;
@@ -322,7 +322,7 @@ class BookingListRequestService implements EpicClass<AppState> {
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<BookingListRequest>().asyncMap((event) async {
       bookingStateList.clear();
-      print("BOOKING_SERVICE_EPIC - BookingListRequestService => BUSINESS ID: ${event.businessId}");
+      debugPrint("booking_service_epic => BookingListRequestService => BUSINESS ID: ${event.businessId}");
       QuerySnapshot bookingListFromFirebase = await FirebaseFirestore.instance /// 1 READ - ? DOC
           .collection("booking")
           .where("business_id", isEqualTo: event.businessId) // TODO check that arrayContains is ok here
@@ -333,20 +333,20 @@ class BookingListRequestService implements EpicClass<AppState> {
       //debugPrint('booking_service_epic: list lenght: ${bookingListFromFirebase.docs.length}');
       bookingListFromFirebase.docs.forEach((element) {
         BookingState bookingState = BookingState.fromJson(element.data());
-        debugPrint('BOOKING_SERVICE_EPIC - BookingListRequestService =>  USER: ${bookingState.user.first.name} ${bookingState.user.first.surname} ${bookingState.user.first.email}');
+        debugPrint('booking_service_epic => BookingListRequestService =>  USER: ${bookingState.user.first.name} ${bookingState.user.first.surname} ${bookingState.user.first.email}');
         bookingStateList.add(bookingState);
       });
 
-      debugPrint('BOOKING_SERVICE_EPIC - BookingListRequestService => BOOKING LIST LENGHT ${bookingStateList.length}');
+      debugPrint('booking_service_epic => BookingListRequestService => BOOKING LIST LENGHT ${bookingStateList.length}');
 
       statisticsState = store.state.statistics;
       int reads = statisticsState.bookingListRequestServiceRead;
       int writes = statisticsState.bookingListRequestServiceWrite;
       int documents = statisticsState.bookingListRequestServiceDocuments;
-      debugPrint('BOOKING_SERVICE_EPIC - BookingListRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('booking_service_epic => BookingListRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       ++reads;
       documents = documents + bookingListFromFirebaseDocs;
-      debugPrint('BOOKING_SERVICE_EPIC - BookingListRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('booking_service_epic => BookingListRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       statisticsState.bookingListRequestServiceRead = reads;
       statisticsState.bookingListRequestServiceWrite = writes;
       statisticsState.bookingListRequestServiceDocuments = documents;
@@ -367,7 +367,7 @@ class BookingUpdateRequestService implements EpicClass<AppState> {
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<UpdateBooking>().asyncMap((event) async {
 
-      print("BOOKING_SERVICE_EPIC - BookingUpdateRequestService => BOOKING ID: ${event.bookingState.booking_id}");
+      debugPrint("booking_service_epic => BookingUpdateRequestService => BOOKING ID: ${event.bookingState.booking_id}");
       await FirebaseFirestore.instance /// 1 WRITE
           .collection("booking")
           .doc(event.bookingState.booking_id)
@@ -398,9 +398,9 @@ class BookingUpdateRequestService implements EpicClass<AppState> {
       int reads = statisticsState.bookingListRequestServiceRead;
       int writes = statisticsState.bookingListRequestServiceWrite;
       int documents = statisticsState.bookingListRequestServiceDocuments;
-      debugPrint('BOOKING_SERVICE_EPIC - BookingUpdateRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('booking_service_epic => BookingUpdateRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       ++writes;
-      debugPrint('BOOKING_SERVICE_EPIC - BookingUpdateRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('booking_service_epic => BookingUpdateRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       statisticsState.bookingListRequestServiceRead = reads;
       statisticsState.bookingListRequestServiceWrite = writes;
       statisticsState.bookingListRequestServiceDocuments = documents;
@@ -420,7 +420,7 @@ class BookingUpdateAndNavigateRequestService implements EpicClass<AppState> {
   Stream call(Stream<dynamic> actions, EpicStore<AppState> store) {
     return actions.whereType<UpdateBookingOnConfirm>().asyncMap((event) async {
 
-      print("BOOKING_SERVICE_EPIC - BookingUpdateAndNavigateRequestService => BOOKING ID: ${event.bookingState.booking_id}");
+      debugPrint("booking_service_epic => BookingUpdateAndNavigateRequestService => BOOKING ID: ${event.bookingState.booking_id}");
 
       bookingState = event.bookingState;
 
@@ -451,9 +451,9 @@ class BookingUpdateAndNavigateRequestService implements EpicClass<AppState> {
       int reads = statisticsState.bookingListRequestServiceRead;
       int writes = statisticsState.bookingListRequestServiceWrite;
       int documents = statisticsState.bookingListRequestServiceDocuments;
-      debugPrint('BOOKING_SERVICE_EPIC - BookingUpdateAndNavigateRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('booking_service_epic => BookingUpdateAndNavigateRequestService => BEFORE| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       ++writes;
-      debugPrint('BOOKING_SERVICE_EPIC - BookingUpdateAndNavigateRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
+      debugPrint('booking_service_epic => BookingUpdateAndNavigateRequestService =>  AFTER| READS: $reads, WRITES: $writes, DOCUMENTS: $documents');
       statisticsState.bookingListRequestServiceRead = reads;
       statisticsState.bookingListRequestServiceWrite = writes;
       statisticsState.bookingListRequestServiceDocuments = documents;
