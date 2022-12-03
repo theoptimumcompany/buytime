@@ -1,4 +1,5 @@
 # buytime
+Protected with Apache 2.0 copyright license
 
 A new Flutter project.
 
